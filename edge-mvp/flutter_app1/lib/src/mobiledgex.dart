@@ -1,5 +1,11 @@
 // Copyright (c) 2018, MobiledgeX
 import 'dart:async';
+import 'package:location/location.dart';
+import 'package:flutter_mex_plugin/flutter_mex_plugin.dart';
+import 'package:flutter_mex_plugin/app-client.pb.dart';
+import 'package:flutter_mex_plugin/app-client.pbgrpc.dart';
+
+import 'package:grpc/grpc.dart';
 
 class CloudletRequest {
   // TODO: Define
@@ -15,12 +21,26 @@ class CloudletRequest {
   }
 }
 
+// Matching Engine wraps grpc and dme together.
 class MatchingEngine {
 
   final String matchingEngineServer = "service.mobiledgex.com/matchingengine/";
   final String matchingEngine = "matchingengine";
 
+  final channel = new ClientChannel('localhost',
+      port: 50051,
+      options: const ChannelOptions(
+          credentials: const ChannelCredentials.insecure()));
+
   MatchingEngine(); // Empty.
+  Match_Engine_Request dme = new Match_Engine_Request();
+
+
+
+  var location = new Location();
+  var currentLocation = Map<String, double>();
+
+
 
   // CloudletRequest needs info. Call Platform Plugins:
 
@@ -32,6 +52,34 @@ class MatchingEngine {
       throw new Exception("CloudletRequest object required."
       );
     }
+
+    try {
+      currentLocation = await location.getLocation;
+    } catch (e){
+      currentLocation = null;
+    }
+
+    var fmexp = new FlutterMexPlugin();
+    var ver = await FlutterMexPlugin.platformVersion;
+    var appInfo - FlutterMexPlugin.
+
+    // GO: conn, err := grpc.Dial(*serverAddr)
+
+    // From GPRC
+    final channel = new ClientChannel('localhost',
+        port: 50051,
+        options: const ChannelOptions(
+            credentials: const ChannelCredentials.insecure()));
+
+
+    // FROM Protobuf's Dart Plugin output: Channel != RpcClient
+    final stub = new Match_Engine_ApiClient(channel);
+
+    final request = new Match_Engine_Request();
+    request.
+    final response = await stub.findCloudlet(new HelloRequest()..name = name);
+    print('Greeter client received: ${response.message}');
+
     // Do post to matching engine
     // TODO: Stub map return
     return {

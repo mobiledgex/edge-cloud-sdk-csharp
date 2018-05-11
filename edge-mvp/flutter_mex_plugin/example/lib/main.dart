@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mex_plugin/flutter_mex_plugin.dart';
 
 import 'package:sprintf/sprintf.dart';
+import 'package:location/location.dart';
 
 void main() => runApp(new MyApp());
 
@@ -14,7 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const platform = const MethodChannel("samples.flutter.io/sysstate");
+  static const platform = const MethodChannel("com.mobiledgex/sysstate");
 
   String _platformVersion = 'Unknown';
   String _batteryLevel = "Unknown battery level.";
@@ -105,15 +106,14 @@ class _MyAppState extends State<MyApp> {
       print("Failed to get operatorInfo : '$e.message}'.");
     }
 
-    // This one is a long running async call. Location is not synchronous.
+    // This one is a long running async call.
     var locationInfo;
+    var location = new Location();
+
     try {
-      final result = await platform.invokeMethod("getLocationInfo");
-      locationInfo = result;
-      print(sprintf("locationInfo: %s", [result.toString()]));
-    } on PlatformException catch (e) {
+      locationInfo = await location.getLocation;
+    } on PlatformException {
       locationInfo = {};
-      print("Failed to get locationInfo: '$e.message}'.");
     }
 
     setState(() {
@@ -125,6 +125,10 @@ class _MyAppState extends State<MyApp> {
       // Update Text Widget.
       _textStateWidget = new Text('Running on: $_batteryLevel\n, $_platformVersion\n, app: $_app\n,'
           'location: $_locationInfo\n, operatorInfo: $_operatorInfo\n');
+
+      // Test: Load protos.
+
+
     });
   }
 

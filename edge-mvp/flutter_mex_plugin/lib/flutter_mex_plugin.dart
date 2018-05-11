@@ -10,4 +10,16 @@ class FlutterMexPlugin {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     return version;
   }
+
+  /*
+  static Future<Map<String,double>> getAppInfo() async {
+    final result = await _channel.invokeMethod("getApp");
+    return result;
+  }
+
+  static Future<Map<String,double>> getOperatorInfo() async {
+    final result = await _channel.invokeMethod("getOperatorInfo");
+    return result;
+  }*/
+
 }

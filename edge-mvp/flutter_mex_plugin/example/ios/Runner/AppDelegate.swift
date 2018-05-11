@@ -13,7 +13,7 @@ import CoreTelephony
     GeneratedPluginRegistrant.register(with: self)
 
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController;
-    let batteryChannel = FlutterMethodChannel.init(name: "samples.flutter.io/sysstate",
+    let batteryChannel = FlutterMethodChannel.init(name: "com.mobiledgex/sysstate",
                                                    binaryMessenger: controller);
 
     batteryChannel.setMethodCallHandler({

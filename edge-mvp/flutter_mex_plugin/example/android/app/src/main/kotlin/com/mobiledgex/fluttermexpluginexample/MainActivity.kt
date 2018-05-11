@@ -22,7 +22,7 @@ import android.os.Build.VERSION_CODES
 import android.content.pm.PackageManager
 
 class MainActivity(): FlutterActivity() {
-  private val CHANNEL = "samples.flutter.io/sysstate"
+  private val CHANNEL = "com.mobiledgex/sysstate"
 
   val APP_ON_PERMISSION_RESULT_READ_PHONE_STATE = 1
   var count: Double = 0.0
