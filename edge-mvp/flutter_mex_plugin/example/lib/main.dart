@@ -15,7 +15,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const platform = const MethodChannel("com.mobiledgex/sysstate");
+  //static const platform = const MethodChannel("com.mobiledgex/sysstate");
+  static const platform = const MethodChannel("flutter_mex_plugin");
+
 
   String _platformVersion = 'Unknown';
   String _batteryLevel = "Unknown battery level.";
@@ -78,6 +80,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Null> updateInfo() async {
+    /*
     String batteryLevel;
     try {
       final int result = await platform.invokeMethod("getBatteryLevel");
@@ -95,7 +98,7 @@ class _MyAppState extends State<MyApp> {
       app = {};
       print("Failed to get app description: '$e.message}'.");
     }
-
+*/
     var operatorInfo;
     try {
       final result = await platform.invokeMethod("getOperatorInfo");
@@ -105,7 +108,7 @@ class _MyAppState extends State<MyApp> {
       operatorInfo = {};
       print("Failed to get operatorInfo : '$e.message}'.");
     }
-
+/*
     // This one is a long running async call.
     var locationInfo;
     var location = new Location();
@@ -115,12 +118,12 @@ class _MyAppState extends State<MyApp> {
     } on PlatformException {
       locationInfo = {};
     }
-
+*/
     setState(() {
-      _batteryLevel = batteryLevel;
-      _app = app;
+      //_batteryLevel = batteryLevel;
+      //_app = app;
       _operatorInfo = operatorInfo;
-      _locationInfo = locationInfo;
+      //_locationInfo = locationInfo;
 
       // Update Text Widget.
       _textStateWidget = new Text('Running on: $_batteryLevel\n, $_platformVersion\n, app: $_app\n,'

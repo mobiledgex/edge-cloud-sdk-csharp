@@ -76,6 +76,8 @@ class MainActivity(): FlutterActivity() {
     }
   }
 
+  // context.getSystemService is a no-go for a plugin. There likely isn't one.
+
   // Placement: "getBatteryLevel" is in "example", and not part of the plugin folder structure?
   private fun getBatteryLevel(): Int {
     val batteryLevel: Int
