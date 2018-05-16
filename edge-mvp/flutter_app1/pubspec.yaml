@@ -11,8 +11,8 @@ dependencies:
   http_parser: '>=3.1.1'
   location: '>=1.2.0'
   grpc: '>=0.0.1'
-  flutter_mex_plugin:
-    path: '/Users/garnerlee/go/src/github.com/mobiledgex/edge-cloud/edge-mvp/flutter_mex_plugin'
+  #flutter_mex_plugin:
+  #  path: '../../edge-mvp/flutter_mex_plugin'
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

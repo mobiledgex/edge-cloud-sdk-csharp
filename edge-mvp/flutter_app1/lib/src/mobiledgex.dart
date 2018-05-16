@@ -1,9 +1,12 @@
 // Copyright (c) 2018, MobiledgeX
 import 'dart:async';
 import 'package:location/location.dart';
+/*
 import 'package:flutter_mex_plugin/flutter_mex_plugin.dart';
+
 import 'package:flutter_mex_plugin/app-client.pb.dart';
 import 'package:flutter_mex_plugin/app-client.pbgrpc.dart';
+*/
 
 import 'package:grpc/grpc.dart';
 
@@ -33,7 +36,7 @@ class MatchingEngine {
           credentials: const ChannelCredentials.insecure()));
 
   MatchingEngine(); // Empty.
-  Match_Engine_Request dme = new Match_Engine_Request();
+  //Match_Engine_Request dme = new Match_Engine_Request();
 
 
 
@@ -59,26 +62,23 @@ class MatchingEngine {
       currentLocation = null;
     }
 
-    var fmexp = new FlutterMexPlugin();
-    var ver = await FlutterMexPlugin.platformVersion;
-    var appInfo - FlutterMexPlugin.
-
-    // GO: conn, err := grpc.Dial(*serverAddr)
+    //var fmexp = new FlutterMexPlugin();
+    //var ver = await FlutterMexPlugin.platformVersion;
 
     // From GPRC
-    final channel = new ClientChannel('localhost',
+    var channel = new ClientChannel('localhost',
         port: 50051,
         options: const ChannelOptions(
             credentials: const ChannelCredentials.insecure()));
 
 
     // FROM Protobuf's Dart Plugin output: Channel != RpcClient
-    final stub = new Match_Engine_ApiClient(channel);
+    //final stub = new Match_Engine_ApiClient(channel);
 
-    final request = new Match_Engine_Request();
-    request.
-    final response = await stub.findCloudlet(new HelloRequest()..name = name);
-    print('Greeter client received: ${response.message}');
+    //var request = new Match_Engine_Request();
+
+    //var response = await stub.findCloudlet(dme);
+    //print('client ver received: ${response.ver}');
 
     // Do post to matching engine
     // TODO: Stub map return
