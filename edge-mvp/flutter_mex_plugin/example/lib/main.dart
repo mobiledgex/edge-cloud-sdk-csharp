@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Null> updateInfo() async {
-    /*
+
     String batteryLevel;
     try {
       final int result = await platform.invokeMethod("getBatteryLevel");
@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
       app = {};
       print("Failed to get app description: '$e.message}'.");
     }
-*/
+
     var operatorInfo;
     try {
       final result = await platform.invokeMethod("getOperatorInfo");
@@ -117,11 +117,11 @@ class _MyAppState extends State<MyApp> {
       locationInfo = await location.getLocation;
     } on PlatformException {
       locationInfo = {};
-    }
-*/
+    }*/
+
     setState(() {
       //_batteryLevel = batteryLevel;
-      //_app = app;
+      _app = app;
       _operatorInfo = operatorInfo;
       //_locationInfo = locationInfo;
 
