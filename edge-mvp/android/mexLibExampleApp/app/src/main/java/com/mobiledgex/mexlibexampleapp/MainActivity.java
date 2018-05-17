@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.camera2basic.Camera2BasicFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,14 +20,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab_left = (FloatingActionButton) findViewById(R.id.fab_left);
+        fab_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+        FloatingActionButton fab_right = (FloatingActionButton) findViewById(R.id.fab_right);
+        fab_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        // Replace id'ed Fragment with Camera2BasicFragment.
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, Camera2BasicFragment.newInstance())
+                .commit();
     }
 
     @Override
