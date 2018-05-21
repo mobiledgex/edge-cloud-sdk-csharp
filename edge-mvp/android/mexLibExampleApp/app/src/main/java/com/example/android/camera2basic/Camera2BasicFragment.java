@@ -15,7 +15,14 @@
  */
 
 package com.example.android.camera2basic;
+import com.mobiledgex.matchingengine.MatchingEngine;
+import com.mobiledgex.mexlibexampleapp.EverAIPoc;
+import com.mobiledgex.mexlibexampleapp.EverAIUploadResponseListener;
 import com.mobiledgex.mexlibexampleapp.R;
+import com.mobiledgex.matchingengine.FindCloudletResponse;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,6 +35,7 @@ import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -72,8 +80,15 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import distributed_match_engine.AppClient;
+
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+
+    /**
+     * EverAI POC
+     */
+    private EverAIPoc everAiPoc = new EverAIPoc();
 
     /**
      * Conversion from screen rotation to JPEG orientation.
@@ -281,6 +296,7 @@ public class Camera2BasicFragment extends Fragment
      */
     private int mSensorOrientation;
 
+    private static int fooCount = 0;
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
      */
@@ -296,8 +312,12 @@ public class Camera2BasicFragment extends Fragment
                 case STATE_WAITING_LOCK: {
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
                     // AF doesn't work on emu? Just capture in emulator.
-                    captureStillPicture();
-                    /*
+                    //captureStillPicture();
+                    if (fooCount%3 == 0)
+                        captureStillPicture();
+                    fooCount++; // Emulated autofocus hack.
+                    fooCount %= 3;
+
                     if (afState == null) {
                         captureStillPicture();
                     } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState ||
@@ -311,7 +331,7 @@ public class Camera2BasicFragment extends Fragment
                         } else {
                             runPrecaptureSequence();
                         }
-                    }*/
+                    }
                     break;
                 }
                 case STATE_WAITING_PRECAPTURE: {
@@ -841,6 +861,12 @@ public class Camera2BasicFragment extends Fragment
                                                @NonNull TotalCaptureResult result) {
                     showToast("Saved: " + mFile);
                     Log.d(TAG, mFile.toString());
+
+                    try {
+                        everAiPoc.uploadToEverAI(mFile);
+                    } catch (Exception e) {
+                        e.printStackTrace(); // Hm..
+                    }
                     unlockFocus();
                 }
             };
