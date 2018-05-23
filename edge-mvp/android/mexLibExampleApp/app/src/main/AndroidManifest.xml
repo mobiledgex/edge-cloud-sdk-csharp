@@ -3,10 +3,8 @@
     package="com.mobiledgex.mexlibexampleapp">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <!-- READ_PHONE_STATE is needed for the MEX Matching Engine to perform
-         cloudlet duties. -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />

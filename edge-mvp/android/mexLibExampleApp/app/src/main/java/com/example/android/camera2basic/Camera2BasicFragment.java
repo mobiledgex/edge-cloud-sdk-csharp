@@ -15,14 +15,17 @@
  */
 
 package com.example.android.camera2basic;
-import com.mobiledgex.matchingengine.MatchingEngine;
 import com.mobiledgex.mexlibexampleapp.EverAIPoc;
-import com.mobiledgex.mexlibexampleapp.EverAIUploadResponseListener;
+import com.mobiledgex.mexlibexampleapp.FaceDetection;
 import com.mobiledgex.mexlibexampleapp.R;
-import com.mobiledgex.matchingengine.FindCloudletResponse;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
+
+
+import android.location.Location;
 
 import android.Manifest;
 import android.app.Activity;
@@ -35,7 +38,6 @@ import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -67,6 +69,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.graphics.Rect;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,11 +79,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-
-import distributed_match_engine.AppClient;
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -88,13 +90,14 @@ public class Camera2BasicFragment extends Fragment
     /**
      * EverAI POC
      */
-    private EverAIPoc everAiPoc = new EverAIPoc();
+    private EverAIPoc mEverAiPoc;
 
     /**
      * Conversion from screen rotation to JPEG orientation.
      */
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    private static final int REQUEST_MULTIPLE_PERMISSION = 1;
+
     private static final String FRAGMENT_DIALOG = "dialog";
 
     static {
@@ -459,12 +462,54 @@ public class Camera2BasicFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
+
+        mEverAiPoc = new EverAIPoc();
+
+        if (checkLocationPermission() == false) {
+            requestMultiplePermissions(); // Required to gather information needed to find nearby Cloudlets.
+            return; // Ask again later, or put up a dialog that won't dismiss.
+        }
+        // Get location:
+        FusedLocationProviderClient fusedLocationClient;
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        try {
+            // Last Location only.
+            fusedLocationClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(Task<Location> location) {
+                        if (location != null) {
+                            mEverAiPoc.setLocation(location.getResult());
+                        }
+                    }
+                });
+        } catch (SecurityException se) {
+            se.printStackTrace();
+        }
+    }
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
+    public void askForLocationPermissions() {
+        if (checkLocationPermission() == false) {
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_MULTIPLE_PERMISSION);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         startBackgroundThread();
+
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
@@ -475,6 +520,8 @@ public class Camera2BasicFragment extends Fragment
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
+
+
     }
 
     @Override
@@ -484,19 +531,55 @@ public class Camera2BasicFragment extends Fragment
         super.onPause();
     }
 
-    private void requestCameraPermission() {
-        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+    private void requestMultiplePermissions() {
+        String[] permissions = new String[] { // Special Enhanced security requests.
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.READ_PHONE_STATE
+        };
+
+        // Check which ones missing
+        int result;
+        List<String> permissionsNeeded = new ArrayList<>();
+        for (String pStr : permissions) {
+            result = ContextCompat.checkSelfPermission(getActivity(), pStr);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionsNeeded.add(pStr);
+            }
+        }
+
+        String[] permissionArray;
+        if (!permissionsNeeded.isEmpty()) {
+            permissionArray = permissionsNeeded.toArray(new String[permissionsNeeded.size()]);
+        } else {
+            permissionArray = permissions; // Bleh
+        }
+
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
             new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            ActivityCompat.requestPermissions(getActivity(), permissionArray, REQUEST_MULTIPLE_PERMISSION);
+            requestPermissions(permissions, REQUEST_MULTIPLE_PERMISSION);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+        // Create a small convience lookup, and ask again if needed.
+        int numGranted = 0;
+        for (int i = 0; i < grantResults.length; i++) {
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                numGranted++;
+            }
+        }
+
+        if (requestCode == REQUEST_MULTIPLE_PERMISSION) {
+            if (numGranted != grantResults.length) {
                 ErrorDialog.newInstance(getString(R.string.request_permission))
                         .show(getChildFragmentManager(), FRAGMENT_DIALOG);
             }
@@ -537,7 +620,7 @@ public class Camera2BasicFragment extends Fragment
                         Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                         new CompareSizesByArea());
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
-                        ImageFormat.JPEG, /*maxImages*/2);
+                        ImageFormat.JPEG, /*maxImages*/4);
                 mImageReader.setOnImageAvailableListener(
                         mOnImageAvailableListener, mBackgroundHandler);
 
@@ -626,7 +709,7 @@ public class Camera2BasicFragment extends Fragment
     private void openCamera(int width, int height) {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestCameraPermission();
+            requestMultiplePermissions();
             return;
         }
         setUpCameraOutputs(width, height);
@@ -863,7 +946,18 @@ public class Camera2BasicFragment extends Fragment
                     Log.d(TAG, mFile.toString());
 
                     try {
-                        everAiPoc.uploadToEverAI(mFile);
+                        mEverAiPoc.uploadToEverAI(getContext(), mFile, new EverAIPoc.OnUploadResponseListener() {
+                            @Override
+                            public void onUploadResponse(ArrayList<FaceDetection> detections) {
+                                if (detections == null) {
+                                    Log.i("Camera2BasicFragment","No Faces Found.");
+                                    return;
+                                }
+                                for (FaceDetection face : detections) {
+                                    System.out.println(face.toString());
+                                }
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace(); // Hm..
                     }
@@ -1046,7 +1140,7 @@ public class Camera2BasicFragment extends Fragment
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             parent.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                    REQUEST_CAMERA_PERMISSION);
+                                    REQUEST_MULTIPLE_PERMISSION);
                         }
                     })
                     .setNegativeButton(android.R.string.cancel,
