@@ -579,9 +579,11 @@ public class Camera2BasicFragment extends Fragment
         }
 
         if (requestCode == REQUEST_MULTIPLE_PERMISSION) {
-            if (numGranted != grantResults.length) {
+            if (numGranted != grantResults.length && (grantResults.length > 0)) {
                 ErrorDialog.newInstance(getString(R.string.request_permission))
                         .show(getChildFragmentManager(), FRAGMENT_DIALOG);
+            } else {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);

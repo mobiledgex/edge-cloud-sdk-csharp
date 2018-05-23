@@ -139,7 +139,7 @@ public class EverAIPoc {
         } catch (JSONException jsone) {
             Log.e(TAG, "JSONException: " + jsone.getStackTrace());
         }
-
+        Log.i(TAG, "Detections found: " + detections);
         return detections;
     }
 
