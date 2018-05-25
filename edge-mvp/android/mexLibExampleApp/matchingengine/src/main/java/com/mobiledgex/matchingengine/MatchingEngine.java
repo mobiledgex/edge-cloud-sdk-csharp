@@ -12,11 +12,13 @@ import distributed_match_engine.AppClient;
 import distributed_match_engine.Match_Engine_ApiGrpc;
 
 import distributed_match_engine.AppClient.Match_Engine_Request;
+import distributed_match_engine.LocOuterClass.Loc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 // Concurrency FutureTasks:
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -95,7 +97,7 @@ public class MatchingEngine implements Callable {
         }
 
         // Passed in Location (which is a callback interface)
-        AppClient.Loc.newBuilder()
+        Loc aLoc = Loc.newBuilder()
                 .setLat((loc == null) ? 0.0d : loc.getLatitude())
                 .setLong((loc == null) ? 0.0d : loc.getLongitude())
                 .setHorizontalAccuracy((loc == null) ? 0.0d :loc.getAccuracy())
@@ -103,7 +105,8 @@ public class MatchingEngine implements Callable {
                 .setVerticalAccuracy(0d)
                 .setAltitude((loc == null) ? 0.0d : loc.getAltitude())
                 .setCourse((loc == null) ? 0.0d : loc.getBearing())
-                .setSpeed((loc == null) ? 0.0d : loc.getSpeed());
+                .setSpeed((loc == null) ? 0.0d : loc.getSpeed())
+                .build();
 
         mMatchEngineRequest = AppClient.Match_Engine_Request.newBuilder()
                 .setVer(5)
@@ -115,6 +118,7 @@ public class MatchingEngine implements Callable {
                 .setAppId(87654321l) // String again.
                 .setProtocol(ByteString.copyFromUtf8("http")) // This one is appId context sensitive.
                 .setServerPort(ByteString.copyFromUtf8("1234")) // App dependent.
+                .setGpsLocation(aLoc)
                 .build();
 
 
@@ -126,17 +130,23 @@ public class MatchingEngine implements Callable {
         uri.server = "ec2-52-3-246-92.compute-1.amazonaws.com";
         uri.service = "/api/detect";
 
+        AppClient.Match_Engine_Reply reply = null;
         // FIXME: UsePlaintxt means no encryption is enabled to the MatchEngine server!
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
-        Match_Engine_ApiGrpc.Match_Engine_ApiBlockingStub stub = Match_Engine_ApiGrpc.newBlockingStub(channel);
+        try {
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
+            Match_Engine_ApiGrpc.Match_Engine_ApiBlockingStub stub = Match_Engine_ApiGrpc.newBlockingStub(channel);
 
-        AppClient.Match_Engine_Reply reply = stub.findCloudlet(request);
 
+            reply = stub.findCloudlet(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // FIXME: Reply TBD.
-        int ver = reply.getVer();
-        Log.i(TAG, "Version of Match_Engine_Reply: " + ver);
-        Log.i(TAG, "Reply: " + reply.toString());
-
+        if (reply != null) {
+            int ver = reply.getVer();
+            Log.i(TAG, "Version of Match_Engine_Reply: " + ver);
+            Log.i(TAG, "Reply: " + reply.toString());
+        }
         return uri;
     }
 }

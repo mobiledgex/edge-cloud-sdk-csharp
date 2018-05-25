@@ -465,10 +465,6 @@ public class Camera2BasicFragment extends Fragment
 
         mEverAiPoc = new EverAIPoc();
 
-        if (checkLocationPermission() == false) {
-            requestMultiplePermissions(); // Required to gather information needed to find nearby Cloudlets.
-            return; // Ask again later, or put up a dialog that won't dismiss.
-        }
         // Get location:
         FusedLocationProviderClient fusedLocationClient;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
@@ -548,11 +544,11 @@ public class Camera2BasicFragment extends Fragment
             }
         }
 
-        String[] permissionArray;
+        String[] permissionArray = null;
         if (!permissionsNeeded.isEmpty()) {
             permissionArray = permissionsNeeded.toArray(new String[permissionsNeeded.size()]);
         } else {
-            permissionArray = permissions; // Bleh
+            permissionArray = permissions; // Nothing was granted. Ask for all.
         }
 
 
@@ -563,7 +559,6 @@ public class Camera2BasicFragment extends Fragment
             new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } else {
             ActivityCompat.requestPermissions(getActivity(), permissionArray, REQUEST_MULTIPLE_PERMISSION);
-            requestPermissions(permissions, REQUEST_MULTIPLE_PERMISSION);
         }
     }
 
@@ -582,8 +577,6 @@ public class Camera2BasicFragment extends Fragment
             if (numGranted != grantResults.length && (grantResults.length > 0)) {
                 ErrorDialog.newInstance(getString(R.string.request_permission))
                         .show(getChildFragmentManager(), FRAGMENT_DIALOG);
-            } else {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);

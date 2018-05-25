@@ -2,7 +2,6 @@ package com.mobiledgex.mexlibexampleapp;
 
 import java.io.File;
 
-import android.graphics.Rect;
 import android.content.Context;
 
 import java.io.IOException;
@@ -14,6 +13,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+
+import distributed_match_engine.AppClient;
 import com.mobiledgex.matchingengine.MatchingEngine;
 import com.mobiledgex.matchingengine.FindCloudletResponse;
 import android.location.Location;
@@ -23,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import distributed_match_engine.AppClient;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -55,7 +55,7 @@ public class EverAIPoc {
         void onUploadResponse(ArrayList<FaceDetection> detections);
     }
 
-    private Future<FindCloudletResponse> findClosestCloudlet(Context context, /* AppServiceInfo appInfo, */ Location loc) {
+    private Future<FindCloudletResponse> findClosestCloudlet(Context context, Location loc) {
         // Find closest cloudlet:
         MatchingEngine task = new MatchingEngine(context);
         AppClient.Match_Engine_Request req = task.createRequest(loc);

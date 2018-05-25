@@ -1,14 +1,8 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 apply plugin: 'com.google.protobuf'
-
-def grpcVersion = '1.12.0' // CURRENT_GRPC_VERSION
-def protocVersion = '3.5.1-1'
 
 android {
     compileSdkVersion 27
-
-
 
     defaultConfig {
         minSdkVersion 21
@@ -17,7 +11,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -33,12 +26,11 @@ android {
     sourceSets {
         main {
             proto {
-                srcDir '../../../../d-match-engine/dme-proto'
+                srcDir '../../../../sdkproto'
             }
             java {
-                srcDirs 'build/generated/source/proto/debug/grpc' // Debug?
-                srcDirs 'build/generated/source/proto/main/grpc'
-                srcDirs 'build/generated/source/proto/main/java'
+                srcDirs 'build/generated/source/sdkproto/debug/grpc' // Debug?
+                srcDirs 'build/generated/source/sdkproto/debug/javalite' // Debug?
             }
         }
     }
@@ -52,30 +44,15 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     // You need to build grpc-java to obtain these libraries below.
     implementation 'io.grpc:grpc-okhttp:1.12.0' // CURRENT_GRPC_VERSION
     implementation 'io.grpc:grpc-protobuf-lite:1.12.0' // CURRENT_GRPC_VERSION
     implementation 'io.grpc:grpc-stub:1.12.0' // CURRENT_GRPC_VERSION
+    protobuf 'com.google.protobuf:protobuf-java:3.0.2' // FIXME: Timestamp, for lite version: old lib: https://github.com/google/protobuf/issues/1889
     implementation 'javax.annotation:javax.annotation-api:1.2'
 
     // For Coarse Location Services.
     implementation 'com.google.android.gms:play-services-location:11.0.0'
-}
-
-buildscript {
-    repositories {
-        google()
-        jcenter()
-        mavenLocal()
-    }
-    dependencies {
-        // ASSUMES GRADLE 2.12 OR HIGHER. Use plugin version 0.7.5 with earlier
-        // gradle versions
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.3"
-    }
 }
 
 protobuf {
