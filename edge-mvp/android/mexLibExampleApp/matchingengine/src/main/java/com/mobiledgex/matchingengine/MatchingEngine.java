@@ -18,21 +18,12 @@ import io.grpc.ManagedChannelBuilder;
 
 // Concurrency FutureTasks:
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.location.Location;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.internal.http.OkHeaders;
-
 import android.util.Log;
 
 // TODO: GRPC (which needs http/2).
@@ -42,22 +33,29 @@ public class MatchingEngine implements Callable {
     private ManagedChannel mChannel;
     private String host = "192.168.28.162"; // FIXME: Your available external server IP until the real server is up.
     private int port = 50051;
-
-    protected Location mLastLocation;
+    private int mTimeoutInMilliseconds = 200;
 
     AppClient.Match_Engine_Request mMatchEngineRequest;
 
-    public MatchingEngine(Context context) throws SecurityException {
+    public MatchingEngine(Context context, int timeoutInMilliseconds) throws SecurityException {
         if (context == null) {
             throw new IllegalArgumentException("MatchingEngine requires a working application context.");
         }
         this.wContext = new WeakReference<Context>(context);
+        if (timeoutInMilliseconds > 0) {
+            mTimeoutInMilliseconds = timeoutInMilliseconds;
+        }
     }
 
     @Override
     public FindCloudletResponse call() {
         FindCloudletResponse uri = findCloudlet(mMatchEngineRequest);
         return uri;
+    }
+
+    public boolean setRequest(Match_Engine_Request request) {
+        mMatchEngineRequest = request;
+        return true;
     }
 
     /**
@@ -108,10 +106,10 @@ public class MatchingEngine implements Callable {
                 .setSpeed((loc == null) ? 0.0d : loc.getSpeed())
                 .build();
 
-        mMatchEngineRequest = AppClient.Match_Engine_Request.newBuilder()
+        Match_Engine_Request request = AppClient.Match_Engine_Request.newBuilder()
                 .setVer(5)
                 .setIdType(id_type)
-                .setId(id)
+                .setId((id == null) ? "" : id)
                 .setCarrier(123456l) // String?
                 .setTower(cid) // cid and lac.
                 .setTower(123456l)
@@ -122,7 +120,7 @@ public class MatchingEngine implements Callable {
                 .build();
 
 
-        return mMatchEngineRequest;
+        return request;
     }
 
     private FindCloudletResponse findCloudlet(AppClient.Match_Engine_Request request) {
@@ -132,14 +130,20 @@ public class MatchingEngine implements Callable {
 
         AppClient.Match_Engine_Reply reply = null;
         // FIXME: UsePlaintxt means no encryption is enabled to the MatchEngine server!
+        ManagedChannel channel = null;
         try {
-            ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
+            channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
             Match_Engine_ApiGrpc.Match_Engine_ApiBlockingStub stub = Match_Engine_ApiGrpc.newBlockingStub(channel);
 
 
-            reply = stub.findCloudlet(request);
+            reply = stub.withDeadlineAfter(mTimeoutInMilliseconds, TimeUnit.MILLISECONDS)
+                        .findCloudlet(request);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (channel != null) {
+                channel.shutdown();
+            }
         }
         // FIXME: Reply TBD.
         if (reply != null) {

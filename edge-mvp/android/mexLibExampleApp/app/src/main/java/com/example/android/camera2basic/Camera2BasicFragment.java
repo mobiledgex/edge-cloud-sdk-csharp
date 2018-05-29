@@ -16,6 +16,7 @@
 
 package com.example.android.camera2basic;
 import com.mobiledgex.mexlibexampleapp.EverAIPoc;
+import com.mobiledgex.mexlibexampleapp.EverAIRequest;
 import com.mobiledgex.mexlibexampleapp.FaceDetection;
 import com.mobiledgex.mexlibexampleapp.R;
 
@@ -23,7 +24,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.OnCompleteListener;
-
 
 import android.location.Location;
 
@@ -56,6 +56,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -68,8 +69,8 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.graphics.Rect;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,10 +80,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -90,7 +92,11 @@ public class Camera2BasicFragment extends Fragment
     /**
      * EverAI POC
      */
+    private Location mLocation;
     private EverAIPoc mEverAiPoc;
+    private EverAIRequest mEverAIRequest;
+    private ArrayList<FaceDetection> mDetections;
+    private EverAIPoc.OnUploadResponseListener mEverAIUploadListener = null;
 
     /**
      * Conversion from screen rotation to JPEG orientation.
@@ -186,6 +192,11 @@ public class Camera2BasicFragment extends Fragment
     private AutoFitTextureView mTextureView;
 
     /**
+     * Parent Layout to add Views at runtime.
+     */
+    private RelativeLayout mLayoutViewGroup;
+
+    /**
      * A {@link CameraCaptureSession } for camera preview.
      */
     private CameraCaptureSession mCaptureSession;
@@ -242,6 +253,8 @@ public class Camera2BasicFragment extends Fragment
      * A {@link Handler} for running tasks in the background.
      */
     private Handler mBackgroundHandler;
+    // We can't update the captured image until it's uploaded.
+    private ReentrantLock mFileLock = new ReentrantLock();
 
     /**
      * An {@link ImageReader} that handles still image capture.
@@ -262,7 +275,10 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+            if (mEverAIRequest == null) {
+                mEverAIRequest = new EverAIRequest(getContext(), mLocation, mFile, mEverAIUploadListener);
+            }
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile, mEverAiPoc, mEverAIRequest));
         }
 
     };
@@ -315,11 +331,12 @@ public class Camera2BasicFragment extends Fragment
                 case STATE_WAITING_LOCK: {
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
                     // AF doesn't work on emu? Just capture in emulator.
-                    //captureStillPicture();
+
+                    /*
                     if (fooCount%3 == 0)
                         captureStillPicture();
                     fooCount++; // Emulated autofocus hack.
-                    fooCount %= 3;
+                    fooCount %= 3;*/
 
                     if (afState == null) {
                         captureStillPicture();
@@ -448,14 +465,91 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            requestMultiplePermissions();
+            // FIXME: Should not be here.
+            Log.i(TAG, "Not Implemented: A 'Dangerous' Permissions splash screen should gate the start of this app. The app will throw a Security exception otherwise.");
+            return null;
+        } else {
+            mLayoutViewGroup = (RelativeLayout) inflater.inflate(R.layout.fragment_camera2_basic, container, false);
+            return mLayoutViewGroup;
+        }
     }
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.picture).setOnClickListener(this);
         view.findViewById(R.id.info).setOnClickListener(this);
-        mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+        mTextureView = view.findViewById(R.id.texture);
+
+        mEverAiPoc = new EverAIPoc(mFileLock);
+        mEverAIUploadListener = new EverAIPoc.OnUploadResponseListener() {
+            @Override
+            public void onUploadResponse(final int img_width, final int img_height, final ArrayList<FaceDetection> detections) {
+                if (detections == null) {
+                    Log.i("Camera2BasicFragment","No Faces Found.");
+                    return;
+                }
+
+                final Activity activity = getActivity();
+                final ArrayList<FaceDetection> detects = detections;
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (FaceDetection face : detections) {
+                            System.out.println(face.toString());
+
+                            View d = new View(activity);
+                            mLayoutViewGroup.getLayoutParams();
+                            double scaleX = 1.0;
+                            double scaleY = 1.0;
+                            double scale = 1.0;
+                            int x, y, width, height;
+
+                            // Face rects are relative (0,0) offsets to the Camera Texture
+                            double view_width = (double)mTextureView.getWidth();
+                            double view_height = (double)mTextureView.getHeight();
+                            if (view_width < img_width && img_width > 0) {
+                                scaleX = view_width / (double)img_width;
+                            }
+                            if (view_height < img_height && img_height > 0) {
+                                scaleY = view_height / (double)img_height;
+                            }
+                            if (scaleX <= scaleY) {
+                                scale = scaleY;
+                            } else if (scaleY < scaleX) {
+                                scale = scaleX;
+                            }
+
+                            if (mTextureView.getHeight() < mTextureView.getWidth()) {
+                                x = (int) (scale * face.x) + mTextureView.getLeft();
+                                y = (int) (scale * face.y) + mTextureView.getTop();
+                                width = (int) (scale * face.width);
+                                height = (int) (scale * face.height);
+                            } else { // Rotate coordinates, portrait.
+                                x = (int) (scale * face.y) + mTextureView.getLeft();
+                                y = (int) (scale * face.x) + mTextureView.getTop();
+                                width = (int) (scale * face.height);
+                                height = (int) (scale * face.width);
+                            }
+
+                            CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+                                    width, height);
+                            params.leftMargin = x;
+                            params.topMargin = y;
+                            d.setLayoutParams(params);
+                            d.setBackground(ContextCompat.getDrawable(
+                                    activity,
+                                    R.drawable.detection_box));
+                            mLayoutViewGroup.addView(d);
+                        }
+                    }
+                });
+
+            }
+        };
     }
 
     @Override
@@ -463,9 +557,7 @@ public class Camera2BasicFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
 
-        mEverAiPoc = new EverAIPoc();
-
-        // Get location:
+        // Get location, perhaps periodically.
         FusedLocationProviderClient fusedLocationClient;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         try {
@@ -475,29 +567,12 @@ public class Camera2BasicFragment extends Fragment
                     @Override
                     public void onComplete(Task<Location> location) {
                         if (location != null) {
-                            mEverAiPoc.setLocation(location.getResult());
+                            mLocation = location.getResult();
                         }
                     }
                 });
         } catch (SecurityException se) {
             se.printStackTrace();
-        }
-    }
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
-    }
-
-    public void askForLocationPermissions() {
-        if (checkLocationPermission() == false) {
-            ActivityCompat.requestPermissions(
-                    getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_MULTIPLE_PERMISSION);
         }
     }
 
@@ -702,8 +777,10 @@ public class Camera2BasicFragment extends Fragment
      * Opens the camera specified by {@link Camera2BasicFragment#mCameraId}.
      */
     private void openCamera(int width, int height) {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
+        if ( // ACCESS_FINE_LOCATION is also possible, if your app wants finer location data.
+            ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             requestMultiplePermissions();
             return;
         }
@@ -766,6 +843,8 @@ public class Camera2BasicFragment extends Fragment
             mBackgroundThread.join();
             mBackgroundThread = null;
             mBackgroundHandler = null;
+            mEverAIRequest = null;
+            mEverAiPoc = null;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -912,59 +991,48 @@ public class Camera2BasicFragment extends Fragment
      */
     private void captureStillPicture() {
         try {
-            final Activity activity = getActivity();
-            if (null == activity || null == mCameraDevice) {
-                return;
-            }
-            // This is the CaptureRequest.Builder that we use to take a picture.
-            final CaptureRequest.Builder captureBuilder =
-                    mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureBuilder.addTarget(mImageReader.getSurface());
-
-            // Use the same AE and AF modes as the preview.
-            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-            setAutoFlash(captureBuilder);
-
-            // Orientation
-            int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
-
-            CameraCaptureSession.CaptureCallback CaptureCallback
-                    = new CameraCaptureSession.CaptureCallback() {
-
-                @Override
-                public void onCaptureCompleted(@NonNull CameraCaptureSession session,
-                                               @NonNull CaptureRequest request,
-                                               @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFile);
-                    Log.d(TAG, mFile.toString());
-
-                    try {
-                        mEverAiPoc.uploadToEverAI(getContext(), mFile, new EverAIPoc.OnUploadResponseListener() {
-                            @Override
-                            public void onUploadResponse(ArrayList<FaceDetection> detections) {
-                                if (detections == null) {
-                                    Log.i("Camera2BasicFragment","No Faces Found.");
-                                    return;
-                                }
-                                for (FaceDetection face : detections) {
-                                    System.out.println(face.toString());
-                                }
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace(); // Hm..
-                    }
-                    unlockFocus();
+            // Don't capture anything if something is using the filelock.
+            if (mFileLock.tryLock()) {
+                final Activity activity = getActivity();
+                if (null == activity || null == mCameraDevice) {
+                    return;
                 }
-            };
+                // This is the CaptureRequest.Builder that we use to take a picture.
+                final CaptureRequest.Builder captureBuilder =
+                        mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                captureBuilder.addTarget(mImageReader.getSurface());
 
-            mCaptureSession.stopRepeating();
-            mCaptureSession.abortCaptures();
-            mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
+                // Use the same AE and AF modes as the preview.
+                captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+                        CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                setAutoFlash(captureBuilder);
+
+                // Orientation
+                int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+                captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
+
+                CameraCaptureSession.CaptureCallback CaptureCallback
+                        = new CameraCaptureSession.CaptureCallback() {
+
+                    @Override
+                    public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+                                                   @NonNull CaptureRequest request,
+                                                   @NonNull TotalCaptureResult result) {
+                        showToast("Saved: " + mFile);
+                        Log.d(TAG, mFile.toString());
+
+                        unlockFocus();
+                    }
+                };
+
+                mCaptureSession.stopRepeating();
+                mCaptureSession.abortCaptures();
+                mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
+            }
         } catch (CameraAccessException e) {
             e.printStackTrace();
+        } finally {
+            mFileLock.unlock();
         }
     }
 
@@ -1043,14 +1111,20 @@ public class Camera2BasicFragment extends Fragment
          * The file we save the image into.
          */
         private final File mFile;
+        private final EverAIPoc mEverAI;
+        private final EverAIRequest mRequest;
 
-        ImageSaver(Image image, File file) {
+        ImageSaver(Image image, File file, EverAIPoc everaipoc, EverAIRequest request) {
             mImage = image;
             mFile = file;
+            mEverAI = everaipoc;
+            mRequest = request;
         }
 
         @Override
         public void run() {
+            int width = mImage.getWidth();
+            int height = mImage.getHeight();
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
@@ -1069,6 +1143,12 @@ public class Camera2BasicFragment extends Fragment
                         e.printStackTrace();
                     }
                 }
+            }
+
+            // Stage 2: Write to EverAI
+            if (mRequest != null && mRequest.getListener() != null) {
+                mEverAI.uploadToEverAI(mRequest.getContext(), mRequest.getLocation(), mFile,
+                        width, height, mRequest.getListener());
             }
         }
 

@@ -4,10 +4,12 @@ import java.io.File;
 
 import android.content.Context;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,87 +35,107 @@ import okhttp3.MultipartBody;
 import okhttp3.Response;
 import okhttp3.MediaType;
 
+
 import android.util.Log;
+
+
+import java.util.concurrent.locks.ReentrantLock;
 
 public class EverAIPoc {
 
     public static final String TAG = "EverAIPoc";
 
-    private static final ExecutorService threadpool = Executors.newFixedThreadPool(1);
+    private static final ExecutorService threadpool = Executors.newFixedThreadPool(2);
 
-    public Location getLocation() {
-        return mLocation;
+    private ReentrantLock mFileLock;
+
+    public EverAIPoc(ReentrantLock reentrantLock) {
+        mFileLock = reentrantLock;
     }
-
-    public void setLocation(Location mLocation) {
-        this.mLocation = mLocation;
-    }
-
-    Location mLocation = null;
 
     public interface OnUploadResponseListener {
-        void onUploadResponse(ArrayList<FaceDetection> detections);
+        void onUploadResponse(final int width, final int height, final ArrayList<FaceDetection> detections);
     }
 
     private Future<FindCloudletResponse> findClosestCloudlet(Context context, Location loc) {
         // Find closest cloudlet:
-        MatchingEngine task = new MatchingEngine(context);
+        MatchingEngine task = new MatchingEngine(context, 40000);
         AppClient.Match_Engine_Request req = task.createRequest(loc);
+        task.setRequest(req);
 
         Future<FindCloudletResponse> future = threadpool.submit(task);
+
         return future;
     }
 
-    public void uploadToEverAI(Context context, File file, final OnUploadResponseListener onUploadResponseListener) {
+    /**
+     * uploadToEverAI finds the closest cloudlet based on context and location, and responds with the passed upload listener.
+     * @param context
+     * @param location
+     * @param file
+     * @param onUploadResponseListener
+     * @return
+     */
+    public void uploadToEverAI(Context context, Location location, File file,
+                               final int width, final int height, final OnUploadResponseListener onUploadResponseListener) {
+
         try {
-            // Make request object, and pass non-null.
-            Future<FindCloudletResponse> future = findClosestCloudlet(context, mLocation);
-            FindCloudletResponse response = future.get(); // await answer.
+            if (mFileLock.tryLock()) {
+                // Make request object, and pass non-null.
+                Future<FindCloudletResponse> future = findClosestCloudlet(context, location); // TODO: Probably don't do this every request.
+                FindCloudletResponse response = future.get(); // await answer.
+                Log.i(TAG, "YYYYYYYYYY Find Cloudlet Response " + response);
 
-            if (response == null) {
-                throw new Exception("No response from Matching Engine! Aborting.");
-            }
 
-            // HTTP: Post file, with onResponse() callback:
-            if (file == null || !file.exists()) {
-                throw new Exception("For some reason, there's no file!");
-            }
-            System.out.println("File size: " + file.length());
-            URL url = new URL("http://" + response.server + response.service);
-            OkHttpClient client = new OkHttpClient();
-
-            MediaType type = MediaType.parse("image/jpeg");
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("image", file.getName(),
-                            RequestBody.create(type, file))
-                    .build();
-
-            Request req = new Request.Builder()
-                    .url(url)
-                    .post(requestBody)
-                    .build();
-            client.newCall(req).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    call.cancel();
+                if (response == null) {
+                    //throw new Exception("No response from Matching Engine! Aborting.");
                 }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    final String faceRectStr = response.body().string();
-                    ArrayList<FaceDetection> detections = GetRectangles(faceRectStr);
-                    onUploadResponseListener.onUploadResponse(detections);
+                // HTTP: Post file, with onResponse() callback:
+                if (file == null || !file.exists()) {
+                    throw new Exception("For some reason, there's no file!");
                 }
-            });
+                System.out.println("File size: " + file.length());
+                URL url = new URL("http://" + response.server + response.service);
+                OkHttpClient client = new OkHttpClient();
+
+                MediaType type = MediaType.parse("image/jpeg");
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("image", file.getName(),
+                                RequestBody.create(type, file))
+                        .build();
+
+                Request req = new Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+                client.newCall(req).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        call.cancel();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        final String faceRectStr = response.body().string();
+                        ArrayList<FaceDetection> detections = GetRectangles(faceRectStr);
+                        onUploadResponseListener.onUploadResponse(width, height, detections);
+                    }
+                });
+
+            }
+
         } catch (MalformedURLException mue) {
             mue.printStackTrace();
-        }catch (InterruptedException ie) {
+        } catch (InterruptedException ie) {
             ie.printStackTrace();
         } catch (ExecutionException ee) {
             ee.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            mFileLock.unlock();
         }
 
     }
