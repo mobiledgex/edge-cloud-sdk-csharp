@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.google.protobuf'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 27
@@ -8,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -21,6 +22,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     sourceSets {
@@ -76,6 +81,23 @@ protobuf {
                     option 'lite'
                 }
             }
+        }
+    }
+}
+
+publishing {
+    // Publish to local repository
+    repositories {
+        mavenLocal() // ~/.m2
+    }
+
+    publications {
+        maven(MavenPublication) {
+            // AAR of each library
+            version android.defaultConfig.versionName
+            groupId "com.mobiledgex.matchingengine"
+            artifactId "${project.name}"
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
         }
     }
 }

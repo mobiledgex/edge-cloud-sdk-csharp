@@ -32,9 +32,13 @@ dependencies {
     // For Coarse Location Services.
     implementation 'com.google.android.gms:play-services-location:11.0.0'
 
-    implementation project(':matchingengine')
+    // Use Maven repository
+    //implementation 'com.mobiledgex.matchingengine:matchingengine:0.0.1'
+    // Use mexLibExampleApp project copy:
+    implementation project(":matchingengine")
 
 }
 repositories {
+    mavenLocal()
     mavenCentral()
 }

@@ -59,11 +59,15 @@ public class MatchingEngine implements Callable {
     }
 
     /**
-     * The library itself will not directly ask for permissions, the application should.
+     * The library itself will not directly ask for permissions, the application should before use.
      * This keeps responsibilities managed clearly in one spot under the app's control.
      */
     public Match_Engine_Request createRequest(Location loc) throws SecurityException {
         Context context = wContext.get();
+
+        if (context == null) {
+            throw new IllegalStateException("Context is missing. Match_Engine_Request cannot retrieve data to create request.");
+        }
 
         // Operator
         TelephonyManager telManager = (TelephonyManager)wContext.get().getSystemService(Context.TELEPHONY_SERVICE);
