@@ -7,13 +7,13 @@ CURL_URL := https://www.nuget.org/api/v2/package/Grpc.Tools
 PROTOC := protoc
 # Run "brew install coreutils" to get "grealpath" for protoc's requirement of absolute paths
 ABSOLUTEPATH := $(shell grealpath ../..)
-DME_PROTOS_PATH = $(ABSOLUTEPATH)/dme-protos/dme
-THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/dme-protos/third_party
+DME_PROTO_PATH = $(ABSOLUTEPATH)/edge-proto/dme
+THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/edge-proto/third_party
 
 VSPROJECTROOT := MatchingEngineSDK
 APPCLIENTOUT := $(VSPROJECTROOT)/MatchingEngineGrpcLibrary
 BINOUT := $(APPCLIENTOUT)/bin
-PROTO_INCLUDE_DIRECTORIES := $(DME_PROTOS_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis
+PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis
 
 PROTO_INCLUDE_FLAGS += $(addprefix --proto_path ,$(PROTO_INCLUDE_DIRECTORIES))
 
@@ -42,7 +42,7 @@ build-proto:
 	@echo Absolute Path for Proto files are: $(ABSOLUTEPATH)
 	mkdir -p $(APPCLIENTOUT)
 	@echo Generating GRPC source code...
-	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPCLIENTOUT) --grpc_out $(APPCLIENTOUT) $(DME_PROTOS_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/grpc_csharp_plugin
+	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPCLIENTOUT) --grpc_out $(APPCLIENTOUT) $(DME_PROTO_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/grpc_csharp_plugin
 	mkdir -p $(APPCLIENTOUT)/google/api
 	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPCLIENTOUT)/google/api --grpc_out $(APPCLIENTOUT) $(THIRD_PARTY_PROTOS_PATH)/googleapis/google/api/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/grpc_csharp_plugin
 
@@ -60,7 +60,7 @@ build-release:
 
 publish:
 	echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
-	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpcLibrary.1.4.7.nupkg -Source $(NUGET_RELEASE_SERVER) | tee $(PUBLISHLOG))
+	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpcLibrary.1.4.8.nupkg -Source $(NUGET_RELEASE_SERVER) | tee $(PUBLISHLOG))
 	cat $(PUBLISHLOG)
 
 
