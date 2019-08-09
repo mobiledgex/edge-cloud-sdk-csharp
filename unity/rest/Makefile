@@ -13,7 +13,7 @@ NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/artifactory/nuget-rel
 all: packageRestore build-all
 
 packageRestore:
-	dotnet restore
+	nuget restore
 
 build-all: build-debug build-release
 

@@ -12,8 +12,8 @@ THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/edge-proto/third_party
 
 GRPC_SDK_VERSION := 1.4.8
 VSPROJECTROOT := MatchingEngineSDK
-APPCLIENTOUT := $(VSPROJECTROOT)/MatchingEngineGrpcLibrary
-BINOUT := $(APPCLIENTOUT)/bin
+APPLIBBASE := $(VSPROJECTROOT)/MatchingEngineGrpcLibrary
+BINOUT := $(APPLIBBASE)/bin
 PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis
 
 PROTO_INCLUDE_FLAGS += $(addprefix --proto_path ,$(PROTO_INCLUDE_DIRECTORIES))
@@ -35,17 +35,17 @@ NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/artifactory/nuget-rel
 all: packageRestore edge-proto-check build-proto build-all
 
 packageRestore:
-	cd $(VSPROJECTROOT) && dotnet restore
+	cd $(VSPROJECTROOT) && nuget restore
 
 build-all: build-proto build-debug build-release
 
 build-proto:
 	@echo Absolute Path for Proto files are: $(ABSOLUTEPATH)
-	mkdir -p $(APPCLIENTOUT)
+	mkdir -p $(APPLIBBASE)
 	@echo Generating GRPC source code...
-	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPCLIENTOUT) --grpc_out $(APPCLIENTOUT) $(DME_PROTO_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/grpc_csharp_plugin
-	mkdir -p $(APPCLIENTOUT)/google/api
-	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPCLIENTOUT)/google/api --grpc_out $(APPCLIENTOUT) $(THIRD_PARTY_PROTOS_PATH)/googleapis/google/api/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/grpc_csharp_plugin
+	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPLIBBASE) --grpc_out $(APPLIBBASE) $(DME_PROTO_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/grpc_csharp_plugin
+	mkdir -p $(APPLIBBASE)/google/api
+	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPLIBBASE)/google/api --grpc_out $(APPLIBBASE) $(THIRD_PARTY_PROTOS_PATH)/googleapis/google/api/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/grpc_csharp_plugin
 
 build-debug:
 	@echo Making Debug Library...
@@ -57,14 +57,14 @@ build-release:
 
 publish:
 	echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
-	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpcLibrary.1.4.8.nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
+	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpcLibrary.$(GRPC_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
 
 
 clean:
-ifneq ("$(APPCLIENTOUT)", "/")
-	rm -rf $(APPCLIENTOUT)/bin
-	rm -rf $(APPCLIENTOUT)/obj
+ifneq ("$(APPLIBBASE)", "/bin")
+	rm -rf $(APPLIBBASE)/bin
 endif
+	rm -rf $(APPLIBBASE)/obj
 
 edge-proto-check:
 ifneq ("$(wildcard $(DME_PROTO_PATH)/app-client.proto)", "")
@@ -75,7 +75,8 @@ else
 endif
 
 test: build-release
-	@echo "Basic test, using the remote publshed GRPC library, provided local client depedency isn't set to use the local built file: "
+	cd SampleApps && nuget restore
+	@echo "Basic test, using the remote publshed library, provided local client depedency isn't set to use the local built file: "
 	nuget install -Source MobiledgeX Mobiledgex.MatchingEngineGrpcLibrary -Version $(GRPC_SDK_VERSION) -OutputDir packages
 	$(shell MSBuild SampleApps/SampleApps.sln /p:Configuration=Release >> $(SOLUTIONLOG))
 	dotnet SampleApps/MeGrpcSampleConsoleApp/bin/Release/netcoreapp2.1/MeGrpcSampleConsoleApp.dll
