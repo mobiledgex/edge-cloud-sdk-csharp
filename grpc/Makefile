@@ -10,6 +10,7 @@ ABSOLUTEPATH := $(shell grealpath ../..)
 DME_PROTO_PATH = $(ABSOLUTEPATH)/edge-proto/dme
 THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/edge-proto/third_party
 
+GRPC_SDK_VERSION := 1.4.8
 VSPROJECTROOT := MatchingEngineSDK
 APPCLIENTOUT := $(VSPROJECTROOT)/MatchingEngineGrpcLibrary
 BINOUT := $(APPCLIENTOUT)/bin
@@ -31,7 +32,7 @@ PUBLISHLOG := /tmp/nuget_out.log
 
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/artifactory/nuget-releases/
 
-all: packageRestore build-proto build-all
+all: packageRestore edge-proto-check build-proto build-all
 
 packageRestore:
 	cd $(VSPROJECTROOT) && dotnet restore
@@ -48,21 +49,33 @@ build-proto:
 
 build-debug:
 	@echo Making Debug Library...
-	$(shell MSBuild $(VSPROJECTROOT)/MatchingEngineSDK.sln /p:Configuration=Debug > $(SOLUTIONLOG))
-	# Print unbounded log to screen:
-	cat $(SOLUTIONLOG)
+	$(shell MSBuild $(VSPROJECTROOT)/MatchingEngineSDK.sln /p:Configuration=Debug >> $(SOLUTIONLOG))
 
 build-release:
 	@echo Making Release Library...
-	$(shell MSBuild $(VSPROJECTROOT)/MatchingEngineSDK.sln /p:Configuration=Release > $(SOLUTIONLOG))
-	# Print unbounded log to screen:
-	cat $(SOLUTIONLOG)
+	$(shell MSBuild $(VSPROJECTROOT)/MatchingEngineSDK.sln /p:Configuration=Release >> $(SOLUTIONLOG))
 
 publish:
 	echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
-	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpcLibrary.1.4.8.nupkg -Source $(NUGET_RELEASE_SERVER) | tee $(PUBLISHLOG))
-	cat $(PUBLISHLOG)
+	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpcLibrary.1.4.8.nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
 
 
 clean:
-	rm -rf $(BINOUT)
+ifneq ("$(APPCLIENTOUT)", "/")
+	rm -rf $(APPCLIENTOUT)/bin
+	rm -rf $(APPCLIENTOUT)/obj
+endif
+
+edge-proto-check:
+ifneq ("$(wildcard $(DME_PROTO_PATH)/app-client.proto)", "")
+	@echo "Found a proto in the proto path. Good."
+else
+	@echo "Sanity check: Missing edge-proto repository file!"
+	@echo "Expected edge-proto.git repo clone at DME_PROTO_PATH outside at the same directory level this git repo here: $(DME_PROTO_PATH)"
+endif
+
+test: build-release
+	@echo "Basic test, using the remote publshed GRPC library, provided local client depedency isn't set to use the local built file: "
+	nuget install -Source MobiledgeX Mobiledgex.MatchingEngineGrpcLibrary -Version $(GRPC_SDK_VERSION) -OutputDir packages
+	$(shell MSBuild SampleApps/SampleApps.sln /p:Configuration=Release >> $(SOLUTIONLOG))
+	dotnet SampleApps/MeGrpcSampleConsoleApp/bin/Release/netcoreapp2.1/MeGrpcSampleConsoleApp.dll
