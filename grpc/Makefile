@@ -19,9 +19,15 @@ PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/google
 PROTO_INCLUDE_FLAGS += $(addprefix --proto_path ,$(PROTO_INCLUDE_DIRECTORIES))
 
 # Host OS platform tools:
-MACOS_PLATFORM := macosx_x64
-LINUX_PLATFORM := linux_x64
-PLATFORM := $(MACOS_PLATFORM)
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Linux)
+	PLATFORM := linux_x64
+else ifeq ($(UNAME_S), Darwin)
+	PLATFORM := macosx_x64
+else
+	"Unsupported platform"
+	exit 1
+endif
 
 GETOUTPUT := $(shell mkdir -p $(TEMP_DIR) && cd $(TEMP_DIR) && curl -sL $(CURL_URL) > tmp.zip; unzip tmp.zip && cd .. && cp -r tmp/tools . && rm -rf tmp && cd ../..)
 OUTPUT := $(shell chmod 750 packages/$(GRPCTOOLS_VERSION)/tools/$(PLATFORM)/protoc)
