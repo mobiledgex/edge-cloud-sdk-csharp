@@ -151,7 +151,8 @@ namespace RestSample
                   ", protocol: " + p.proto +
                   ", public_port: " + p.public_port +
                   ", internal_port: " + p.internal_port +
-                  ", path_prefix: " + p.path_prefix);
+                  ", path_prefix: " + p.path_prefix +
+                  ", end_port: " + p.end_port);
           }
         }
         catch (HttpException httpe)
