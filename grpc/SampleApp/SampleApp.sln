@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeGrpcSampleConsoleApp", "MeGrpcSampleConsoleApp\MeGrpcSampleConsoleApp.csproj", "{F78B096E-3F71-4224-A34B-2A2747137DC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "SampleApp.csproj", "{F78B096E-3F71-4224-A34B-2A2747137DC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

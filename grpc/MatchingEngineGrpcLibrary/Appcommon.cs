@@ -24,17 +24,17 @@ namespace DistributedMatchEngine {
     static AppcommonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZSKQ",
+            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZSKi",
             "AQoHQXBwUG9ydBIvCgVwcm90bxgBIAEoDjIgLmRpc3RyaWJ1dGVkX21hdGNo",
             "X2VuZ2luZS5MUHJvdG8SFQoNaW50ZXJuYWxfcG9ydBgCIAEoBRITCgtwdWJs",
             "aWNfcG9ydBgDIAEoBRITCgtwYXRoX3ByZWZpeBgEIAEoCRITCgtmcWRuX3By",
-            "ZWZpeBgFIAEoCSpRCgZMUHJvdG8SEwoPTF9QUk9UT19VTktOT1dOEAASDwoL",
-            "TF9QUk9UT19UQ1AQARIPCgtMX1BST1RPX1VEUBACEhAKDExfUFJPVE9fSFRU",
-            "UBADYgZwcm90bzM="));
+            "ZWZpeBgFIAEoCRIQCghlbmRfcG9ydBgGIAEoBSpRCgZMUHJvdG8SEwoPTF9Q",
+            "Uk9UT19VTktOT1dOEAASDwoLTF9QUk9UT19UQ1AQARIPCgtMX1BST1RPX1VE",
+            "UBACEhAKDExfUFJPVE9fSFRUUBADYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "PathPrefix", "FqdnPrefix" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "PathPrefix", "FqdnPrefix", "EndPort" }, null, null, null)
           }));
     }
     #endregion
@@ -99,6 +99,7 @@ namespace DistributedMatchEngine {
       publicPort_ = other.publicPort_;
       pathPrefix_ = other.pathPrefix_;
       fqdnPrefix_ = other.fqdnPrefix_;
+      endPort_ = other.endPort_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -177,6 +178,20 @@ namespace DistributedMatchEngine {
       }
     }
 
+    /// <summary>Field number for the "end_port" field.</summary>
+    public const int EndPortFieldNumber = 6;
+    private int endPort_;
+    /// <summary>
+    /// A non-zero end port indicates this is a port range from internal port to end port, inclusive.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int EndPort {
+      get { return endPort_; }
+      set {
+        endPort_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as AppPort);
@@ -195,6 +210,7 @@ namespace DistributedMatchEngine {
       if (PublicPort != other.PublicPort) return false;
       if (PathPrefix != other.PathPrefix) return false;
       if (FqdnPrefix != other.FqdnPrefix) return false;
+      if (EndPort != other.EndPort) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -206,6 +222,7 @@ namespace DistributedMatchEngine {
       if (PublicPort != 0) hash ^= PublicPort.GetHashCode();
       if (PathPrefix.Length != 0) hash ^= PathPrefix.GetHashCode();
       if (FqdnPrefix.Length != 0) hash ^= FqdnPrefix.GetHashCode();
+      if (EndPort != 0) hash ^= EndPort.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -239,6 +256,10 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(42);
         output.WriteString(FqdnPrefix);
       }
+      if (EndPort != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(EndPort);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -261,6 +282,9 @@ namespace DistributedMatchEngine {
       }
       if (FqdnPrefix.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(FqdnPrefix);
+      }
+      if (EndPort != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(EndPort);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -288,6 +312,9 @@ namespace DistributedMatchEngine {
       if (other.FqdnPrefix.Length != 0) {
         FqdnPrefix = other.FqdnPrefix;
       }
+      if (other.EndPort != 0) {
+        EndPort = other.EndPort;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -300,7 +327,7 @@ namespace DistributedMatchEngine {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            proto_ = (global::DistributedMatchEngine.LProto) input.ReadEnum();
+            Proto = (global::DistributedMatchEngine.LProto) input.ReadEnum();
             break;
           }
           case 16: {
@@ -317,6 +344,10 @@ namespace DistributedMatchEngine {
           }
           case 42: {
             FqdnPrefix = input.ReadString();
+            break;
+          }
+          case 48: {
+            EndPort = input.ReadInt32();
             break;
           }
         }

@@ -504,7 +504,7 @@ namespace DistributedMatchEngine {
       }
       if (other.timestamp_ != null) {
         if (timestamp_ == null) {
-          timestamp_ = new global::DistributedMatchEngine.Timestamp();
+          Timestamp = new global::DistributedMatchEngine.Timestamp();
         }
         Timestamp.MergeFrom(other.Timestamp);
       }
@@ -549,9 +549,9 @@ namespace DistributedMatchEngine {
           }
           case 66: {
             if (timestamp_ == null) {
-              timestamp_ = new global::DistributedMatchEngine.Timestamp();
+              Timestamp = new global::DistributedMatchEngine.Timestamp();
             }
-            input.ReadMessage(timestamp_);
+            input.ReadMessage(Timestamp);
             break;
           }
         }
