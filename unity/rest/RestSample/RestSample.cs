@@ -199,7 +199,7 @@ namespace RestSample
           };
           var requestList = CreateQosPositionList(firstLoc, 45, 2, 0.1);
 
-          var qosPositionKpiRequest = me.CreateQosPositionKpiRequest(requestList);
+          var qosPositionKpiRequest = me.CreateQosPositionRequest(requestList);
           QosPositionKpiStreamReply qosPositionKpiStreamReply = await me.GetQosPositionKpi(host, port, qosPositionKpiRequest); // FIXME: Stream of objects
 
           if (qosPositionKpiStreamReply.result == null || qosPositionKpiStreamReply.error != null)
