@@ -13,7 +13,7 @@ namespace DistributedMatchEngine
   }
 
   [DataContract]
-  public class QosPositionKpiRequest
+  public class QosPositionRequest
   {
     // API version
     [DataMember]

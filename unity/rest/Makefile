@@ -7,7 +7,7 @@ BINOUT := $(APPLIBBASE)/lib
 SOLUTIONLOG := /tmp/$(VSPROJECTROOT)_out.log
 PUBLISHLOG := /tmp/nuget_out.log
 
-REST_SDK_VERSION=1.4.9
+REST_SDK_VERSION=1.4.10
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/artifactory/nuget-releases/
 
 all: packageRestore build-all
@@ -37,6 +37,6 @@ endif
 
 test: build-release
 	@echo "Basic test, using the remote publshed library, provided local client depedency isn't set to use the local built file: "
-	nuget install -Source MobiledgeX Mobiledgex.MatchingEngineRestSDKLibrary -Version $(REST_SDK_VERSION) -OutputDir packages
+	nuget install -Source MobiledgeX Mobiledgex.MatchingEngineUnityRestSDKLibrary -Version $(REST_SDK_VERSION) -OutputDir packages
 	$(shell MSBuild RestSample/RestSample.sln /p:Configuration=Release >> $(SOLUTIONLOG))
 	dotnet RestSample/bin/Release/netcoreapp2.1/RestSample.dll
