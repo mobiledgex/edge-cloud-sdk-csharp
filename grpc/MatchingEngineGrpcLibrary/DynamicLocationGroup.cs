@@ -314,7 +314,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 40: {
-            ackType_ = (global::DistributedMatchEngine.DlgMessage.Types.DlgAck) input.ReadEnum();
+            AckType = (global::DistributedMatchEngine.DlgMessage.Types.DlgAck) input.ReadEnum();
             break;
           }
           case 50: {

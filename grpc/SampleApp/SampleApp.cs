@@ -92,9 +92,20 @@ namespace MexGrpcSampleConsoleApp
       Console.WriteLine("VerifyLocation Accuracy: " + verifyResponse.GpsLocationAccuracyKm);
 
       // Blocking GRPC call:
-      var findCloudletResponse = FindCloudlet();
-      Console.WriteLine("FindCloudlet Status: " + findCloudletResponse.Status);
-      Console.WriteLine("FindCloudlet Response: " + findCloudletResponse);
+      var findCloudletReply = FindCloudlet();
+      Console.WriteLine("FindCloudlet Status: " + findCloudletReply.Status);
+      // appinst server end port might not exist:
+      foreach (AppPort p in findCloudletReply.Ports)
+      {
+        Console.WriteLine("Port: fqdn_prefix: " + p.FqdnPrefix +
+                  ", protocol: " + p.Proto +
+                  ", public_port: " + p.PublicPort +
+                  ", internal_port: " + p.InternalPort +
+                  ", path_prefix: " + p.PathPrefix +
+                  ", end_port: " + p.EndPort);
+      }
+      // Straight reflection print:
+      Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
     }
 
 
