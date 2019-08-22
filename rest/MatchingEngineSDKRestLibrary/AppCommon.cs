@@ -46,6 +46,9 @@ namespace DistributedMatchEngine
     // FQDN prefix to append to base FQDN in FindCloudlet response. May be empty.
     [DataMember]
     public string fqdn_prefix;
+    // A non-zero end port indicates this is a port range from internal port to end port, inclusive.
+    [DataMember]
+    public Int32 end_port;
   }
 
   public enum IDTypes
