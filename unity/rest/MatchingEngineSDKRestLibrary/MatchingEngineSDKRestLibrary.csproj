@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ReleaseVersion>1.4.9</ReleaseVersion>
+    <ReleaseVersion>1.4.10</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>1.4.9</PackageVersion>
+    <PackageVersion>1.4.10</PackageVersion>
     <Authors>MobiledgeX, Inc.</Authors>
     <Description>MobiledgeX MatchingEngineSDK Library for Unity</Description>
     <Owners>MobiledgeX, Inc.</Owners>

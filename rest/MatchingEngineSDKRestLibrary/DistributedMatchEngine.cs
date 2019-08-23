@@ -528,14 +528,14 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public QosPositionKpiRequest CreateQosPositionKpiRequest(List<QosPosition> QosPositions)
+    public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions)
     {
       if (sessionCookie == null)
       {
         return null;
       }
 
-      return new QosPositionKpiRequest
+      return new QosPositionRequest
       {
         ver = 1,
         positions = QosPositions.ToArray(),
@@ -543,9 +543,9 @@ namespace DistributedMatchEngine
       };
     }
 
-    public async Task<QosPositionKpiStreamReply> GetQosPositionKpi(string host, uint port, QosPositionKpiRequest request)
+    public async Task<QosPositionKpiStreamReply> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
     {
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionKpiRequest));
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionRequest));
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
