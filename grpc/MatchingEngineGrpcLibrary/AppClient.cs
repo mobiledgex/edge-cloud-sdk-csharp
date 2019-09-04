@@ -101,49 +101,53 @@ namespace DistributedMatchEngine {
             "ZXBseVN0YXR1cxISCgplcnJvcl9jb2RlGAMgASgNEhQKDGdyb3VwX2Nvb2tp",
             "ZRgFIAEoCSJWCgtRb3NQb3NpdGlvbhISCgpwb3NpdGlvbmlkGAEgASgDEjMK",
             "DGdwc19sb2NhdGlvbhgCIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5Mb2MidgoVUW9zUG9zaXRpb25LcGlSZXF1ZXN0EgsKA3ZlchgBIAEoDRIW",
-            "Cg5zZXNzaW9uX2Nvb2tpZRgCIAEoCRI4Cglwb3NpdGlvbnMYAyADKAsyJS5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRpb24izwIKEVFvc1Bv",
-            "c2l0aW9uUmVzdWx0EhIKCnBvc2l0aW9uaWQYASABKAMSMwoMZ3BzX2xvY2F0",
-            "aW9uGAIgASgLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxvYxIcChRk",
-            "bHVzZXJ0aHJvdWdocHV0X21pbhgDIAEoAhIcChRkbHVzZXJ0aHJvdWdocHV0",
-            "X2F2ZxgEIAEoAhIcChRkbHVzZXJ0aHJvdWdocHV0X21heBgFIAEoAhIcChR1",
-            "bHVzZXJ0aHJvdWdocHV0X21pbhgGIAEoAhIcChR1bHVzZXJ0aHJvdWdocHV0",
-            "X2F2ZxgHIAEoAhIcChR1bHVzZXJ0aHJvdWdocHV0X21heBgIIAEoAhITCgts",
-            "YXRlbmN5X21pbhgJIAEoAhITCgtsYXRlbmN5X2F2ZxgKIAEoAhITCgtsYXRl",
-            "bmN5X21heBgLIAEoAiKgAQoTUW9zUG9zaXRpb25LcGlSZXBseRILCgN2ZXIY",
-            "ASABKA0SNQoGc3RhdHVzGAIgASgOMiUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
-            "aW5lLlJlcGx5U3RhdHVzEkUKEHBvc2l0aW9uX3Jlc3VsdHMYAyADKAsyKy5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRpb25SZXN1bHQqPQoH",
-            "SURUeXBlcxIQCgxJRF9VTkRFRklORUQQABIICgRJTUVJEAESCgoGTVNJU0RO",
-            "EAISCgoGSVBBRERSEAMqPAoLUmVwbHlTdGF0dXMSEAoMUlNfVU5ERUZJTkVE",
-            "EAASDgoKUlNfU1VDQ0VTUxABEgsKB1JTX0ZBSUwQAjL9CAoOTWF0Y2hFbmdp",
-            "bmVBcGkSjwEKDlJlZ2lzdGVyQ2xpZW50Ei8uZGlzdHJpYnV0ZWRfbWF0Y2hf",
-            "ZW5naW5lLlJlZ2lzdGVyQ2xpZW50UmVxdWVzdBotLmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5SZWdpc3RlckNsaWVudFJlcGx5Ih2C0+STAhciEi92MS9y",
-            "ZWdpc3RlcmNsaWVudDoBKhKHAQoMRmluZENsb3VkbGV0Ei0uZGlzdHJpYnV0",
-            "ZWRfbWF0Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJlcXVlc3QaKy5kaXN0cmli",
-            "dXRlZF9tYXRjaF9lbmdpbmUuRmluZENsb3VkbGV0UmVwbHkiG4LT5JMCFSIQ",
-            "L3YxL2ZpbmRjbG91ZGxldDoBKhKPAQoOVmVyaWZ5TG9jYXRpb24SLy5kaXN0",
-            "cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVyaWZ5TG9jYXRpb25SZXF1ZXN0Gi0u",
-            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlZlcmlmeUxvY2F0aW9uUmVwbHki",
-            "HYLT5JMCFyISL3YxL3ZlcmlmeWxvY2F0aW9uOgEqEoMBCgtHZXRMb2NhdGlv",
-            "bhIsLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5HZXRMb2NhdGlvblJlcXVl",
-            "c3QaKi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuR2V0TG9jYXRpb25SZXBs",
-            "eSIagtPkkwIUIg8vdjEvZ2V0bG9jYXRpb246ASoSkQEKDkFkZFVzZXJUb0dy",
-            "b3VwEjAuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91",
-            "cFJlcXVlc3QaLi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRHluYW1pY0xv",
-            "Y0dyb3VwUmVwbHkiHYLT5JMCFyISL3YxL2FkZHVzZXJ0b2dyb3VwOgEqEokB",
-            "Cg5HZXRBcHBJbnN0TGlzdBIsLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5B",
-            "cHBJbnN0TGlzdFJlcXVlc3QaKi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
-            "QXBwSW5zdExpc3RSZXBseSIdgtPkkwIXIhIvdjEvZ2V0YXBwaW5zdGxpc3Q6",
-            "ASoSfQoLR2V0RnFkbkxpc3QSKS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
-            "RnFkbkxpc3RSZXF1ZXN0GicuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZx",
-            "ZG5MaXN0UmVwbHkiGoLT5JMCFCIPL3YxL2dldGZxZG5saXN0OgEqEpcBChFH",
-            "ZXRRb3NQb3NpdGlvbktwaRIvLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5R",
-            "b3NQb3NpdGlvbktwaVJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
-            "bmUuUW9zUG9zaXRpb25LcGlSZXBseSIggtPkkwIaIhUvdjEvZ2V0cW9zcG9z",
-            "aXRpb25rcGk6ASowAWIGcHJvdG8z"));
+            "ZS5Mb2MiTwoNQmFuZFNlbGVjdGlvbhIOCgZyYXRfMmcYASADKAkSDgoGcmF0",
+            "XzNnGAIgAygJEg4KBnJhdF80ZxgDIAMoCRIOCgZyYXRfNWcYBCADKAkiygEK",
+            "ElFvc1Bvc2l0aW9uUmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9j",
+            "b29raWUYAiABKAkSOAoJcG9zaXRpb25zGAMgAygLMiUuZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uEhQKDGx0ZV9jYXRlZ29yeRgEIAEo",
+            "BRI/Cg5iYW5kX3NlbGVjdGlvbhgFIAEoCzInLmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5CYW5kU2VsZWN0aW9uItICChRRb3NQb3NpdGlvbktwaVJlc3Vs",
+            "dBISCgpwb3NpdGlvbmlkGAEgASgDEjMKDGdwc19sb2NhdGlvbhgCIAEoCzId",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSHAoUZGx1c2VydGhyb3Vn",
+            "aHB1dF9taW4YAyABKAISHAoUZGx1c2VydGhyb3VnaHB1dF9hdmcYBCABKAIS",
+            "HAoUZGx1c2VydGhyb3VnaHB1dF9tYXgYBSABKAISHAoUdWx1c2VydGhyb3Vn",
+            "aHB1dF9taW4YBiABKAISHAoUdWx1c2VydGhyb3VnaHB1dF9hdmcYByABKAIS",
+            "HAoUdWx1c2VydGhyb3VnaHB1dF9tYXgYCCABKAISEwoLbGF0ZW5jeV9taW4Y",
+            "CSABKAISEwoLbGF0ZW5jeV9hdmcYCiABKAISEwoLbGF0ZW5jeV9tYXgYCyAB",
+            "KAIiowEKE1Fvc1Bvc2l0aW9uS3BpUmVwbHkSCwoDdmVyGAEgASgNEjUKBnN0",
+            "YXR1cxgCIAEoDjIlLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5SZXBseVN0",
+            "YXR1cxJIChBwb3NpdGlvbl9yZXN1bHRzGAMgAygLMi4uZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uS3BpUmVzdWx0Kj0KB0lEVHlwZXMS",
+            "EAoMSURfVU5ERUZJTkVEEAASCAoESU1FSRABEgoKBk1TSVNEThACEgoKBklQ",
+            "QUREUhADKjwKC1JlcGx5U3RhdHVzEhAKDFJTX1VOREVGSU5FRBAAEg4KClJT",
+            "X1NVQ0NFU1MQARILCgdSU19GQUlMEAIy+ggKDk1hdGNoRW5naW5lQXBpEo8B",
+            "Cg5SZWdpc3RlckNsaWVudBIvLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5S",
+            "ZWdpc3RlckNsaWVudFJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
+            "bmUuUmVnaXN0ZXJDbGllbnRSZXBseSIdgtPkkwIXIhIvdjEvcmVnaXN0ZXJj",
+            "bGllbnQ6ASoShwEKDEZpbmRDbG91ZGxldBItLmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5GaW5kQ2xvdWRsZXRSZXF1ZXN0GisuZGlzdHJpYnV0ZWRfbWF0",
+            "Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJlcGx5IhuC0+STAhUiEC92MS9maW5k",
+            "Y2xvdWRsZXQ6ASoSjwEKDlZlcmlmeUxvY2F0aW9uEi8uZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLlZlcmlmeUxvY2F0aW9uUmVxdWVzdBotLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5WZXJpZnlMb2NhdGlvblJlcGx5Ih2C0+STAhci",
+            "Ei92MS92ZXJpZnlsb2NhdGlvbjoBKhKDAQoLR2V0TG9jYXRpb24SLC5kaXN0",
+            "cmlidXRlZF9tYXRjaF9lbmdpbmUuR2V0TG9jYXRpb25SZXF1ZXN0GiouZGlz",
+            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkdldExvY2F0aW9uUmVwbHkiGoLT5JMC",
+            "FCIPL3YxL2dldGxvY2F0aW9uOgEqEpEBCg5BZGRVc2VyVG9Hcm91cBIwLmRp",
+            "c3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5EeW5hbWljTG9jR3JvdXBSZXF1ZXN0",
+            "Gi4uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91cFJl",
+            "cGx5Ih2C0+STAhciEi92MS9hZGR1c2VydG9ncm91cDoBKhKJAQoOR2V0QXBw",
+            "SW5zdExpc3QSLC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwSW5zdExp",
+            "c3RSZXF1ZXN0GiouZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RM",
+            "aXN0UmVwbHkiHYLT5JMCFyISL3YxL2dldGFwcGluc3RsaXN0OgEqEn0KC0dl",
+            "dEZxZG5MaXN0EikuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZxZG5MaXN0",
+            "UmVxdWVzdBonLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GcWRuTGlzdFJl",
+            "cGx5IhqC0+STAhQiDy92MS9nZXRmcWRubGlzdDoBKhKUAQoRR2V0UW9zUG9z",
+            "aXRpb25LcGkSLC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRp",
+            "b25SZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0",
+            "aW9uS3BpUmVwbHkiIILT5JMCGiIVL3YxL2dldHFvc3Bvc2l0aW9ua3BpOgEq",
+            "MAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::DistributedMatchEngine.LocReflection.Descriptor, global::DistributedMatchEngine.AppcommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.IDTypes), typeof(global::DistributedMatchEngine.ReplyStatus), }, new pbr::GeneratedClrTypeInfo[] {
@@ -165,8 +169,9 @@ namespace DistributedMatchEngine {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupRequest), global::DistributedMatchEngine.DynamicLocGroupRequest.Parser, new[]{ "Ver", "SessionCookie", "LgId", "CommType", "UserData" }, null, new[]{ typeof(global::DistributedMatchEngine.DynamicLocGroupRequest.Types.DlgCommType) }, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupReply), global::DistributedMatchEngine.DynamicLocGroupReply.Parser, new[]{ "Ver", "Status", "ErrorCode", "GroupCookie" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPosition), global::DistributedMatchEngine.QosPosition.Parser, new[]{ "Positionid", "GpsLocation" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiRequest), global::DistributedMatchEngine.QosPositionKpiRequest.Parser, new[]{ "Ver", "SessionCookie", "Positions" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionResult), global::DistributedMatchEngine.QosPositionResult.Parser, new[]{ "Positionid", "GpsLocation", "DluserthroughputMin", "DluserthroughputAvg", "DluserthroughputMax", "UluserthroughputMin", "UluserthroughputAvg", "UluserthroughputMax", "LatencyMin", "LatencyAvg", "LatencyMax" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.BandSelection), global::DistributedMatchEngine.BandSelection.Parser, new[]{ "Rat2G", "Rat3G", "Rat4G", "Rat5G" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionRequest), global::DistributedMatchEngine.QosPositionRequest.Parser, new[]{ "Ver", "SessionCookie", "Positions", "LteCategory", "BandSelection" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiResult), global::DistributedMatchEngine.QosPositionKpiResult.Parser, new[]{ "Positionid", "GpsLocation", "DluserthroughputMin", "DluserthroughputAvg", "DluserthroughputMax", "UluserthroughputMin", "UluserthroughputAvg", "UluserthroughputMax", "LatencyMin", "LatencyAvg", "LatencyMax" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiReply), global::DistributedMatchEngine.QosPositionKpiReply.Parser, new[]{ "Ver", "Status", "PositionResults" }, null, null, null)
           }));
     }
@@ -685,7 +690,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 16: {
-            status_ = (global::DistributedMatchEngine.ReplyStatus) input.ReadEnum();
+            Status = (global::DistributedMatchEngine.ReplyStatus) input.ReadEnum();
             break;
           }
           case 26: {
@@ -965,7 +970,7 @@ namespace DistributedMatchEngine {
       }
       if (other.gpsLocation_ != null) {
         if (gpsLocation_ == null) {
-          gpsLocation_ = new global::DistributedMatchEngine.Loc();
+          GpsLocation = new global::DistributedMatchEngine.Loc();
         }
         GpsLocation.MergeFrom(other.GpsLocation);
       }
@@ -1003,9 +1008,9 @@ namespace DistributedMatchEngine {
           }
           case 34: {
             if (gpsLocation_ == null) {
-              gpsLocation_ = new global::DistributedMatchEngine.Loc();
+              GpsLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(gpsLocation_);
+            input.ReadMessage(GpsLocation);
             break;
           }
           case 42: {
@@ -1236,7 +1241,7 @@ namespace DistributedMatchEngine {
       ports_.Add(other.ports_);
       if (other.cloudletLocation_ != null) {
         if (cloudletLocation_ == null) {
-          cloudletLocation_ = new global::DistributedMatchEngine.Loc();
+          CloudletLocation = new global::DistributedMatchEngine.Loc();
         }
         CloudletLocation.MergeFrom(other.CloudletLocation);
       }
@@ -1256,7 +1261,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 16: {
-            status_ = (global::DistributedMatchEngine.FindCloudletReply.Types.FindStatus) input.ReadEnum();
+            Status = (global::DistributedMatchEngine.FindCloudletReply.Types.FindStatus) input.ReadEnum();
             break;
           }
           case 26: {
@@ -1269,9 +1274,9 @@ namespace DistributedMatchEngine {
           }
           case 42: {
             if (cloudletLocation_ == null) {
-              cloudletLocation_ = new global::DistributedMatchEngine.Loc();
+              CloudletLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(cloudletLocation_);
+            input.ReadMessage(CloudletLocation);
             break;
           }
         }
@@ -1508,7 +1513,7 @@ namespace DistributedMatchEngine {
       }
       if (other.gpsLocation_ != null) {
         if (gpsLocation_ == null) {
-          gpsLocation_ = new global::DistributedMatchEngine.Loc();
+          GpsLocation = new global::DistributedMatchEngine.Loc();
         }
         GpsLocation.MergeFrom(other.GpsLocation);
       }
@@ -1540,9 +1545,9 @@ namespace DistributedMatchEngine {
           }
           case 34: {
             if (gpsLocation_ == null) {
-              gpsLocation_ = new global::DistributedMatchEngine.Loc();
+              GpsLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(gpsLocation_);
+            input.ReadMessage(GpsLocation);
             break;
           }
           case 42: {
@@ -1759,11 +1764,11 @@ namespace DistributedMatchEngine {
             break;
           }
           case 16: {
-            towerStatus_ = (global::DistributedMatchEngine.VerifyLocationReply.Types.TowerStatus) input.ReadEnum();
+            TowerStatus = (global::DistributedMatchEngine.VerifyLocationReply.Types.TowerStatus) input.ReadEnum();
             break;
           }
           case 24: {
-            gpsLocationStatus_ = (global::DistributedMatchEngine.VerifyLocationReply.Types.GPSLocationStatus) input.ReadEnum();
+            GpsLocationStatus = (global::DistributedMatchEngine.VerifyLocationReply.Types.GPSLocationStatus) input.ReadEnum();
             break;
           }
           case 33: {
@@ -2209,7 +2214,7 @@ namespace DistributedMatchEngine {
       }
       if (other.networkLocation_ != null) {
         if (networkLocation_ == null) {
-          networkLocation_ = new global::DistributedMatchEngine.Loc();
+          NetworkLocation = new global::DistributedMatchEngine.Loc();
         }
         NetworkLocation.MergeFrom(other.NetworkLocation);
       }
@@ -2229,7 +2234,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 16: {
-            status_ = (global::DistributedMatchEngine.GetLocationReply.Types.LocStatus) input.ReadEnum();
+            Status = (global::DistributedMatchEngine.GetLocationReply.Types.LocStatus) input.ReadEnum();
             break;
           }
           case 26: {
@@ -2242,9 +2247,9 @@ namespace DistributedMatchEngine {
           }
           case 42: {
             if (networkLocation_ == null) {
-              networkLocation_ = new global::DistributedMatchEngine.Loc();
+              NetworkLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(networkLocation_);
+            input.ReadMessage(NetworkLocation);
             break;
           }
         }
@@ -2463,7 +2468,7 @@ namespace DistributedMatchEngine {
       }
       if (other.gpsLocation_ != null) {
         if (gpsLocation_ == null) {
-          gpsLocation_ = new global::DistributedMatchEngine.Loc();
+          GpsLocation = new global::DistributedMatchEngine.Loc();
         }
         GpsLocation.MergeFrom(other.GpsLocation);
       }
@@ -2492,9 +2497,9 @@ namespace DistributedMatchEngine {
           }
           case 34: {
             if (gpsLocation_ == null) {
-              gpsLocation_ = new global::DistributedMatchEngine.Loc();
+              GpsLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(gpsLocation_);
+            input.ReadMessage(GpsLocation);
             break;
           }
         }
@@ -2926,7 +2931,7 @@ namespace DistributedMatchEngine {
       }
       if (other.gpsLocation_ != null) {
         if (gpsLocation_ == null) {
-          gpsLocation_ = new global::DistributedMatchEngine.Loc();
+          GpsLocation = new global::DistributedMatchEngine.Loc();
         }
         GpsLocation.MergeFrom(other.GpsLocation);
       }
@@ -2955,9 +2960,9 @@ namespace DistributedMatchEngine {
           }
           case 26: {
             if (gpsLocation_ == null) {
-              gpsLocation_ = new global::DistributedMatchEngine.Loc();
+              GpsLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(gpsLocation_);
+            input.ReadMessage(GpsLocation);
             break;
           }
           case 33: {
@@ -3141,7 +3146,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 16: {
-            status_ = (global::DistributedMatchEngine.AppInstListReply.Types.AIStatus) input.ReadEnum();
+            Status = (global::DistributedMatchEngine.AppInstListReply.Types.AIStatus) input.ReadEnum();
             break;
           }
           case 26: {
@@ -3752,7 +3757,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 32: {
-            status_ = (global::DistributedMatchEngine.FqdnListReply.Types.FLStatus) input.ReadEnum();
+            Status = (global::DistributedMatchEngine.FqdnListReply.Types.FLStatus) input.ReadEnum();
             break;
           }
         }
@@ -4014,7 +4019,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 88: {
-            commType_ = (global::DistributedMatchEngine.DynamicLocGroupRequest.Types.DlgCommType) input.ReadEnum();
+            CommType = (global::DistributedMatchEngine.DynamicLocGroupRequest.Types.DlgCommType) input.ReadEnum();
             break;
           }
           case 98: {
@@ -4248,7 +4253,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 16: {
-            status_ = (global::DistributedMatchEngine.ReplyStatus) input.ReadEnum();
+            Status = (global::DistributedMatchEngine.ReplyStatus) input.ReadEnum();
             break;
           }
           case 24: {
@@ -4402,7 +4407,7 @@ namespace DistributedMatchEngine {
       }
       if (other.gpsLocation_ != null) {
         if (gpsLocation_ == null) {
-          gpsLocation_ = new global::DistributedMatchEngine.Loc();
+          GpsLocation = new global::DistributedMatchEngine.Loc();
         }
         GpsLocation.MergeFrom(other.GpsLocation);
       }
@@ -4423,9 +4428,9 @@ namespace DistributedMatchEngine {
           }
           case 18: {
             if (gpsLocation_ == null) {
-              gpsLocation_ = new global::DistributedMatchEngine.Loc();
+              GpsLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(gpsLocation_);
+            input.ReadMessage(GpsLocation);
             break;
           }
         }
@@ -4434,11 +4439,14 @@ namespace DistributedMatchEngine {
 
   }
 
-  public sealed partial class QosPositionKpiRequest : pb::IMessage<QosPositionKpiRequest> {
-    private static readonly pb::MessageParser<QosPositionKpiRequest> _parser = new pb::MessageParser<QosPositionKpiRequest>(() => new QosPositionKpiRequest());
+  /// <summary>
+  /// supported band values
+  /// </summary>
+  public sealed partial class BandSelection : pb::IMessage<BandSelection> {
+    private static readonly pb::MessageParser<BandSelection> _parser = new pb::MessageParser<BandSelection>(() => new BandSelection());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<QosPositionKpiRequest> Parser { get { return _parser; } }
+    public static pb::MessageParser<BandSelection> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -4451,23 +4459,212 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QosPositionKpiRequest() {
+    public BandSelection() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QosPositionKpiRequest(QosPositionKpiRequest other) : this() {
-      ver_ = other.ver_;
-      sessionCookie_ = other.sessionCookie_;
-      positions_ = other.positions_.Clone();
+    public BandSelection(BandSelection other) : this() {
+      rat2G_ = other.rat2G_.Clone();
+      rat3G_ = other.rat3G_.Clone();
+      rat4G_ = other.rat4G_.Clone();
+      rat5G_ = other.rat5G_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QosPositionKpiRequest Clone() {
-      return new QosPositionKpiRequest(this);
+    public BandSelection Clone() {
+      return new BandSelection(this);
+    }
+
+    /// <summary>Field number for the "rat_2g" field.</summary>
+    public const int Rat2GFieldNumber = 1;
+    private static readonly pb::FieldCodec<string> _repeated_rat2G_codec
+        = pb::FieldCodec.ForString(10);
+    private readonly pbc::RepeatedField<string> rat2G_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Radio Access Technologies
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> Rat2G {
+      get { return rat2G_; }
+    }
+
+    /// <summary>Field number for the "rat_3g" field.</summary>
+    public const int Rat3GFieldNumber = 2;
+    private static readonly pb::FieldCodec<string> _repeated_rat3G_codec
+        = pb::FieldCodec.ForString(18);
+    private readonly pbc::RepeatedField<string> rat3G_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> Rat3G {
+      get { return rat3G_; }
+    }
+
+    /// <summary>Field number for the "rat_4g" field.</summary>
+    public const int Rat4GFieldNumber = 3;
+    private static readonly pb::FieldCodec<string> _repeated_rat4G_codec
+        = pb::FieldCodec.ForString(26);
+    private readonly pbc::RepeatedField<string> rat4G_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> Rat4G {
+      get { return rat4G_; }
+    }
+
+    /// <summary>Field number for the "rat_5g" field.</summary>
+    public const int Rat5GFieldNumber = 4;
+    private static readonly pb::FieldCodec<string> _repeated_rat5G_codec
+        = pb::FieldCodec.ForString(34);
+    private readonly pbc::RepeatedField<string> rat5G_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> Rat5G {
+      get { return rat5G_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as BandSelection);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(BandSelection other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!rat2G_.Equals(other.rat2G_)) return false;
+      if(!rat3G_.Equals(other.rat3G_)) return false;
+      if(!rat4G_.Equals(other.rat4G_)) return false;
+      if(!rat5G_.Equals(other.rat5G_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= rat2G_.GetHashCode();
+      hash ^= rat3G_.GetHashCode();
+      hash ^= rat4G_.GetHashCode();
+      hash ^= rat5G_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      rat2G_.WriteTo(output, _repeated_rat2G_codec);
+      rat3G_.WriteTo(output, _repeated_rat3G_codec);
+      rat4G_.WriteTo(output, _repeated_rat4G_codec);
+      rat5G_.WriteTo(output, _repeated_rat5G_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += rat2G_.CalculateSize(_repeated_rat2G_codec);
+      size += rat3G_.CalculateSize(_repeated_rat3G_codec);
+      size += rat4G_.CalculateSize(_repeated_rat4G_codec);
+      size += rat5G_.CalculateSize(_repeated_rat5G_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(BandSelection other) {
+      if (other == null) {
+        return;
+      }
+      rat2G_.Add(other.rat2G_);
+      rat3G_.Add(other.rat3G_);
+      rat4G_.Add(other.rat4G_);
+      rat5G_.Add(other.rat5G_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            rat2G_.AddEntriesFrom(input, _repeated_rat2G_codec);
+            break;
+          }
+          case 18: {
+            rat3G_.AddEntriesFrom(input, _repeated_rat3G_codec);
+            break;
+          }
+          case 26: {
+            rat4G_.AddEntriesFrom(input, _repeated_rat4G_codec);
+            break;
+          }
+          case 34: {
+            rat5G_.AddEntriesFrom(input, _repeated_rat5G_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// QosPositionRequest is used for both GetQosPositionKpi
+  /// </summary>
+  public sealed partial class QosPositionRequest : pb::IMessage<QosPositionRequest> {
+    private static readonly pb::MessageParser<QosPositionRequest> _parser = new pb::MessageParser<QosPositionRequest>(() => new QosPositionRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QosPositionRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[19]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPositionRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPositionRequest(QosPositionRequest other) : this() {
+      ver_ = other.ver_;
+      sessionCookie_ = other.sessionCookie_;
+      positions_ = other.positions_.Clone();
+      lteCategory_ = other.lteCategory_;
+      bandSelection_ = other.bandSelection_ != null ? other.bandSelection_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPositionRequest Clone() {
+      return new QosPositionRequest(this);
     }
 
     /// <summary>Field number for the "ver" field.</summary>
@@ -4511,13 +4708,41 @@ namespace DistributedMatchEngine {
       get { return positions_; }
     }
 
+    /// <summary>Field number for the "lte_category" field.</summary>
+    public const int LteCategoryFieldNumber = 4;
+    private int lteCategory_;
+    /// <summary>
+    /// client's device LTE category number, optional
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as QosPositionKpiRequest);
+    public int LteCategory {
+      get { return lteCategory_; }
+      set {
+        lteCategory_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "band_selection" field.</summary>
+    public const int BandSelectionFieldNumber = 5;
+    private global::DistributedMatchEngine.BandSelection bandSelection_;
+    /// <summary>
+    /// Band list used by the client, optional
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.BandSelection BandSelection {
+      get { return bandSelection_; }
+      set {
+        bandSelection_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(QosPositionKpiRequest other) {
+    public override bool Equals(object other) {
+      return Equals(other as QosPositionRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QosPositionRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -4527,6 +4752,8 @@ namespace DistributedMatchEngine {
       if (Ver != other.Ver) return false;
       if (SessionCookie != other.SessionCookie) return false;
       if(!positions_.Equals(other.positions_)) return false;
+      if (LteCategory != other.LteCategory) return false;
+      if (!object.Equals(BandSelection, other.BandSelection)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -4536,6 +4763,8 @@ namespace DistributedMatchEngine {
       if (Ver != 0) hash ^= Ver.GetHashCode();
       if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
       hash ^= positions_.GetHashCode();
+      if (LteCategory != 0) hash ^= LteCategory.GetHashCode();
+      if (bandSelection_ != null) hash ^= BandSelection.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -4558,6 +4787,14 @@ namespace DistributedMatchEngine {
         output.WriteString(SessionCookie);
       }
       positions_.WriteTo(output, _repeated_positions_codec);
+      if (LteCategory != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(LteCategory);
+      }
+      if (bandSelection_ != null) {
+        output.WriteRawTag(42);
+        output.WriteMessage(BandSelection);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -4573,6 +4810,12 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(SessionCookie);
       }
       size += positions_.CalculateSize(_repeated_positions_codec);
+      if (LteCategory != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(LteCategory);
+      }
+      if (bandSelection_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(BandSelection);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -4580,7 +4823,7 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(QosPositionKpiRequest other) {
+    public void MergeFrom(QosPositionRequest other) {
       if (other == null) {
         return;
       }
@@ -4591,6 +4834,15 @@ namespace DistributedMatchEngine {
         SessionCookie = other.SessionCookie;
       }
       positions_.Add(other.positions_);
+      if (other.LteCategory != 0) {
+        LteCategory = other.LteCategory;
+      }
+      if (other.bandSelection_ != null) {
+        if (bandSelection_ == null) {
+          BandSelection = new global::DistributedMatchEngine.BandSelection();
+        }
+        BandSelection.MergeFrom(other.BandSelection);
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -4614,21 +4866,32 @@ namespace DistributedMatchEngine {
             positions_.AddEntriesFrom(input, _repeated_positions_codec);
             break;
           }
+          case 32: {
+            LteCategory = input.ReadInt32();
+            break;
+          }
+          case 42: {
+            if (bandSelection_ == null) {
+              BandSelection = new global::DistributedMatchEngine.BandSelection();
+            }
+            input.ReadMessage(BandSelection);
+            break;
+          }
         }
       }
     }
 
   }
 
-  public sealed partial class QosPositionResult : pb::IMessage<QosPositionResult> {
-    private static readonly pb::MessageParser<QosPositionResult> _parser = new pb::MessageParser<QosPositionResult>(() => new QosPositionResult());
+  public sealed partial class QosPositionKpiResult : pb::IMessage<QosPositionKpiResult> {
+    private static readonly pb::MessageParser<QosPositionKpiResult> _parser = new pb::MessageParser<QosPositionKpiResult>(() => new QosPositionKpiResult());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<QosPositionResult> Parser { get { return _parser; } }
+    public static pb::MessageParser<QosPositionKpiResult> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[19]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4637,14 +4900,14 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QosPositionResult() {
+    public QosPositionKpiResult() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QosPositionResult(QosPositionResult other) : this() {
+    public QosPositionKpiResult(QosPositionKpiResult other) : this() {
       positionid_ = other.positionid_;
       gpsLocation_ = other.gpsLocation_ != null ? other.gpsLocation_.Clone() : null;
       dluserthroughputMin_ = other.dluserthroughputMin_;
@@ -4660,15 +4923,15 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QosPositionResult Clone() {
-      return new QosPositionResult(this);
+    public QosPositionKpiResult Clone() {
+      return new QosPositionKpiResult(this);
     }
 
     /// <summary>Field number for the "positionid" field.</summary>
     public const int PositionidFieldNumber = 1;
     private long positionid_;
     /// <summary>
-    /// as set by the client, must be unique within one QosPositionKpiRequest
+    /// as set by the client, must be unique within one QosPositionRequest
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public long Positionid {
@@ -4796,11 +5059,11 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as QosPositionResult);
+      return Equals(other as QosPositionKpiResult);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(QosPositionResult other) {
+    public bool Equals(QosPositionKpiResult other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -4940,7 +5203,7 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(QosPositionResult other) {
+    public void MergeFrom(QosPositionKpiResult other) {
       if (other == null) {
         return;
       }
@@ -4949,7 +5212,7 @@ namespace DistributedMatchEngine {
       }
       if (other.gpsLocation_ != null) {
         if (gpsLocation_ == null) {
-          gpsLocation_ = new global::DistributedMatchEngine.Loc();
+          GpsLocation = new global::DistributedMatchEngine.Loc();
         }
         GpsLocation.MergeFrom(other.GpsLocation);
       }
@@ -4997,9 +5260,9 @@ namespace DistributedMatchEngine {
           }
           case 18: {
             if (gpsLocation_ == null) {
-              gpsLocation_ = new global::DistributedMatchEngine.Loc();
+              GpsLocation = new global::DistributedMatchEngine.Loc();
             }
-            input.ReadMessage(gpsLocation_);
+            input.ReadMessage(GpsLocation);
             break;
           }
           case 29: {
@@ -5052,7 +5315,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[20]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5107,14 +5370,14 @@ namespace DistributedMatchEngine {
 
     /// <summary>Field number for the "position_results" field.</summary>
     public const int PositionResultsFieldNumber = 3;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.QosPositionResult> _repeated_positionResults_codec
-        = pb::FieldCodec.ForMessage(26, global::DistributedMatchEngine.QosPositionResult.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.QosPositionResult> positionResults_ = new pbc::RepeatedField<global::DistributedMatchEngine.QosPositionResult>();
+    private static readonly pb::FieldCodec<global::DistributedMatchEngine.QosPositionKpiResult> _repeated_positionResults_codec
+        = pb::FieldCodec.ForMessage(26, global::DistributedMatchEngine.QosPositionKpiResult.Parser);
+    private readonly pbc::RepeatedField<global::DistributedMatchEngine.QosPositionKpiResult> positionResults_ = new pbc::RepeatedField<global::DistributedMatchEngine.QosPositionKpiResult>();
     /// <summary>
     /// kpi details
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.QosPositionResult> PositionResults {
+    public pbc::RepeatedField<global::DistributedMatchEngine.QosPositionKpiResult> PositionResults {
       get { return positionResults_; }
     }
 
@@ -5214,7 +5477,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 16: {
-            status_ = (global::DistributedMatchEngine.ReplyStatus) input.ReadEnum();
+            Status = (global::DistributedMatchEngine.ReplyStatus) input.ReadEnum();
             break;
           }
           case 26: {
