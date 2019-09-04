@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace DistributedMatchEngine
@@ -20,9 +19,9 @@ namespace DistributedMatchEngine
       return jsonStr;
     }
 
+    // FIXME: This function needs per device customization.
     public async static Task<Loc> GetLocationFromDevice()
     {
-      // FIXME: Do async device location.
       long timeLongMs = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
       long seconds = timeLongMs / 1000;
       int nanoSec = (int)(timeLongMs % 1000) * 1000000;
