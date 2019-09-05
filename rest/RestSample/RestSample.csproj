@@ -4,9 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>7.1</LangVersion>
-    <ReleaseVersion>1.4.0</ReleaseVersion>
+    <ReleaseVersion>1.4.11</ReleaseVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MobiledgeX.MatchingEngineRestSDKLibrary" Version="1.4.10" />
+    <PackageReference Include="MobiledgeX.MatchingEngineRestSDKLibrary" Version="1.4.11" />
   </ItemGroup>
 </Project>

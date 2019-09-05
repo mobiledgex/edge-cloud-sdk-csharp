@@ -286,7 +286,7 @@ namespace DistributedMatchEngine
         dev_name = developerName,
         app_name = appName,
         app_vers = appVersion,
-        auth_token= authToken
+        auth_token = authToken
       };
     }
 
@@ -378,9 +378,6 @@ namespace DistributedMatchEngine
       {
         return null;
       }
-
-      jsonStr = Util.StreamToString(responseStream);
-      responseStream.Position = 0;
 
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(VerifyLocationReply));
       VerifyLocationReply reply = (VerifyLocationReply)deserializer.ReadObject(responseStream);
@@ -528,7 +525,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions)
+    public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection)
     {
       if (sessionCookie == null)
       {
@@ -539,11 +536,13 @@ namespace DistributedMatchEngine
       {
         ver = 1,
         positions = QosPositions.ToArray(),
-        session_cookie = this.sessionCookie
+        session_cookie = this.sessionCookie,
+        lte_category = lteCategory,
+        band_selection = bandSelection
       };
     }
 
-    public async Task<QosPositionKpiStreamReply> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
+    public async Task<QosPositionKpiStream> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionRequest));
       MemoryStream ms = new MemoryStream();
@@ -551,14 +550,14 @@ namespace DistributedMatchEngine
       string jsonStr = Util.StreamToString(ms);
 
       Stream responseStream = await PostRequest(CreateUri(host, port) + qospositionkpiAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
+      if (responseStream == null || !responseStream.CanRead || responseStream.Length == 0)
       {
         return null;
       }
 
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(QosPositionKpiStreamReply));
-      QosPositionKpiStreamReply streamReply = (QosPositionKpiStreamReply)deserializer.ReadObject(responseStream);
-      return streamReply;
+      var qosPositionKpiStream = new QosPositionKpiStream(responseStream);
+
+      return qosPositionKpiStream;
     }
 
   };

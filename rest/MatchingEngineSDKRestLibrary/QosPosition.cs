@@ -13,6 +13,20 @@ namespace DistributedMatchEngine
   }
 
   [DataContract]
+  public class BandSelection
+  {
+    // Radio Access Technologies
+    [DataMember]
+    public string[] rat_2g;
+    [DataMember]
+    public string[] rat_3g;
+    [DataMember]
+    public string[] rat_4g;
+    [DataMember]
+    public string[] rat_5g;
+  }
+
+  [DataContract]
   public class QosPositionRequest
   {
     // API version
@@ -24,6 +38,12 @@ namespace DistributedMatchEngine
     // list of positions
     [DataMember]
     public QosPosition[] positions;
+    // client's device LTE category number, optional
+    [DataMember]
+    public Int32 lte_category;
+    // Band list used by the client, optional
+    [DataMember]
+    public BandSelection band_selection;
   }
 
   [DataContract]
