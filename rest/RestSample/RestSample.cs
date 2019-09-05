@@ -28,66 +28,56 @@ namespace RestSample
       return carrierName;
     }
 
-    static Loc createLocation(double longitude_src, double latitude_src, double direction_degrees, double kilometers)
+    static Timestamp createTimestamp(int futureSeconds)
     {
       long ticks = DateTime.Now.Ticks;
       long sec = ticks / TimeSpan.TicksPerSecond; // Truncates.
       long remainderTicks = ticks - (sec * TimeSpan.TicksPerSecond);
       int nanos = (int)(remainderTicks / TimeSpan.TicksPerMillisecond) * 1000000;
 
-      double direction_radians = direction_degrees * Math.PI / 180;
-
-      Loc loc = new Loc
+      var timestamp = new Timestamp
       {
-        longitude = longitude_src + kilometers * Math.Cos(direction_radians),
-        latitude = latitude_src + kilometers * Math.Sin(direction_radians),
-        timestamp = new Timestamp
-        {
-          seconds = sec.ToString(),
-          nanos = nanos
-        }
+        seconds = (sec+futureSeconds).ToString(),
+        nanos = nanos
       };
 
-      return loc;
+      return timestamp;
     }
+
 
     static List<QosPosition> CreateQosPositionList(Loc firstLocation, double direction_degrees, double totalDistanceKm, double increment)
     {
       var req = new List<QosPosition>();
-      long positionid = 1;
-      Loc lastLocation = createLocation(firstLocation.longitude, firstLocation.latitude, 0, 0);
+      double kmPerDegreeLong = 111.32; // at Equator
+      double kmPerDegreeLat = 110.57; // at Equator
+      double addLongitude = (Math.Cos(direction_degrees / (Math.PI / 180)) * increment) / kmPerDegreeLong;
+      double addLatitude = (Math.Sin(direction_degrees / (Math.PI / 180)) * increment) / kmPerDegreeLat;
+      double i = 0d;
+      double longitude = firstLocation.longitude;
+      double latitude = firstLocation.latitude;
 
-      var firstQosPostion = new QosPosition
+      long id = 1;
+
+      while (i < totalDistanceKm)
       {
-        positionid = positionid.ToString(),
-        gps_location = lastLocation
-      };
+        longitude += addLongitude;
+        latitude += addLatitude;
+        i += increment;
 
-      req.Add(firstQosPostion);
-
-      var traverse = increment;
-      for (traverse = increment; traverse + increment < totalDistanceKm - increment; traverse += increment, positionid++)
-      {
-        Loc next = createLocation(lastLocation.longitude, lastLocation.latitude, direction_degrees, increment);
-        var np = new QosPosition
+        // FIXME: No time is attached to GPS location, as that breaks the server!
+        var qloc = new QosPosition
         {
-          positionid = positionid.ToString(),
-          gps_location = next
+          positionid = id.ToString(),
+          gps_location = new Loc {
+            longitude = longitude,
+            latitude = latitude,
+            timestamp = createTimestamp(100)
+          }
         };
-        req.Add(np);
-        lastLocation = next;
-      }
 
-      // Last point, if needed.
-      if (traverse < totalDistanceKm)
-      {
-        lastLocation = createLocation(lastLocation.longitude, lastLocation.latitude, direction_degrees, totalDistanceKm);
-        var lastPosition = new QosPosition
-        {
-          positionid = positionid.ToString(),
-          gps_location = lastLocation
-        };
-        req.Add(lastPosition);
+
+        req.Add(qloc);
+        id++;
       }
 
       return req;
@@ -194,31 +184,31 @@ namespace RestSample
           // Create a list of quality of service position requests:
           var firstLoc = new Loc
           {
-            longitude = -121.892558,
-            latitude = 37.327820,
-            timestamp = new Timestamp { seconds = "0", nanos = 0}
+            longitude = 8.5821,
+            latitude = 50.11
           };
-          var requestList = CreateQosPositionList(firstLoc, 45, 2, 0.1);
+          var requestList = CreateQosPositionList(firstLoc, 45, 2, 1);
 
-          var qosPositionRequest = me.CreateQosPositionRequest(requestList);
-          QosPositionKpiStreamReply qosPositionKpiStreamReply = await me.GetQosPositionKpi(host, port, qosPositionRequest);
+          var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null);
 
-          if (qosPositionKpiStreamReply.result == null || qosPositionKpiStreamReply.error != null)
+          var qosReplyStream = await me.GetQosPositionKpi(host, port, qosPositionRequest);
+
+          if (qosReplyStream == null)
           {
-            Console.WriteLine("Reply result missing: " + qosPositionKpiStreamReply);
+            Console.WriteLine("Reply result missing: " + qosReplyStream);
           }
           else
           {
-            Console.WriteLine("Result: " + qosPositionKpiStreamReply.result);
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionResult));
-            MemoryStream ms = new MemoryStream();
-            foreach (QosPositionResult qpr in qosPositionKpiStreamReply.result.position_results)
+            foreach (var qosPositionKpiReply in qosReplyStream)
             {
-              ms.Position = 0;
-              serializer.WriteObject(ms, qpr);
+              // Serialize the DataContract and print everything:
+              DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionKpiReply));
+              MemoryStream ms = new MemoryStream();
+              serializer.WriteObject(ms, qosPositionKpiReply);
               string jsonStr = Util.StreamToString(ms);
-              Console.WriteLine("QosPositionResult: " + jsonStr);
+              Console.WriteLine("QoS of requested gps location(s): " + jsonStr);
             }
+            qosReplyStream.Dispose();
           }
         }
         catch (HttpException httpe)
