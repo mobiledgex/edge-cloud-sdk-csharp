@@ -88,6 +88,19 @@ namespace DistributedMatchEngine
 
   }
 
+  class EmptyCarrierInfo: ICarrierInfo
+  {
+    public string GetCurrentCarrierName()
+    {
+      return null;
+    }
+
+    public string GetMccMnc()
+    {
+      return null;
+    }
+  }
+
 
   public class MatchingEngine
   {
@@ -95,9 +108,12 @@ namespace DistributedMatchEngine
     private static HttpClient httpClient;
     public const UInt32 defaultDmeRestPort = 38001;
     public const string carrierNameDefault = "gddt";
+    public const string fallbackDmeHost = "sdkdemo.dme.mobiledgex.net";
+    public const string baseDmeHost = "dme.mobiledgex.net";
 
-    string baseDmeHost = "dme.mobiledgex.net";
     UInt32 dmePort { get; set; } = defaultDmeRestPort; // HTTP REST port
+
+    public ICarrierInfo carrierInfo { get; set; }
 
     // API Paths:
     private string registerAPI = "/v1/registerclient";
@@ -109,6 +125,9 @@ namespace DistributedMatchEngine
     private string getfqdnlistAPI = "/v1/getfqdnlist";
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
 
+    public int REST_TIMEOUT_MS { get; set; } = 10000;
+    public const long TICKS_PER_MS = 10000;
+
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
@@ -116,42 +135,45 @@ namespace DistributedMatchEngine
     public MatchingEngine()
     {
       httpClient = new HttpClient();
+      httpClient.Timeout = TimeSpan.FromTicks(REST_TIMEOUT_MS * TICKS_PER_MS);
+      carrierInfo = new EmptyCarrierInfo();
     }
 
     public string GetCarrierName()
     {
-      return carrierNameDefault;
+      return carrierInfo.GetCurrentCarrierName();
     }
 
-    string GenerateDmeHostPath(string carrierName)
+    public string GenerateDmeHostName()
     {
-      if (carrierName == null || carrierName == "")
+      if (carrierInfo == null)
       {
-        return carrierNameDefault + "." + baseDmeHost;
+        throw new InvalidCarrierInfoException("Missing platform integration interface.");
       }
-      return carrierName + "." + baseDmeHost;
-    }
 
-    public string GenerateDmeBaseUri(string carrierName, UInt32 port = defaultDmeRestPort)
-    {
-      return "https://" + GenerateDmeHostPath(carrierName) + ":" + port;
-    }
-
-    public string CreateUri(string host, UInt32 port)
-    {
-      if (host != null && host != "")
+      string mccmnc = carrierInfo.GetMccMnc();
+      if (mccmnc == null)
       {
-        return "https://" + host + ":" + port;
+        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string. Returning fallback default.");
+        return fallbackDmeHost;
       }
-      return GenerateDmeBaseUri(null, port);
+
+      // Check minimum size:
+      if (mccmnc.Length < 5)
+      {
+        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string length. Returning fallback default.");
+        return fallbackDmeHost;
+      }
+
+      string mcc = mccmnc.Substring(0, 3);
+      string mnc = mccmnc.Substring(3);
+
+      return mcc + "-" + mnc + "." + baseDmeHost;
     }
 
-    /*
-     * This is temporary, and must be updated later.
-     */
-    private bool SetCredentials(string caCert, string clientCert, string clientPrivKey)
+    private string CreateUri(string host, uint port)
     {
-      return false;
+      return "https://" + host + ":" + port;
     }
 
     private async Task<Stream> PostRequest(string uri, string jsonStr)
@@ -162,7 +184,6 @@ namespace DistributedMatchEngine
       var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
       Log.D("Post Body: " + jsonStr);
       var response = await httpClient.PostAsync(uri, stringContent);
-
 
       if (response == null)
       {
@@ -307,6 +328,11 @@ namespace DistributedMatchEngine
       };
     }
 
+    public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
+    {
+      return await RegisterClient(GenerateDmeHostName(), defaultDmeRestPort, request);
+    }
+
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
@@ -346,6 +372,11 @@ namespace DistributedMatchEngine
       };
     }
 
+    public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request)
+    {
+      return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request);
+    }
+
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest));
@@ -378,6 +409,11 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         verify_loc_token = null
       };
+    }
+
+    public async Task<VerifyLocationReply> VerifyLocation(VerifyLocationRequest request)
+    {
+      return await VerifyLocation(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
 
     public async Task<VerifyLocationReply> VerifyLocation(string host, uint port, VerifyLocationRequest request)
@@ -418,6 +454,11 @@ namespace DistributedMatchEngine
     /*
      * Retrieves the carrier based network based geolocation of the network device.
      */
+    public async Task<GetLocationReply> GetLocation(GetLocationRequest request)
+    {
+      return await GetLocation(GenerateDmeHostName(), defaultDmeRestPort, request);
+    }
+
     public async Task<GetLocationReply> GetLocation(string host, uint port, GetLocationRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(GetLocationRequest));
@@ -435,7 +476,6 @@ namespace DistributedMatchEngine
       GetLocationReply reply = (GetLocationReply)deserializer.ReadObject(responseStream);
       return reply;
     }
-
 
     public AppInstListRequest CreateAppInstListRequest(string carrierName, Loc loc)
     {
@@ -455,6 +495,11 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         gps_location = loc
       };
+    }
+
+    public async Task<AppInstListReply> GetAppInstList(AppInstListRequest request)
+    {
+      return await GetAppInstList(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
 
     public async Task<AppInstListReply> GetAppInstList(string host, uint port, AppInstListRequest request)
@@ -487,6 +532,11 @@ namespace DistributedMatchEngine
         ver = 1,
         session_cookie = this.sessionCookie
       };
+    }
+
+    public async Task<FqdnListReply> GetFqdnList(FqdnListRequest request)
+    {
+      return await GetFqdnList(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
 
     public async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
@@ -524,6 +574,11 @@ namespace DistributedMatchEngine
       };
     }
 
+    public async Task<DynamicLocGroupReply> AddUserToGroup(DynamicLocGroupRequest request)
+    {
+      return await AddUserToGroup(GenerateDmeHostName(), defaultDmeRestPort, request);
+    }
+
     public async Task<DynamicLocGroupReply> AddUserToGroup(string host, uint port, DynamicLocGroupRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DynamicLocGroupRequest));
@@ -557,6 +612,11 @@ namespace DistributedMatchEngine
         lte_category = lteCategory,
         band_selection = bandSelection
       };
+    }
+
+    public async Task<QosPositionKpiStream> GetQosPositionKpi(QosPositionRequest request)
+    {
+      return await GetQosPositionKpi(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
 
     public async Task<QosPositionKpiStream> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
