@@ -35,9 +35,6 @@ namespace RestSample
     static string appVers = "1.0";
     static string developerAuthToken = "";
 
-    static string host = "mexdemo.dme.mobiledgex.net";
-    static UInt32 port = 38001;
-
     // Get the ephemerial carriername from device specific properties.
     async static Task<string> getCurrentCarrierName()
     {
@@ -109,7 +106,6 @@ namespace RestSample
         Console.WriteLine("MobiledgeX RestSample!");
 
         MatchingEngine me = new MatchingEngine();
-        port = MatchingEngine.defaultDmeRestPort;
 
         // Start location task. This is for test use only. The source of the
         // location in an Unity application should be from an application context
@@ -121,7 +117,7 @@ namespace RestSample
         // APIs depend on Register client to complete successfully:
         try
         {
-          var registerClientReply = await me.RegisterClient(host, port, registerClientRequest);
+          var registerClientReply = await me.RegisterClient(registerClientRequest);
           Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
         }
         catch (HttpException httpe) // HTTP status, and REST API call error codes.
@@ -143,7 +139,7 @@ namespace RestSample
         // FindCloudlet:
         try
         {
-          var findCloudletReply = await me.FindCloudlet(host, port, findCloudletRequest);
+          var findCloudletReply = await me.FindCloudlet(findCloudletRequest);
           Console.WriteLine("FindCloudlet Reply: " + findCloudletReply.status);
           Console.WriteLine("FindCloudlet:" +
                   " ver: " + findCloudletReply.ver +
@@ -170,7 +166,7 @@ namespace RestSample
         // Get Location:
         try
         {
-          var getLocationReply = await me.GetLocation(host, port, getLocationRequest);
+          var getLocationReply = await me.GetLocation(getLocationRequest);
           var location = getLocationReply.network_location;
           Console.WriteLine("GetLocationReply: longitude: " + location.longitude + ", latitude: " + location.latitude);
         }
@@ -183,7 +179,7 @@ namespace RestSample
         try
         {
           Console.WriteLine("VerifyLocation() may timeout, due to reachability of carrier verification servers from your network.");
-          var verifyLocationReply = await me.VerifyLocation(host, port, verifyLocationRequest);
+          var verifyLocationReply = await me.VerifyLocation(verifyLocationRequest);
           Console.WriteLine("VerifyLocation Reply: " + verifyLocationReply.gps_location_status);
         }
         catch (HttpException httpe)
@@ -208,7 +204,7 @@ namespace RestSample
 
           var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null);
 
-          var qosReplyStream = await me.GetQosPositionKpi(host, port, qosPositionRequest);
+          var qosReplyStream = await me.GetQosPositionKpi(qosPositionRequest);
 
           if (qosReplyStream == null)
           {
