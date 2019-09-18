@@ -44,70 +44,57 @@ namespace RestSample
       return carrierName;
     }
 
-    static Loc createLocation(double longitude_src, double latitude_src, double direction_degrees, double kilometers)
+    static Timestamp createTimestamp(int futureSeconds)
     {
-      long ticks = DateTime.Now.Ticks;
-      long sec = ticks / TimeSpan.TicksPerSecond; // Truncates.
-      long remainderTicks = ticks - (sec * TimeSpan.TicksPerSecond);
-      int nanos = (int)(remainderTicks / TimeSpan.TicksPerMillisecond) * 1000000;
+        long ticks = DateTime.Now.Ticks;
+        long sec = ticks / TimeSpan.TicksPerSecond; // Truncates.
+        long remainderTicks = ticks - (sec * TimeSpan.TicksPerSecond);
+        int nanos = (int)(remainderTicks / TimeSpan.TicksPerMillisecond) * 1000000;
 
-      double direction_radians = direction_degrees * Math.PI / 180;
-
-      Loc loc = new Loc
-      {
-        longitude = longitude_src + kilometers * Math.Cos(direction_radians),
-        latitude = latitude_src + kilometers * Math.Sin(direction_radians),
-        timestamp = new Timestamp
+        var timestamp = new Timestamp
         {
-          seconds = sec.ToString(),
-          nanos = nanos
-        }
-      };
-
-      return loc;
+            seconds = (sec + futureSeconds).ToString(),
+            nanos = nanos
+        };
+        return timestamp;
     }
 
     static List<QosPosition> CreateQosPositionList(Loc firstLocation, double direction_degrees, double totalDistanceKm, double increment)
     {
       var req = new List<QosPosition>();
-      long positionid = 1;
-      Loc lastLocation = createLocation(firstLocation.longitude, firstLocation.latitude, 0, 0);
+      double kmPerDegreeLong = 111.32; // at Equator
+      double kmPerDegreeLat = 110.57; // at Equator
+      double addLongitude = (Math.Cos(direction_degrees * (Math.PI/180)) * increment) / kmPerDegreeLong;
+      double addLatitude = (Math.Sin(direction_degrees * (Math.PI/180)) * increment) / kmPerDegreeLat;
+      double i = 0d;
+      double longitude = firstLocation.longitude;
+      double latitude = firstLocation.latitude;
 
-      var firstQosPostion = new QosPosition
+      long id = 1;
+
+      while (i < totalDistanceKm)
       {
-        positionid = positionid.ToString(),
-        gps_location = lastLocation
-      };
+        longitude += addLongitude;
+        latitude += addLatitude;
+        i += increment;
 
-      req.Add(firstQosPostion);
-
-      var traverse = increment;
-      for (traverse = increment; traverse + increment < totalDistanceKm - increment; traverse += increment, positionid++)
-      {
-        Loc next = createLocation(lastLocation.longitude, lastLocation.latitude, direction_degrees, increment);
-        var np = new QosPosition
+        // FIXME: No time is attached to GPS location, as that breaks the server!
+        var qloc = new QosPosition
         {
-          positionid = positionid.ToString(),
-          gps_location = next
+          positionid = id.ToString(),
+          gps_location = new Loc
+          {
+            longitude = longitude,
+            latitude = latitude,
+            timestamp = createTimestamp(100)
+          }
         };
-        req.Add(np);
-        lastLocation = next;
-      }
 
-      // Last point, if needed.
-      if (traverse < totalDistanceKm)
-      {
-        lastLocation = createLocation(lastLocation.longitude, lastLocation.latitude, direction_degrees, totalDistanceKm);
-        var lastPosition = new QosPosition
-        {
-          positionid = positionid.ToString(),
-          gps_location = lastLocation
-        };
-        req.Add(lastPosition);
+        req.Add(qloc);
+        id++;
       }
-
       return req;
-    }
+    }     
 
     async static Task Main(string[] args)
     {
