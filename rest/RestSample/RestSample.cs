@@ -29,11 +29,15 @@ namespace RestSample
 {
   class Program
   {
-    static string carrierName = "gddt";
+    static string carrierName = "GDDT";
     static string devName = "MobiledgeX";
     static string appName = "MobiledgeX SDK Demo";
     static string appVers = "1.0";
     static string developerAuthToken = "";
+
+    // For SDK purposes only, this allows continued operation against default app insts.
+    // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
+    static string fallbackDmeHost = MatchingEngine.fallbackDmeHost;
 
     // Get the ephemerial carriername from device specific properties.
     async static Task<string> getCurrentCarrierName()
@@ -106,6 +110,7 @@ namespace RestSample
         Console.WriteLine("MobiledgeX RestSample!");
 
         MatchingEngine me = new MatchingEngine();
+        me.SetTimeout(15000);
 
         // Start location task. This is for test use only. The source of the
         // location in an Unity application should be from an application context
@@ -115,10 +120,20 @@ namespace RestSample
         var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken);
 
         // APIs depend on Register client to complete successfully:
+        RegisterClientReply registerClientReply;
         try
         {
-          var registerClientReply = await me.RegisterClient(registerClientRequest);
-          Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
+          try
+          {
+            registerClientReply = await me.RegisterClient(registerClientRequest);
+            Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
+          }
+          catch (DmeDnsException)
+          {
+            // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
+            registerClientReply = await me.RegisterClient(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
+            Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
+          }
         }
         catch (HttpException httpe) // HTTP status, and REST API call error codes.
         {
@@ -139,23 +154,37 @@ namespace RestSample
         // FindCloudlet:
         try
         {
-          var findCloudletReply = await me.FindCloudlet(findCloudletRequest);
-          Console.WriteLine("FindCloudlet Reply: " + findCloudletReply.status);
-          Console.WriteLine("FindCloudlet:" +
-                  " ver: " + findCloudletReply.ver +
-                  ", fqdn: " + findCloudletReply.fqdn +
-                  ", cloudlet_location: " +
-                  " long: " + findCloudletReply.cloudlet_location.longitude +
-                  ", lat: " + findCloudletReply.cloudlet_location.latitude);
-          // App Ports:
-          foreach (AppPort p in findCloudletReply.ports)
+          FindCloudletReply findCloudletReply = null;
+          try
           {
-            Console.WriteLine("Port: fqdn_prefix: " + p.fqdn_prefix +
-                  ", protocol: " + p.proto +
-                  ", public_port: " + p.public_port +
-                  ", internal_port: " + p.internal_port +
-                  ", path_prefix: " + p.path_prefix +
-                  ", end_port: " + p.end_port);
+            await me.FindCloudlet(findCloudletRequest);
+          }
+          catch (DmeDnsException)
+          {
+            // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
+            findCloudletReply = await me.FindCloudlet(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
+          }
+          Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
+
+          if (findCloudletReply != null)
+          {
+            Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.status);
+            Console.WriteLine("FindCloudlet:" +
+                    " ver: " + findCloudletReply.ver +
+                    ", fqdn: " + findCloudletReply.fqdn +
+                    ", cloudlet_location: " +
+                    " long: " + findCloudletReply.cloudlet_location.longitude +
+                    ", lat: " + findCloudletReply.cloudlet_location.latitude);
+            // App Ports:
+            foreach (AppPort p in findCloudletReply.ports)
+            {
+              Console.WriteLine("Port: fqdn_prefix: " + p.fqdn_prefix +
+                    ", protocol: " + p.proto +
+                    ", public_port: " + p.public_port +
+                    ", internal_port: " + p.internal_port +
+                    ", path_prefix: " + p.path_prefix +
+                    ", end_port: " + p.end_port);
+            }
           }
         }
         catch (HttpException httpe)
@@ -164,9 +193,20 @@ namespace RestSample
         }
 
         // Get Location:
+        GetLocationReply getLocationReply = null;
+
         try
         {
-          var getLocationReply = await me.GetLocation(getLocationRequest);
+          try
+          {
+            getLocationReply = await me.GetLocation(getLocationRequest);
+          }
+          catch (DmeDnsException)
+          {
+            getLocationReply = await me.GetLocation(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, getLocationRequest);
+          }
+          Console.WriteLine("GetLocation Reply: " + getLocationReply);
+
           var location = getLocationReply.network_location;
           Console.WriteLine("GetLocationReply: longitude: " + location.longitude + ", latitude: " + location.latitude);
         }
@@ -179,8 +219,19 @@ namespace RestSample
         try
         {
           Console.WriteLine("VerifyLocation() may timeout, due to reachability of carrier verification servers from your network.");
-          var verifyLocationReply = await me.VerifyLocation(verifyLocationRequest);
-          Console.WriteLine("VerifyLocation Reply: " + verifyLocationReply.gps_location_status);
+          VerifyLocationReply verifyLocationReply = null;
+          try
+          {
+            verifyLocationReply = await me.VerifyLocation(verifyLocationRequest);
+          }
+          catch (DmeDnsException)
+          {
+            verifyLocationReply = await me.VerifyLocation(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, verifyLocationRequest);
+          }
+          if (verifyLocationReply != null)
+          {
+            Console.WriteLine("VerifyLocation Reply: " + verifyLocationReply.gps_location_status);
+          }
         }
         catch (HttpException httpe)
         {
@@ -204,7 +255,14 @@ namespace RestSample
 
           var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null);
 
-          var qosReplyStream = await me.GetQosPositionKpi(qosPositionRequest);
+          QosPositionKpiStream qosReplyStream = null;
+          try
+          {
+            qosReplyStream = await me.GetQosPositionKpi(qosPositionRequest);
+          } catch (DmeDnsException)
+          {
+            qosReplyStream = await me.GetQosPositionKpi(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
+          }
 
           if (qosReplyStream == null)
           {
