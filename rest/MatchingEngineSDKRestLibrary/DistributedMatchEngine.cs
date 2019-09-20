@@ -31,7 +31,13 @@ using System.Runtime.Serialization.Json;
 
 namespace DistributedMatchEngine
 {
-
+  public class DmeDnsException: Exception
+  {
+    public DmeDnsException(string message)
+        : base(message)
+    {
+    }
+  }
   public class HttpException : Exception
   {
     public HttpStatusCode HttpStatusCode { get; set; }
@@ -125,7 +131,7 @@ namespace DistributedMatchEngine
     private string getfqdnlistAPI = "/v1/getfqdnlist";
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
 
-    public int REST_TIMEOUT_MS { get; set; } = 10000;
+    public const int DEFAULT_REST_TIMEOUT_MS = 10000;
     public const long TICKS_PER_MS = 10000;
 
     public string sessionCookie { get; set; }
@@ -135,8 +141,18 @@ namespace DistributedMatchEngine
     public MatchingEngine()
     {
       httpClient = new HttpClient();
-      httpClient.Timeout = TimeSpan.FromTicks(REST_TIMEOUT_MS * TICKS_PER_MS);
+      httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
       carrierInfo = new EmptyCarrierInfo();
+    }
+
+    // Set the REST timeout for DME APIs.
+    public TimeSpan SetTimeout(int timeout_in_milliseconds)
+    {
+      if (timeout_in_milliseconds > 1)
+      {
+        return httpClient.Timeout = TimeSpan.FromTicks(timeout_in_milliseconds * TICKS_PER_MS);
+      }
+      return httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
     }
 
     public string GetCarrierName()
@@ -154,21 +170,31 @@ namespace DistributedMatchEngine
       string mccmnc = carrierInfo.GetMccMnc();
       if (mccmnc == null)
       {
-        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string. Returning fallback default.");
-        return fallbackDmeHost;
+        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string.");
+        throw new DmeDnsException("Cannot generate DME hostname, mccmnc is empty");
       }
 
       // Check minimum size:
       if (mccmnc.Length < 5)
       {
-        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string length. Returning fallback default.");
-        return fallbackDmeHost;
+        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string length.");
+        throw new DmeDnsException("Cannot generate DME hostname, mccmnc length is invalid: " + mccmnc.Length);
       }
 
       string mcc = mccmnc.Substring(0, 3);
       string mnc = mccmnc.Substring(3);
 
-      return mcc + "-" + mnc + "." + baseDmeHost;
+      string potentialDmeHost = mcc + "-" + mnc + "." + baseDmeHost;
+
+      // This host might not actually exist (yet):
+      IPHostEntry ipHostEntry = Dns.GetHostEntry(potentialDmeHost);
+      if (ipHostEntry.AddressList.Length > 0)
+      {
+        return potentialDmeHost;
+      }
+
+      // Let the caller handle an unsupported DME configuration.
+      throw new DmeDnsException("Generated mcc-mnc." + baseDmeHost + " hostname not found: " + potentialDmeHost);
     }
 
     private string CreateUri(string host, uint port)
