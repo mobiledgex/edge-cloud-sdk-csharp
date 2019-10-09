@@ -55,7 +55,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        status = Enum.TryParse(value, out LocStatus locStatus) ? locStatus : LocStatus.LOC_UNKNOWN;
+        try
+        {
+          status = (LocStatus)Enum.Parse(typeof(LocStatus), value);
+        }
+        catch
+        {
+          status = LocStatus.LOC_UNKNOWN;
+        }
       }
     }
 

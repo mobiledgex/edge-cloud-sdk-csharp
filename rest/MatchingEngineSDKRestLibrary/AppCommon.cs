@@ -47,7 +47,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        proto = Enum.TryParse(value, out LProto lproto) ? lproto : LProto.L_PROTO_UNKNOWN;
+        try
+        {
+          proto = (LProto)Enum.Parse(typeof(LProto), value);
+        }
+        catch
+        {
+          proto = LProto.L_PROTO_UNKNOWN;
+        }
       }
     }
 

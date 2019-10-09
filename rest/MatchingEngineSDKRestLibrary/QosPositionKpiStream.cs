@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Json;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
@@ -212,6 +213,29 @@ namespace DistributedMatchEngine
       }
     }
 
+    private ReplyStatus ParseReplyStatus(string responseStr)
+    {
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      string statusStr;
+      if (jsObj != null && jsObj.TryGetValue("result", out JsonValue resultValue))
+      {
+        statusStr = resultValue["status"];
+        if (statusStr != null) {
+          ReplyStatus replyStatus;
+          try
+          {
+            replyStatus = (ReplyStatus)Enum.Parse(typeof(ReplyStatus), statusStr);
+          }
+          catch
+          {
+            replyStatus = ReplyStatus.RS_UNDEFINED;
+          }
+          return replyStatus;
+        }
+      }
+      return ReplyStatus.RS_UNDEFINED;
+    }
+
     public IEnumerator<QosPositionKpiReply> GetEnumerator()
     {
       while (sr.Peek() > -1 && !sr.EndOfStream)
@@ -226,7 +250,10 @@ namespace DistributedMatchEngine
           try
           {
             reply = deserializer.ReadObject(ms) as QosPositionKpiStreamReply;
-          } catch (Exception e)
+            // Re-parse if still on default value.
+            reply.result.status = reply.result.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(qprJsonStr) : reply.result.status;
+          }
+          catch (Exception e)
           {
             Console.Error.WriteLine(e.StackTrace);
             Console.Error.WriteLine(reply.error);
