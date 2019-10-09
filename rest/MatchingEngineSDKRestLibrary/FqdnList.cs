@@ -78,7 +78,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        status = Enum.TryParse(value, out FLStatus flStatus) ? flStatus : FLStatus.FL_UNDEFINED;
+        try
+        {
+          status = (FLStatus)Enum.Parse(typeof(FLStatus), value);
+        }
+        catch
+        {
+          status = FLStatus.FL_UNDEFINED;
+        }
       }
     }
   }

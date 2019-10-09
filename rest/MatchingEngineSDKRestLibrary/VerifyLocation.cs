@@ -72,7 +72,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        tower_status = Enum.TryParse(value, out TowerStatus towerStatus) ? towerStatus : TowerStatus.TOWER_UNKNOWN;
+        try
+        {
+          tower_status = (TowerStatus)Enum.Parse(typeof(TowerStatus), value);
+        }
+        catch
+        {
+          tower_status = TowerStatus.TOWER_UNKNOWN;
+        }
       }
     }
 
@@ -87,7 +94,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        gps_location_status = Enum.TryParse(value, out GPSLocationStatus gpsLocation) ? gpsLocation : GPSLocationStatus.LOC_UNKNOWN;
+        try
+        {
+          gps_location_status = (GPSLocationStatus)Enum.Parse(typeof(GPSLocationStatus), value);
+        }
+        catch
+        {
+          gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
+        }
       }
     }
 

@@ -64,7 +64,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        status = Enum.TryParse(value, out FindStatus findStatus) ? findStatus : FindStatus.FIND_UNKNOWN;
+        try
+        {
+          status = (FindStatus)Enum.Parse(typeof(FindStatus), value);
+        }
+        catch
+        {
+          status = FindStatus.FIND_UNKNOWN;
+        }
       }
     }
 

@@ -54,7 +54,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        status = Enum.TryParse(value, out ReplyStatus replyStatus) ? replyStatus : ReplyStatus.RS_UNDEFINED;
+        try
+        {
+          status = (ReplyStatus)Enum.Parse(typeof(ReplyStatus), value);
+        }
+        catch
+        {
+          status = ReplyStatus.RS_UNDEFINED;
+        }
       }
     }
 
