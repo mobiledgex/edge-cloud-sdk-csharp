@@ -94,7 +94,14 @@ namespace DistributedMatchEngine
       }
       set
       {
-        status = Enum.TryParse(value, out AIStatus rStatus) ? rStatus : AIStatus.AI_UNDEFINED;
+        try
+        {
+          status = (AIStatus)Enum.Parse(typeof(AIStatus), value);
+        }
+        catch
+        {
+          status = AIStatus.AI_UNDEFINED;
+        }
       }
     }
 

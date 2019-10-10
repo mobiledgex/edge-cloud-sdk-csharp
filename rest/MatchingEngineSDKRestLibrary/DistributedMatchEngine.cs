@@ -24,10 +24,8 @@ using System.Text;
 using System.Collections.Generic;
 
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
-
 
 namespace DistributedMatchEngine
 {
@@ -354,6 +352,22 @@ namespace DistributedMatchEngine
       };
     }
 
+    private ReplyStatus ParseReplyStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      ReplyStatus replyStatus;
+      try
+      {
+        replyStatus = (ReplyStatus)Enum.Parse(typeof(ReplyStatus), jsObj[key]);
+      }
+      catch
+      {
+        replyStatus = ReplyStatus.RS_UNDEFINED;
+      }
+      return replyStatus;
+    }
+
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
       return await RegisterClient(GenerateDmeHostName(), defaultDmeRestPort, request);
@@ -373,10 +387,17 @@ namespace DistributedMatchEngine
       }
 
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
-      RegisterClientReply reply = (RegisterClientReply)deserializer.ReadObject(responseStream);
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      RegisterClientReply reply = (RegisterClientReply)deserializer.ReadObject(ms);
 
       this.sessionCookie = reply.session_cookie;
       this.tokenServerURI = reply.token_server_uri;
+
+      // Some platforms won't parse emums with same library binary.
+      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+
       return reply;
     }
 
@@ -398,6 +419,46 @@ namespace DistributedMatchEngine
       };
     }
 
+    private FindCloudletReply.FindStatus ParseFindStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      FindCloudletReply.FindStatus status;
+      try
+      {
+        status = (FindCloudletReply.FindStatus)Enum.Parse(typeof(FindCloudletReply.FindStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = FindCloudletReply.FindStatus.FIND_UNKNOWN;
+      }
+      return status;
+    }
+
+    private AppPort[] ParseAppPortTypes(AppPort[] appports, string responseStr)
+    {
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      JsonArray ports;
+
+      if (jsObj.ContainsKey("ports"))
+      {
+        ports = (JsonArray)jsObj["ports"];
+        for (int i = 0; i < ports.Count; i++)
+        {
+          try
+          {
+            JsonValue jval = ports[i];
+            appports[i].proto = (LProto)Enum.Parse(typeof(LProto), jval["proto"]);
+          }
+          catch
+          {
+            appports[i].proto = LProto.L_PROTO_UNKNOWN;
+          }
+        }
+      }
+      return appports;
+    }
+
     public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request)
     {
       return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request);
@@ -416,8 +477,18 @@ namespace DistributedMatchEngine
         return null;
       }
 
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply));
-      FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(responseStream);
+      FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(ms);
+
+      // Reparse if default value.
+      reply.status = reply.status == FindCloudletReply.FindStatus.FIND_UNKNOWN ? ParseFindStatus(responseStr) : reply.status;
+
+      // Port has an emum to reparse if set to default as well:
+      ParseAppPortTypes(reply.ports, responseStr);
+
       return reply;
     }
 
@@ -435,6 +506,38 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         verify_loc_token = null
       };
+    }
+
+    private VerifyLocationReply.TowerStatus ParseTowerStatus(string responseStr)
+    {
+      string key = "tower_status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      VerifyLocationReply.TowerStatus status;
+      try
+      {
+        status = (VerifyLocationReply.TowerStatus)Enum.Parse(typeof(VerifyLocationReply.TowerStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = VerifyLocationReply.TowerStatus.TOWER_UNKNOWN;
+      }
+      return status;
+    }
+
+    private VerifyLocationReply.GPSLocationStatus ParseGpsLocationStatus(string responseStr)
+    {
+      string key = "gps_location_status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      VerifyLocationReply.GPSLocationStatus status;
+      try
+      {
+        status = (VerifyLocationReply.GPSLocationStatus)Enum.Parse(typeof(VerifyLocationReply.GPSLocationStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = VerifyLocationReply.GPSLocationStatus.LOC_UNKNOWN;
+      }
+      return status;
     }
 
     public async Task<VerifyLocationReply> VerifyLocation(VerifyLocationRequest request)
@@ -458,8 +561,18 @@ namespace DistributedMatchEngine
         return null;
       }
 
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(VerifyLocationReply));
-      VerifyLocationReply reply = (VerifyLocationReply)deserializer.ReadObject(responseStream);
+      VerifyLocationReply reply = (VerifyLocationReply)deserializer.ReadObject(ms);
+
+      // Reparse if default value is set.
+      reply.tower_status = reply.tower_status == VerifyLocationReply.TowerStatus.TOWER_UNKNOWN ?
+        ParseTowerStatus(responseStr) : reply.tower_status;
+      reply.gps_location_status = reply.gps_location_status == VerifyLocationReply.GPSLocationStatus.LOC_UNKNOWN ?
+        ParseGpsLocationStatus(responseStr) : reply.gps_location_status;
+
       return reply;
     }
 
@@ -475,6 +588,22 @@ namespace DistributedMatchEngine
         carrier_name = carrierName,
         session_cookie = this.sessionCookie
       };
+    }
+
+    private GetLocationReply.LocStatus ParseLocationStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      GetLocationReply.LocStatus status;
+      try
+      {
+        status = (GetLocationReply.LocStatus)Enum.Parse(typeof(GetLocationReply.LocStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = GetLocationReply.LocStatus.LOC_UNKNOWN;
+      }
+      return status;
     }
 
     /*
@@ -498,8 +627,15 @@ namespace DistributedMatchEngine
         return null;
       }
 
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(GetLocationReply));
-      GetLocationReply reply = (GetLocationReply)deserializer.ReadObject(responseStream);
+      GetLocationReply reply = (GetLocationReply)deserializer.ReadObject(ms);
+
+      // Reparse if unknown:
+      reply.status = reply.status == GetLocationReply.LocStatus.LOC_UNKNOWN ? ParseLocationStatus(responseStr) : reply.status;
+
       return reply;
     }
 
@@ -523,6 +659,22 @@ namespace DistributedMatchEngine
       };
     }
 
+    private AppInstListReply.AIStatus ParseAIStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      AppInstListReply.AIStatus status;
+      try
+      {
+        status = (AppInstListReply.AIStatus)Enum.Parse(typeof(AppInstListReply.AIStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = AppInstListReply.AIStatus.AI_UNDEFINED;
+      }
+      return status;
+    }
+
     public async Task<AppInstListReply> GetAppInstList(AppInstListRequest request)
     {
       return await GetAppInstList(GenerateDmeHostName(), defaultDmeRestPort, request);
@@ -541,8 +693,15 @@ namespace DistributedMatchEngine
         return null;
       }
 
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppInstListReply));
-      AppInstListReply reply = (AppInstListReply)deserializer.ReadObject(responseStream);
+      AppInstListReply reply = (AppInstListReply)deserializer.ReadObject(ms);
+
+      // reparse if undefined.
+      reply.status = reply.status == AppInstListReply.AIStatus.AI_UNDEFINED ? ParseAIStatus(responseStr) : reply.status;
+
       return reply;
     }
 
@@ -558,6 +717,22 @@ namespace DistributedMatchEngine
         ver = 1,
         session_cookie = this.sessionCookie
       };
+    }
+
+    private FqdnListReply.FLStatus ParseFLStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      FqdnListReply.FLStatus status;
+      try
+      {
+        status = (FqdnListReply.FLStatus)Enum.Parse(typeof(FqdnListReply.FLStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = FqdnListReply.FLStatus.FL_UNDEFINED;
+      }
+      return status;
     }
 
     public async Task<FqdnListReply> GetFqdnList(FqdnListRequest request)
@@ -578,8 +753,14 @@ namespace DistributedMatchEngine
         return null;
       }
 
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FqdnListReply));
-      FqdnListReply reply = (FqdnListReply)deserializer.ReadObject(responseStream);
+      FqdnListReply reply = (FqdnListReply)deserializer.ReadObject(ms);
+
+      reply.status = reply.status == FqdnListReply.FLStatus.FL_UNDEFINED ? ParseFLStatus(responseStr) : reply.status;
+
       return reply;
     }
 
@@ -618,8 +799,14 @@ namespace DistributedMatchEngine
         return null;
       }
 
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(DynamicLocGroupReply));
-      DynamicLocGroupReply reply = (DynamicLocGroupReply)deserializer.ReadObject(responseStream);
+      DynamicLocGroupReply reply = (DynamicLocGroupReply)deserializer.ReadObject(ms);
+
+      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+
       return reply;
     }
 
