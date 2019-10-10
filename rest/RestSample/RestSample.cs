@@ -230,7 +230,8 @@ namespace RestSample
           }
           if (verifyLocationReply != null)
           {
-            Console.WriteLine("VerifyLocation Reply: " + verifyLocationReply.gps_location_status);
+            Console.WriteLine("VerifyLocation Reply GPS location status: " + verifyLocationReply.gps_location_status);
+            Console.WriteLine("VerifyLocation Reply Tower Status: " + verifyLocationReply.tower_status);
           }
         }
         catch (HttpException httpe)
