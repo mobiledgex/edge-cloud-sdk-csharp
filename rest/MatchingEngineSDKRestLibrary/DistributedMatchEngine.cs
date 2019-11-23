@@ -27,6 +27,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 
+using System.Net.Sockets;
+
 namespace DistributedMatchEngine
 {
   public class DmeDnsException: Exception
@@ -106,7 +108,7 @@ namespace DistributedMatchEngine
   }
 
 
-  public class MatchingEngine
+  public partial class MatchingEngine
   {
     public const string TAG = "MatchingEngine";
     private static HttpClient httpClient;
@@ -118,6 +120,7 @@ namespace DistributedMatchEngine
     UInt32 dmePort { get; set; } = defaultDmeRestPort; // HTTP REST port
 
     public ICarrierInfo carrierInfo { get; set; }
+    public NetInterface netInterface { get; set; }
 
     // API Paths:
     private string registerAPI = "/v1/registerclient";
@@ -141,6 +144,7 @@ namespace DistributedMatchEngine
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
       carrierInfo = new EmptyCarrierInfo();
+      netInterface = new EmptyNetInterface();
     }
 
     // Set the REST timeout for DME APIs.
@@ -849,6 +853,5 @@ namespace DistributedMatchEngine
 
       return qosPositionKpiStream;
     }
-
   };
 }

@@ -21,6 +21,10 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using System.Net.Sockets;
+using System.Text;
+using System.Security.Authentication;
+using System.Net.Http;
 
 using DistributedMatchEngine;
 
@@ -101,6 +105,51 @@ namespace RestSample
       return req;
     }
 
+    async static Task TestGetConnection(MatchingEngine me)
+    {
+        string message = "Connection Test";
+        byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
+        // TCP Connection Test
+        try
+        {
+            Socket tcpConnection = me.GetTCPConnection("localhost", 6667);
+            tcpConnection.Send(bytesMessage);
+            byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
+            tcpConnection.Receive(bytesReceive);
+            string receiveMessage = Encoding.ASCII.GetString(bytesReceive);
+            Console.WriteLine("Echoed string: " + receiveMessage);
+            tcpConnection.Close();
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+        // HTTP Connection Test
+        try
+        { 
+            HttpClient httpClient = await me.GetHTTPConnection("localhost", 6666);
+            StringContent content = new StringContent(message);
+            HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("response body is " + responseBody);
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("HttpRequestException is " + e.Message);
+        }
+        // TLS on TCP Connection Test
+        try
+        {
+            me.GetTCPTLSConnection("localhost", 6667);
+        }
+        catch (AuthenticationException e)
+        {
+            Console.WriteLine("Authentication Exception is " + e.Message);
+        }
+
+    }
+
     async static Task Main(string[] args)
     {
       try
@@ -116,6 +165,8 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
+
+        await TestGetConnection(me);
 
         var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken);
 
@@ -293,7 +344,6 @@ namespace RestSample
       {
         Console.WriteLine(e.Message + "\n" + e.StackTrace);
       }
-
     }
   };
 }
