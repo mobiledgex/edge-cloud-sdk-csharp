@@ -22,9 +22,12 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Net.Sockets;
+using System.Net.Security;
 using System.Text;
 using System.Security.Authentication;
 using System.Net.Http;
+using System.Net.WebSockets;
+using System.Threading;
 
 using DistributedMatchEngine;
 
@@ -105,10 +108,11 @@ namespace RestSample
       return req;
     }
 
-    async static Task TestGetConnection(MatchingEngine me)
+    async static Task TestTCPConnection(MatchingEngine me)
     {
-        string message = "Connection Test";
+        string message = "TCP Connection Test";
         byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
+
         // TCP Connection Test
         try
         {
@@ -117,13 +121,19 @@ namespace RestSample
             byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
             tcpConnection.Receive(bytesReceive);
             string receiveMessage = Encoding.ASCII.GetString(bytesReceive);
-            Console.WriteLine("Echoed string: " + receiveMessage);
+            Console.WriteLine("Echoed tcp string: " + receiveMessage);
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
         {
             Console.WriteLine("GetConnectionException is " + e.Message);
         }
+    }
+
+    async static Task TestHTTPConnection(MatchingEngine me)
+    {
+        string message = "HTTP Connection Test";
+
         // HTTP Connection Test
         try
         { 
@@ -132,22 +142,64 @@ namespace RestSample
             HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("response body is " + responseBody);
+            Console.WriteLine("http response body is " + responseBody);
         }
         catch (HttpRequestException e)
         {
             Console.WriteLine("HttpRequestException is " + e.Message);
         }
+    }
+
+    async static Task TestTCPTLSConnection(MatchingEngine me)
+    {
         // TLS on TCP Connection Test
         try
         {
-            me.GetTCPTLSConnection("localhost", 6667);
+            SslStream stream = me.GetTCPTLSConnection("localhost", 6667);
+            stream.Close();
         }
         catch (AuthenticationException e)
         {
             Console.WriteLine("Authentication Exception is " + e.Message);
         }
+    }
 
+    async static Task TestWebsocketsConnection(MatchingEngine me)
+    {
+        string message = "Websockets connection test";
+        byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
+
+        // Websocket Connection Test
+        try
+        {
+            ClientWebSocket socket = await me.GetWebsocketConnection("localhost", 6669);
+            // Send message
+            ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            await socket.SendAsync(sendBuffer, WebSocketMessageType.Binary, true, token);
+            // Receive message
+            byte[] bytesReceive = new byte[message.Length * 2];
+            ArraySegment<Byte> receiveBuffer = new ArraySegment<byte>(bytesReceive);
+            WebSocketReceiveResult result = await socket.ReceiveAsync(receiveBuffer, token);
+            Console.WriteLine("count is " + result.Count);
+            Console.WriteLine("status is " + result.CloseStatus);
+            string receiveMessage = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
+            Console.WriteLine("Echoed websocket result is " + receiveMessage);
+            await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "end of test", token);
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+    }
+
+    async static Task TestGetConnection(MatchingEngine me)
+    {
+        await TestWebsocketsConnection(me);
+        await TestTCPConnection(me);
+        await TestHTTPConnection(me);
+        await TestTCPTLSConnection(me);
     }
 
     async static Task Main(string[] args)
