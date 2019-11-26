@@ -41,6 +41,7 @@ namespace RestSample
     static string appName = "MobiledgeX SDK Demo";
     static string appVers = "1.0";
     static string developerAuthToken = "";
+    static string connectionTestFqdn = "arshootereucluster.berlin-main.tdg.mobiledgex.net";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
@@ -116,7 +117,7 @@ namespace RestSample
         // TCP Connection Test
         try
         {
-            Socket tcpConnection = me.GetTCPConnection("localhost", 6667);
+            Socket tcpConnection = me.GetTCPConnection(connectionTestFqdn, 6667);
             tcpConnection.Send(bytesMessage);
             byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
             tcpConnection.Receive(bytesReceive);
@@ -137,7 +138,7 @@ namespace RestSample
         // HTTP Connection Test
         try
         { 
-            HttpClient httpClient = await me.GetHTTPConnection("localhost", 6666);
+            HttpClient httpClient = await me.GetHTTPConnection(connectionTestFqdn, 6666);
             StringContent content = new StringContent(message);
             HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
             response.EnsureSuccessStatusCode();
@@ -155,12 +156,16 @@ namespace RestSample
         // TLS on TCP Connection Test
         try
         {
-            SslStream stream = me.GetTCPTLSConnection("localhost", 6667);
+            SslStream stream = me.GetTCPTLSConnection(connectionTestFqdn, 6667);
             stream.Close();
         }
         catch (AuthenticationException e)
         {
             Console.WriteLine("Authentication Exception is " + e.Message);
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
         }
     }
 
@@ -172,18 +177,17 @@ namespace RestSample
         // Websocket Connection Test
         try
         {
-            ClientWebSocket socket = await me.GetWebsocketConnection("localhost", 6669);
+            ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 6669);
+
             // Send message
             ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
-            await socket.SendAsync(sendBuffer, WebSocketMessageType.Binary, true, token);
+            await socket.SendAsync(sendBuffer, WebSocketMessageType.Text, true, token);
             // Receive message
             byte[] bytesReceive = new byte[message.Length * 2];
             ArraySegment<Byte> receiveBuffer = new ArraySegment<byte>(bytesReceive);
             WebSocketReceiveResult result = await socket.ReceiveAsync(receiveBuffer, token);
-            Console.WriteLine("count is " + result.Count);
-            Console.WriteLine("status is " + result.CloseStatus);
             string receiveMessage = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
             Console.WriteLine("Echoed websocket result is " + receiveMessage);
             await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "end of test", token);
@@ -191,6 +195,14 @@ namespace RestSample
         catch (GetConnectionException e)
         {
             Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+        catch (OperationCanceledException e)
+        {
+            Console.WriteLine("OperationCanceledException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Exception is " + e.Message);
         }
     }
 
