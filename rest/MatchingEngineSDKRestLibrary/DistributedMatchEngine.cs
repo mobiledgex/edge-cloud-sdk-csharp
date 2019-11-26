@@ -27,8 +27,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 
-using System.Net.Sockets;
-
 namespace DistributedMatchEngine
 {
   public class DmeDnsException: Exception

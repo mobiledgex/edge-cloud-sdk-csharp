@@ -1,9 +1,25 @@
-﻿using System;
+﻿/**
+ * Copyright 2019 MobiledgeX, Inc. All rights and licenses reserved.
+ * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.Http;
 using System.Net.WebSockets;
-using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
@@ -13,13 +29,6 @@ using System.Threading;
 
 namespace DistributedMatchEngine
 {
-
-    public interface NetInterface
-    {
-        string GetIPAddress();
-        bool IsWifi();
-        bool IsCellular();
-    }
 
     class EmptyNetInterface: NetInterface
     {
@@ -44,22 +53,23 @@ namespace DistributedMatchEngine
 
         public async Task<Socket> RegisterAndFindTCPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
         {
+            // Register Client
             RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
             await RegisterClient(registerRequest);
-
+            // Find Cloudlet
             FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
             FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
 
             List<AppPort> ports = GetTCPPorts(findCloudletReply);
-
+            // Make sure there is a TCP port
             if (ports.Count == 0) {
                 throw new GetConnectionException("No TCP Ports returned in findCloudletReply");
             }
 
-            AppPort port = ports[0];
+            AppPort port = ports[0]; // Choose 1st port in list
             string host = findCloudletReply.fqdn;
             string fqdnPrefix = port.fqdn_prefix;
-            host = fqdnPrefix + host;
+            host = fqdnPrefix + host;  // concatenate fqdn prefix associated with port chosen
             int publicPort = port.public_port;
 
             return GetTCPConnection(host, publicPort);
@@ -67,14 +77,15 @@ namespace DistributedMatchEngine
 
         public async Task<Socket> RegisterAndFindUDPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
         {
+            // Register Client
             RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
             await RegisterClient(registerRequest);
-
+            // Find Cloudlet
             FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
             FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
 
             List<AppPort> ports = GetUDPPorts(findCloudletReply);
-
+            // Make sure there is a UDP port
             if (ports.Count == 0) {
                 throw new GetConnectionException("No UDP Ports returned in findCloudletReply");
             }
@@ -91,14 +102,15 @@ namespace DistributedMatchEngine
 
         public async Task<HttpClient> RegisterAndFindHTTPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
         {
+            // Register Client
             RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
             await RegisterClient(registerRequest);
-
+            // Find Cloudlet
             FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
             FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
 
             List<AppPort> ports = GetHTTPPorts(findCloudletReply);
-
+            // Make sure there is an HTTP port
             if (ports.Count == 0) {
                 throw new GetConnectionException("No HTTP Ports returned in findCloudletReply");
             }
@@ -113,9 +125,9 @@ namespace DistributedMatchEngine
             return await GetHTTPConnection(host, publicPort);
         }
 
-        //public async Task<Socket> GetTCPConnection(string host, uint port)
         public Socket GetTCPConnection(string host, int port)
         {
+            // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
@@ -140,14 +152,14 @@ namespace DistributedMatchEngine
             return s;
         }
 
-        // close tcp client?
         public SslStream GetTCPTLSConnection(string host, int port)
         {
+            // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
-
+            // Create tcp client
             TcpClient tcpClient = new TcpClient(localEndPoint);
             tcpClient.Connect(host, port);
-
+            // Create ssl stream on top of tcp client and validate server cert
             using (SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
         new RemoteCertificateValidationCallback(ValidateServerCertificate), null))
             {
@@ -158,6 +170,7 @@ namespace DistributedMatchEngine
 
         public Socket GetUDPConnection(string host, int port)
         {
+            // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
@@ -184,80 +197,80 @@ namespace DistributedMatchEngine
 
         public async Task<HttpClient> GetHTTPConnection(string host, int port)
         {
+            // Initialize http client
             HttpClient httpClient = new HttpClient();
             UriBuilder uriBuilder = new UriBuilder("http", host, port);
             Uri uri = uriBuilder.Uri;
+            // Set address of URI http client will send requests to
             httpClient.BaseAddress = uri;
-            string responseBody = await httpClient.GetStringAsync(uri);
-            Console.WriteLine("responseBody is " + responseBody);
+            // Sends a GET Request: verifies if network path exists and checks for DNS failure
+            await httpClient.GetStringAsync(uri); // throws ArgumentNullException or HttpRequestException
             return httpClient;
         }
 
         public async Task<HttpClient> GetHTTPSConnection(string host, int port)
         {
+            // Initialize http client
             HttpClient httpClient = new HttpClient();
             UriBuilder uriBuilder = new UriBuilder("https", host, port);
             Uri uri = uriBuilder.Uri;
+            // Set address of URI https client will send requests to
             httpClient.BaseAddress = uri;
-            string responseBody = await httpClient.GetStringAsync(uri);
-            Console.WriteLine("responseBody is " + responseBody);
+            // Sends a GET Request: verifies if network path exists, checks for DNS failure, and checks server cert
+            await httpClient.GetStringAsync(uri); // throws ArgumentNullException or HttpRequestException
             return httpClient;
         }
 
         public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port)
         {
+            // Initialize websocket client
             ClientWebSocket webSocket = new ClientWebSocket();
             UriBuilder uriBuilder = new UriBuilder("ws", host, port);
             Uri uri = uriBuilder.Uri;
+            // Token is used to notify listeners/ delegates of task state
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
+            // initialize websocket handshake with server
             await webSocket.ConnectAsync(uri, token);
-            if (webSocket.State == WebSocketState.Open)
+            if (webSocket.State != WebSocketState.Open)
             {
-                return webSocket;
+                throw new GetConnectionException("Cannot get websocket connection");    
             }
-            else
-            {
-                throw new GetConnectionException("Cannot get websocket connection");
-            }
+            return webSocket;
         }
 
         public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port)
         {
+            // Initialize websocket class
             ClientWebSocket webSocket = new ClientWebSocket();
             UriBuilder uriBuilder = new UriBuilder("wss", host, port);
             Uri uri = uriBuilder.Uri;
+            // Token is used to notify listeners/ delegates of task state
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
+            // initialize websocket handshake  with server
             await webSocket.ConnectAsync(uri, token);
-            if (webSocket.State == WebSocketState.Open)
-            {
-                return webSocket;
-            }
-            else
+            if (webSocket.State != WebSocketState.Open)
             {
                 throw new GetConnectionException("Cannot get websocket connection");
             }
+            return webSocket;
         }
 
         private IPEndPoint GetLocalIP(int port)
         {
-            string host = netInterface.GetIPAddress();
-            IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
-            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (NetworkInterface inter in networkInterfaces)
+            if (netInterface == null)
             {
-                Console.WriteLine("ip properties are " + inter.GetIPProperties());
-                Console.WriteLine("Interface type is " + inter.NetworkInterfaceType);
-                Console.WriteLine("address is " + inter.GetPhysicalAddress().ToString());
+                throw new GetConnectionException("Have not integrated NetworkInterface");
             }
-            // Get cellular ip to bind to
-            IPHostEntry localHost = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress localIP = localHost.AddressList[0];
+            string host = netInterface.GetIPAddress();
+            if (host == null)
+            {
+                throw new GetConnectionException("Could not get Cellular interface");
+            }
+            // Gets IP address of host
+            IPAddress localIP = Dns.GetHostAddresses(host)[0];
             IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
-            foreach (IPAddress address in localHost.AddressList) {
-                Console.WriteLine("address list is " + address);
-            }
             return localEndPoint;
         }
 
