@@ -92,7 +92,7 @@ namespace DistributedMatchEngine
 
   }
 
-  class EmptyCarrierInfo: ICarrierInfo
+  class EmptyCarrierInfo: CarrierInfo
   {
     public string GetCurrentCarrierName()
     {
@@ -117,7 +117,7 @@ namespace DistributedMatchEngine
 
     UInt32 dmePort { get; set; } = defaultDmeRestPort; // HTTP REST port
 
-    public ICarrierInfo carrierInfo { get; set; }
+    public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
 
     // API Paths:
@@ -170,14 +170,14 @@ namespace DistributedMatchEngine
       string mccmnc = carrierInfo.GetMccMnc();
       if (mccmnc == null)
       {
-        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string.");
+        Log.E("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string.");
         throw new DmeDnsException("Cannot generate DME hostname, mccmnc is empty");
       }
 
       // Check minimum size:
       if (mccmnc.Length < 5)
       {
-        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string length.");
+        Log.E("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string length.");
         throw new DmeDnsException("Cannot generate DME hostname, mccmnc length is invalid: " + mccmnc.Length);
       }
 
