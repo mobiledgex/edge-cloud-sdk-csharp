@@ -205,17 +205,67 @@ namespace RestSample
         }
     }
 
+    // Test Workflow with TCP connection and exception handling
+    async static Task TestGetConnectionWorkflow(MatchingEngine me)
+    {
+        // MatchingEngine APIs Developer workflow:
+
+        // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, authToken, loc)
+        // hostAndPortsList = me.GetHostAndPorts(findCloudletReply, LProto);
+        // Developer chooses HostAndPort object they want to use from hostAndPortsList
+        // socket = me.GetTCPConnection(hostAndPort.host, hostAndPort.port, timeout)
+
+        var loc = await Util.GetLocationFromDevice();
+        FindCloudletReply reply;
+
+        try
+        {
+            reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
+        }
+        catch (DmeDnsException e)
+        {
+            Console.WriteLine("DmeDnsException is " + e.InnerException);
+            return;
+        }
+        List<HostAndPort> hostAndPorts = me.GetHostAndPorts(reply, LProto.L_PROTO_TCP);
+        if (hostAndPorts.Capacity == 0)
+        {
+            Console.WriteLine("No HostAndPorts returned");
+            return;
+        }
+        // Print list of Host and Ports
+        foreach (HostAndPort hostAndPort in hostAndPorts)
+        {
+            Console.WriteLine(hostAndPort);
+        }
+        HostAndPort remoteEndpoint = hostAndPorts[0];
+        Console.WriteLine("host is " + remoteEndpoint.host);
+        Console.WriteLine("port is " + remoteEndpoint.port);
+      
+        try
+        {
+            Socket tcpConnection = await me.GetTCPConnection(remoteEndpoint.host, remoteEndpoint.port, 5); // 5 second timeout
+            tcpConnection.Close();
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+    }
+
     async static Task TestGetConnection(MatchingEngine me)
     {
         Task websocketTest = TestWebsocketsConnection(me);
         Task tcpTest = TestTCPConnection(me);
         Task httpTest = TestHTTPConnection(me);
         Task tcpTlsTest = TestTCPTLSConnection(me);
+        Task getConnectionWorkflow = TestGetConnectionWorkflow(me);
 
         await websocketTest;
         await tcpTest;
         await httpTest;
-        await tcpTlsTest;   
+        await tcpTlsTest;
+        await getConnectionWorkflow;
     }
 
     async static Task Main(string[] args)

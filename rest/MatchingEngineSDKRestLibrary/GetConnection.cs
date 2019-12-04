@@ -52,80 +52,7 @@ namespace DistributedMatchEngine
     {
         private static ManualResetEvent TimeoutObj = new ManualResetEvent(false);
 
-        public async Task<Socket> RegisterAndFindTCPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
-        {
-            // Register Client
-            RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-            await RegisterClient(registerRequest);
-            // Find Cloudlet
-            FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
-            FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
-
-            List<AppPort> ports = GetTCPPorts(findCloudletReply);
-            // Make sure there is a TCP port
-            if (ports.Count == 0) {
-                throw new GetConnectionException("No TCP Ports returned in findCloudletReply");
-            }
-
-            AppPort port = ports[0]; // Choose 1st port in list
-            string host = findCloudletReply.fqdn;
-            string fqdnPrefix = port.fqdn_prefix;
-            host = fqdnPrefix + host;  // concatenate fqdn prefix associated with port chosen
-            int publicPort = port.public_port;
-
-            return await GetTCPConnection(host, publicPort, 5);
-        }
-
-        public async Task<Socket> RegisterAndFindUDPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
-        {
-            // Register Client
-            RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-            await RegisterClient(registerRequest);
-            // Find Cloudlet
-            FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
-            FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
-
-            List<AppPort> ports = GetUDPPorts(findCloudletReply);
-            // Make sure there is a UDP port
-            if (ports.Count == 0) {
-                throw new GetConnectionException("No UDP Ports returned in findCloudletReply");
-            }
-
-            AppPort port = ports[0];
-
-            string host = findCloudletReply.fqdn;
-            string fqdnPrefix = port.fqdn_prefix;
-            host = fqdnPrefix + host;
-            int publicPort = port.public_port;
-
-            return await GetUDPConnection(host, publicPort, 5);
-        }
-
-        public async Task<HttpClient> RegisterAndFindHTTPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
-        {
-            // Register Client
-            RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-            await RegisterClient(registerRequest);
-            // Find Cloudlet
-            FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
-            FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
-
-            List<AppPort> ports = GetHTTPPorts(findCloudletReply);
-            // Make sure there is an HTTP port
-            if (ports.Count == 0) {
-                throw new GetConnectionException("No HTTP Ports returned in findCloudletReply");
-            }
-
-            AppPort port = ports[0];
-
-            string host = findCloudletReply.fqdn;
-            string fqdnPrefix = port.fqdn_prefix;
-            host = fqdnPrefix + host;
-            int publicPort = port.public_port;
-
-            return await GetHTTPConnection(host, publicPort);
-        }
-
+        // Callback for the Socket object's BeginConnect function
         private static void ConnectCallback(IAsyncResult ar)
         {
             // Retrieve the socket from the state object.  
@@ -133,6 +60,17 @@ namespace DistributedMatchEngine
             // Complete the connection.  
             client.EndConnect(ar);  
             TimeoutObj.Set();
+        }
+
+        private static bool ValidateServerCertificate(object sender, X509Certificate certificate,
+X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            if (sslPolicyErrors == SslPolicyErrors.None) return true;
+
+            Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+      
+            // Do not allow this client to communicate with unauthenticated servers.
+            return false;
         }
 
         public async Task<Socket> GetTCPConnection(string host, int port, int timeout)
@@ -148,8 +86,9 @@ namespace DistributedMatchEngine
 
             TimeoutObj.Reset();
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
-            // Uses milliseconds
-            if (TimeoutObj.WaitOne(timeout * 1000, false))
+            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
+            if (TimeoutObj.WaitOne(timeout * 1000, false)) // WaitOne timeout is in milliseconds
+
             { 
                 if (!s.IsBound && !s.Connected) 
                 {
@@ -179,6 +118,7 @@ namespace DistributedMatchEngine
             TcpClient tcpClient = new TcpClient(localEndPoint);
             //TcpClient tcpClient = new TcpClient();
             var task = tcpClient.ConnectAsync(host, port);
+            // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout))) {
                 // Create ssl stream on top of tcp client and validate server cert
                 using (SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
@@ -193,7 +133,7 @@ namespace DistributedMatchEngine
                 throw new GetConnectionException("Timeout");
             }
         }
-
+        
         public async Task<Socket> GetUDPConnection(string host, int port, int timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
@@ -207,6 +147,7 @@ namespace DistributedMatchEngine
 
             TimeoutObj.Reset();
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
+            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
             if (TimeoutObj.WaitOne(timeout * 1000, false))
             { 
                 if (!s.IsBound && !s.Connected) 
@@ -262,6 +203,7 @@ namespace DistributedMatchEngine
             CancellationToken token = source.Token;
             // initialize websocket handshake with server
             var task = webSocket.ConnectAsync(uri, token);
+            // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout)))
             { 
                 if (webSocket.State != WebSocketState.Open)
@@ -287,6 +229,7 @@ namespace DistributedMatchEngine
             CancellationToken token = source.Token;
             // initialize websocket handshake  with server
             var task = webSocket.ConnectAsync(uri, token);
+            // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout)))
             { 
                 if (webSocket.State != WebSocketState.Open)
@@ -301,6 +244,7 @@ namespace DistributedMatchEngine
             }
         }
 
+        // Gets IP Address of the specified network interface
         private IPEndPoint GetLocalIP(int port)
         {
             if (netInterface == null)
@@ -373,17 +317,6 @@ namespace DistributedMatchEngine
                 }
             }
             return httpPorts;
-        }
-
-        private static bool ValidateServerCertificate(object sender, X509Certificate certificate,
-X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            if (sslPolicyErrors == SslPolicyErrors.None) return true;
-
-            Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
-      
-            // Do not allow this client to communicate with unauthenticated servers.
-            return false;
         }
     }
 }
