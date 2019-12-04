@@ -50,6 +50,7 @@ namespace DistributedMatchEngine
 
     public partial class MatchingEngine
     {
+        private static ManualResetEvent TimeoutObj = new ManualResetEvent(false);
 
         public async Task<Socket> RegisterAndFindTCPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
         {
@@ -72,7 +73,7 @@ namespace DistributedMatchEngine
             host = fqdnPrefix + host;  // concatenate fqdn prefix associated with port chosen
             int publicPort = port.public_port;
 
-            return GetTCPConnection(host, publicPort);
+            return await GetTCPConnection(host, publicPort, 5);
         }
 
         public async Task<Socket> RegisterAndFindUDPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
@@ -97,7 +98,7 @@ namespace DistributedMatchEngine
             host = fqdnPrefix + host;
             int publicPort = port.public_port;
 
-            return GetUDPConnection(host, publicPort);
+            return await GetUDPConnection(host, publicPort, 5);
         }
 
         public async Task<HttpClient> RegisterAndFindHTTPConnection(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
@@ -125,7 +126,16 @@ namespace DistributedMatchEngine
             return await GetHTTPConnection(host, publicPort);
         }
 
-        public Socket GetTCPConnection(string host, int port)
+        private static void ConnectCallback(IAsyncResult ar)
+        {
+            // Retrieve the socket from the state object.  
+            Socket client = (Socket) ar.AsyncState;  
+            // Complete the connection.  
+            client.EndConnect(ar);  
+            TimeoutObj.Set();
+        }
+
+        public async Task<Socket> GetTCPConnection(string host, int port, int timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
@@ -135,40 +145,56 @@ namespace DistributedMatchEngine
             // Create Socket and bind to local ip and connect to remote endpoint
             Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             s.Bind(localEndPoint);
-            s.Connect(remoteEndPoint);
 
-            if (!s.IsBound && !s.Connected) 
-            {
-                throw new GetConnectionException("Could not bind to interface or connect to server");
+            TimeoutObj.Reset();
+            s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
+            // Uses milliseconds
+            if (TimeoutObj.WaitOne(timeout * 1000, false))
+            { 
+                if (!s.IsBound && !s.Connected) 
+                {
+                    throw new GetConnectionException("Could not bind to interface or connect to server");
+                }
+                else if (!s.IsBound)
+                {
+                    throw new GetConnectionException("Could not bind to interface");
+                }
+                else if (!s.Connected)
+                {
+                    throw new GetConnectionException("Could not connect to server");
+                }
+                return s;
             }
-            else if (!s.IsBound)
+            else
             {
-                throw new GetConnectionException("Could not bind to interface");
+                throw new GetConnectionException("Timeout");
             }
-            else if (!s.Connected)
-            {
-                throw new GetConnectionException("Could not connect to server");
-            }
-            return s;
         }
 
-        public SslStream GetTCPTLSConnection(string host, int port)
+        public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
             // Create tcp client
             TcpClient tcpClient = new TcpClient(localEndPoint);
-            tcpClient.Connect(host, port);
-            // Create ssl stream on top of tcp client and validate server cert
-            using (SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
-        new RemoteCertificateValidationCallback(ValidateServerCertificate), null))
+            //TcpClient tcpClient = new TcpClient();
+            var task = tcpClient.ConnectAsync(host, port);
+            if (task.Wait(TimeSpan.FromSeconds(timeout))) {
+                // Create ssl stream on top of tcp client and validate server cert
+                using (SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
+            new RemoteCertificateValidationCallback(ValidateServerCertificate), null))
+                {
+                    sslStream.AuthenticateAsClient(host);
+                    return sslStream;
+                }
+            }
+            else
             {
-                sslStream.AuthenticateAsClient(host);
-                return sslStream;
+                throw new GetConnectionException("Timeout");
             }
         }
 
-        public Socket GetUDPConnection(string host, int port)
+        public async Task<Socket> GetUDPConnection(string host, int port, int timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
@@ -178,21 +204,29 @@ namespace DistributedMatchEngine
             // Create Socket and bind to local ip and connect to remote endpoint
             Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             s.Bind(localEndPoint);
-            s.Connect(remoteEndPoint);
 
-            if (!s.IsBound && !s.Connected) 
-            {
-                throw new GetConnectionException("Could not bind to interface or connect to server");
+            TimeoutObj.Reset();
+            s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
+            if (TimeoutObj.WaitOne(timeout * 1000, false))
+            { 
+                if (!s.IsBound && !s.Connected) 
+                {
+                    throw new GetConnectionException("Could not bind to interface or connect to server");
+                }
+                else if (!s.IsBound)
+                {
+                    throw new GetConnectionException("Could not bind to interface");
+                }
+                else if (!s.Connected)
+                {
+                    throw new GetConnectionException("Could not connect to server");
+                }
+                return s;
             }
-            else if (!s.IsBound)
+            else
             {
-                throw new GetConnectionException("Could not bind to interface");
+                throw new GetConnectionException("Timeout");
             }
-            else if (!s.Connected)
-            {
-                throw new GetConnectionException("Could not connect to server");
-            }
-            return s;
         }
 
         public async Task<HttpClient> GetHTTPConnection(string host, int port)
@@ -203,8 +237,6 @@ namespace DistributedMatchEngine
             Uri uri = uriBuilder.Uri;
             // Set address of URI http client will send requests to
             httpClient.BaseAddress = uri;
-            // Sends a GET Request: verifies if network path exists and checks for DNS failure
-            await httpClient.GetStringAsync(uri); // throws ArgumentNullException or HttpRequestException
             return httpClient;
         }
 
@@ -216,12 +248,10 @@ namespace DistributedMatchEngine
             Uri uri = uriBuilder.Uri;
             // Set address of URI https client will send requests to
             httpClient.BaseAddress = uri;
-            // Sends a GET Request: verifies if network path exists, checks for DNS failure, and checks server cert
-            await httpClient.GetStringAsync(uri); // throws ArgumentNullException or HttpRequestException
             return httpClient;
         }
 
-        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port)
+        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeout)
         {
             // Initialize websocket client
             ClientWebSocket webSocket = new ClientWebSocket();
@@ -231,15 +261,22 @@ namespace DistributedMatchEngine
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
             // initialize websocket handshake with server
-            await webSocket.ConnectAsync(uri, token);
-            if (webSocket.State != WebSocketState.Open)
-            {
-                throw new GetConnectionException("Cannot get websocket connection");    
+            var task = webSocket.ConnectAsync(uri, token);
+            if (task.Wait(TimeSpan.FromSeconds(timeout)))
+            { 
+                if (webSocket.State != WebSocketState.Open)
+                {
+                    throw new GetConnectionException("Cannot get websocket connection");    
+                }
+                return webSocket;
             }
-            return webSocket;
+            else
+            {
+                throw new GetConnectionException("Timeout");
+            }
         }
 
-        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port)
+        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeout)
         {
             // Initialize websocket class
             ClientWebSocket webSocket = new ClientWebSocket();
@@ -249,12 +286,19 @@ namespace DistributedMatchEngine
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
             // initialize websocket handshake  with server
-            await webSocket.ConnectAsync(uri, token);
-            if (webSocket.State != WebSocketState.Open)
-            {
-                throw new GetConnectionException("Cannot get websocket connection");
+            var task = webSocket.ConnectAsync(uri, token);
+            if (task.Wait(TimeSpan.FromSeconds(timeout)))
+            { 
+                if (webSocket.State != WebSocketState.Open)
+                {
+                    throw new GetConnectionException("Cannot get websocket connection");
+                }
+                return webSocket;
             }
-            return webSocket;
+            else
+            {
+                throw new GetConnectionException("Timeout");
+            }
         }
 
         private IPEndPoint GetLocalIP(int port)

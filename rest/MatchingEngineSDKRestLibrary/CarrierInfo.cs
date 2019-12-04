@@ -18,9 +18,9 @@
 namespace DistributedMatchEngine
 {
   /**
-   * ICarrierInfo telephony interface for the platform
+   * CarrierInfo telephony interface for the platform
    */
-  public interface ICarrierInfo
+  public interface CarrierInfo
   {
     string GetCurrentCarrierName();
     string GetMccMnc();

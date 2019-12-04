@@ -70,7 +70,6 @@ namespace RestSample
       return timestamp;
     }
 
-
     static List<QosPosition> CreateQosPositionList(Loc firstLocation, double direction_degrees, double totalDistanceKm, double increment)
     {
       var req = new List<QosPosition>();
@@ -117,7 +116,7 @@ namespace RestSample
         // TCP Connection Test
         try
         {
-            Socket tcpConnection = me.GetTCPConnection(connectionTestFqdn, 6667);
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 6667, 5);
             tcpConnection.Send(bytesMessage);
             byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
             tcpConnection.Receive(bytesReceive);
@@ -156,7 +155,7 @@ namespace RestSample
         // TLS on TCP Connection Test
         try
         {
-            SslStream stream = me.GetTCPTLSConnection(connectionTestFqdn, 6667);
+            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 6667, 5);
             stream.Close();
         }
         catch (AuthenticationException e)
@@ -177,7 +176,7 @@ namespace RestSample
         // Websocket Connection Test
         try
         {
-            ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 6669);
+            ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 6669, 5);
 
             // Send message
             ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
@@ -208,10 +207,15 @@ namespace RestSample
 
     async static Task TestGetConnection(MatchingEngine me)
     {
-        await TestWebsocketsConnection(me);
-        await TestTCPConnection(me);
-        await TestHTTPConnection(me);
-        await TestTCPTLSConnection(me);
+        Task websocketTest = TestWebsocketsConnection(me);
+        Task tcpTest = TestTCPConnection(me);
+        Task httpTest = TestHTTPConnection(me);
+        Task tcpTlsTest = TestTCPTLSConnection(me);
+
+        await websocketTest;
+        await tcpTest;
+        await httpTest;
+        await tcpTlsTest;   
     }
 
     async static Task Main(string[] args)
@@ -230,7 +234,9 @@ namespace RestSample
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
 
-        await TestGetConnection(me);
+        Task testing = TestGetConnection(me);
+        await testing;
+        Console.WriteLine("connection test finished");
 
         var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken);
 
