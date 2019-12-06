@@ -507,30 +507,6 @@ namespace DistributedMatchEngine
         return findCloudletReply;
     }
 
-    // Returns list of HostAndPort objects from findCloudletReply that match the specified protocol
-    public List<HostAndPort> GetHostAndPorts(FindCloudletReply reply, LProto proto)
-    {
-        List<HostAndPort> list = new List<HostAndPort>();
-        string baseFqdn = reply.fqdn;
-        // Get list of available AppPort objects which hold public_port as well as fqdn and path prefixes
-        AppPort[] ports = reply.ports;
-        foreach (AppPort appPort in ports)
-        {
-            if (appPort.proto == proto)
-            {
-                // Prepend fqdn_prefix and append path_prefix to baseFqdn
-                string host = appPort.fqdn_prefix + baseFqdn + appPort.path_prefix;
-                int port = appPort.public_port;
-                // Initialize HostAndPort object that will contain the constructed host and public port
-                HostAndPort hostAndPort = new HostAndPort();
-                hostAndPort.host = host;
-                hostAndPort.port = port;
-                list.Add(hostAndPort);
-            }
-        }
-        return list;
-    }
-
     public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc)
     {
       if (sessionCookie == null)

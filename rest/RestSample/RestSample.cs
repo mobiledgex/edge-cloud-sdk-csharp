@@ -133,11 +133,14 @@ namespace RestSample
     async static Task TestHTTPConnection(MatchingEngine me)
     {
         string message = "HTTP Connection Test";
+        string uriString = connectionTestFqdn;
+        UriBuilder uriBuilder = new UriBuilder("http", uriString, 6666);
+        Uri uri = uriBuilder.Uri;
 
         // HTTP Connection Test
         try
         { 
-            HttpClient httpClient = await me.GetHTTPConnection(connectionTestFqdn, 6666);
+            HttpClient httpClient = await me.GetHTTPClient(uri);
             StringContent content = new StringContent(message);
             HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
             response.EnsureSuccessStatusCode();
@@ -211,9 +214,12 @@ namespace RestSample
         // MatchingEngine APIs Developer workflow:
 
         // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, authToken, loc)
-        // hostAndPortsList = me.GetHostAndPorts(findCloudletReply, LProto);
-        // Developer chooses HostAndPort object they want to use from hostAndPortsList
-        // socket = me.GetTCPConnection(hostAndPort.host, hostAndPort.port, timeout)
+        // OPTIONAL (if developer does not know info about ports):
+        //      hostAndPortsList = me.GetHostAndPorts(findCloudletReply, LProto);
+        //      Developer chooses HostAndPort object they want to use from hostAndPortsList
+        // socket = me.GetTCPConnection(findCloudletReply, containerPort, desiredPort, timeout)
+        //      containerPort is used to identify correct public_port
+        //      desiredPort can be set to 0 if user wants to default to public_port
 
         var loc = await Util.GetLocationFromDevice();
         FindCloudletReply reply;
@@ -227,24 +233,9 @@ namespace RestSample
             Console.WriteLine("DmeDnsException is " + e.InnerException);
             return;
         }
-        List<HostAndPort> hostAndPorts = me.GetHostAndPorts(reply, LProto.L_PROTO_TCP);
-        if (hostAndPorts.Capacity == 0)
-        {
-            Console.WriteLine("No HostAndPorts returned");
-            return;
-        }
-        // Print list of Host and Ports
-        foreach (HostAndPort hostAndPort in hostAndPorts)
-        {
-            Console.WriteLine(hostAndPort);
-        }
-        HostAndPort remoteEndpoint = hostAndPorts[0];
-        Console.WriteLine("host is " + remoteEndpoint.host);
-        Console.WriteLine("port is " + remoteEndpoint.port);
-      
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(remoteEndpoint.host, remoteEndpoint.port, 5); // 5 second timeout
+            Socket tcpConnection = await me.GetTCPConnection(reply, 6666, 6667, 5); // 5 second timeout
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
