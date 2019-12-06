@@ -58,7 +58,7 @@ namespace DistributedMatchEngine
       }
     }
 
-    // Container port
+    // Container port (Specified in Dockerfile)
     [DataMember]
     public Int32 internal_port;
     // Public facing port for TCP/UDP (may be mapped on shared LB reverse proxy)
@@ -70,15 +70,9 @@ namespace DistributedMatchEngine
     // FQDN prefix to prepend to base FQDN in FindCloudlet response. May be empty.
     [DataMember]
     public string fqdn_prefix;
-    // A non-zero end port indicates this is a port range from internal port to end port, inclusive.
+    // A non-zero end port indicates this is a port range from public port to end port, inclusive.
     [DataMember]
     public Int32 end_port;
-  }
-
-  public class HostAndPort
-  {
-    public String host;
-    public int port;
   }
 
   public enum IDTypes

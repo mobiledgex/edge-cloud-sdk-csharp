@@ -16,307 +16,204 @@
  */
 
 using System;
-using System.Net;
 using System.Net.Sockets;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Collections.Generic;
 
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace DistributedMatchEngine
 {
-
-    class EmptyNetInterface: NetInterface
-    {
-        public string GetIPAddress()
-        {
-            return null;
-        }
-
-        public bool IsWifi()
-        {
-            return false;
-        }
-
-        public bool IsCellular()
-        {
-            return false;
-        }
-    }
-
     public partial class MatchingEngine
     {
-        private static ManualResetEvent TimeoutObj = new ManualResetEvent(false);
 
-        // Callback for the Socket object's BeginConnect function
-        private static void ConnectCallback(IAsyncResult ar)
+        public async Task<Socket> GetTCPConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
         {
-            // Retrieve the socket from the state object.  
-            Socket client = (Socket) ar.AsyncState;  
-            // Complete the connection.  
-            client.EndConnect(ar);  
-            TimeoutObj.Set();
-        }
+            // Gets the AppPort object whose internal port is equal to the specified containerPort
+            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
 
-        private static bool ValidateServerCertificate(object sender, X509Certificate certificate,
-X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            if (sslPolicyErrors == SslPolicyErrors.None) return true;
-
-            Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
-      
-            // Do not allow this client to communicate with unauthenticated servers.
-            return false;
-        }
-
-        public async Task<Socket> GetTCPConnection(string host, int port, int timeout)
-        {
-            // Using integration with IOS or Android sdk, get cellular interface
-            IPEndPoint localEndPoint = GetLocalIP(port);
-            // Get remote ip of the provided host
-            IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
-            IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
-            // Create Socket and bind to local ip and connect to remote endpoint
-            Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            s.Bind(localEndPoint);
-
-            TimeoutObj.Reset();
-            s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
-            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-            if (TimeoutObj.WaitOne(timeout * 1000, false)) // WaitOne timeout is in milliseconds
-
-            { 
-                if (!s.IsBound && !s.Connected) 
-                {
-                    throw new GetConnectionException("Could not bind to interface or connect to server");
-                }
-                else if (!s.IsBound)
-                {
-                    throw new GetConnectionException("Could not bind to interface");
-                }
-                else if (!s.Connected)
-                {
-                    throw new GetConnectionException("Could not connect to server");
-                }
-                return s;
-            }
-            else
+            if (appPort == null)
             {
-                throw new GetConnectionException("Timeout");
+                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
             }
+
+            // If desiredPort is not specified, then default to public_port
+            if (desiredPort == 0)
+            {
+                desiredPort = appPort.public_port;
+            }
+
+            if (!IsInPortRange(appPort, desiredPort))
+            {
+                throw new GetConnectionException("Desired port: " + desiredPort +  " is not in AppPort range");
+            }
+
+            string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
+            Socket s = await GetTCPConnection(host, desiredPort, timeout);
+            return s;
         }
 
-        public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeout)
+        public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
         {
-            // Using integration with IOS or Android sdk, get cellular interface
-            IPEndPoint localEndPoint = GetLocalIP(port);
-            // Create tcp client
-            TcpClient tcpClient = new TcpClient(localEndPoint);
-            //TcpClient tcpClient = new TcpClient();
-            var task = tcpClient.ConnectAsync(host, port);
-            // Wait returns true if Task completes execution before timeout, false otherwise
-            if (task.Wait(TimeSpan.FromSeconds(timeout))) {
-                // Create ssl stream on top of tcp client and validate server cert
-                using (SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
-            new RemoteCertificateValidationCallback(ValidateServerCertificate), null))
-                {
-                    sslStream.AuthenticateAsClient(host);
-                    return sslStream;
-                }
-            }
-            else
+            // Gets the AppPort object whose internal port is equal to the specified containerPort
+            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
+
+            if (appPort == null)
             {
-                throw new GetConnectionException("Timeout");
+                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
             }
+
+            // If desiredPort is not specified, then default to public_port
+            if (desiredPort == 0)
+            {
+                desiredPort = appPort.public_port;
+            }
+
+            if (!IsInPortRange(appPort, desiredPort))
+            {
+                throw new GetConnectionException("Desired port: " + desiredPort +  " is not in AppPort range");
+            }
+
+            string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
+            SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeout);
+            return stream;
+        }
+
+        public async Task<Socket> GetUDPConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        {
+            // Gets the AppPort object whose internal port is equal to the specified containerPort
+            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_UDP);
+
+            if (appPort == null)
+            {
+                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+            }
+
+            // If desiredPort is not specified, then default to public_port
+            if (desiredPort == 0)
+            {
+                desiredPort = appPort.public_port;
+            }
+
+            if (!IsInPortRange(appPort, desiredPort))
+            {
+                throw new GetConnectionException("Desired port: " + desiredPort +  " is not in AppPort range");
+            }
+
+            string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
+            Socket s = await GetUDPConnection(host, desiredPort, timeout);
+            return s;
         }
         
-        public async Task<Socket> GetUDPConnection(string host, int port, int timeout)
+        public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
         {
-            // Using integration with IOS or Android sdk, get cellular interface
-            IPEndPoint localEndPoint = GetLocalIP(port);
-            // Get remote ip of the provided host
-            IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
-            IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
-            // Create Socket and bind to local ip and connect to remote endpoint
-            Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-            s.Bind(localEndPoint);
+            // Gets the AppPort object whose internal port is equal to the specified containerPort
+            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_HTTP);
 
-            TimeoutObj.Reset();
-            s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
-            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-            if (TimeoutObj.WaitOne(timeout * 1000, false))
-            { 
-                if (!s.IsBound && !s.Connected) 
-                {
-                    throw new GetConnectionException("Could not bind to interface or connect to server");
-                }
-                else if (!s.IsBound)
-                {
-                    throw new GetConnectionException("Could not bind to interface");
-                }
-                else if (!s.Connected)
-                {
-                    throw new GetConnectionException("Could not connect to server");
-                }
-                return s;
-            }
-            else
+            if (appPort == null)
             {
-                throw new GetConnectionException("Timeout");
+                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
             }
-        }
 
-        public async Task<HttpClient> GetHTTPConnection(string host, int port)
-        {
-            // Initialize http client
-            HttpClient httpClient = new HttpClient();
-            UriBuilder uriBuilder = new UriBuilder("http", host, port);
+            // If desiredPort is not specified, then default to public_port
+            if (desiredPort == 0)
+            {
+                desiredPort = appPort.public_port;
+            }
+
+            if (!IsInPortRange(appPort, desiredPort))
+            {
+                throw new GetConnectionException("Desired port: " + desiredPort +  " is not in AppPort range");
+            }
+
+            // prepend fqdn prefix given in AppPort to fqdn and append path_prefix to uri
+            string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix;
+            UriBuilder uriBuilder = new UriBuilder("http", uriString);
             Uri uri = uriBuilder.Uri;
-            // Set address of URI http client will send requests to
-            httpClient.BaseAddress = uri;
-            return httpClient;
+            HttpClient client = await GetHTTPClient(uri);
+            return client;
         }
 
-        public async Task<HttpClient> GetHTTPSConnection(string host, int port)
+        public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
         {
-            // Initialize http client
-            HttpClient httpClient = new HttpClient();
-            UriBuilder uriBuilder = new UriBuilder("https", host, port);
+            // Gets the AppPort object whose internal port is equal to the specified containerPort
+            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_HTTP);
+
+            if (appPort == null)
+            {
+                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+            }
+
+            // If desiredPort is not specified, then default to public_port
+            if (desiredPort == 0)
+            {
+                desiredPort = appPort.public_port;
+            }
+
+            if (!IsInPortRange(appPort, desiredPort))
+            {
+                throw new GetConnectionException("Desired port: " + desiredPort +  " is not in AppPort range");
+            }
+
+            // prepend fqdn prefix given in AppPort to fqdn and append path_prefix to uri
+            string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix;
+            UriBuilder uriBuilder = new UriBuilder("https", uriString);
             Uri uri = uriBuilder.Uri;
-            // Set address of URI https client will send requests to
-            httpClient.BaseAddress = uri;
-            return httpClient;
+            HttpClient client = await GetHTTPClient(uri);
+            return client;
         }
 
-        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeout)
+        public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
         {
-            // Initialize websocket client
-            ClientWebSocket webSocket = new ClientWebSocket();
-            UriBuilder uriBuilder = new UriBuilder("ws", host, port);
-            Uri uri = uriBuilder.Uri;
-            // Token is used to notify listeners/ delegates of task state
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
-            // initialize websocket handshake with server
-            var task = webSocket.ConnectAsync(uri, token);
-            // Wait returns true if Task completes execution before timeout, false otherwise
-            if (task.Wait(TimeSpan.FromSeconds(timeout)))
-            { 
-                if (webSocket.State != WebSocketState.Open)
-                {
-                    throw new GetConnectionException("Cannot get websocket connection");    
-                }
-                return webSocket;
-            }
-            else
+            // Gets the AppPort object whose internal port is equal to the specified containerPort
+            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
+
+            if (appPort == null)
             {
-                throw new GetConnectionException("Timeout");
+                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
             }
+
+            // If desiredPort is not specified, then default to public_port
+            if (desiredPort == 0)
+            {
+                desiredPort = appPort.public_port;
+            }
+
+            if (!IsInPortRange(appPort, desiredPort))
+            {
+                throw new GetConnectionException("Desired port: " + desiredPort +  " is not in AppPort range");
+            }
+
+            string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
+            ClientWebSocket s = await GetWebsocketConnection(host, desiredPort, timeout);
+            return s;
         }
 
-        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeout)
+        public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
         {
-            // Initialize websocket class
-            ClientWebSocket webSocket = new ClientWebSocket();
-            UriBuilder uriBuilder = new UriBuilder("wss", host, port);
-            Uri uri = uriBuilder.Uri;
-            // Token is used to notify listeners/ delegates of task state
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
-            // initialize websocket handshake  with server
-            var task = webSocket.ConnectAsync(uri, token);
-            // Wait returns true if Task completes execution before timeout, false otherwise
-            if (task.Wait(TimeSpan.FromSeconds(timeout)))
-            { 
-                if (webSocket.State != WebSocketState.Open)
-                {
-                    throw new GetConnectionException("Cannot get websocket connection");
-                }
-                return webSocket;
-            }
-            else
-            {
-                throw new GetConnectionException("Timeout");
-            }
-        }
+            // Gets the AppPort object whose internal port is equal to the specified containerPort
+            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
 
-        // Gets IP Address of the specified network interface
-        private IPEndPoint GetLocalIP(int port)
-        {
-            if (netInterface == null)
+            if (appPort == null)
             {
-                throw new GetConnectionException("Have not integrated NetworkInterface");
+                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
             }
-            string host = netInterface.GetIPAddress();
-            if (host == null)
-            {
-                throw new GetConnectionException("Could not get Cellular interface");
-            }
-            // Gets IP address of host
-            IPAddress localIP = Dns.GetHostAddresses(host)[0];
-            IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
-            return localEndPoint;
-        }
 
-
-        public List<AppPort> GetPortsByProtocol(FindCloudletReply reply, LProto proto)
-        {
-            List<AppPort> portsByProtocol = new List<AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
+            // If desiredPort is not specified, then default to public_port
+            if (desiredPort == 0)
             {
-                if (port.proto == proto)
-                {
-                    portsByProtocol.Add(port);
-                }
+                desiredPort = appPort.public_port;
             }
-            return portsByProtocol;
-        }
 
-        public List<AppPort> GetTCPPorts(FindCloudletReply reply)
-        {
-            List<AppPort> tcpPorts = new List<AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
+            if (!IsInPortRange(appPort, desiredPort))
             {
-                if (port.proto == LProto.L_PROTO_TCP)
-                {
-                    tcpPorts.Add(port);
-                }
+                throw new GetConnectionException("Desired port: " + desiredPort +  " is not in AppPort range");
             }
-            return tcpPorts;
-        }
 
-        public List<AppPort> GetUDPPorts(FindCloudletReply reply)
-        {
-            List<AppPort> udpPorts = new List<AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
-            {
-                if (port.proto == LProto.L_PROTO_UDP)
-                {
-                    udpPorts.Add(port);
-                }
-            }
-            return udpPorts;
-        }
-
-        public List<AppPort> GetHTTPPorts(FindCloudletReply reply)
-        {
-            List<AppPort> httpPorts = new List<AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
-            {
-                if (port.proto == LProto.L_PROTO_HTTP)
-                {
-                    httpPorts.Add(port);
-                }
-            }
-            return httpPorts;
+            string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
+            ClientWebSocket s = await GetSecureWebsocketConnection(host, desiredPort, timeout);
+            return s;
         }
     }
 }
