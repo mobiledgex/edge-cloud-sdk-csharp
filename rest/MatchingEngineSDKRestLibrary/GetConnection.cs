@@ -28,18 +28,15 @@ namespace DistributedMatchEngine
     public partial class MatchingEngine
     {
 
-        public async Task<Socket> GetTCPConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
         {
-            // Gets the AppPort object whose internal port is equal to the specified containerPort
-            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
-
-            if (appPort == null)
+            if (timeout <= 0)
             {
-                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+                throw new GetConnectionException(timeout + " is an invalid timeout");
             }
 
-            // If desiredPort is not specified, then default to public_port
-            if (desiredPort == 0)
+            // If desiredPort is -1, then default to public_port
+            if (desiredPort == -1)
             {
                 desiredPort = appPort.public_port;
             }
@@ -54,18 +51,15 @@ namespace DistributedMatchEngine
             return s;
         }
 
-        public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
         {
-            // Gets the AppPort object whose internal port is equal to the specified containerPort
-            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
-
-            if (appPort == null)
+            if (timeout <= 0)
             {
-                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+                throw new GetConnectionException(timeout + " is an invalid timeout");
             }
 
             // If desiredPort is not specified, then default to public_port
-            if (desiredPort == 0)
+            if (desiredPort == -1)
             {
                 desiredPort = appPort.public_port;
             }
@@ -80,18 +74,15 @@ namespace DistributedMatchEngine
             return stream;
         }
 
-        public async Task<Socket> GetUDPConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
         {
-            // Gets the AppPort object whose internal port is equal to the specified containerPort
-            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_UDP);
-
-            if (appPort == null)
+            if (timeout <= 0)
             {
-                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+                throw new GetConnectionException(timeout + " is an invalid timeout");
             }
 
             // If desiredPort is not specified, then default to public_port
-            if (desiredPort == 0)
+            if (desiredPort == -1)
             {
                 desiredPort = appPort.public_port;
             }
@@ -106,18 +97,15 @@ namespace DistributedMatchEngine
             return s;
         }
         
-        public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
         {
-            // Gets the AppPort object whose internal port is equal to the specified containerPort
-            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_HTTP);
-
-            if (appPort == null)
+            if (timeout <= 0)
             {
-                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+                throw new GetConnectionException(timeout + " is an invalid timeout");
             }
 
             // If desiredPort is not specified, then default to public_port
-            if (desiredPort == 0)
+            if (desiredPort == -1)
             {
                 desiredPort = appPort.public_port;
             }
@@ -135,18 +123,15 @@ namespace DistributedMatchEngine
             return client;
         }
 
-        public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
         {
-            // Gets the AppPort object whose internal port is equal to the specified containerPort
-            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_HTTP);
-
-            if (appPort == null)
+            if (timeout <= 0)
             {
-                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+                throw new GetConnectionException(timeout + " is an invalid timeout");
             }
 
             // If desiredPort is not specified, then default to public_port
-            if (desiredPort == 0)
+            if (desiredPort == -1)
             {
                 desiredPort = appPort.public_port;
             }
@@ -164,18 +149,15 @@ namespace DistributedMatchEngine
             return client;
         }
 
-        public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
         {
-            // Gets the AppPort object whose internal port is equal to the specified containerPort
-            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
-
-            if (appPort == null)
+            if (timeout <= 0)
             {
-                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+                throw new GetConnectionException(timeout + " is an invalid timeout");
             }
 
             // If desiredPort is not specified, then default to public_port
-            if (desiredPort == 0)
+            if (desiredPort == -1)
             {
                 desiredPort = appPort.public_port;
             }
@@ -190,18 +172,15 @@ namespace DistributedMatchEngine
             return s;
         }
 
-        public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, int containerPort, int desiredPort, int timeout)
+        public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
         {
-            // Gets the AppPort object whose internal port is equal to the specified containerPort
-            AppPort appPort = GetMatchingInternalAppPort(reply, containerPort, LProto.L_PROTO_TCP);
-
-            if (appPort == null)
+            if (timeout <= 0)
             {
-                throw new GetConnectionException("Unable to find AppPort with internal port: " + containerPort);
+                throw new GetConnectionException(timeout + " is an invalid timeout");
             }
 
             // If desiredPort is not specified, then default to public_port
-            if (desiredPort == 0)
+            if (desiredPort == -1)
             {
                 desiredPort = appPort.public_port;
             }

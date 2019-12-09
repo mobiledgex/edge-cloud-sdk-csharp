@@ -69,23 +69,10 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
             return false;
         }
 
-        // Returns the AppPort with the internal port that matches the specified container port and matches the specified protocol
-        private AppPort GetMatchingInternalAppPort(FindCloudletReply reply, int containerPort, LProto proto)
-        {
-            AppPort[] ports = reply.ports;
-            foreach (AppPort appPort in ports)
-            {
-                if (containerPort == appPort.internal_port && appPort.proto == proto)
-                {
-                    return appPort;
-                }
-            }
-            return null;
-        }
-
         // Checks if the specified port is within the range of public_port and end_port
         private bool IsInPortRange(AppPort appPort, int port)
-        {   
+        {
+            // Checks if range exists -> if not, check if specified port equals public port
             if (appPort.end_port == 0 || appPort.end_port < appPort.public_port)
             {
                 return port == appPort.public_port;
@@ -111,60 +98,60 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
             return localEndPoint;
         }
 
-        public List<AppPort> GetPortsByProtocol(FindCloudletReply reply, LProto proto)
+        public Dictionary<int, AppPort> GetAppPortsByProtocol(FindCloudletReply reply, LProto proto)
         {
-            List<AppPort> portsByProtocol = new List<AppPort>();
+            Dictionary<int, AppPort> appPortsByProtocol = new Dictionary<int, AppPort>();
             AppPort[] ports = reply.ports;
             foreach (AppPort port in ports)
             {
                 if (port.proto == proto)
                 {
-                    portsByProtocol.Add(port);
+                    appPortsByProtocol.Add(port.internal_port, port);
                 }
             }
-            return portsByProtocol;
+            return appPortsByProtocol;
         }
 
-        public List<AppPort> GetTCPPorts(FindCloudletReply reply)
+        public Dictionary<int, AppPort> GetTCPAppPorts(FindCloudletReply reply)
         {
-            List<AppPort> tcpPorts = new List<AppPort>();
+            Dictionary<int, AppPort> tcpAppPorts = new Dictionary<int, AppPort>();
             AppPort[] ports = reply.ports;
             foreach (AppPort port in ports)
             {
                 if (port.proto == LProto.L_PROTO_TCP)
                 {
-                    tcpPorts.Add(port);
+                    tcpAppPorts.Add(port.internal_port, port);
                 }
             }
-            return tcpPorts;
+            return tcpAppPorts;
         }
 
-        public List<AppPort> GetUDPPorts(FindCloudletReply reply)
+        public Dictionary<int, AppPort> GetUDPAppPorts(FindCloudletReply reply)
         {
-            List<AppPort> udpPorts = new List<AppPort>();
+            Dictionary<int, AppPort> udpAppPorts = new Dictionary<int, AppPort>();
             AppPort[] ports = reply.ports;
             foreach (AppPort port in ports)
             {
                 if (port.proto == LProto.L_PROTO_UDP)
                 {
-                    udpPorts.Add(port);
+                    udpAppPorts.Add(port.internal_port, port);
                 }
             }
-            return udpPorts;
+            return udpAppPorts;
         }
 
-        public List<AppPort> GetHTTPPorts(FindCloudletReply reply)
+        public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
         {
-            List<AppPort> httpPorts = new List<AppPort>();
+            Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();
             AppPort[] ports = reply.ports;
             foreach (AppPort port in ports)
             {
                 if (port.proto == LProto.L_PROTO_HTTP)
                 {
-                    httpPorts.Add(port);
+                    httpAppPorts.Add(port.internal_port, port);
                 }
             }
-            return httpPorts;
+            return httpAppPorts;
         }
     }
 }

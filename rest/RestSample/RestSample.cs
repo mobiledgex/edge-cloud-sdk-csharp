@@ -214,12 +214,11 @@ namespace RestSample
         // MatchingEngine APIs Developer workflow:
 
         // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, authToken, loc)
-        // OPTIONAL (if developer does not know info about ports):
-        //      hostAndPortsList = me.GetHostAndPorts(findCloudletReply, LProto);
-        //      Developer chooses HostAndPort object they want to use from hostAndPortsList
-        // socket = me.GetTCPConnection(findCloudletReply, containerPort, desiredPort, timeout)
-        //      containerPort is used to identify correct public_port
-        //      desiredPort can be set to 0 if user wants to default to public_port
+        // appPortsDict = me.GetTCpPorts(findCloudletReply)
+        // appPort = appPortsDict[internal_port]
+        //      internal_port is the Container port specified in the Dockerfile
+        // socket = me.GetTCPConnection(findCloudletReply, appPort, desiredPort, timeout)
+        //      desiredPort can be set to -1 if user wants to default to public_port
 
         var loc = await Util.GetLocationFromDevice();
         FindCloudletReply reply;
@@ -233,9 +232,24 @@ namespace RestSample
             Console.WriteLine("DmeDnsException is " + e.InnerException);
             return;
         }
+
+        Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
+        if (appPortsDict.Count == 0)
+        {
+            Console.WriteLine("No ports with specified protocol");
+            return;
+        }
+
+        AppPort appPort = appPortsDict[6666];
+        if (appPort == null)
+        {
+            Console.WriteLine("Not AppPorts with specified internal port");
+            return;
+        }
+
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(reply, 6666, 6667, 5); // 5 second timeout
+            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 6667, 5); // 5 second timeout
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
