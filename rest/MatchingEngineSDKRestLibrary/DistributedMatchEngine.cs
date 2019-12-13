@@ -494,6 +494,18 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    // Wrapper function for RegisterClient and FindCloudlet
+    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
+    {
+        // Register Client
+        RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
+        await RegisterClient(registerRequest);
+        // Find Cloudlet
+        FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
+        FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
+
+        return findCloudletReply;
+    }
 
     public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc)
     {
