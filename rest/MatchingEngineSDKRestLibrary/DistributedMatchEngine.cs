@@ -92,7 +92,7 @@ namespace DistributedMatchEngine
 
   }
 
-  class EmptyCarrierInfo: ICarrierInfo
+  class EmptyCarrierInfo: CarrierInfo
   {
     public string GetCurrentCarrierName()
     {
@@ -106,7 +106,7 @@ namespace DistributedMatchEngine
   }
 
 
-  public class MatchingEngine
+  public partial class MatchingEngine
   {
     public const string TAG = "MatchingEngine";
     private static HttpClient httpClient;
@@ -117,7 +117,8 @@ namespace DistributedMatchEngine
 
     UInt32 dmePort { get; set; } = defaultDmeRestPort; // HTTP REST port
 
-    public ICarrierInfo carrierInfo { get; set; }
+    public CarrierInfo carrierInfo { get; set; }
+    public NetInterface netInterface { get; set; }
 
     // API Paths:
     private string registerAPI = "/v1/registerclient";
@@ -141,6 +142,7 @@ namespace DistributedMatchEngine
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
       carrierInfo = new EmptyCarrierInfo();
+      netInterface = new EmptyNetInterface();
     }
 
     // Set the REST timeout for DME APIs.
@@ -168,14 +170,14 @@ namespace DistributedMatchEngine
       string mccmnc = carrierInfo.GetMccMnc();
       if (mccmnc == null)
       {
-        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string.");
+        Log.E("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string.");
         throw new DmeDnsException("Cannot generate DME hostname, mccmnc is empty");
       }
 
       // Check minimum size:
       if (mccmnc.Length < 5)
       {
-        Log.E("PlatformIntegration ICarrierInfo interface does not have a valid MCCMNC string length.");
+        Log.E("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string length.");
         throw new DmeDnsException("Cannot generate DME hostname, mccmnc length is invalid: " + mccmnc.Length);
       }
 
@@ -492,6 +494,18 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    // Wrapper function for RegisterClient and FindCloudlet
+    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
+    {
+        // Register Client
+        RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
+        await RegisterClient(registerRequest);
+        // Find Cloudlet
+        FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
+        FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
+
+        return findCloudletReply;
+    }
 
     public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc)
     {
@@ -849,6 +863,5 @@ namespace DistributedMatchEngine
 
       return qosPositionKpiStream;
     }
-
   };
 }

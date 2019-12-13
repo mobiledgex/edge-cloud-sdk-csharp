@@ -21,6 +21,13 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using System.Net.Sockets;
+using System.Net.Security;
+using System.Text;
+using System.Security.Authentication;
+using System.Net.Http;
+using System.Net.WebSockets;
+using System.Threading;
 
 using DistributedMatchEngine;
 
@@ -34,6 +41,7 @@ namespace RestSample
     static string appName = "MobiledgeX SDK Demo";
     static string appVers = "1.0";
     static string developerAuthToken = "";
+    static string connectionTestFqdn = "arshootereucluster.berlin-main.tdg.mobiledgex.net";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
@@ -61,7 +69,6 @@ namespace RestSample
 
       return timestamp;
     }
-
 
     static List<QosPosition> CreateQosPositionList(Loc firstLocation, double direction_degrees, double totalDistanceKm, double increment)
     {
@@ -101,6 +108,171 @@ namespace RestSample
       return req;
     }
 
+    async static Task TestTCPConnection(MatchingEngine me)
+    {
+        string message = "TCP Connection Test";
+        byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
+
+        // TCP Connection Test
+        try
+        {
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 6667, 5);
+            tcpConnection.Send(bytesMessage);
+            byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
+            tcpConnection.Receive(bytesReceive);
+            string receiveMessage = Encoding.ASCII.GetString(bytesReceive);
+            Console.WriteLine("Echoed tcp string: " + receiveMessage);
+            tcpConnection.Close();
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+    }
+
+    async static Task TestHTTPConnection(MatchingEngine me)
+    {
+        string message = "HTTP Connection Test";
+        string uriString = connectionTestFqdn;
+        UriBuilder uriBuilder = new UriBuilder("http", uriString, 6666);
+        Uri uri = uriBuilder.Uri;
+
+        // HTTP Connection Test
+        try
+        { 
+            HttpClient httpClient = await me.GetHTTPClient(uri);
+            StringContent content = new StringContent(message);
+            HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("http response body is " + responseBody);
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("HttpRequestException is " + e.Message);
+        }
+    }
+
+    async static Task TestTCPTLSConnection(MatchingEngine me)
+    {
+        // TLS on TCP Connection Test
+        try
+        {
+            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 6667, 5);
+            stream.Close();
+        }
+        catch (AuthenticationException e)
+        {
+            Console.WriteLine("Authentication Exception is " + e.Message);
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+    }
+
+    async static Task TestWebsocketsConnection(MatchingEngine me)
+    {
+        string message = "Websockets connection test";
+        byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
+
+        // Websocket Connection Test
+        try
+        {
+            ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 6669, 5);
+
+            // Send message
+            ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            await socket.SendAsync(sendBuffer, WebSocketMessageType.Text, true, token);
+            // Receive message
+            byte[] bytesReceive = new byte[message.Length * 2];
+            ArraySegment<Byte> receiveBuffer = new ArraySegment<byte>(bytesReceive);
+            WebSocketReceiveResult result = await socket.ReceiveAsync(receiveBuffer, token);
+            string receiveMessage = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
+            Console.WriteLine("Echoed websocket result is " + receiveMessage);
+            await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "end of test", token);
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+        catch (OperationCanceledException e)
+        {
+            Console.WriteLine("OperationCanceledException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Exception is " + e.Message);
+        }
+    }
+
+    // Test Workflow with TCP connection and exception handling
+    async static Task TestGetConnectionWorkflow(MatchingEngine me)
+    {
+        // MatchingEngine APIs Developer workflow:
+
+        // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, authToken, loc)
+        // appPortsDict = me.GetTCpPorts(findCloudletReply)
+        // appPort = appPortsDict[internal_port]
+        //      internal_port is the Container port specified in the Dockerfile
+        // socket = me.GetTCPConnection(findCloudletReply, appPort, desiredPort, timeout)
+        //      desiredPort can be set to -1 if user wants to default to public_port
+
+        var loc = await Util.GetLocationFromDevice();
+        FindCloudletReply reply;
+
+        try
+        {
+            reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
+        }
+        catch (DmeDnsException e)
+        {
+            Console.WriteLine("DmeDnsException is " + e.InnerException);
+            return;
+        }
+
+        Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
+        if (appPortsDict.Count == 0)
+        {
+            Console.WriteLine("No ports with specified protocol");
+            return;
+        }
+
+        AppPort appPort = appPortsDict[6666];
+        if (appPort == null)
+        {
+            Console.WriteLine("Not AppPorts with specified internal port");
+            return;
+        }
+
+        try
+        {
+            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 6667, 5); // 5 second timeout
+            tcpConnection.Close();
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("GetConnectionException is " + e.Message);
+        }
+    }
+
+    async static Task TestGetConnection(MatchingEngine me)
+    {
+        Task websocketTest = TestWebsocketsConnection(me);
+        Task tcpTest = TestTCPConnection(me);
+        Task httpTest = TestHTTPConnection(me);
+        Task tcpTlsTest = TestTCPTLSConnection(me);
+        Task getConnectionWorkflow = TestGetConnectionWorkflow(me);
+
+        await websocketTest;
+        await tcpTest;
+        await httpTest;
+        await tcpTlsTest;
+        await getConnectionWorkflow;
+    }
+
     async static Task Main(string[] args)
     {
       try
@@ -116,6 +288,10 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
+
+        Task testing = TestGetConnection(me);
+        await testing;
+        Console.WriteLine("connection test finished");
 
         var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken);
 
@@ -293,7 +469,6 @@ namespace RestSample
       {
         Console.WriteLine(e.Message + "\n" + e.StackTrace);
       }
-
     }
   };
 }
