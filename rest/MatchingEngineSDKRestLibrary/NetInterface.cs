@@ -17,12 +17,10 @@
 
 namespace DistributedMatchEngine
 {
-  /**
-   * ICarrierInfo telephony interface for the platform
-   */
-  public interface ICarrierInfo
-  {
-    string GetCurrentCarrierName();
-    string GetMccMnc();
-  }
+  public interface NetInterface
+    {
+        string GetIPAddress();
+        bool IsWifi();
+        bool IsCellular();
+    }
 }
