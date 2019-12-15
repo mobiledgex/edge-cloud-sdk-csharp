@@ -28,7 +28,7 @@ namespace DistributedMatchEngine
 {
     class EmptyNetInterface: NetInterface
     {
-        public string GetIPAddress()
+        public string GetIPAddress(String netInterface)
         {
             return null;
         }
@@ -87,7 +87,7 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
             {
                 throw new GetConnectionException("Have not integrated NetworkInterface");
             }
-            string host = netInterface.GetIPAddress();
+            string host = netInterface.GetIPAddress("pdp_ip0");
             if (host == null)
             {
                 throw new GetConnectionException("Could not get Cellular interface");
