@@ -44,6 +44,18 @@ namespace DistributedMatchEngine
         }
     }
 
+    public class IOSNetworkInterface
+    {
+        public static string CELLULAR = "pdp_ip0";
+        public static string WIFI = "en0";
+    }
+
+    public class AndroidNetworkInterface
+    {
+        public static string CELLULAR = "rmnet_data0";
+        public static string WIFI = "wlan0";
+    }
+
     public partial class MatchingEngine
     {
         private static ManualResetEvent TimeoutObj = new ManualResetEvent(false);
@@ -87,8 +99,13 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
             {
                 throw new GetConnectionException("Have not integrated NetworkInterface");
             }
-            string host = netInterface.GetIPAddress("pdp_ip0");
-            if (host == null)
+            string host = "";
+            #if UNITY_ANDROID
+                host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
+            #elif UNITY_IOS
+                host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
+            #endif
+            if (host == null || host == "")
             {
                 throw new GetConnectionException("Could not get Cellular interface");
             }
