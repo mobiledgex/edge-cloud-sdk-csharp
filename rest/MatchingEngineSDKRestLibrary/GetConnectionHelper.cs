@@ -31,7 +31,7 @@ namespace DistributedMatchEngine
     public partial class MatchingEngine
     {
         // GetTCPConnection helper function
-        public async Task<Socket> GetTCPConnection(string host, int port, int timeout)
+        public async Task<Socket> GetTCPConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
@@ -45,9 +45,9 @@ namespace DistributedMatchEngine
             TimeoutObj.Reset();
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
             // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-            if (TimeoutObj.WaitOne(timeout * 1000, false)) // WaitOne timeout is in milliseconds
+            if (TimeoutObj.WaitOne(Convert.ToInt32(timeout * 1000), false)) // WaitOne timeout is in milliseconds
 
-            { 
+            {
                 if (!s.IsBound && !s.Connected) 
                 {
                     throw new GetConnectionException("Could not bind to interface or connect to server");
@@ -69,7 +69,7 @@ namespace DistributedMatchEngine
         }
 
         // GetTCPTLSConnection helper function
-        public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeout)
+        public async Task<SslStream> GetTCPTLSConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
@@ -94,7 +94,7 @@ namespace DistributedMatchEngine
         }
 
         // GetUDPConnection helper function
-        public async Task<Socket> GetUDPConnection(string host, int port, int timeout)
+        public async Task<Socket> GetUDPConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
@@ -108,7 +108,7 @@ namespace DistributedMatchEngine
             TimeoutObj.Reset();
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
             // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-            if (TimeoutObj.WaitOne(timeout * 1000, false))
+            if (TimeoutObj.WaitOne(Convert.ToInt32(timeout * 1000), false))
             { 
                 if (!s.IsBound && !s.Connected) 
                 {
@@ -139,7 +139,7 @@ namespace DistributedMatchEngine
         }
 
         // GetWebsocketConnection helper function
-        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeout)
+        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, double timeout)
         {
             // Initialize websocket client
             ClientWebSocket webSocket = new ClientWebSocket();
@@ -166,7 +166,7 @@ namespace DistributedMatchEngine
         }
 
         // GetSecureWebsocketConnection helper function
-        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeout)
+        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, double timeout)
         {
             // Initialize websocket class
             ClientWebSocket webSocket = new ClientWebSocket();
