@@ -63,11 +63,21 @@ namespace DistributedMatchEngine
         // Callback for the Socket object's BeginConnect function
         private static void ConnectCallback(IAsyncResult ar)
         {
-            // Retrieve the socket from the state object.  
-            Socket client = (Socket) ar.AsyncState;  
-            // Complete the connection.  
-            client.EndConnect(ar);  
-            TimeoutObj.Set();
+            try
+            {
+                // Retrieve the socket from the state object.  
+                Socket client = (Socket) ar.AsyncState;
+                // Complete the connection.  
+                client.EndConnect(ar);
+
+                TimeoutObj.Set();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception in connect callback " + e.Message);
+                TimeoutObj.Set();
+            }
+
         }
 
         private static bool ValidateServerCertificate(object sender, X509Certificate certificate,

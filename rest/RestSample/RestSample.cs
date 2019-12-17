@@ -41,7 +41,7 @@ namespace RestSample
     static string appName = "MobiledgeX SDK Demo";
     static string appVers = "1.0";
     static string developerAuthToken = "";
-    static string connectionTestFqdn = "arshootereucluster.beacon-main.gddt.mobiledgex.net";
+    static string connectionTestFqdn = "mextest-app-cluster.fairview-main.gddt.mobiledgex.net";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
@@ -126,7 +126,11 @@ namespace RestSample
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("TCP GetConnectionException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("TCP socket exception is " + e);
         }
     }
 
@@ -134,7 +138,7 @@ namespace RestSample
     {
         string message = "HTTP Connection Test";
         string uriString = connectionTestFqdn;
-        UriBuilder uriBuilder = new UriBuilder("http", uriString, 6666);
+        UriBuilder uriBuilder = new UriBuilder("http", uriString, 3001);
         Uri uri = uriBuilder.Uri;
 
         // HTTP Connection Test
@@ -167,7 +171,7 @@ namespace RestSample
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("TCPTLS GetConnectionException is " + e.Message);
         }
     }
 
@@ -196,15 +200,15 @@ namespace RestSample
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("Websocket GetConnectionException is " + e.Message);
         }
         catch (OperationCanceledException e)
         {
-            Console.WriteLine("OperationCanceledException is " + e.Message);
+            Console.WriteLine("Websocket OperationCanceledException is " + e.Message);
         }
         catch (Exception e)
         {
-            Console.WriteLine("Exception is " + e.Message);
+            Console.WriteLine("Websocket Exception is " + e.Message);
         }
     }
 
@@ -229,7 +233,7 @@ namespace RestSample
         }
         catch (DmeDnsException e)
         {
-            Console.WriteLine("DmeDnsException is " + e.InnerException);
+            Console.WriteLine("Workflow DmeDnsException is " + e.InnerException);
             return;
         }
 
@@ -254,7 +258,27 @@ namespace RestSample
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("Workflow GetConnectionException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("workflow test exception " + e.Message);
+        }
+    }
+
+    async static Task TestTimeout(MatchingEngine me)
+    {
+        try
+        {
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 6667, 0.1);
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("Timeout test GetConnectionException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Timeout test exception " + e.Message);
         }
     }
 
@@ -265,12 +289,14 @@ namespace RestSample
         Task httpTest = TestHTTPConnection(me);
         Task tcpTlsTest = TestTCPTLSConnection(me);
         Task getConnectionWorkflow = TestGetConnectionWorkflow(me);
+        Task timeoutTest = TestTimeout(me);
 
         await websocketTest;
         await tcpTest;
         await httpTest;
         await tcpTlsTest;
         await getConnectionWorkflow;
+        await timeoutTest;
     }
 
     async static Task Main(string[] args)
