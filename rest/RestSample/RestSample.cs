@@ -123,7 +123,7 @@ namespace RestSample
         // TCP Connection Test
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5, DistributedMatchEngine.OperatingSystem.Other);
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5, DistributedMatchEngine.OperatingSystem.OTHER);
 
             tcpConnection.Send(bytesMessage);
 
@@ -184,7 +184,7 @@ namespace RestSample
         // TLS on TCP Connection Test
         try
         {
-            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5, DistributedMatchEngine.OperatingSystem.Other);
+            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5, DistributedMatchEngine.OperatingSystem.OTHER);
             stream.Close();
         }
         catch (AuthenticationException e)
@@ -277,7 +277,7 @@ namespace RestSample
 
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 3001, 5, DistributedMatchEngine.OperatingSystem.Other); // 5 second timeout
+            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 3001, 5, DistributedMatchEngine.OperatingSystem.OTHER); // 5 second timeout
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
@@ -295,7 +295,7 @@ namespace RestSample
         // comment out localIP and bind in GetConnectionHelper.cs in order to test timeout
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 0.1, DistributedMatchEngine.OperatingSystem.Other);
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 0.1, DistributedMatchEngine.OperatingSystem.OTHER);
             tcpConnection.Close();
         }
         catch (GetConnectionException e)

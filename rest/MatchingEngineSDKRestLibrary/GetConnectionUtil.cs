@@ -58,9 +58,9 @@ namespace DistributedMatchEngine
 
     public enum OperatingSystem
     {
-        Android,
-        iOS,
-        Other
+        ANDROID,
+        IOS,
+        OTHER
     }
 
     public partial class MatchingEngine
@@ -119,11 +119,11 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
 
             string host = "";
 
-            if (os is OperatingSystem.Android)
+            if (os is OperatingSystem.ANDROID)
             { 
                 host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
             }
-            else if (os is OperatingSystem.iOS)
+            else if (os is OperatingSystem.IOS)
             { 
                 host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
             }
