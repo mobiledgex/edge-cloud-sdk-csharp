@@ -59,6 +59,7 @@ namespace DistributedMatchEngine
     public partial class MatchingEngine
     {
         private static ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+        private static Exception handlerException;
 
         // Callback for the Socket object's BeginConnect function
         private static void ConnectCallback(IAsyncResult ar)
@@ -69,12 +70,11 @@ namespace DistributedMatchEngine
                 Socket client = (Socket) ar.AsyncState;
                 // Complete the connection.  
                 client.EndConnect(ar);
-
                 TimeoutObj.Set();
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception in connect callback " + e.Message);
+                handlerException = e;
                 TimeoutObj.Set();
             }
 

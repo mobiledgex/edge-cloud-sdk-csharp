@@ -35,19 +35,27 @@ namespace DistributedMatchEngine
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
+
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
             IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+
             // Create Socket and bind to local ip and connect to remote endpoint
             Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             s.Bind(localEndPoint);
 
+            // Reset static variables that handler uses
             TimeoutObj.Reset();
+            handlerException = null;
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
+
             // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
             if (TimeoutObj.WaitOne(Convert.ToInt32(timeout * 1000), false)) // WaitOne timeout is in milliseconds
-
             {
+                if (handlerException != null)
+                {
+                    throw handlerException;
+                }
                 if (!s.IsBound && !s.Connected) 
                 {
                     throw new GetConnectionException("Could not bind to interface or connect to server");
@@ -73,10 +81,13 @@ namespace DistributedMatchEngine
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
+
             // Create tcp client
             TcpClient tcpClient = new TcpClient(localEndPoint);
+
             //TcpClient tcpClient = new TcpClient();
             var task = tcpClient.ConnectAsync(host, port);
+
             // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout))) {
                 // Create ssl stream on top of tcp client and validate server cert
@@ -98,18 +109,27 @@ namespace DistributedMatchEngine
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
+
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
             IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+
             // Create Socket and bind to local ip and connect to remote endpoint
             Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             s.Bind(localEndPoint);
 
+            // Reset static variables that handler uses
             TimeoutObj.Reset();
+            handlerException = null;
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
+
             // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
             if (TimeoutObj.WaitOne(Convert.ToInt32(timeout * 1000), false))
-            { 
+            {
+                if (handlerException != null)
+                {
+                    throw handlerException;
+                }
                 if (!s.IsBound && !s.Connected) 
                 {
                     throw new GetConnectionException("Could not bind to interface or connect to server");
@@ -145,11 +165,14 @@ namespace DistributedMatchEngine
             ClientWebSocket webSocket = new ClientWebSocket();
             UriBuilder uriBuilder = new UriBuilder("ws", host, port);
             Uri uri = uriBuilder.Uri;
+
             // Token is used to notify listeners/ delegates of task state
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
+
             // initialize websocket handshake with server
             var task = webSocket.ConnectAsync(uri, token);
+
             // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout)))
             { 
@@ -172,11 +195,14 @@ namespace DistributedMatchEngine
             ClientWebSocket webSocket = new ClientWebSocket();
             UriBuilder uriBuilder = new UriBuilder("wss", host, port);
             Uri uri = uriBuilder.Uri;
+
             // Token is used to notify listeners/ delegates of task state
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
+
             // initialize websocket handshake  with server
             var task = webSocket.ConnectAsync(uri, token);
+
             // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout)))
             { 
