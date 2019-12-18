@@ -28,7 +28,7 @@ namespace DistributedMatchEngine
     public partial class MatchingEngine
     {
 
-        public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
+        public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout, OperatingSystem os)
         {
             if (timeout <= 0)
             {
@@ -47,11 +47,11 @@ namespace DistributedMatchEngine
             }
 
             string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-            Socket s = await GetTCPConnection(host, desiredPort, timeout);
+            Socket s = await GetTCPConnection(host, desiredPort, timeout, os);
             return s;
         }
 
-        public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
+        public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout, OperatingSystem os)
         {
             if (timeout <= 0)
             {
@@ -70,11 +70,11 @@ namespace DistributedMatchEngine
             }
 
             string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-            SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeout);
+            SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeout, os);
             return stream;
         }
 
-        public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
+        public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout, OperatingSystem os)
         {
             if (timeout <= 0)
             {
@@ -93,7 +93,7 @@ namespace DistributedMatchEngine
             }
 
             string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-            Socket s = await GetUDPConnection(host, desiredPort, timeout);
+            Socket s = await GetUDPConnection(host, desiredPort, timeout, os);
             return s;
         }
         

@@ -56,13 +56,20 @@ namespace DistributedMatchEngine
         public static string WIFI = "wlan0";
     }
 
+    public enum OperatingSystem
+    {
+        Android,
+        iOS,
+        Other
+    }
+
     public partial class MatchingEngine
     {
-        private static ManualResetEvent TimeoutObj = new ManualResetEvent(false);
-        private static Exception handlerException;
+        private ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+        private Exception handlerException = new Exception();
 
         // Callback for the Socket object's BeginConnect function
-        private static void ConnectCallback(IAsyncResult ar)
+        private void ConnectCallback(IAsyncResult ar)
         {
             try
             {
@@ -103,18 +110,24 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
         }
 
         // Gets IP Address of the specified network interface
-        private IPEndPoint GetLocalIP(int port)
+        private IPEndPoint GetLocalIP(int port, OperatingSystem os)
         {
             if (netInterface == null)
             {
                 throw new GetConnectionException("Have not integrated NetworkInterface");
             }
+
             string host = "";
-            #if UNITY_ANDROID
+
+            if (os is OperatingSystem.Android)
+            { 
                 host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
-            #elif UNITY_IOS
+            }
+            else if (os is OperatingSystem.iOS)
+            { 
                 host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
-            #endif
+            }
+
             if (host == null || host == "")
             {
                 throw new GetConnectionException("Could not get Cellular interface");
