@@ -52,7 +52,7 @@ namespace DistributedMatchEngine
 
     public class AndroidNetworkInterface
     {
-        public static string CELLULAR = "rmnet_data0";
+        public static string CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
         public static string WIFI = "wlan0";
     }
 
