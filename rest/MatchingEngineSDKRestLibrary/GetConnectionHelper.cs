@@ -31,23 +31,31 @@ namespace DistributedMatchEngine
     public partial class MatchingEngine
     {
         // GetTCPConnection helper function
-        public async Task<Socket> GetTCPConnection(string host, int port, int timeout)
+        public async Task<Socket> GetTCPConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
+
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
             IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+
             // Create Socket and bind to local ip and connect to remote endpoint
             Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             s.Bind(localEndPoint);
 
+            // Reset static variables that handler uses
             TimeoutObj.Reset();
+            handlerException = null;
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
-            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-            if (TimeoutObj.WaitOne(timeout * 1000, false)) // WaitOne timeout is in milliseconds
 
-            { 
+            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
+            if (TimeoutObj.WaitOne(Convert.ToInt32(timeout * 1000), false)) // WaitOne timeout is in milliseconds
+            {
+                if (handlerException != null)
+                {
+                    throw handlerException;
+                }
                 if (!s.IsBound && !s.Connected) 
                 {
                     throw new GetConnectionException("Could not bind to interface or connect to server");
@@ -69,14 +77,17 @@ namespace DistributedMatchEngine
         }
 
         // GetTCPTLSConnection helper function
-        public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeout)
+        public async Task<SslStream> GetTCPTLSConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
+
             // Create tcp client
             TcpClient tcpClient = new TcpClient(localEndPoint);
+
             //TcpClient tcpClient = new TcpClient();
             var task = tcpClient.ConnectAsync(host, port);
+
             // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout))) {
                 // Create ssl stream on top of tcp client and validate server cert
@@ -94,22 +105,31 @@ namespace DistributedMatchEngine
         }
 
         // GetUDPConnection helper function
-        public async Task<Socket> GetUDPConnection(string host, int port, int timeout)
+        public async Task<Socket> GetUDPConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
             IPEndPoint localEndPoint = GetLocalIP(port);
+
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
             IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+
             // Create Socket and bind to local ip and connect to remote endpoint
             Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             s.Bind(localEndPoint);
 
+            // Reset static variables that handler uses
             TimeoutObj.Reset();
+            handlerException = null;
             s.BeginConnect(remoteEndPoint, new AsyncCallback(ConnectCallback), s);
+
             // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-            if (TimeoutObj.WaitOne(timeout * 1000, false))
-            { 
+            if (TimeoutObj.WaitOne(Convert.ToInt32(timeout * 1000), false))
+            {
+                if (handlerException != null)
+                {
+                    throw handlerException;
+                }
                 if (!s.IsBound && !s.Connected) 
                 {
                     throw new GetConnectionException("Could not bind to interface or connect to server");
@@ -139,17 +159,20 @@ namespace DistributedMatchEngine
         }
 
         // GetWebsocketConnection helper function
-        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeout)
+        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, double timeout)
         {
             // Initialize websocket client
             ClientWebSocket webSocket = new ClientWebSocket();
             UriBuilder uriBuilder = new UriBuilder("ws", host, port);
             Uri uri = uriBuilder.Uri;
+
             // Token is used to notify listeners/ delegates of task state
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
+
             // initialize websocket handshake with server
             var task = webSocket.ConnectAsync(uri, token);
+
             // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout)))
             { 
@@ -166,17 +189,20 @@ namespace DistributedMatchEngine
         }
 
         // GetSecureWebsocketConnection helper function
-        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeout)
+        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, double timeout)
         {
             // Initialize websocket class
             ClientWebSocket webSocket = new ClientWebSocket();
             UriBuilder uriBuilder = new UriBuilder("wss", host, port);
             Uri uri = uriBuilder.Uri;
+
             // Token is used to notify listeners/ delegates of task state
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
+
             // initialize websocket handshake  with server
             var task = webSocket.ConnectAsync(uri, token);
+
             // Wait returns true if Task completes execution before timeout, false otherwise
             if (task.Wait(TimeSpan.FromSeconds(timeout)))
             { 

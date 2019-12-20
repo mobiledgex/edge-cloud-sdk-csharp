@@ -41,7 +41,7 @@ namespace RestSample
     static string appName = "MobiledgeX SDK Demo";
     static string appVers = "1.0";
     static string developerAuthToken = "";
-    static string connectionTestFqdn = "arshootereucluster.berlin-main.tdg.mobiledgex.net";
+    static string connectionTestFqdn = "mextest-app-cluster.frankfurt-main.tdg.mobiledgex.net";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
@@ -110,39 +110,65 @@ namespace RestSample
 
     async static Task TestTCPConnection(MatchingEngine me)
     {
-        string message = "TCP Connection Test";
+        string test = "{\"Data\": \"tcp test string\"}";
+        string message = "POST / HTTP/1.1\r\n" +
+            "Host: 10.227.69.96:3001\r\n" +
+            "User-Agent: curl/7.54.0\r\n" +
+            "Accept: */*\r\n" +
+            "Content-Length: " +
+            test.Length + "\r\n" +
+            "Content-Type: application/json\r\n" + "\r\n" + test;
         byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
         // TCP Connection Test
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 6667, 5);
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5);
+
             tcpConnection.Send(bytesMessage);
+
             byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
             tcpConnection.Receive(bytesReceive);
             string receiveMessage = Encoding.ASCII.GetString(bytesReceive);
+
             Console.WriteLine("Echoed tcp string: " + receiveMessage);
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("TCP GetConnectionException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("TCP socket exception is " + e);
         }
     }
 
     async static Task TestHTTPConnection(MatchingEngine me)
     {
-        string message = "HTTP Connection Test";
+        var dict = new Dictionary<string, string>();
+        dict["data"] = "HTTP Connection Test";
+
+        var settings = new DataContractJsonSerializerSettings();
+        settings.UseSimpleDictionaryFormat = true;
+        var serializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>), settings);
+
+        var ms = new MemoryStream();
+        serializer.WriteObject(ms, dict);
+        string message = Util.StreamToString(ms);
+
         string uriString = connectionTestFqdn;
-        UriBuilder uriBuilder = new UriBuilder("http", uriString, 6666);
+        UriBuilder uriBuilder = new UriBuilder("http", uriString, 3001);
         Uri uri = uriBuilder.Uri;
 
         // HTTP Connection Test
         try
         { 
             HttpClient httpClient = await me.GetHTTPClient(uri);
+
             StringContent content = new StringContent(message);
             HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
+
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             Console.WriteLine("http response body is " + responseBody);
@@ -158,7 +184,7 @@ namespace RestSample
         // TLS on TCP Connection Test
         try
         {
-            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 6667, 5);
+            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5);
             stream.Close();
         }
         catch (AuthenticationException e)
@@ -167,7 +193,7 @@ namespace RestSample
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("TCPTLS GetConnectionException is " + e.Message);
         }
     }
 
@@ -179,32 +205,34 @@ namespace RestSample
         // Websocket Connection Test
         try
         {
-            ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 6669, 5);
+            ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 3001, 5);
 
             // Send message
             ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
             await socket.SendAsync(sendBuffer, WebSocketMessageType.Text, true, token);
+
             // Receive message
             byte[] bytesReceive = new byte[message.Length * 2];
             ArraySegment<Byte> receiveBuffer = new ArraySegment<byte>(bytesReceive);
             WebSocketReceiveResult result = await socket.ReceiveAsync(receiveBuffer, token);
             string receiveMessage = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
+
             Console.WriteLine("Echoed websocket result is " + receiveMessage);
             await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "end of test", token);
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("Websocket GetConnectionException is " + e.Message);
         }
         catch (OperationCanceledException e)
         {
-            Console.WriteLine("OperationCanceledException is " + e.Message);
+            Console.WriteLine("Websocket OperationCanceledException is " + e.Message);
         }
         catch (Exception e)
         {
-            Console.WriteLine("Exception is " + e.Message);
+            Console.WriteLine("Websocket Exception is " + e.Message);
         }
     }
 
@@ -227,9 +255,14 @@ namespace RestSample
         {
             reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
         }
-        catch (DmeDnsException e)
+        catch (DmeDnsException dde)
         {
-            Console.WriteLine("DmeDnsException is " + e.InnerException);
+            Console.WriteLine("Workflow DmeDnsException is " + dde.InnerException);
+            return;
+        }
+        catch (RegisterClientException rce)
+        {
+            Console.WriteLine("Workflow RegisterClient is " + rce.InnerException);
             return;
         }
 
@@ -240,7 +273,7 @@ namespace RestSample
             return;
         }
 
-        AppPort appPort = appPortsDict[6666];
+        AppPort appPort = appPortsDict[3001];
         if (appPort == null)
         {
             Console.WriteLine("Not AppPorts with specified internal port");
@@ -249,12 +282,34 @@ namespace RestSample
 
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 6667, 5); // 5 second timeout
+            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 3001, 5); // 5 second timeout
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
         {
-            Console.WriteLine("GetConnectionException is " + e.Message);
+            Console.WriteLine("Workflow GetConnectionException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("workflow test exception " + e.Message);
+        }
+    }
+
+    async static Task TestTimeout(MatchingEngine me)
+    {
+        // comment out localIP and bind in GetConnectionHelper.cs in order to test timeout
+        try
+        {
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 0.1);
+            tcpConnection.Close();
+        }
+        catch (GetConnectionException e)
+        {
+            Console.WriteLine("Timeout test GetConnectionException is " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Timeout test exception " + e.Message);
         }
     }
 
@@ -265,12 +320,14 @@ namespace RestSample
         Task httpTest = TestHTTPConnection(me);
         Task tcpTlsTest = TestTCPTLSConnection(me);
         Task getConnectionWorkflow = TestGetConnectionWorkflow(me);
+        Task timeoutTest = TestTimeout(me);
 
         await websocketTest;
         await tcpTest;
         await httpTest;
         await tcpTlsTest;
         await getConnectionWorkflow;
+        await timeoutTest;
     }
 
     async static Task Main(string[] args)
@@ -281,7 +338,7 @@ namespace RestSample
 
         Console.WriteLine("MobiledgeX RestSample!");
 
-        MatchingEngine me = new MatchingEngine();
+        MatchingEngine me = new MatchingEngine(DistributedMatchEngine.OperatingSystem.OTHER);
         me.SetTimeout(15000);
 
         // Start location task. This is for test use only. The source of the
