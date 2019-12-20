@@ -28,7 +28,7 @@ namespace DistributedMatchEngine
     public partial class MatchingEngine
     {
 
-        public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
+        public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
         {
             if (timeout <= 0)
             {
@@ -51,7 +51,7 @@ namespace DistributedMatchEngine
             return s;
         }
 
-        public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
+        public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
         {
             if (timeout <= 0)
             {
@@ -74,7 +74,7 @@ namespace DistributedMatchEngine
             return stream;
         }
 
-        public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
+        public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
         {
             if (timeout <= 0)
             {
@@ -97,7 +97,7 @@ namespace DistributedMatchEngine
             return s;
         }
         
-        public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
+        public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
         {
             if (timeout <= 0)
             {
@@ -123,7 +123,7 @@ namespace DistributedMatchEngine
             return client;
         }
 
-        public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
+        public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
         {
             if (timeout <= 0)
             {
@@ -149,7 +149,7 @@ namespace DistributedMatchEngine
             return client;
         }
 
-        public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
+        public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
         {
             if (timeout <= 0)
             {
@@ -172,7 +172,7 @@ namespace DistributedMatchEngine
             return s;
         }
 
-        public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeout)
+        public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, double timeout)
         {
             if (timeout <= 0)
             {

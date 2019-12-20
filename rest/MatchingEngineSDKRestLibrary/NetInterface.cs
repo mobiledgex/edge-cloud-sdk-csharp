@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace DistributedMatchEngine
 {
   public interface NetInterface
     {
-        string GetIPAddress();
+        string GetIPAddress(String netInterfaceType);
         bool IsWifi();
         bool IsCellular();
     }
