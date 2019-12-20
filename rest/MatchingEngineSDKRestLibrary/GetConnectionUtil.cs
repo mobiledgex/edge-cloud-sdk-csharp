@@ -28,7 +28,7 @@ namespace DistributedMatchEngine
 {
     class EmptyNetInterface: NetInterface
     {
-        public string GetIPAddress()
+        public string GetIPAddress(String netInterface)
         {
             return null;
         }
@@ -44,18 +44,40 @@ namespace DistributedMatchEngine
         }
     }
 
+    public class IOSNetworkInterface
+    {
+        public static string CELLULAR = "pdp_ip0";
+        public static string WIFI = "en0";
+    }
+
+    public class AndroidNetworkInterface
+    {
+        public static string CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
+        public static string WIFI = "wlan0";
+    }
+
     public partial class MatchingEngine
     {
-        private static ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+        private ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+        private Exception handlerException = new Exception();
 
         // Callback for the Socket object's BeginConnect function
-        private static void ConnectCallback(IAsyncResult ar)
+        private void ConnectCallback(IAsyncResult ar)
         {
-            // Retrieve the socket from the state object.  
-            Socket client = (Socket) ar.AsyncState;  
-            // Complete the connection.  
-            client.EndConnect(ar);  
-            TimeoutObj.Set();
+            try
+            {
+                // Retrieve the socket from the state object.  
+                Socket client = (Socket) ar.AsyncState;
+                // Complete the connection.  
+                client.EndConnect(ar);
+                TimeoutObj.Set();
+            }
+            catch (Exception e)
+            {
+                handlerException = e;
+                TimeoutObj.Set();
+            }
+
         }
 
         private static bool ValidateServerCertificate(object sender, X509Certificate certificate,
@@ -87,8 +109,19 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
             {
                 throw new GetConnectionException("Have not integrated NetworkInterface");
             }
-            string host = netInterface.GetIPAddress();
-            if (host == null)
+
+            string host = "";
+
+            if (this.os is OperatingSystem.ANDROID)
+            { 
+                host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
+            }
+            else if (this.os is OperatingSystem.IOS)
+            { 
+                host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
+            }
+
+            if (host == null || host == "")
             {
                 throw new GetConnectionException("Could not get Cellular interface");
             }
