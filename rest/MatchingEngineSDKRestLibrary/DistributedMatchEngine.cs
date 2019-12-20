@@ -68,6 +68,19 @@ namespace DistributedMatchEngine
     }
   }
 
+  public class RegisterClientException : Exception
+  {
+    public RegisterClientException(string message)
+        : base(message)
+    {
+    }
+
+    public RegisterClientException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+  }
+
   // Minimal logger without log levels:
   static class Log
   {
@@ -508,7 +521,11 @@ namespace DistributedMatchEngine
     {
         // Register Client
         RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-        await RegisterClient(registerRequest);
+        RegisterClientReply registerClientReply = await RegisterClient(registerRequest);
+        if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
+        {
+            throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
+        }
         // Find Cloudlet
         FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
         FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
@@ -521,7 +538,11 @@ namespace DistributedMatchEngine
     {
         // Register Client
         RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-        await RegisterClient(host, port, registerRequest);
+        RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
+        if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
+        {
+            throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
+        }
         // Find Cloudlet 
         FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
         FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest);

@@ -255,9 +255,14 @@ namespace RestSample
         {
             reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
         }
-        catch (DmeDnsException e)
+        catch (DmeDnsException dde)
         {
-            Console.WriteLine("Workflow DmeDnsException is " + e.InnerException);
+            Console.WriteLine("Workflow DmeDnsException is " + dde.InnerException);
+            return;
+        }
+        catch (RegisterClientException rce)
+        {
+            Console.WriteLine("Workflow RegisterClient is " + rce.InnerException);
             return;
         }
 
