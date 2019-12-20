@@ -123,7 +123,7 @@ namespace RestSample
         // TCP Connection Test
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5, DistributedMatchEngine.OperatingSystem.OTHER);
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5);
 
             tcpConnection.Send(bytesMessage);
 
@@ -184,7 +184,7 @@ namespace RestSample
         // TLS on TCP Connection Test
         try
         {
-            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5, DistributedMatchEngine.OperatingSystem.OTHER);
+            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5);
             stream.Close();
         }
         catch (AuthenticationException e)
@@ -277,7 +277,7 @@ namespace RestSample
 
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 3001, 5, DistributedMatchEngine.OperatingSystem.OTHER); // 5 second timeout
+            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 3001, 5); // 5 second timeout
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
@@ -295,7 +295,7 @@ namespace RestSample
         // comment out localIP and bind in GetConnectionHelper.cs in order to test timeout
         try
         {
-            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 0.1, DistributedMatchEngine.OperatingSystem.OTHER);
+            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 0.1);
             tcpConnection.Close();
         }
         catch (GetConnectionException e)
@@ -333,7 +333,7 @@ namespace RestSample
 
         Console.WriteLine("MobiledgeX RestSample!");
 
-        MatchingEngine me = new MatchingEngine();
+        MatchingEngine me = new MatchingEngine(DistributedMatchEngine.OperatingSystem.OTHER);
         me.SetTimeout(15000);
 
         // Start location task. This is for test use only. The source of the
