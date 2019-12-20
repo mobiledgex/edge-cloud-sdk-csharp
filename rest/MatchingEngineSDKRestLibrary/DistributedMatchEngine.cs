@@ -68,6 +68,19 @@ namespace DistributedMatchEngine
     }
   }
 
+  public class RegisterClientException : Exception
+  {
+    public RegisterClientException(string message)
+        : base(message)
+    {
+    }
+
+    public RegisterClientException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+  }
+
   // Minimal logger without log levels:
   static class Log
   {
@@ -105,6 +118,13 @@ namespace DistributedMatchEngine
     }
   }
 
+  public enum OperatingSystem
+  {
+     ANDROID,
+     IOS,
+     OTHER
+  }
+
 
   public partial class MatchingEngine
   {
@@ -136,9 +156,11 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
+    public OperatingSystem os { get; set; }
 
-    public MatchingEngine()
+    public MatchingEngine(OperatingSystem os)
     {
+      this.os = os;
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
       carrierInfo = new EmptyCarrierInfo();
@@ -499,10 +521,31 @@ namespace DistributedMatchEngine
     {
         // Register Client
         RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-        await RegisterClient(registerRequest);
+        RegisterClientReply registerClientReply = await RegisterClient(registerRequest);
+        if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
+        {
+            throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
+        }
         // Find Cloudlet
         FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
         FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
+
+        return findCloudletReply;
+    }
+
+    // Override with specified dme host and port
+    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port, string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
+    {
+        // Register Client
+        RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
+        RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
+        if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
+        {
+            throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
+        }
+        // Find Cloudlet 
+        FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
+        FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest);
 
         return findCloudletReply;
     }
