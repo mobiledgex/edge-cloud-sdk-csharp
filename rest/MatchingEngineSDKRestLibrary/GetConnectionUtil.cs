@@ -56,13 +56,6 @@ namespace DistributedMatchEngine
         public static string WIFI = "wlan0";
     }
 
-    public enum OperatingSystem
-    {
-        ANDROID,
-        IOS,
-        OTHER
-    }
-
     public partial class MatchingEngine
     {
         private ManualResetEvent TimeoutObj = new ManualResetEvent(false);
@@ -110,7 +103,7 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
         }
 
         // Gets IP Address of the specified network interface
-        private IPEndPoint GetLocalIP(int port, OperatingSystem os)
+        private IPEndPoint GetLocalIP(int port)
         {
             if (netInterface == null)
             {
@@ -119,11 +112,11 @@ X509Chain chain, SslPolicyErrors sslPolicyErrors)
 
             string host = "";
 
-            if (os is OperatingSystem.ANDROID)
+            if (this.os is OperatingSystem.ANDROID)
             { 
                 host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
             }
-            else if (os is OperatingSystem.IOS)
+            else if (this.os is OperatingSystem.IOS)
             { 
                 host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
             }

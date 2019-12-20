@@ -105,6 +105,13 @@ namespace DistributedMatchEngine
     }
   }
 
+  public enum OperatingSystem
+  {
+     ANDROID,
+     IOS,
+     OTHER
+  }
+
 
   public partial class MatchingEngine
   {
@@ -136,9 +143,11 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
+    public OperatingSystem os { get; set; }
 
-    public MatchingEngine()
+    public MatchingEngine(OperatingSystem os)
     {
+      this.os = os;
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
       carrierInfo = new EmptyCarrierInfo();

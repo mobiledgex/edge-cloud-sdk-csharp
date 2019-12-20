@@ -31,10 +31,10 @@ namespace DistributedMatchEngine
     public partial class MatchingEngine
     {
         // GetTCPConnection helper function
-        public async Task<Socket> GetTCPConnection(string host, int port, double timeout, OperatingSystem os)
+        public async Task<Socket> GetTCPConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
-            IPEndPoint localEndPoint = GetLocalIP(port, os);
+            IPEndPoint localEndPoint = GetLocalIP(port);
 
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
@@ -77,10 +77,10 @@ namespace DistributedMatchEngine
         }
 
         // GetTCPTLSConnection helper function
-        public async Task<SslStream> GetTCPTLSConnection(string host, int port, double timeout, OperatingSystem os)
+        public async Task<SslStream> GetTCPTLSConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
-            IPEndPoint localEndPoint = GetLocalIP(port, os);
+            IPEndPoint localEndPoint = GetLocalIP(port);
 
             // Create tcp client
             TcpClient tcpClient = new TcpClient(localEndPoint);
@@ -105,10 +105,10 @@ namespace DistributedMatchEngine
         }
 
         // GetUDPConnection helper function
-        public async Task<Socket> GetUDPConnection(string host, int port, double timeout, OperatingSystem os)
+        public async Task<Socket> GetUDPConnection(string host, int port, double timeout)
         {
             // Using integration with IOS or Android sdk, get cellular interface
-            IPEndPoint localEndPoint = GetLocalIP(port, os);
+            IPEndPoint localEndPoint = GetLocalIP(port);
 
             // Get remote ip of the provided host
             IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
