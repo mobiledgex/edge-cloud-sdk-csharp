@@ -22,169 +22,157 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
 
-using System.Threading;
-
 namespace DistributedMatchEngine
 {
-    class EmptyNetInterface: NetInterface
+  class EmptyNetInterface : NetInterface
+  {
+    public string GetIPAddress(String netInterface)
     {
-        public string GetIPAddress(String netInterface)
-        {
-            return null;
-        }
-
-        public bool IsWifi()
-        {
-            return false;
-        }
-
-        public bool IsCellular()
-        {
-            return false;
-        }
+      return null;
     }
 
-    public class IOSNetworkInterface
+    public bool IsWifi()
     {
-        public static string CELLULAR = "pdp_ip0";
-        public static string WIFI = "en0";
+      return false;
     }
 
-    public class AndroidNetworkInterface
+    public bool IsCellular()
     {
-        public static string CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
-        public static string WIFI = "wlan0";
+      return false;
+    }
+  }
+
+  public class IOSNetworkInterface
+  {
+    public static string CELLULAR = "pdp_ip0";
+    public static string WIFI = "en0";
+  }
+
+  public class AndroidNetworkInterface
+  {
+    public static string CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
+    public static string WIFI = "wlan0";
+  }
+
+  public class MacNetworkInterface
+  {
+    public static string CELLULAR = "en0";
+    public static string WIFI = "en0";
+  }
+
+  public partial class MatchingEngine
+  {
+    private static bool ValidateServerCertificate(object sender,
+      X509Certificate certificate,
+      X509Chain chain, SslPolicyErrors sslPolicyErrors)
+    {
+      if (sslPolicyErrors == SslPolicyErrors.None) return true;
+
+      Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+
+      // Do not allow this client to communicate with unauthenticated servers.
+      return false;
     }
 
-    public partial class MatchingEngine
+    // Checks if the specified port is within the range of public_port and end_port
+    private bool IsInPortRange(AppPort appPort, int port)
     {
-        private ManualResetEvent TimeoutObj = new ManualResetEvent(false);
-        private Exception handlerException = new Exception();
-
-        // Callback for the Socket object's BeginConnect function
-        private void ConnectCallback(IAsyncResult ar)
-        {
-            try
-            {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket) ar.AsyncState;
-                // Complete the connection.  
-                client.EndConnect(ar);
-                TimeoutObj.Set();
-            }
-            catch (Exception e)
-            {
-                handlerException = e;
-                TimeoutObj.Set();
-            }
-
-        }
-
-        private static bool ValidateServerCertificate(object sender, X509Certificate certificate,
-X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            if (sslPolicyErrors == SslPolicyErrors.None) return true;
-
-            Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
-      
-            // Do not allow this client to communicate with unauthenticated servers.
-            return false;
-        }
-
-        // Checks if the specified port is within the range of public_port and end_port
-        private bool IsInPortRange(AppPort appPort, int port)
-        {
-            // Checks if range exists -> if not, check if specified port equals public port
-            if (appPort.end_port == 0 || appPort.end_port < appPort.public_port)
-            {
-                return port == appPort.public_port;
-            }
-            return (port >= appPort.public_port && port <= appPort.end_port);
-        }
-
-        // Gets IP Address of the specified network interface
-        private IPEndPoint GetLocalIP(int port)
-        {
-            if (netInterface == null)
-            {
-                throw new GetConnectionException("Have not integrated NetworkInterface");
-            }
-
-            string host = "";
-
-            if (this.os is OperatingSystem.ANDROID)
-            { 
-                host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
-            }
-            else if (this.os is OperatingSystem.IOS)
-            { 
-                host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
-            }
-
-            if (host == null || host == "")
-            {
-                throw new GetConnectionException("Could not get Cellular interface");
-            }
-            // Gets IP address of host
-            IPAddress localIP = Dns.GetHostAddresses(host)[0];
-            IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
-            return localEndPoint;
-        }
-
-        public Dictionary<int, AppPort> GetAppPortsByProtocol(FindCloudletReply reply, LProto proto)
-        {
-            Dictionary<int, AppPort> appPortsByProtocol = new Dictionary<int, AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
-            {
-                if (port.proto == proto)
-                {
-                    appPortsByProtocol.Add(port.internal_port, port);
-                }
-            }
-            return appPortsByProtocol;
-        }
-
-        public Dictionary<int, AppPort> GetTCPAppPorts(FindCloudletReply reply)
-        {
-            Dictionary<int, AppPort> tcpAppPorts = new Dictionary<int, AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
-            {
-                if (port.proto == LProto.L_PROTO_TCP)
-                {
-                    tcpAppPorts.Add(port.internal_port, port);
-                }
-            }
-            return tcpAppPorts;
-        }
-
-        public Dictionary<int, AppPort> GetUDPAppPorts(FindCloudletReply reply)
-        {
-            Dictionary<int, AppPort> udpAppPorts = new Dictionary<int, AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
-            {
-                if (port.proto == LProto.L_PROTO_UDP)
-                {
-                    udpAppPorts.Add(port.internal_port, port);
-                }
-            }
-            return udpAppPorts;
-        }
-
-        public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
-        {
-            Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();
-            AppPort[] ports = reply.ports;
-            foreach (AppPort port in ports)
-            {
-                if (port.proto == LProto.L_PROTO_HTTP)
-                {
-                    httpAppPorts.Add(port.internal_port, port);
-                }
-            }
-            return httpAppPorts;
-        }
+      // Checks if range exists -> if not, check if specified port equals public port
+      if (appPort.end_port == 0 || appPort.end_port < appPort.public_port)
+      {
+        return port == appPort.public_port;
+      }
+      return (port >= appPort.public_port && port <= appPort.end_port);
     }
+
+    // Gets IP Address of the specified network interface
+    private IPEndPoint GetLocalIP(int port)
+    {
+      if (netInterface == null)
+      {
+        throw new GetConnectionException("Have not integrated NetworkInterface");
+      }
+
+      string host = "";
+
+      if (this.os is OperatingSystem.ANDROID)
+      {
+        host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
+      }
+      else if (this.os is OperatingSystem.IOS)
+      {
+        host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
+      }
+      // Unsupported or Test only interface profile:
+      else if (os is OperatingSystem.OTHER && netInterface != null)
+      {
+        host = netInterface.GetIPAddress(MacNetworkInterface.CELLULAR);
+      }
+
+      if (host == null || host == "")
+      {
+        throw new GetConnectionException("Could not get Cellular interface");
+      }
+      // Gets IP address of host
+      IPAddress localIP = Dns.GetHostAddresses(host)[0];
+      IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
+      return localEndPoint;
+    }
+
+    public Dictionary<int, AppPort> GetAppPortsByProtocol(FindCloudletReply reply, LProto proto)
+    {
+      Dictionary<int, AppPort> appPortsByProtocol = new Dictionary<int, AppPort>();
+      AppPort[] ports = reply.ports;
+      foreach (AppPort port in ports)
+      {
+        if (port.proto == proto)
+        {
+          appPortsByProtocol.Add(port.internal_port, port);
+        }
+      }
+      return appPortsByProtocol;
+    }
+
+    public Dictionary<int, AppPort> GetTCPAppPorts(FindCloudletReply reply)
+    {
+      Dictionary<int, AppPort> tcpAppPorts = new Dictionary<int, AppPort>();
+      AppPort[] ports = reply.ports;
+      foreach (AppPort port in ports)
+      {
+        if (port.proto == LProto.L_PROTO_TCP)
+        {
+          tcpAppPorts.Add(port.internal_port, port);
+        }
+      }
+      return tcpAppPorts;
+    }
+
+    public Dictionary<int, AppPort> GetUDPAppPorts(FindCloudletReply reply)
+    {
+      Dictionary<int, AppPort> udpAppPorts = new Dictionary<int, AppPort>();
+      AppPort[] ports = reply.ports;
+      foreach (AppPort port in ports)
+      {
+        if (port.proto == LProto.L_PROTO_UDP)
+        {
+          udpAppPorts.Add(port.internal_port, port);
+        }
+      }
+      return udpAppPorts;
+    }
+
+    public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
+    {
+      Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();
+      AppPort[] ports = reply.ports;
+      foreach (AppPort port in ports)
+      {
+        if (port.proto == LProto.L_PROTO_HTTP)
+        {
+          httpAppPorts.Add(port.internal_port, port);
+        }
+      }
+      return httpAppPorts;
+    }
+  }
 }

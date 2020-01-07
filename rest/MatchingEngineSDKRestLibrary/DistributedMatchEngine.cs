@@ -226,50 +226,50 @@ namespace DistributedMatchEngine
 
     private async Task<Stream> PostRequest(string uri, string jsonStr)
     {
-      // Choose network TBD
-      Log.D("URI: " + uri);
-      // static HTTPClient singleton, with instanced HttpContent is recommended for performance.
-      var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-      Log.D("Post Body: " + jsonStr);
-      var response = await httpClient.PostAsync(uri, stringContent);
+        // Choose network TBD
+        Log.D("URI: " + uri);
+        // static HTTPClient singleton, with instanced HttpContent is recommended for performance.
+        var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
+        Log.D("Post Body: " + jsonStr);
+        HttpResponseMessage response = await httpClient.PostAsync(uri, stringContent).ConfigureAwait(false);
 
-      if (response == null)
-      {
-        throw new Exception("Null http response object!");
-      }
+        if (response == null)
+        {
+          throw new Exception("Null http response object!");
+        }
 
-      if (response.StatusCode != HttpStatusCode.OK)
-      {
-        string responseBodyStr = response.Content.ReadAsStringAsync().Result;
-        JsonObject jsObj = (JsonObject)JsonValue.Parse(responseBodyStr);
-        string extendedErrorStr;
-        int errorCode;
-        if (jsObj.ContainsKey("message") && jsObj.ContainsKey("code"))
+        if (response.StatusCode != HttpStatusCode.OK)
         {
-          extendedErrorStr = jsObj["message"];
-          try
+          string responseBodyStr = response.Content.ReadAsStringAsync().Result;
+          JsonObject jsObj = (JsonObject)JsonValue.Parse(responseBodyStr);
+          string extendedErrorStr;
+          int errorCode;
+          if (jsObj.ContainsKey("message") && jsObj.ContainsKey("code"))
           {
-            errorCode = jsObj["code"];
+            extendedErrorStr = jsObj["message"];
+            try
+            {
+              errorCode = jsObj["code"];
+            }
+            catch (FormatException)
+            {
+              errorCode = -1; // Bad code number format
+            }
+            throw new HttpException(extendedErrorStr, response.StatusCode, errorCode);
           }
-          catch (FormatException)
+          else
           {
-            errorCode = -1; // Bad code number format
+            // Unknown error message format, throw exception with inner:
+            try
+            {
+              response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+              throw new HttpException(e.Message, response.StatusCode, -1, e);
+            }
           }
-          throw new HttpException(extendedErrorStr, response.StatusCode, errorCode);
         }
-        else
-        {
-          // Unknown error message format, throw exception with inner:
-          try
-          {
-            response.EnsureSuccessStatusCode();
-          }
-          catch (Exception e)
-          {
-            throw new HttpException(e.Message, response.StatusCode, -1, e);
-          }
-        }
-      }
 
       // Normal path:
       Stream replyStream = await response.Content.ReadAsStreamAsync();
@@ -404,7 +404,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + registerAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + registerAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
@@ -495,7 +495,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + findcloudletAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + findcloudletAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
@@ -612,7 +612,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + verifylocationAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + verifylocationAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
@@ -678,7 +678,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + getlocationAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + getlocationAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
@@ -744,7 +744,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + appinstlistAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + appinstlistAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
@@ -804,7 +804,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + getfqdnlistAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + getfqdnlistAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
@@ -850,7 +850,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + dynamiclocgroupAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + dynamiclocgroupAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
@@ -896,7 +896,7 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + qospositionkpiAPI, jsonStr);
+      Stream responseStream = await PostRequest(CreateUri(host, port) + qospositionkpiAPI, jsonStr).ConfigureAwait(false);
       if (responseStream == null || !responseStream.CanRead || responseStream.Length == 0)
       {
         return null;

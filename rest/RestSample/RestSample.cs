@@ -31,21 +31,19 @@ using System.Threading;
 
 using DistributedMatchEngine;
 
-
 namespace RestSample
 {
   class Program
   {
     static string carrierName = "GDDT";
     static string devName = "MobiledgeX";
-    static string appName = "MobiledgeX SDK Demo";
-    static string appVers = "1.0";
+    static string appName = "PongGame2";
+    static string appVers = "2019-09-26";
     static string developerAuthToken = "";
-    static string connectionTestFqdn = "mextest-app-cluster.fairview-main.gddt.mobiledgex.net";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = MatchingEngine.fallbackDmeHost;
+    static string fallbackDmeHost = "260-10.dme.mobiledgex.net";
 
     // Get the ephemerial carriername from device specific properties.
     async static Task<string> getCurrentCarrierName()
@@ -108,227 +106,7 @@ namespace RestSample
       return req;
     }
 
-    async static Task TestTCPConnection(MatchingEngine me)
-    {
-        string test = "{\"Data\": \"tcp test string\"}";
-        string message = "POST / HTTP/1.1\r\n" +
-            "Host: 10.227.69.96:3001\r\n" +
-            "User-Agent: curl/7.54.0\r\n" +
-            "Accept: */*\r\n" +
-            "Content-Length: " +
-            test.Length + "\r\n" +
-            "Content-Type: application/json\r\n" + "\r\n" + test;
-        byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
-        // TCP Connection Test
-        try
-        {
-            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5);
-
-            tcpConnection.Send(bytesMessage);
-
-            byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
-            tcpConnection.Receive(bytesReceive);
-            string receiveMessage = Encoding.ASCII.GetString(bytesReceive);
-
-            Console.WriteLine("Echoed tcp string: " + receiveMessage);
-            tcpConnection.Close();
-        }
-        catch (GetConnectionException e)
-        {
-            Console.WriteLine("TCP GetConnectionException is " + e.Message);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("TCP socket exception is " + e);
-        }
-    }
-
-    async static Task TestHTTPConnection(MatchingEngine me)
-    {
-        var dict = new Dictionary<string, string>();
-        dict["data"] = "HTTP Connection Test";
-
-        var settings = new DataContractJsonSerializerSettings();
-        settings.UseSimpleDictionaryFormat = true;
-        var serializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>), settings);
-
-        var ms = new MemoryStream();
-        serializer.WriteObject(ms, dict);
-        string message = Util.StreamToString(ms);
-
-        string uriString = connectionTestFqdn;
-        UriBuilder uriBuilder = new UriBuilder("http", uriString, 3001);
-        Uri uri = uriBuilder.Uri;
-
-        // HTTP Connection Test
-        try
-        { 
-            HttpClient httpClient = await me.GetHTTPClient(uri);
-
-            StringContent content = new StringContent(message);
-            HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
-
-            response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("http response body is " + responseBody);
-        }
-        catch (HttpRequestException e)
-        {
-            Console.WriteLine("HttpRequestException is " + e.Message);
-        }
-    }
-
-    async static Task TestTCPTLSConnection(MatchingEngine me)
-    {
-        // TLS on TCP Connection Test
-        try
-        {
-            SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5);
-            stream.Close();
-        }
-        catch (AuthenticationException e)
-        {
-            Console.WriteLine("Authentication Exception is " + e.Message);
-        }
-        catch (GetConnectionException e)
-        {
-            Console.WriteLine("TCPTLS GetConnectionException is " + e.Message);
-        }
-    }
-
-    async static Task TestWebsocketsConnection(MatchingEngine me)
-    {
-        string message = "Websockets connection test";
-        byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
-
-        // Websocket Connection Test
-        try
-        {
-            ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 3001, 5);
-
-            // Send message
-            ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
-            await socket.SendAsync(sendBuffer, WebSocketMessageType.Text, true, token);
-
-            // Receive message
-            byte[] bytesReceive = new byte[message.Length * 2];
-            ArraySegment<Byte> receiveBuffer = new ArraySegment<byte>(bytesReceive);
-            WebSocketReceiveResult result = await socket.ReceiveAsync(receiveBuffer, token);
-            string receiveMessage = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
-
-            Console.WriteLine("Echoed websocket result is " + receiveMessage);
-            await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "end of test", token);
-        }
-        catch (GetConnectionException e)
-        {
-            Console.WriteLine("Websocket GetConnectionException is " + e.Message);
-        }
-        catch (OperationCanceledException e)
-        {
-            Console.WriteLine("Websocket OperationCanceledException is " + e.Message);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Websocket Exception is " + e.Message);
-        }
-    }
-
-    // Test Workflow with TCP connection and exception handling
-    async static Task TestGetConnectionWorkflow(MatchingEngine me)
-    {
-        // MatchingEngine APIs Developer workflow:
-
-        // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, authToken, loc)
-        // appPortsDict = me.GetTCpPorts(findCloudletReply)
-        // appPort = appPortsDict[internal_port]
-        //      internal_port is the Container port specified in the Dockerfile
-        // socket = me.GetTCPConnection(findCloudletReply, appPort, desiredPort, timeout)
-        //      desiredPort can be set to -1 if user wants to default to public_port
-
-        var loc = await Util.GetLocationFromDevice();
-        FindCloudletReply reply;
-
-        try
-        {
-            reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
-        }
-        catch (DmeDnsException dde)
-        {
-            Console.WriteLine("Workflow DmeDnsException is " + dde.InnerException);
-            return;
-        }
-        catch (RegisterClientException rce)
-        {
-            Console.WriteLine("Workflow RegisterClient is " + rce.InnerException);
-            return;
-        }
-
-        Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
-        if (appPortsDict.Count == 0)
-        {
-            Console.WriteLine("No ports with specified protocol");
-            return;
-        }
-
-        AppPort appPort = appPortsDict[3001];
-        if (appPort == null)
-        {
-            Console.WriteLine("Not AppPorts with specified internal port");
-            return;
-        }
-
-        try
-        {
-            Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 3001, 5); // 5 second timeout
-            tcpConnection.Close();
-        }
-        catch (GetConnectionException e)
-        {
-            Console.WriteLine("Workflow GetConnectionException is " + e.Message);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("workflow test exception " + e.Message);
-        }
-    }
-
-    async static Task TestTimeout(MatchingEngine me)
-    {
-        // comment out localIP and bind in GetConnectionHelper.cs in order to test timeout
-        try
-        {
-            Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 0.1);
-            tcpConnection.Close();
-        }
-        catch (GetConnectionException e)
-        {
-            Console.WriteLine("Timeout test GetConnectionException is " + e.Message);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Timeout test exception " + e.Message);
-        }
-    }
-
-    async static Task TestGetConnection(MatchingEngine me)
-    {
-        Task websocketTest = TestWebsocketsConnection(me);
-        Task tcpTest = TestTCPConnection(me);
-        Task httpTest = TestHTTPConnection(me);
-        Task tcpTlsTest = TestTCPTLSConnection(me);
-        Task getConnectionWorkflow = TestGetConnectionWorkflow(me);
-        Task timeoutTest = TestTimeout(me);
-
-        await websocketTest;
-        await tcpTest;
-        await httpTest;
-        await tcpTlsTest;
-        await getConnectionWorkflow;
-        await timeoutTest;
-    }
 
     async static Task Main(string[] args)
     {
@@ -346,10 +124,6 @@ namespace RestSample
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
 
-        Task testing = TestGetConnection(me);
-        await testing;
-        Console.WriteLine("connection test finished");
-
         var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken);
 
         // APIs depend on Register client to complete successfully:
@@ -364,7 +138,7 @@ namespace RestSample
           catch (DmeDnsException)
           {
             // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
-            registerClientReply = await me.RegisterClient(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
+            registerClientReply = await me.RegisterClient(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
             Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
           }
         }
@@ -395,7 +169,7 @@ namespace RestSample
           catch (DmeDnsException)
           {
             // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
-            findCloudletReply = await me.FindCloudlet(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
+            findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
           }
           Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
 
@@ -436,7 +210,7 @@ namespace RestSample
           }
           catch (DmeDnsException)
           {
-            getLocationReply = await me.GetLocation(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, getLocationRequest);
+            getLocationReply = await me.GetLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, getLocationRequest);
           }
           Console.WriteLine("GetLocation Reply: " + getLocationReply);
 
@@ -459,7 +233,7 @@ namespace RestSample
           }
           catch (DmeDnsException)
           {
-            verifyLocationReply = await me.VerifyLocation(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, verifyLocationRequest);
+            verifyLocationReply = await me.VerifyLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, verifyLocationRequest);
           }
           if (verifyLocationReply != null)
           {
@@ -495,7 +269,7 @@ namespace RestSample
             qosReplyStream = await me.GetQosPositionKpi(qosPositionRequest);
           } catch (DmeDnsException)
           {
-            qosReplyStream = await me.GetQosPositionKpi(MatchingEngine.fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
+            qosReplyStream = await me.GetQosPositionKpi(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
           }
 
           if (qosReplyStream == null)
