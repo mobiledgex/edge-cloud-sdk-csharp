@@ -156,15 +156,13 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
-    public OperatingSystem os { get; set; }
 
-    public MatchingEngine(OperatingSystem os)
+    public MatchingEngine(NetInterface netInterface = null)
     {
-      this.os = os;
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
       carrierInfo = new EmptyCarrierInfo();
-      netInterface = new EmptyNetInterface();
+      this.netInterface = (netInterface == null) ? new EmptyNetInterface() : netInterface;
     }
 
     // Set the REST timeout for DME APIs.
@@ -226,50 +224,49 @@ namespace DistributedMatchEngine
 
     private async Task<Stream> PostRequest(string uri, string jsonStr)
     {
-        // Choose network TBD
-        Log.D("URI: " + uri);
-        // static HTTPClient singleton, with instanced HttpContent is recommended for performance.
-        var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-        Log.D("Post Body: " + jsonStr);
-        HttpResponseMessage response = await httpClient.PostAsync(uri, stringContent).ConfigureAwait(false);
+      // Choose network TBD
+      Log.D("URI: " + uri);
+      var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
+      Log.D("Post Body: " + jsonStr);
+      HttpResponseMessage response = await httpClient.PostAsync(uri, stringContent).ConfigureAwait(false);
 
-        if (response == null)
-        {
-          throw new Exception("Null http response object!");
-        }
+      if (response == null)
+      {
+        throw new Exception("Null http response object!");
+      }
 
-        if (response.StatusCode != HttpStatusCode.OK)
+      if (response.StatusCode != HttpStatusCode.OK)
+      {
+        string responseBodyStr = response.Content.ReadAsStringAsync().Result;
+        JsonObject jsObj = (JsonObject)JsonValue.Parse(responseBodyStr);
+        string extendedErrorStr;
+        int errorCode;
+        if (jsObj.ContainsKey("message") && jsObj.ContainsKey("code"))
         {
-          string responseBodyStr = response.Content.ReadAsStringAsync().Result;
-          JsonObject jsObj = (JsonObject)JsonValue.Parse(responseBodyStr);
-          string extendedErrorStr;
-          int errorCode;
-          if (jsObj.ContainsKey("message") && jsObj.ContainsKey("code"))
+          extendedErrorStr = jsObj["message"];
+          try
           {
-            extendedErrorStr = jsObj["message"];
-            try
-            {
-              errorCode = jsObj["code"];
-            }
-            catch (FormatException)
-            {
-              errorCode = -1; // Bad code number format
-            }
-            throw new HttpException(extendedErrorStr, response.StatusCode, errorCode);
+            errorCode = jsObj["code"];
           }
-          else
+          catch (FormatException)
           {
-            // Unknown error message format, throw exception with inner:
-            try
-            {
-              response.EnsureSuccessStatusCode();
-            }
-            catch (Exception e)
-            {
-              throw new HttpException(e.Message, response.StatusCode, -1, e);
-            }
+            errorCode = -1; // Bad code number format
+          }
+          throw new HttpException(extendedErrorStr, response.StatusCode, errorCode);
+        }
+        else
+        {
+          // Unknown error message format, throw exception with inner:
+          try
+          {
+            response.EnsureSuccessStatusCode();
+          }
+          catch (Exception e)
+          {
+            throw new HttpException(e.Message, response.StatusCode, -1, e);
           }
         }
+      }
 
       // Normal path:
       Stream replyStream = await response.Content.ReadAsStreamAsync();

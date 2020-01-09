@@ -26,38 +26,63 @@ namespace DistributedMatchEngine
 {
   class EmptyNetInterface : NetInterface
   {
-    public string GetIPAddress(String netInterface)
+    public NetworkInterfaceName GetNetworkInterfaceName()
     {
-      return null;
+      throw new NotImplementedException("Required NetInferface is not defined!");
+    }
+    public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
+    {
+      throw new NotImplementedException("Required NetInferface is not defined!");
     }
 
-    public bool IsWifi()
+    public string GetIPAddress(String netInterface, AddressFamily addressFamily = AddressFamily.InterNetwork)
     {
-      return false;
+      throw new NotImplementedException("Required NetInterface is not defined!");
     }
 
-    public bool IsCellular()
+    public bool HasWifi()
     {
-      return false;
+      throw new NotImplementedException("Required NetInterface is not defined!");
+    }
+
+    public bool HasCellular()
+    {
+      throw new NotImplementedException("Required NetInterface is not defined!");
     }
   }
 
-  public class IOSNetworkInterface
+  public class NetworkInterfaceName
   {
-    public static string CELLULAR = "pdp_ip0";
-    public static string WIFI = "en0";
+    public string CELLULAR = null;
+    public string WIFI = null;
   }
 
-  public class AndroidNetworkInterface
+  // Some known network interface profiles:
+  public class IOSNetworkInterfaceName : NetworkInterfaceName
   {
-    public static string CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
-    public static string WIFI = "wlan0";
+    public IOSNetworkInterfaceName()
+    {
+      CELLULAR = "pdp_ip0";
+      WIFI = "en0";
+    }
   }
 
-  public class MacNetworkInterface
+  public class AndroidNetworkInterfaceName : NetworkInterfaceName
   {
-    public static string CELLULAR = "en0";
-    public static string WIFI = "en0";
+    public AndroidNetworkInterfaceName()
+    {
+      CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
+      WIFI = "wlan0";
+    }
+  }
+
+  public class MacNetworkInterfaceName : NetworkInterfaceName
+  {
+    public MacNetworkInterfaceName()
+    {
+      CELLULAR = "en0";
+      WIFI = "en0";
+    }
   }
 
   public partial class MatchingEngine
@@ -74,6 +99,57 @@ namespace DistributedMatchEngine
       return false;
     }
 
+    private static bool IsValidPortNumber(AppPort appPort, int port)
+    {
+      int publicPort = appPort.public_port;
+      int end = appPort.end_port;
+
+      end = (end < publicPort) ? publicPort : end;
+
+      if (port >= publicPort && port <= end)
+      {
+        return true;
+      }
+      return false;
+    }
+
+    public static AppPort ValidatePublicPort(FindCloudletReply findCloudletReply, AppPort appPort, LProto proto, int portNum)
+    {
+      AppPort found = null;
+      foreach (AppPort aPort in findCloudletReply.ports)
+      {
+        // See if spec matches:
+        if (aPort.proto != proto)
+        {
+          continue;
+        }
+        if (IsValidPortNumber(appPort, portNum))
+        {
+          found = aPort;
+        }
+      }
+      return found;
+    }
+
+    // Create a L7Path URL from an app port:
+    public static string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, int portNum)
+    {
+      int aPortNum = portNum <= 0 ? appPort.public_port : portNum;
+      AppPort foundPort = ValidatePublicPort(findCloudletReply, appPort, LProto.L_PROTO_TCP, aPortNum);
+      if (foundPort == null)
+      {
+        return null;
+      }
+      string url = "http://" +
+              appPort.fqdn_prefix +
+              findCloudletReply.fqdn +
+              ":" +
+              aPortNum +
+              appPort.path_prefix;
+
+      return url;
+    }
+
     // Checks if the specified port is within the range of public_port and end_port
     private bool IsInPortRange(AppPort appPort, int port)
     {
@@ -86,29 +162,14 @@ namespace DistributedMatchEngine
     }
 
     // Gets IP Address of the specified network interface
-    private IPEndPoint GetLocalIP(int port)
+    private IPEndPoint GetLocalIP(int port = 0)
     {
       if (netInterface == null)
       {
         throw new GetConnectionException("Have not integrated NetworkInterface");
       }
 
-      string host = "";
-
-      if (this.os is OperatingSystem.ANDROID)
-      {
-        host = netInterface.GetIPAddress(AndroidNetworkInterface.CELLULAR);
-      }
-      else if (this.os is OperatingSystem.IOS)
-      {
-        host = netInterface.GetIPAddress(IOSNetworkInterface.CELLULAR);
-      }
-      // Unsupported or Test only interface profile:
-      else if (os is OperatingSystem.OTHER && netInterface != null)
-      {
-        host = netInterface.GetIPAddress(MacNetworkInterface.CELLULAR);
-      }
-
+      string host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().CELLULAR);
       if (host == null || host == "")
       {
         throw new GetConnectionException("Could not get Cellular interface");

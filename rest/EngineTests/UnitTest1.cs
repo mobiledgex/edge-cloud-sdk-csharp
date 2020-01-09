@@ -30,6 +30,8 @@ using System.Threading;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Net.WebSockets;
+using DistributedMatchEngine.PerformanceMetrics;
+using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 
 namespace Tests
 {
@@ -41,13 +43,29 @@ namespace Tests
     const string appVers = "2019-09-26";
     const string developerAuthToken = "";
     const string connectionTestFqdn = "mextest-app-cluster.fairview-main.gddt.mobiledgex.net";
+    const string aWebSocketServerFqdn = "ponggame2-tcp.fairview-main.gddt.mobiledgex.net"; // or, localhost.
 
     static MatchingEngine me;
+
+    class TestCarrierInfo : CarrierInfo
+    {
+      string CarrierInfo.GetCurrentCarrierName()
+      {
+        return carrierName;
+      }
+
+      string CarrierInfo.GetMccMnc()
+      {
+        return "26010";
+      }
+    }
 
     [SetUp]
     public void Setup()
     {
-      me = new MatchingEngine(DistributedMatchEngine.OperatingSystem.OTHER);
+      // Create a network interface abstraction, with named WiFi and Cellular interfaces.
+      me = new MatchingEngine(new SimpleNetInterface(new MacNetworkInterfaceName()));
+      me.carrierInfo = new TestCarrierInfo();
     }
 
     private MemoryStream getMemoryStream(string jsonStr)
@@ -84,6 +102,7 @@ namespace Tests
         Assert.AreEqual(js1, parsed);
       }
       streamParser.Dispose();
+      Console.WriteLine("Test1 finished.");
     }
 
     /**
@@ -101,6 +120,7 @@ namespace Tests
       parsed = streamParser.ParseJsonBlock();
       Assert.AreEqual(js1, parsed);
       streamParser.Dispose();
+      Console.WriteLine("TestQosPositionStreamEscape finished.");
     }
 
     /**
@@ -184,6 +204,8 @@ namespace Tests
       }
       Assert.AreEqual(js1, parsed);
       streamParser.Dispose();
+
+      Console.WriteLine("TestQosPositionStream finished.");
     }
 
     [Test]
@@ -203,14 +225,16 @@ namespace Tests
       string receiveMessage = "";
       try
       {
-        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5);
+        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5000);
         Assert.ByVal(tcpConnection, Is.Not.Null);
 
         tcpConnection.Send(bytesMessage);
 
-        byte[] bytesReceive = new byte[message.Length * 2]; // C# chars are unicode-16 bits
-        tcpConnection.Receive(bytesReceive);
-        receiveMessage = Encoding.ASCII.GetString(bytesReceive);
+        byte[] buffer = new byte[message.Length * 2]; // C# chars are unicode-16 bits
+        int numRead = tcpConnection.Receive(buffer);
+        byte[] readBuffer = new byte[numRead];
+        Array.Copy(buffer, readBuffer, numRead);
+        receiveMessage = Encoding.ASCII.GetString(readBuffer);
 
         Console.WriteLine("Echoed tcp string: " + receiveMessage);
         tcpConnection.Close();
@@ -223,8 +247,8 @@ namespace Tests
       {
         Console.WriteLine("TCP socket exception is " + e);
       }
-
-      Assert.AreEqual("tcp test string", receiveMessage, "Test string doesn't match!");
+      Assert.True(receiveMessage.Contains("tcp test string"));
+      Console.WriteLine("TestTCPConnection finished.");
     }
 
     [Test]
@@ -258,6 +282,7 @@ namespace Tests
         string responseBody = await response.Content.ReadAsStringAsync();
         Assert.ByVal(responseBody, Is.Not.Null);
         Console.WriteLine("http response body is " + responseBody);
+        Assert.True(responseBody.Contains("HTTP Connection Test"));
       }
       catch (HttpRequestException e)
       {
@@ -265,13 +290,38 @@ namespace Tests
       }
     }
 
-    [Test]
+    // Test is incompete. Missing SSL test server.
+    //[Test]
     public async static Task TestTCPTLSConnection()
     {
       // TLS on TCP Connection Test
       try
       {
-        SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5);
+        string data = "{\"data\": \"Http Connection Test\"}";
+        string rawpost = "POST / HTTP/1.1\r\n" +
+                "Host: 10.227.66.62:3000\r\n" +
+                "User-Agent: curl/7.54.0\r\n" +
+                "Accept: */*\r\n" +
+                "Content-Length: " + data.Length + "\r\n" +
+                "Content-Type: application/json\r\n" +
+                "\r\n" + data;
+        byte[] bytes = Encoding.UTF8.GetBytes(rawpost);
+
+        SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5000);
+        Assert.ByVal(stream, Is.Not.Null);
+        Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);
+
+        stream.Write(Encoding.UTF8.GetBytes(rawpost));
+        stream.Write(Encoding.UTF8.GetBytes(data));
+
+        await Task.Delay(500);
+        byte[] readBuffer = new byte[4096*2];
+
+        Assert.True(stream.CanRead);
+        stream.Read(readBuffer);
+
+        string response = Encoding.UTF8.GetString(readBuffer);
+        Assert.True(response.Contains("Http Connection Test"));
         stream.Close();
       }
       catch (AuthenticationException e)
@@ -282,6 +332,11 @@ namespace Tests
       {
         Assert.Fail("TCPTLS GetConnectionException is " + e.Message);
       }
+      catch (IOException ioe)
+      {
+        // FIXME: The test server doesn't have HTTPs.
+        Assert.False(ioe.Message.Contains("The handshake failed due to an unexpected packet format."));
+      }
     }
 
     [Test]
@@ -291,10 +346,18 @@ namespace Tests
       byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
       // Websocket Connection Test
+      ClientWebSocket socket = null;
       try
       {
-        ClientWebSocket socket = await me.GetWebsocketConnection(connectionTestFqdn, 3001, 5);
+        socket = await me.GetWebsocketConnection(aWebSocketServerFqdn, 3000, 5000);
+      } catch (Exception e)
+      {
+        Console.WriteLine("Websocket Initial GetConnectionException is " + e.Message);
+        Assert.ByVal(socket, Is.Not.Null);
+        Assert.True(socket.State == WebSocketState.Open);
+      }
 
+      try {
         // Send message
         ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
         CancellationTokenSource source = new CancellationTokenSource();
@@ -308,11 +371,16 @@ namespace Tests
         string receiveMessage = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);
 
         Console.WriteLine("Echoed websocket result is " + receiveMessage);
+        Assert.True(socket.State == WebSocketState.Open);
         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "end of test", token);
+        await Task.Delay(100);
+        Assert.True(socket.State == WebSocketState.Closed || socket.State == WebSocketState.CloseSent);
       }
       catch (GetConnectionException e)
       {
         Console.WriteLine("Websocket GetConnectionException is " + e.Message);
+        // Since we don't necessarily know the message format, this should actually be slammed closed by the running server.
+        //Assert.True(e.Message.Contains("Cannot get websocket connection"));
       }
       catch (OperationCanceledException e)
       {
@@ -346,61 +414,114 @@ namespace Tests
       }
       catch (DmeDnsException dde)
       {
-        Console.WriteLine("Workflow DmeDnsException is " + dde.InnerException);
+        Console.WriteLine("Workflow DmeDnsException is " + dde);
       }
       catch (RegisterClientException rce)
       {
-        Console.WriteLine("Workflow RegisterClient is " + rce.InnerException);
+        Console.WriteLine("Workflow RegisterClient is " + rce);
         return;
       }
       Assert.ByVal(reply, Is.Not.Null);
 
       Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
-      if (appPortsDict.Count == 0)
-      {
-        Console.WriteLine("No ports with specified protocol");
-        return;
-      }
 
-      AppPort appPort = appPortsDict[3001];
-      if (appPort == null)
-      {
-        Console.WriteLine("Not AppPorts with specified internal port");
-        return;
-      }
+      int public_port = reply.ports[0].public_port; // We happen to know it's the first one.
+      AppPort appPort = appPortsDict[public_port];
+
+      Assert.ByVal(appPort, Is.Not.Null);
 
       try
       {
-        Socket tcpConnection = await me.GetTCPConnection(reply, appPort, 3001, 5); // 5 second timeout
+        Socket tcpConnection = await me.GetTCPConnection(reply, appPort, public_port, 5000);
+        Assert.ByVal(tcpConnection, Is.Not.Null);
         tcpConnection.Close();
       }
       catch (GetConnectionException e)
       {
         Console.WriteLine("Workflow GetConnectionException is " + e.Message);
+        Assert.Fail("Workflow GetConnectionException is " + e.Message);
       }
       catch (Exception e)
       {
-        Console.WriteLine("workflow test exception " + e.Message);
+        Assert.Fail("workflow test exception " + e.Message);
       }
     }
 
     [Test]
     public async static Task TestTimeout()
     {
-      // comment out localIP and bind in GetConnectionHelper.cs in order to test timeout
       try
       {
-        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 0.1);
+        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 10);
         tcpConnection.Close();
       }
       catch (GetConnectionException e)
       {
         Console.WriteLine("Timeout test GetConnectionException is " + e.Message);
+        Assert.True(e.Message.Contains("Timeout"));
       }
       catch (Exception e)
       {
         Console.WriteLine("Timeout test exception " + e.Message);
+        Assert.False(e.Message.Contains("Timeout"));
       }
+    }
+
+    [Test]
+    public async static Task TestNetTest()
+    {
+      var loc = await Util.GetLocationFromDevice();
+      FindCloudletReply reply = null;
+
+      try
+      {
+        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
+      }
+      catch (DmeDnsException dde)
+      {
+        Console.WriteLine("Workflow DmeDnsException is " + dde);
+      }
+      catch (RegisterClientException rce)
+      {
+        Console.WriteLine("Workflow RegisterClient is " + rce);
+        return;
+      }
+      Assert.ByVal(reply, Is.Not.Null);
+
+      Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
+
+      int public_port = reply.ports[0].public_port; // We happen to know it's the first one.
+      AppPort appPort = appPortsDict[public_port];
+
+      NetTest netTest = new NetTest(me);
+
+      string l7Url = MatchingEngine.CreateUrl(reply, appPort, appPort.public_port);
+      Site site = new Site
+      {
+        L7Path = MatchingEngine.CreateUrl(reply, appPort, appPort.public_port),
+        testType = TestType.CONNECT
+      };
+      // In case you want a local test server:
+      /*
+      site = new Site
+      {
+        host = "localhost",
+        port = 3000,
+        testType = TestType.CONNECT
+      };
+      */
+      netTest.sites.Enqueue(site);
+
+      netTest.PingIntervalMS = 1000;
+      netTest.doTest(true);
+      await Task.Delay(6000).ConfigureAwait(false);
+      foreach (Site s in netTest.sites)
+      {
+        Assert.True(s.average < 2000);
+      }
+      Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
+      netTest.doTest(false);
+
     }
 
     [Test]
@@ -421,6 +542,4 @@ namespace Tests
       await timeoutTest;
     }
   }
-
-
 }

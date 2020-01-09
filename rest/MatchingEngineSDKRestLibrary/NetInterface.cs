@@ -1,5 +1,5 @@
 ﻿/**
- * Copyright 2019 MobiledgeX, Inc. All rights and licenses reserved.
+ * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,112 @@
  */
 
 using System;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace DistributedMatchEngine
 {
   public interface NetInterface
+  {
+    NetworkInterfaceName GetNetworkInterfaceName();
+    void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName);
+    string GetIPAddress(String netInterfaceType, AddressFamily adressFamily = AddressFamily.InterNetwork);
+    bool HasWifi();
+    bool HasCellular();
+  }
+
+  // A generic network interface for most systems, with an interface names parameter.
+  public class SimpleNetInterface : NetInterface
+  {
+
+    NetworkInterfaceName networkInterfaceName;
+
+    public SimpleNetInterface(NetworkInterfaceName networkInterfaceName)
     {
-        string GetIPAddress(String netInterfaceType);
-        bool IsWifi();
-        bool IsCellular();
+      SetNetworkInterfaceName(networkInterfaceName);
     }
+
+    public NetworkInterfaceName GetNetworkInterfaceName()
+    {
+      return networkInterfaceName;
+    }
+    public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
+    {
+      this.networkInterfaceName = networkInterfaceName;
+    }
+    private NetworkInterface[] GetInterfaces()
+    {
+      return NetworkInterface.GetAllNetworkInterfaces();
+    }
+    public string GetIPAddress(string sourceNetInterfaceName, AddressFamily addressfamily = AddressFamily.InterNetwork)
+    {
+      if (!NetworkInterface.GetIsNetworkAvailable())
+      {
+        return null;
+      }
+
+      NetworkInterface[] netInterfaces = GetInterfaces();
+
+      string ipAddress = null;
+      string ipAddressV4 = null;
+      string ipAddressV6 = null;
+      Log.S("Looking for: " + sourceNetInterfaceName + ", known Wifi: " + networkInterfaceName.WIFI + ", known Cellular: " + networkInterfaceName.CELLULAR);
+
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        if (iface.Name.Equals(sourceNetInterfaceName))
+        {
+          IPInterfaceProperties ipifaceProperties = iface.GetIPProperties();
+          foreach (UnicastIPAddressInformation ip in ipifaceProperties.UnicastAddresses)
+          {
+            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+            {
+              ipAddressV4 = ip.Address.ToString();
+            }
+            if (ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
+            {
+              ipAddressV6 = ip.Address.ToString();
+            }
+          }
+
+          if (addressfamily == AddressFamily.InterNetworkV6)
+          {
+            return ipAddressV6;
+          }
+
+          if (addressfamily == AddressFamily.InterNetwork)
+          {
+            return ipAddressV4;
+          }
+        }
+      }
+      return ipAddress;
+    }
+
+    public bool HasCellular()
+    {
+      NetworkInterface[] netInterfaces = GetInterfaces();
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        if (iface.Name.Equals(networkInterfaceName.CELLULAR))
+        {
+          return iface.OperationalStatus == OperationalStatus.Up;
+        }
+      }
+      return false;
+    }
+
+    public bool HasWifi()
+    {
+      NetworkInterface[] netInterfaces = GetInterfaces();
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        if (iface.Name.Equals(networkInterfaceName.WIFI))
+        {
+          return iface.OperationalStatus == OperationalStatus.Up;
+        }
+      }
+      return false;
+    }
+  }
 }
