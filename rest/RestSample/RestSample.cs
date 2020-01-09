@@ -116,7 +116,7 @@ namespace RestSample
 
         Console.WriteLine("MobiledgeX RestSample!");
 
-        MatchingEngine me = new MatchingEngine(DistributedMatchEngine.OperatingSystem.OTHER);
+        MatchingEngine me = new MatchingEngine();
         me.SetTimeout(15000);
 
         // Start location task. This is for test use only. The source of the
