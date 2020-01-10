@@ -129,18 +129,28 @@ namespace DistributedMatchEngine
       //TcpClient tcpClient = new TcpClient();
       var task = tcpClient.ConnectAsync(host, port);
 
-      // Wait returns true if Task completes execution before timeout, false otherwise
-      if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
+      try
       {
-        // Create ssl stream on top of tcp client and validate server cert
-        using (SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
-          new RemoteCertificateValidationCallback(ValidateServerCertificate), null))
+        // Wait returns true if Task completes execution before timeout, false otherwise
+        if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
         {
+          // Create ssl stream on top of tcp client and validate server cert
+          SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
+            new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+
           sslStream.AuthenticateAsClient(host);
           return sslStream;
         }
+        source.Cancel();
       }
-
+      catch (TaskCanceledException tce)
+      {
+        throw new GetConnectionException("Timeout", tce);
+      }
+      finally
+      {
+        source.Dispose();
+      }
       throw new GetConnectionException("Timeout");
     }
 
@@ -276,7 +286,11 @@ namespace DistributedMatchEngine
       }
       catch (TaskCanceledException tce)
       {
-        throw new GetConnectionException("Cannot get websocket connection", tce);
+        throw new GetConnectionException("Timeout getting websocket connection.", tce);
+      }
+      finally
+      {
+        source.Dispose();
       }
       throw new GetConnectionException("Cannot get websocket connection");
     }
@@ -330,6 +344,10 @@ namespace DistributedMatchEngine
       catch (TaskCanceledException tce)
       {
         throw new GetConnectionException("Cannot get websocket connection", tce);
+      }
+      finally
+      {
+        source.Dispose();
       }
       throw new GetConnectionException("Cannot get websocket connection");
     }
