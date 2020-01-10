@@ -93,24 +93,40 @@ namespace DistributedMatchEngine
     {
       if (sslPolicyErrors == SslPolicyErrors.None) return true;
 
-      Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+      Log.E(string.Format("Certificate error: {0}", sslPolicyErrors));
 
       // Do not allow this client to communicate with unauthenticated servers.
       return false;
     }
 
-    private static bool IsValidPortNumber(AppPort appPort, int port)
+    // Maybe move to the DataContract instead.
+    private static bool AppPortIsEqual(AppPort port1, AppPort port2)
     {
-      int publicPort = appPort.public_port;
-      int end = appPort.end_port;
-
-      end = (end < publicPort) ? publicPort : end;
-
-      if (port >= publicPort && port <= end)
+      if (port1.end_port != port2.end_port)
       {
-        return true;
+        return false;
       }
-      return false;
+      if (!port1.fqdn_prefix.Equals(port2.fqdn_prefix))
+      {
+        return false;
+      }
+      if (port1.internal_port != port2.internal_port)
+      {
+        return false;
+      }
+      if (port1.path_prefix != port2.path_prefix)
+      {
+        return false;
+      }
+      if (port1.proto != port2.proto)
+      {
+        return false;
+      }
+      if (!port1.public_port.Equals(port2.public_port))
+      {
+        return false;
+      }
+      return true;
     }
 
     public static AppPort ValidatePublicPort(FindCloudletReply findCloudletReply, AppPort appPort, LProto proto, int portNum)
@@ -123,7 +139,7 @@ namespace DistributedMatchEngine
         {
           continue;
         }
-        if (IsValidPortNumber(appPort, portNum))
+        if (IsInPortRange(appPort, portNum) && AppPortIsEqual(aPort, appPort))
         {
           found = aPort;
         }
@@ -151,7 +167,7 @@ namespace DistributedMatchEngine
     }
 
     // Checks if the specified port is within the range of public_port and end_port
-    private bool IsInPortRange(AppPort appPort, int port)
+    private static bool IsInPortRange(AppPort appPort, int port)
     {
       // Checks if range exists -> if not, check if specified port equals public port
       if (appPort.end_port == 0 || appPort.end_port < appPort.public_port)
