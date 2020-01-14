@@ -517,6 +517,10 @@ namespace Tests
       await Task.Delay(6000).ConfigureAwait(false);
       foreach (Site s in netTest.sites)
       {
+        for (int i = 0; i < s.samples.Length; i++)
+        {
+          Console.WriteLine("Sample: " + s.samples[i]);
+        }
         Assert.True(s.average < 2000);
       }
       Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);

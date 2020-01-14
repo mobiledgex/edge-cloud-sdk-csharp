@@ -34,84 +34,81 @@ namespace DistributedMatchEngine
     // GetTCPConnection helper function
     public async Task<Socket> GetTCPConnection(string host, int port, int timeoutMs)
     {
-      return await Task.Run(() =>
-      {
-        // For retrieving exceptions:
-        ManualResetEvent TimeoutObj = new ManualResetEvent(false);
-        Exception handlerException = new Exception();
+      ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+      Exception handlerException = new Exception();
 
-        // Using integration with IOS or Android sdk, get cellular interface
-        IPEndPoint localEndPoint = GetLocalIP();
-        Console.WriteLine("got local endpoint: " + localEndPoint);
+      // Using integration with IOS or Android sdk, get cellular interface
+      IPEndPoint localEndPoint = GetLocalIP();
+      Console.WriteLine("got local endpoint: " + localEndPoint);
 
-        // Get remote ip of the provided host
-        IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
-        IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
-        Console.WriteLine("got remote endpoint: " + remoteEndPoint);
+      // Get remote ip of the provided host
+      IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
+      IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+      Console.WriteLine("got remote endpoint: " + remoteEndPoint);
 
-        // Create Socket and bind to local ip and connect to remote endpoint
-        Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        s.Bind(localEndPoint);
-        Console.WriteLine("bound local endpoint: " + localEndPoint);
+      // Create Socket and bind to local ip and connect to remote endpoint
+      Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+      s.Bind(localEndPoint);
+      Console.WriteLine("bound local endpoint: " + localEndPoint);
 
-        // Reset static variables that handler uses
-        TimeoutObj.Reset();
-        handlerException = null;
-        s.BeginConnect(remoteEndPoint,
-          new AsyncCallback( // Closure to retrieve exceptions:
-            ar =>
+      // Reset static variables that handler uses
+      TimeoutObj.Reset();
+      handlerException = null;
+      s.BeginConnect(remoteEndPoint,
+        new AsyncCallback( // Closure to retrieve exceptions:
+          ar =>
+          {
+            try
             {
-              try
-              {
-                Console.WriteLine("Connect try: " + remoteEndPoint);
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
-                // Complete the connection.  
-                client.EndConnect(ar);
-                TimeoutObj.Set();
-              }
-              catch (Exception e)
-              {
-                Console.WriteLine("Connect exception: " + e);
-                handlerException = e;
-                TimeoutObj.Set();
-              }
+              Console.WriteLine("Connect try: " + remoteEndPoint);
+              // Retrieve the socket from the state object.
+              Socket client = (Socket)ar.AsyncState;
+              // Complete the connection.
+              client.EndConnect(ar);
+              TimeoutObj.Set();
             }
-          ),
-          s);
+            catch (Exception e)
+            {
+              Console.WriteLine("Connect exception: " + e);
+              handlerException = e;
+              TimeoutObj.Set();
+            }
+          }
+        ),
+        s);
 
-        // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-        if (TimeoutObj.WaitOne(timeoutMs, false)) // WaitOne timeout is in milliseconds
+      // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
+      if (TimeoutObj.WaitOne(timeoutMs, false)) // WaitOne timeout is in milliseconds
+      {
+        if (handlerException != null)
         {
-          if (handlerException != null)
-          {
-            Console.WriteLine("Connect found exception: " + handlerException);
-            throw handlerException;
-          }
-          if (!s.IsBound && !s.Connected)
-          {
-            Console.WriteLine("Could not bind to interface or connect to server");
-            throw new GetConnectionException("Could not bind to interface or connect to server");
-          }
-          else if (!s.IsBound)
-          {
-            Console.WriteLine("Could not bind to interface");
-            throw new GetConnectionException("Could not bind to interface");
-          }
-          else if (!s.Connected)
-          {
-            Console.WriteLine("Connect Success: " + remoteEndPoint);
-            throw new GetConnectionException("Could not connect to server");
-          }
+          Console.WriteLine("Connect found exception: " + handlerException);
+          throw handlerException;
+        }
+        if (!s.IsBound && !s.Connected)
+        {
+          Console.WriteLine("Could not bind to interface or connect to server");
+          throw new GetConnectionException("Could not bind to interface or connect to server");
+        }
+        else if (!s.IsBound)
+        {
+          Console.WriteLine("Could not bind to interface");
+          throw new GetConnectionException("Could not bind to interface");
+        }
+        else if (!s.Connected)
+        {
           Console.WriteLine("Connect Success: " + remoteEndPoint);
-          return s;
+          throw new GetConnectionException("Could not connect to server");
         }
-        else
-        {
-          Console.WriteLine("Connect timeout: " + remoteEndPoint);
-          throw new GetConnectionException("Timeout");
-        }
-      }).ConfigureAwait(false);
+        Console.WriteLine("Connect Success: " + remoteEndPoint);
+        await Task.Delay(0); // For Unity.
+        return s;
+      }
+      else
+      {
+        Console.WriteLine("Connect timeout: " + remoteEndPoint);
+        throw new GetConnectionException("Timeout");
+      }
     }
 
     // GetTCPTLSConnection helper function
@@ -157,84 +154,81 @@ namespace DistributedMatchEngine
     // GetUDPConnection helper function
     public async Task<Socket> GetUDPConnection(string host, int port, int timeoutMs)
     {
-      return await Task.Run(() =>
-      {
-        // For retrieving exceptions:
-        ManualResetEvent TimeoutObj = new ManualResetEvent(false);
-        Exception handlerException = new Exception();
+      // For retrieving exceptions:
+      ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+      Exception handlerException = new Exception();
 
-        // Using integration with IOS or Android sdk, get cellular interface
-        IPEndPoint localEndPoint = GetLocalIP();
+      // Using integration with IOS or Android sdk, get cellular interface
+      IPEndPoint localEndPoint = GetLocalIP();
 
-        // Get remote ip of the provided host
-        IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
-        IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+      // Get remote ip of the provided host
+      IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
+      IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
 
-        // Create Socket and bind to local ip and connect to remote endpoint
-        Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-        s.Bind(localEndPoint);
+      // Create Socket and bind to local ip and connect to remote endpoint
+      Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+      s.Bind(localEndPoint);
 
-        // Reset static variables that handler uses
-        TimeoutObj.Reset();
-        handlerException = null;
-        s.BeginConnect(remoteEndPoint,
-          new AsyncCallback( // Closure to retrieve exceptions:
-            ar =>
+      // Reset static variables that handler uses
+      TimeoutObj.Reset();
+      handlerException = null;
+      s.BeginConnect(remoteEndPoint,
+        new AsyncCallback( // Closure to retrieve exceptions:
+          ar =>
+          {
+            try
             {
-              try
-              {
                 // Retrieve the socket from the state object.  
                 Socket client = (Socket)ar.AsyncState;
                 // Complete the connection.  
                 client.EndConnect(ar);
-                TimeoutObj.Set();
-              }
-              catch (Exception e)
-              {
-                handlerException = e;
-                TimeoutObj.Set();
-              }
+              TimeoutObj.Set();
             }
-          ),
-          s);
+            catch (Exception e)
+            {
+              handlerException = e;
+              TimeoutObj.Set();
+            }
+          }
+        ),
+        s);
 
-        // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-        if (TimeoutObj.WaitOne(timeoutMs, false))
+      // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
+      if (TimeoutObj.WaitOne(timeoutMs, false))
+      {
+        if (handlerException != null)
         {
-          if (handlerException != null)
-          {
-            throw handlerException;
-          }
-          if (!s.IsBound && !s.Connected)
-          {
-            throw new GetConnectionException("Could not bind to interface or connect to server");
-          }
-
-          if (!s.IsBound)
-          {
-            throw new GetConnectionException("Could not bind to interface");
-          }
-
-          if (!s.Connected)
-          {
-            throw new GetConnectionException("Could not connect to server");
-          }
-          return s;
+          throw handlerException;
         }
-        throw new GetConnectionException("Timeout");
-      }).ConfigureAwait(false);
+        if (!s.IsBound && !s.Connected)
+        {
+          throw new GetConnectionException("Could not bind to interface or connect to server");
+        }
+
+        if (!s.IsBound)
+        {
+          throw new GetConnectionException("Could not bind to interface");
+        }
+
+        if (!s.Connected)
+        {
+          throw new GetConnectionException("Could not connect to server");
+        }
+        await Task.Delay(0); // Unity doesn't like Task.Run();
+        return s;
+      }
+      throw new GetConnectionException("Timeout");
+
     }
 
     // GetHTTPClient and GetHTTPSClient helper function.
     // TODO: .Net Core 2.1: The httpclient socket handler needs to be set to use a cellular socket.
     public async Task<HttpClient> GetHTTPClient(Uri uri)
     {
-      return await Task.Run(() =>
-      {
-        HttpClient appHttpClient = new HttpClient();
-        appHttpClient.BaseAddress = uri;
-        return appHttpClient;
-      }).ConfigureAwait(false);
+      HttpClient appHttpClient = new HttpClient();
+      appHttpClient.BaseAddress = uri;
+      await Task.Delay(0); // For Unity.
+      return appHttpClient;
     }
 
 
