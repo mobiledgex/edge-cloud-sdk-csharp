@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ReleaseVersion>1.4.15</ReleaseVersion>
+    <ReleaseVersion>1.4.18</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>1.4.15</PackageVersion>
+    <PackageVersion>1.4.18</PackageVersion>
     <Authors>MobiledgeX, Inc.</Authors>
     <Description>MobiledgeX MatchingEngineSDK Library</Description>
     <Owners>MobiledgeX, Inc.</Owners>
@@ -12,8 +12,8 @@
     <Title>MobiledgeX MatchingEngineSDK Rest Library</Title>
     <PackageId>MobiledgeX.MatchingEngineRestSDKLibrary</PackageId>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
-    <AssemblyVersion>1.4.15</AssemblyVersion>
-    <FileVersion>1.4.15</FileVersion>
+    <AssemblyVersion>1.4.18</AssemblyVersion>
+    <FileVersion>1.4.18</FileVersion>
     <Copyright>Copyright 2019 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
   </PropertyGroup>
 
@@ -27,5 +27,8 @@
   <ItemGroup>
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2" />
     <PackageReference Include="System.Json" Version="4.6.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PerformanceMetrics\" />
   </ItemGroup>
 </Project>

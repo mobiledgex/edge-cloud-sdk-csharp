@@ -156,15 +156,28 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
-    public OperatingSystem os { get; set; }
 
-    public MatchingEngine(OperatingSystem os)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null)
     {
-      this.os = os;
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
-      carrierInfo = new EmptyCarrierInfo();
-      netInterface = new EmptyNetInterface();
+      if (carrierInfo == null)
+      {
+        this.carrierInfo = new EmptyCarrierInfo();
+      }
+      else
+      {
+        this.carrierInfo = carrierInfo;
+      }
+
+      if (netInterface == null)
+      {
+        this.netInterface = new EmptyNetInterface();
+      }
+      else
+      {
+        this.netInterface = netInterface;
+      }
     }
 
     // Set the REST timeout for DME APIs.
@@ -226,12 +239,11 @@ namespace DistributedMatchEngine
 
     private async Task<Stream> PostRequest(string uri, string jsonStr)
     {
-      // Choose network TBD
+      // FIXME: Choose network TBD (.Net Core 2.1)
       Log.D("URI: " + uri);
-      // static HTTPClient singleton, with instanced HttpContent is recommended for performance.
       var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
       Log.D("Post Body: " + jsonStr);
-      var response = await httpClient.PostAsync(uri, stringContent);
+      HttpResponseMessage response = await httpClient.PostAsync(uri, stringContent).ConfigureAwait(false);
 
       if (response == null)
       {

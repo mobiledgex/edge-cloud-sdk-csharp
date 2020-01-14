@@ -39,24 +39,25 @@ namespace DistributedMatchEngine
     // FIXME: This function needs per device customization.
     public async static Task<Loc> GetLocationFromDevice()
     {
-      long timeLongMs = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-      long seconds = timeLongMs / 1000;
-      int nanoSec = (int)(timeLongMs % 1000) * 1000000;
-      var ts = new Timestamp { nanos = nanoSec, seconds = seconds.ToString() };
-      var loc = new Loc()
+      return await Task.Run(() =>
       {
-        course = 0,
-        altitude = 100,
-        horizontal_accuracy = 5,
-        speed = 2,
-        longitude = -122.149349,
-        latitude = 37.459601,
-        vertical_accuracy = 20,
-        timestamp = ts
-      };
-
-      var dummyResult = await Task.FromResult(0);
-      return loc;
+        long timeLongMs = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+        long seconds = timeLongMs / 1000;
+        int nanoSec = (int)(timeLongMs % 1000) * 1000000;
+        var ts = new Timestamp { nanos = nanoSec, seconds = seconds.ToString() };
+        var loc = new Loc()
+        {
+          course = 0,
+          altitude = 100,
+          horizontal_accuracy = 5,
+          speed = 2,
+          longitude = -122.149349,
+          latitude = 37.459601,
+          vertical_accuracy = 20,
+          timestamp = ts
+        };
+        return loc;
+      });
     }
   }
 }
