@@ -64,8 +64,11 @@ namespace Tests
     public void Setup()
     {
       // Create a network interface abstraction, with named WiFi and Cellular interfaces.
-      me = new MatchingEngine(new SimpleNetInterface(new MacNetworkInterfaceName()));
-      me.carrierInfo = new TestCarrierInfo();
+      CarrierInfo carrierInfo = new TestCarrierInfo();
+      NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
+
+      // pass in unknown interfaces at compile and runtime.
+      me = new MatchingEngine(carrierInfo, netInterface);
     }
 
     private MemoryStream getMemoryStream(string jsonStr)
