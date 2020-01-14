@@ -157,12 +157,27 @@ namespace DistributedMatchEngine
     string tokenServerURI;
     string authToken { get; set; }
 
-    public MatchingEngine(NetInterface netInterface = null)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null)
     {
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
-      carrierInfo = new EmptyCarrierInfo();
-      this.netInterface = (netInterface == null) ? new EmptyNetInterface() : netInterface;
+      if (carrierInfo == null)
+      {
+        this.carrierInfo = new EmptyCarrierInfo();
+      }
+      else
+      {
+        this.carrierInfo = carrierInfo;
+      }
+
+      if (netInterface == null)
+      {
+        this.netInterface = new EmptyNetInterface();
+      }
+      else
+      {
+        this.netInterface = netInterface;
+      }
     }
 
     // Set the REST timeout for DME APIs.
@@ -224,7 +239,7 @@ namespace DistributedMatchEngine
 
     private async Task<Stream> PostRequest(string uri, string jsonStr)
     {
-      // Choose network TBD
+      // FIXME: Choose network TBD (.Net Core 2.1)
       Log.D("URI: " + uri);
       var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
       Log.D("Post Body: " + jsonStr);
