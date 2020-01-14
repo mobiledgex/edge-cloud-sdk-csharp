@@ -177,11 +177,18 @@ namespace DistributedMatchEngine.PerformanceMetrics
       if (runTest)
       {
         pingThread = new Thread(RunNetTest);
+        if (pingThread == null)
+        {
+          throw new Exception("Unable to create a thread!");
+        }
         pingThread.Start();
       }
       else
       {
-        pingThread.Join(PingIntervalMS);
+        if (pingThread != null)
+        {
+          pingThread.Join(PingIntervalMS);
+        }
         pingThread = null;
       }
       return runTest;
@@ -191,7 +198,6 @@ namespace DistributedMatchEngine.PerformanceMetrics
     public async void RunNetTest()
     {
       Log.D("Run Net Test");
-      
       while (runTest)
       {
         Log.D("..");
