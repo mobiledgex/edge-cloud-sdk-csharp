@@ -6,11 +6,11 @@
     <PackOnBuild>true</PackOnBuild>
     <PackageVersion>1.4.18</PackageVersion>
     <Authors>MobiledgeX, Inc.</Authors>
-    <Description>MobiledgeX MatchingEngineSDK Library</Description>
+    <Description>MobiledgeX MatchingEngineSDK Rest Library</Description>
     <Owners>MobiledgeX, Inc.</Owners>
     <PackageProjectUrl>https://github.com/mobiledgex/edge-cloud</PackageProjectUrl>
     <Title>MobiledgeX MatchingEngineSDK Rest Library</Title>
-    <PackageId>MobiledgeX.MatchingEngineRestSDKLibrary</PackageId>
+    <PackageId>MobiledgeX.MatchingEngineSDKRestLibrary</PackageId>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
     <AssemblyVersion>1.4.18</AssemblyVersion>
     <FileVersion>1.4.18</FileVersion>
