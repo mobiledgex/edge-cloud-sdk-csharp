@@ -45,13 +45,6 @@ namespace RestSample
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
     static string fallbackDmeHost = "260-10.dme.mobiledgex.net";
 
-    // Get the ephemerial carriername from device specific properties.
-    async static Task<string> getCurrentCarrierName()
-    {
-      var dummy = await Task.FromResult(0);
-      return carrierName;
-    }
-
     static Timestamp createTimestamp(int futureSeconds)
     {
       long ticks = DateTime.Now.Ticks;
@@ -112,11 +105,9 @@ namespace RestSample
     {
       try
       {
-        carrierName = await getCurrentCarrierName();
-
         Console.WriteLine("MobiledgeX RestSample!");
 
-        MatchingEngine me = new MatchingEngine();
+        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()));
         me.SetTimeout(15000);
 
         // Start location task. This is for test use only. The source of the
@@ -124,7 +115,7 @@ namespace RestSample
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
 
-        var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken);
+        var registerClientRequest = me.CreateRegisterClientRequest(me.GetCarrierName(), devName, appName, appVers, developerAuthToken);
 
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
@@ -164,7 +155,7 @@ namespace RestSample
           FindCloudletReply findCloudletReply = null;
           try
           {
-            await me.FindCloudlet(findCloudletRequest);
+            findCloudletReply = await me.FindCloudlet(findCloudletRequest);
           }
           catch (DmeDnsException)
           {
