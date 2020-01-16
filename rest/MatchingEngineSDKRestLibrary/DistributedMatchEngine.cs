@@ -132,7 +132,8 @@ namespace DistributedMatchEngine
     private static HttpClient httpClient;
     public const UInt32 defaultDmeRestPort = 38001;
     public const string carrierNameDefault = "tdg";
-    public const string fallbackDmeHost = "sdkdemo.dme.mobiledgex.net";
+    public const string wifiCarrier = "wifi";
+    public const string wifiOnlyDmeHost = wifiCarrier + "." + baseDmeHost; // Demo mode only.
     public const string baseDmeHost = "dme.mobiledgex.net";
 
     UInt32 dmePort { get; set; } = defaultDmeRestPort; // HTTP REST port
@@ -152,6 +153,8 @@ namespace DistributedMatchEngine
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
     public const long TICKS_PER_MS = 10000;
+
+    private bool useOnlyWifi { get; set; } = false;
 
     public string sessionCookie { get; set; }
     string tokenServerURI;
@@ -192,7 +195,17 @@ namespace DistributedMatchEngine
 
     public string GetCarrierName()
     {
-      return carrierInfo.GetCurrentCarrierName();
+      if (useOnlyWifi)
+      {
+        return wifiCarrier;
+      }
+
+      string mccmnc = carrierInfo.GetMccMnc();
+      if (mccmnc == "" || mccmnc == null)
+      {
+        return wifiCarrier;
+      }
+      return mccmnc;
     }
 
     public string GenerateDmeHostName()
@@ -202,11 +215,16 @@ namespace DistributedMatchEngine
         throw new InvalidCarrierInfoException("Missing platform integration interface.");
       }
 
+      if (useOnlyWifi)
+      {
+        return wifiOnlyDmeHost;
+      }
+
       string mccmnc = carrierInfo.GetMccMnc();
       if (mccmnc == null)
       {
         Log.E("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string.");
-        throw new DmeDnsException("Cannot generate DME hostname, mccmnc is empty");
+        return wifiOnlyDmeHost; // fallback to wifi, this hostname must/should always exist.
       }
 
       // Check minimum size:
