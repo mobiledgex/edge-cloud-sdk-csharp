@@ -20,79 +20,110 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
-  public enum LProto
-  {
-    // Unknown protocol
-    L_PROTO_UNKNOWN = 0,
-    // TCP (L4) protocol
-    L_PROTO_TCP = 1,
-    // UDP (L4) protocol
-    L_PROTO_UDP = 2,
-    // HTTP (L7 tcp) protocol
-    L_PROTO_HTTP = 3
-  }
-
-  [DataContract]
-  public class AppPort
-  {
-    // TCP (L4), UDP (L4), or HTTP (L7) protocol
-    public LProto proto = LProto.L_PROTO_UNKNOWN;
-
-    [DataMember(Name = "proto")]
-    private string proto_string
+    // Vendor specific data
+    [DataContract]
+    public class Tag
     {
-      get
-      {
-        return proto.ToString();
-      }
-      set
-      {
-        try
-        {
-          proto = (LProto)Enum.Parse(typeof(LProto), value);
-        }
-        catch
-        {
-          proto = LProto.L_PROTO_UNKNOWN;
-        }
-      }
+        [DataMember]
+        public string type;
+        [DataMember]
+        public string data;
     }
 
-    // Container port (Specified in Dockerfile)
-    [DataMember]
-    public Int32 internal_port;
-    // Public facing port for TCP/UDP (may be mapped on shared LB reverse proxy)
-    [DataMember]
-    public Int32 public_port;
-    // Public facing path prefix for HTTP L7 access.
-    [DataMember]
-    public string path_prefix;
-    // FQDN prefix to prepend to base FQDN in FindCloudlet response. May be empty.
-    [DataMember]
-    public string fqdn_prefix;
-    // A non-zero end port indicates this is a port range from public port to end port, inclusive.
-    [DataMember]
-    public Int32 end_port;
-  }
+    [DataContract]
+    public class Loc
+    {
+        [DataMember]
+        public double latitude;
+        [DataMember]
+        public double longitude;
+        [DataMember]
+        public double horizontal_accuracy;
+        [DataMember]
+        public double vertical_accuracy;
+        [DataMember]
+        public double altitude;
+        [DataMember]
+        public double course;
+        [DataMember]
+        public double speed;
+        [DataMember]
+        public Timestamp timestamp;
+    }
 
-  public enum IDTypes
-  {
-    ID_UNDEFINED = 0,
-    IMEI = 1,
-    MSISDN = 2,
-    IPADDR = 3
-  }
+    public enum LProto
+    {
+        // Unknown protocol
+        L_PROTO_UNKNOWN = 0,
+        // TCP (L4) protocol
+        L_PROTO_TCP = 1,
+        // UDP (L4) protocol
+        L_PROTO_UDP = 2,
+        // HTTP (L7 tcp) protocol
+        L_PROTO_HTTP = 3
+    }
 
-  public enum ReplyStatus
-  {
-    RS_UNDEFINED = 0,
-    RS_SUCCESS = 1,
-    RS_FAIL = 2
-  }
+    [DataContract]
+    public class AppPort
+    {
+        // TCP (L4), UDP (L4), or HTTP (L7) protocol
+        public LProto proto = LProto.L_PROTO_UNKNOWN;
 
-  public class Timestamp
-  {
-    public string seconds;
-    public Int32 nanos;
-  }
+        [DataMember(Name = "proto")]
+        private string proto_string
+        {
+            get
+            {
+                return proto.ToString();
+            }
+            set
+            {
+                try
+                {
+                    proto = (LProto)Enum.Parse(typeof(LProto), value);
+                }
+                catch
+                {
+                    proto = LProto.L_PROTO_UNKNOWN;
+                }
+            }
+        }
+
+        // Container port (Specified in Dockerfile)
+        [DataMember]
+        public Int32 internal_port;
+        // Public facing port for TCP/UDP (may be mapped on shared LB reverse proxy)
+        [DataMember]
+        public Int32 public_port;
+        // Public facing path prefix for HTTP L7 access.
+        [DataMember]
+        public string path_prefix;
+        // FQDN prefix to prepend to base FQDN in FindCloudlet response. May be empty.
+        [DataMember]
+        public string fqdn_prefix;
+        // A non-zero end port indicates this is a port range from public port to end port, inclusive.
+        [DataMember]
+        public Int32 end_port;
+    }
+
+    public enum IDTypes
+    {
+        ID_UNDEFINED = 0,
+        IMEI = 1,
+        MSISDN = 2,
+        IPADDR = 3
+    }
+
+    public enum ReplyStatus
+    {
+        RS_UNDEFINED = 0,
+        RS_SUCCESS = 1,
+        RS_FAIL = 2
+    }
+
+    public class Timestamp
+    {
+        public string seconds;
+        public Int32 nanos;
+    }
 }

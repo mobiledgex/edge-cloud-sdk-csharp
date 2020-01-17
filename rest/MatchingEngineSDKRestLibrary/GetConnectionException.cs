@@ -18,8 +18,8 @@
 using System;
 namespace DistributedMatchEngine
 {
-  public class GetConnectionException : Exception
-  {
+    public class GetConnectionException : Exception
+    {
         public GetConnectionException()
         {
         }
@@ -33,5 +33,5 @@ namespace DistributedMatchEngine
         : base(message, inner)
         {
         }
-  }
+    }
 }

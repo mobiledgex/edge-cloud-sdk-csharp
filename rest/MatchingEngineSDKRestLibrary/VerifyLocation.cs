@@ -20,92 +20,98 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
-  [DataContract]
-  public class VerifyLocationRequest
-  {
-    [DataMember]
-    public UInt32 Ver = 1;
-    [DataMember]
-    public string session_cookie;
-    [DataMember]
-    public string carrier_name;
-    [DataMember]
-    public Loc gps_location;
-    [DataMember]
-    public string verify_loc_token;
-  };
-
-  [DataContract]
-  public class VerifyLocationReply
-  {
-    // Status of the reply
-    public enum TowerStatus
+    [DataContract]
+    public class VerifyLocationRequest
     {
-      TOWER_UNKNOWN = 0,
-      CONNECTED_TO_SPECIFIED_TOWER = 1,
-      NOT_CONNECTED_TO_SPECIFIED_TOWER = 2,
-    }
+        [DataMember]
+        public UInt32 ver = 1;
+        [DataMember]
+        public string session_cookie;
+        [DataMember]
+        public string carrier_name;
+        [DataMember]
+        public Loc gps_location;
+        [DataMember]
+        public string verify_loc_token;
+        [DataMember]
+        public UInt32 cell_id;
+        [DataMember]
+        public Tag[] tags;
+    };
 
-    public enum GPSLocationStatus
+    [DataContract]
+    public class VerifyLocationReply
     {
-      LOC_UNKNOWN = 0,
-      LOC_VERIFIED = 1,
-      LOC_MISMATCH_SAME_COUNTRY = 2,
-      LOC_MISMATCH_OTHER_COUNTRY = 3,
-      LOC_ROAMING_COUNTRY_MATCH = 4,
-      LOC_ROAMING_COUNTRY_MISMATCH = 5,
-      LOC_ERROR_UNAUTHORIZED = 6,
-      LOC_ERROR_OTHER = 7
+        // Status of the reply
+        public enum TowerStatus
+        {
+            TOWER_UNKNOWN = 0,
+            CONNECTED_TO_SPECIFIED_TOWER = 1,
+            NOT_CONNECTED_TO_SPECIFIED_TOWER = 2,
+        }
+
+        public enum GPSLocationStatus
+        {
+            LOC_UNKNOWN = 0,
+            LOC_VERIFIED = 1,
+            LOC_MISMATCH_SAME_COUNTRY = 2,
+            LOC_MISMATCH_OTHER_COUNTRY = 3,
+            LOC_ROAMING_COUNTRY_MATCH = 4,
+            LOC_ROAMING_COUNTRY_MISMATCH = 5,
+            LOC_ERROR_UNAUTHORIZED = 6,
+            LOC_ERROR_OTHER = 7
+        }
+
+        [DataMember]
+        public UInt32 ver;
+
+        public TowerStatus tower_status = TowerStatus.TOWER_UNKNOWN;
+
+        [DataMember(Name = "tower_status")]
+        private string tower_status_tring
+        {
+            get
+            {
+                return tower_status.ToString();
+            }
+            set
+            {
+                try
+                {
+                    tower_status = (TowerStatus)Enum.Parse(typeof(TowerStatus), value);
+                }
+                catch
+                {
+                    tower_status = TowerStatus.TOWER_UNKNOWN;
+                }
+            }
+        }
+
+        public GPSLocationStatus gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
+
+        [DataMember(Name = "gps_location_status")]
+        private string gps_location_status_string
+        {
+            get
+            {
+                return gps_location_status.ToString();
+            }
+            set
+            {
+                try
+                {
+                    gps_location_status = (GPSLocationStatus)Enum.Parse(typeof(GPSLocationStatus), value);
+                }
+                catch
+                {
+                    gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
+                }
+            }
+        }
+
+        [DataMember]
+        public double gps_location_accuracy_km;
+        [DataMember]
+        public Tag[] tags;
     }
-
-    [DataMember]
-    public UInt32 ver;
-
-    public TowerStatus tower_status = TowerStatus.TOWER_UNKNOWN;
-
-    [DataMember(Name = "tower_status")]
-    private string tower_status_tring
-    {
-      get
-      {
-        return tower_status.ToString();
-      }
-      set
-      {
-        try
-        {
-          tower_status = (TowerStatus)Enum.Parse(typeof(TowerStatus), value);
-        }
-        catch
-        {
-          tower_status = TowerStatus.TOWER_UNKNOWN;
-        }
-      }
-    }
-
-    public GPSLocationStatus gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
-
-    [DataMember(Name = "gps_location_status")]
-    private string gps_location_status_string
-    {
-      get
-      {
-        return gps_location_status.ToString();
-      }
-      set
-      {
-        try
-        {
-          gps_location_status = (GPSLocationStatus)Enum.Parse(typeof(GPSLocationStatus), value);
-        }
-        catch
-        {
-          gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
-        }
-      }
-    }
-
-    [DataMember]
-    public double gps_location_accuracy_km;
-  }
 }
