@@ -29,321 +29,321 @@ using System.Diagnostics;
 namespace DistributedMatchEngine
 {
 
-  public partial class MatchingEngine
-  {
-    // GetTCPConnection helper function
-    public async Task<Socket> GetTCPConnection(string host, int port, int timeoutMs)
+    public partial class MatchingEngine
     {
-      ManualResetEvent TimeoutObj = new ManualResetEvent(false);
-      Exception handlerException = new Exception();
+        // GetTCPConnection helper function
+        public async Task<Socket> GetTCPConnection(string host, int port, int timeoutMs)
+        {
+            ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+            Exception handlerException = new Exception();
 
-      // Using integration with IOS or Android sdk, get cellular interface
-      IPEndPoint localEndPoint = GetLocalIP();
-      Console.WriteLine("got local endpoint: " + localEndPoint);
+            // Using integration with IOS or Android sdk, get cellular interface
+            IPEndPoint localEndPoint = GetLocalIP();
+            Console.WriteLine("got local endpoint: " + localEndPoint);
 
-      // Get remote ip of the provided host
-      IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
-      IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
-      Console.WriteLine("got remote endpoint: " + remoteEndPoint);
+            // Get remote ip of the provided host
+            IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
+            IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+            Console.WriteLine("got remote endpoint: " + remoteEndPoint);
 
-      // Create Socket and bind to local ip and connect to remote endpoint
-      Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-      s.Bind(localEndPoint);
-      Console.WriteLine("bound local endpoint: " + localEndPoint);
+            // Create Socket and bind to local ip and connect to remote endpoint
+            Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            s.Bind(localEndPoint);
+            Console.WriteLine("bound local endpoint: " + localEndPoint);
 
-      // Reset static variables that handler uses
-      TimeoutObj.Reset();
-      handlerException = null;
-      s.BeginConnect(remoteEndPoint,
-        new AsyncCallback( // Closure to retrieve exceptions:
-          ar =>
-          {
-            try
+            // Reset static variables that handler uses
+            TimeoutObj.Reset();
+            handlerException = null;
+            s.BeginConnect(remoteEndPoint,
+              new AsyncCallback( // Closure to retrieve exceptions:
+                ar =>
+                {
+                    try
+                    {
+                        Console.WriteLine("Connect try: " + remoteEndPoint);
+                  // Retrieve the socket from the state object.
+                  Socket client = (Socket)ar.AsyncState;
+                  // Complete the connection.
+                  client.EndConnect(ar);
+                        TimeoutObj.Set();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Connect exception: " + e);
+                        handlerException = e;
+                        TimeoutObj.Set();
+                    }
+                }
+              ),
+              s);
+
+            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
+            if (TimeoutObj.WaitOne(timeoutMs, false)) // WaitOne timeout is in milliseconds
             {
-              Console.WriteLine("Connect try: " + remoteEndPoint);
-              // Retrieve the socket from the state object.
-              Socket client = (Socket)ar.AsyncState;
-              // Complete the connection.
-              client.EndConnect(ar);
-              TimeoutObj.Set();
-            }
-            catch (Exception e)
-            {
-              Console.WriteLine("Connect exception: " + e);
-              handlerException = e;
-              TimeoutObj.Set();
-            }
-          }
-        ),
-        s);
-
-      // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-      if (TimeoutObj.WaitOne(timeoutMs, false)) // WaitOne timeout is in milliseconds
-      {
-        if (handlerException != null)
-        {
-          Console.WriteLine("Connect found exception: " + handlerException);
-          throw handlerException;
-        }
-        if (!s.IsBound && !s.Connected)
-        {
-          Console.WriteLine("Could not bind to interface or connect to server");
-          throw new GetConnectionException("Could not bind to interface or connect to server");
-        }
-        else if (!s.IsBound)
-        {
-          Console.WriteLine("Could not bind to interface");
-          throw new GetConnectionException("Could not bind to interface");
-        }
-        else if (!s.Connected)
-        {
-          Console.WriteLine("Connect Success: " + remoteEndPoint);
-          throw new GetConnectionException("Could not connect to server");
-        }
-        Console.WriteLine("Connect Success: " + remoteEndPoint);
-        await Task.Delay(0); // For Unity.
-        return s;
-      }
-      else
-      {
-        Console.WriteLine("Connect timeout: " + remoteEndPoint);
-        throw new GetConnectionException("Timeout");
-      }
-    }
-
-    // GetTCPTLSConnection helper function
-    public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs)
-    {
-      CancellationTokenSource source = new CancellationTokenSource();
-      CancellationToken token = source.Token;
-
-      // Using integration with IOS or Android sdk, get cellular interface
-      IPEndPoint localEndPoint = GetLocalIP();
-
-      // Create tcp client
-      TcpClient tcpClient = new TcpClient(localEndPoint);
-
-      //TcpClient tcpClient = new TcpClient();
-      var task = tcpClient.ConnectAsync(host, port);
-
-      try
-      {
-        // Wait returns true if Task completes execution before timeout, false otherwise
-        if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
-        {
-          // Create ssl stream on top of tcp client and validate server cert
-          SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
-            new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
-
-          sslStream.AuthenticateAsClient(host);
-          return sslStream;
-        }
-        source.Cancel();
-      }
-      catch (TaskCanceledException tce)
-      {
-        throw new GetConnectionException("Timeout", tce);
-      }
-      finally
-      {
-        source.Dispose();
-      }
-      throw new GetConnectionException("Timeout");
-    }
-
-    // GetUDPConnection helper function
-    public async Task<Socket> GetUDPConnection(string host, int port, int timeoutMs)
-    {
-      // For retrieving exceptions:
-      ManualResetEvent TimeoutObj = new ManualResetEvent(false);
-      Exception handlerException = new Exception();
-
-      // Using integration with IOS or Android sdk, get cellular interface
-      IPEndPoint localEndPoint = GetLocalIP();
-
-      // Get remote ip of the provided host
-      IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
-      IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
-
-      // Create Socket and bind to local ip and connect to remote endpoint
-      Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-      s.Bind(localEndPoint);
-
-      // Reset static variables that handler uses
-      TimeoutObj.Reset();
-      handlerException = null;
-      s.BeginConnect(remoteEndPoint,
-        new AsyncCallback( // Closure to retrieve exceptions:
-          ar =>
-          {
-            try
-            {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
-                // Complete the connection.  
-                client.EndConnect(ar);
-              TimeoutObj.Set();
-            }
-            catch (Exception e)
-            {
-              handlerException = e;
-              TimeoutObj.Set();
-            }
-          }
-        ),
-        s);
-
-      // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
-      if (TimeoutObj.WaitOne(timeoutMs, false))
-      {
-        if (handlerException != null)
-        {
-          throw handlerException;
-        }
-        if (!s.IsBound && !s.Connected)
-        {
-          throw new GetConnectionException("Could not bind to interface or connect to server");
-        }
-
-        if (!s.IsBound)
-        {
-          throw new GetConnectionException("Could not bind to interface");
-        }
-
-        if (!s.Connected)
-        {
-          throw new GetConnectionException("Could not connect to server");
-        }
-        await Task.Delay(0); // Unity doesn't like Task.Run();
-        return s;
-      }
-      throw new GetConnectionException("Timeout");
-
-    }
-
-    // GetHTTPClient and GetHTTPSClient helper function.
-    // TODO: .Net Core 2.1: The httpclient socket handler needs to be set to use a cellular socket.
-    public async Task<HttpClient> GetHTTPClient(Uri uri)
-    {
-      HttpClient appHttpClient = new HttpClient();
-      appHttpClient.BaseAddress = uri;
-      await Task.Delay(0); // For Unity.
-      return appHttpClient;
-    }
-
-
-    // GetWebsocketConnection helper function, if interface available.
-    // TODO: This requires a socket handler to set network interfaces.
-    public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeoutMs, bool waitForOpen = true)
-    {
-      // Initialize websocket client
-      ClientWebSocket webSocket = new ClientWebSocket();
-      UriBuilder uriBuilder = new UriBuilder("ws", host, port);
-      Uri uri = uriBuilder.Uri;
-
-      // Token is used to notify listeners/ delegates of task state
-      CancellationTokenSource source = new CancellationTokenSource();
-      CancellationToken token = source.Token;
-
-      Stopwatch stopWatch = new Stopwatch();
-      TimeSpan tstimeout = new TimeSpan(0, 0, 0, 0, timeoutMs);
-      stopWatch.Reset();
-      // initiate websocket handshake with server
-      var task = webSocket.ConnectAsync(uri, token);
-      try
-      {
-        if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
-        {
-          // Check for connecting timeout until connected (loop observeable):
-          do
-          {
-            // Return if open:
-            if (webSocket.State == WebSocketState.Open)
-            {
-              return webSocket;
-            }
-
-            // Timeout...
-            if (stopWatch.Elapsed <= tstimeout && webSocket.State == WebSocketState.Connecting)
-            {
-              Log.D("Waiting to connect...");
-              await Task.Delay(50).ConfigureAwait(false);
+                if (handlerException != null)
+                {
+                    Console.WriteLine("Connect found exception: " + handlerException);
+                    throw handlerException;
+                }
+                if (!s.IsBound && !s.Connected)
+                {
+                    Console.WriteLine("Could not bind to interface or connect to server");
+                    throw new GetConnectionException("Could not bind to interface or connect to server");
+                }
+                else if (!s.IsBound)
+                {
+                    Console.WriteLine("Could not bind to interface");
+                    throw new GetConnectionException("Could not bind to interface");
+                }
+                else if (!s.Connected)
+                {
+                    Console.WriteLine("Connect Success: " + remoteEndPoint);
+                    throw new GetConnectionException("Could not connect to server");
+                }
+                Console.WriteLine("Connect Success: " + remoteEndPoint);
+                await Task.Delay(0); // For Unity.
+                return s;
             }
             else
             {
-              Log.D("Cancelling");
-              source.Cancel();
+                Console.WriteLine("Connect timeout: " + remoteEndPoint);
+                throw new GetConnectionException("Timeout");
             }
-          }
-          while (webSocket.State == WebSocketState.Connecting && waitForOpen);
         }
-      }
-      catch (TaskCanceledException tce)
-      {
-        throw new GetConnectionException("Timeout getting websocket connection.", tce);
-      }
-      finally
-      {
-        source.Dispose();
-      }
-      throw new GetConnectionException("Cannot get websocket connection");
-    }
 
-    // GetSecureWebsocketConnection helper function
-    // TODO: This requires a socket handler to set network interfaces.
-    public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeoutMs, bool waitForOpen = true)
-    {
-      // Initialize websocket class
-      ClientWebSocket webSocket = new ClientWebSocket();
-      UriBuilder uriBuilder = new UriBuilder("wss", host, port);
-      Uri uri = uriBuilder.Uri;
-
-      // Token is used to notify listeners/ delegates of task state
-      CancellationTokenSource source = new CancellationTokenSource();
-      CancellationToken token = source.Token;
-
-      Stopwatch stopWatch = new Stopwatch();
-      TimeSpan tstimeout = new TimeSpan(0, 0, 0, 0, timeoutMs);
-      stopWatch.Reset();
-      // initiate websocket handshake  with server
-      var task = webSocket.ConnectAsync(uri, token);
-      try
-      {
-        if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
+        // GetTCPTLSConnection helper function
+        public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs)
         {
-          // Check for connecting timeout until connected (loop observeable):
-          do
-          {
-            // Return if open:
-            if (webSocket.State == WebSocketState.Open)
-            {
-              return webSocket;
-            }
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
 
-            // Timeout...
-            if (stopWatch.Elapsed <= tstimeout && webSocket.State == WebSocketState.Connecting)
+            // Using integration with IOS or Android sdk, get cellular interface
+            IPEndPoint localEndPoint = GetLocalIP();
+
+            // Create tcp client
+            TcpClient tcpClient = new TcpClient(localEndPoint);
+
+            //TcpClient tcpClient = new TcpClient();
+            var task = tcpClient.ConnectAsync(host, port);
+
+            try
             {
-              Log.D("Waiting to connect...");
-              await Task.Delay(50).ConfigureAwait(false);
+                // Wait returns true if Task completes execution before timeout, false otherwise
+                if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
+                {
+                    // Create ssl stream on top of tcp client and validate server cert
+                    SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
+                      new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+
+                    sslStream.AuthenticateAsClient(host);
+                    return sslStream;
+                }
+                source.Cancel();
             }
-            else
+            catch (TaskCanceledException tce)
             {
-              Log.D("Cancelling");
-              source.Cancel();
+                throw new GetConnectionException("Timeout", tce);
             }
-          }
-          while (webSocket.State == WebSocketState.Connecting && waitForOpen);
+            finally
+            {
+                source.Dispose();
+            }
+            throw new GetConnectionException("Timeout");
         }
-      }
-      catch (TaskCanceledException tce)
-      {
-        throw new GetConnectionException("Cannot get websocket connection", tce);
-      }
-      finally
-      {
-        source.Dispose();
-      }
-      throw new GetConnectionException("Cannot get websocket connection");
+
+        // GetUDPConnection helper function
+        public async Task<Socket> GetUDPConnection(string host, int port, int timeoutMs)
+        {
+            // For retrieving exceptions:
+            ManualResetEvent TimeoutObj = new ManualResetEvent(false);
+            Exception handlerException = new Exception();
+
+            // Using integration with IOS or Android sdk, get cellular interface
+            IPEndPoint localEndPoint = GetLocalIP();
+
+            // Get remote ip of the provided host
+            IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
+            IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
+
+            // Create Socket and bind to local ip and connect to remote endpoint
+            Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+            s.Bind(localEndPoint);
+
+            // Reset static variables that handler uses
+            TimeoutObj.Reset();
+            handlerException = null;
+            s.BeginConnect(remoteEndPoint,
+              new AsyncCallback( // Closure to retrieve exceptions:
+                ar =>
+                {
+                    try
+                    {
+                  // Retrieve the socket from the state object.  
+                  Socket client = (Socket)ar.AsyncState;
+                  // Complete the connection.  
+                  client.EndConnect(ar);
+                        TimeoutObj.Set();
+                    }
+                    catch (Exception e)
+                    {
+                        handlerException = e;
+                        TimeoutObj.Set();
+                    }
+                }
+              ),
+              s);
+
+            // WaitOne returns true if TimeoutObj receives a signal (ie. when .Set() is called in the connect callback)
+            if (TimeoutObj.WaitOne(timeoutMs, false))
+            {
+                if (handlerException != null)
+                {
+                    throw handlerException;
+                }
+                if (!s.IsBound && !s.Connected)
+                {
+                    throw new GetConnectionException("Could not bind to interface or connect to server");
+                }
+
+                if (!s.IsBound)
+                {
+                    throw new GetConnectionException("Could not bind to interface");
+                }
+
+                if (!s.Connected)
+                {
+                    throw new GetConnectionException("Could not connect to server");
+                }
+                await Task.Delay(0); // Unity doesn't like Task.Run();
+                return s;
+            }
+            throw new GetConnectionException("Timeout");
+
+        }
+
+        // GetHTTPClient and GetHTTPSClient helper function.
+        // TODO: .Net Core 2.1: The httpclient socket handler needs to be set to use a cellular socket.
+        public async Task<HttpClient> GetHTTPClient(Uri uri)
+        {
+            HttpClient appHttpClient = new HttpClient();
+            appHttpClient.BaseAddress = uri;
+            await Task.Delay(0); // For Unity.
+            return appHttpClient;
+        }
+
+
+        // GetWebsocketConnection helper function, if interface available.
+        // TODO: This requires a socket handler to set network interfaces.
+        public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeoutMs, bool waitForOpen = true)
+        {
+            // Initialize websocket client
+            ClientWebSocket webSocket = new ClientWebSocket();
+            UriBuilder uriBuilder = new UriBuilder("ws", host, port);
+            Uri uri = uriBuilder.Uri;
+
+            // Token is used to notify listeners/ delegates of task state
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+
+            Stopwatch stopWatch = new Stopwatch();
+            TimeSpan tstimeout = new TimeSpan(0, 0, 0, 0, timeoutMs);
+            stopWatch.Reset();
+            // initiate websocket handshake with server
+            var task = webSocket.ConnectAsync(uri, token);
+            try
+            {
+                if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
+                {
+                    // Check for connecting timeout until connected (loop observeable):
+                    do
+                    {
+                        // Return if open:
+                        if (webSocket.State == WebSocketState.Open)
+                        {
+                            return webSocket;
+                        }
+
+                        // Timeout...
+                        if (stopWatch.Elapsed <= tstimeout && webSocket.State == WebSocketState.Connecting)
+                        {
+                            Log.D("Waiting to connect...");
+                            await Task.Delay(50).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            Log.D("Cancelling");
+                            source.Cancel();
+                        }
+                    }
+                    while (webSocket.State == WebSocketState.Connecting && waitForOpen);
+                }
+            }
+            catch (TaskCanceledException tce)
+            {
+                throw new GetConnectionException("Timeout getting websocket connection.", tce);
+            }
+            finally
+            {
+                source.Dispose();
+            }
+            throw new GetConnectionException("Cannot get websocket connection");
+        }
+
+        // GetSecureWebsocketConnection helper function
+        // TODO: This requires a socket handler to set network interfaces.
+        public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeoutMs, bool waitForOpen = true)
+        {
+            // Initialize websocket class
+            ClientWebSocket webSocket = new ClientWebSocket();
+            UriBuilder uriBuilder = new UriBuilder("wss", host, port);
+            Uri uri = uriBuilder.Uri;
+
+            // Token is used to notify listeners/ delegates of task state
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+
+            Stopwatch stopWatch = new Stopwatch();
+            TimeSpan tstimeout = new TimeSpan(0, 0, 0, 0, timeoutMs);
+            stopWatch.Reset();
+            // initiate websocket handshake  with server
+            var task = webSocket.ConnectAsync(uri, token);
+            try
+            {
+                if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
+                {
+                    // Check for connecting timeout until connected (loop observeable):
+                    do
+                    {
+                        // Return if open:
+                        if (webSocket.State == WebSocketState.Open)
+                        {
+                            return webSocket;
+                        }
+
+                        // Timeout...
+                        if (stopWatch.Elapsed <= tstimeout && webSocket.State == WebSocketState.Connecting)
+                        {
+                            Log.D("Waiting to connect...");
+                            await Task.Delay(50).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            Log.D("Cancelling");
+                            source.Cancel();
+                        }
+                    }
+                    while (webSocket.State == WebSocketState.Connecting && waitForOpen);
+                }
+            }
+            catch (TaskCanceledException tce)
+            {
+                throw new GetConnectionException("Cannot get websocket connection", tce);
+            }
+            finally
+            {
+                source.Dispose();
+            }
+            throw new GetConnectionException("Cannot get websocket connection");
+        }
     }
-  }
 }

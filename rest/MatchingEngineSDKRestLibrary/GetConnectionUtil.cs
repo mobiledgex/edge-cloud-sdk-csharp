@@ -24,232 +24,232 @@ using System.Collections.Generic;
 
 namespace DistributedMatchEngine
 {
-  class EmptyNetInterface : NetInterface
-  {
-    public NetworkInterfaceName GetNetworkInterfaceName()
+    class EmptyNetInterface : NetInterface
     {
-      throw new NotImplementedException("Required NetInferface is not defined!");
-    }
-    public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
-    {
-      throw new NotImplementedException("Required NetInferface is not defined!");
-    }
-
-    public string GetIPAddress(String netInterface, AddressFamily addressFamily = AddressFamily.InterNetwork)
-    {
-      throw new NotImplementedException("Required NetInterface is not defined!");
-    }
-
-    public bool HasWifi()
-    {
-      throw new NotImplementedException("Required NetInterface is not defined!");
-    }
-
-    public bool HasCellular()
-    {
-      throw new NotImplementedException("Required NetInterface is not defined!");
-    }
-  }
-
-  public class NetworkInterfaceName
-  {
-    public string CELLULAR = null;
-    public string WIFI = null;
-  }
-
-  // Some known network interface profiles:
-  public class IOSNetworkInterfaceName : NetworkInterfaceName
-  {
-    public IOSNetworkInterfaceName()
-    {
-      CELLULAR = "pdp_ip0";
-      WIFI = "en0";
-    }
-  }
-
-  public class AndroidNetworkInterfaceName : NetworkInterfaceName
-  {
-    public AndroidNetworkInterfaceName()
-    {
-      CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
-      WIFI = "wlan0";
-    }
-  }
-
-  public class MacNetworkInterfaceName : NetworkInterfaceName
-  {
-    public MacNetworkInterfaceName()
-    {
-      CELLULAR = "en0";
-      WIFI = "en0";
-    }
-  }
-
-  public partial class MatchingEngine
-  {
-    private static bool ValidateServerCertificate(object sender,
-      X509Certificate certificate,
-      X509Chain chain, SslPolicyErrors sslPolicyErrors)
-    {
-      if (sslPolicyErrors == SslPolicyErrors.None) return true;
-
-      Log.E(string.Format("Certificate error: {0}", sslPolicyErrors));
-
-      // Do not allow this client to communicate with unauthenticated servers.
-      return false;
-    }
-
-    // Maybe move to the DataContract instead.
-    private static bool AppPortIsEqual(AppPort port1, AppPort port2)
-    {
-      if (port1.end_port != port2.end_port)
-      {
-        return false;
-      }
-      if (!port1.fqdn_prefix.Equals(port2.fqdn_prefix))
-      {
-        return false;
-      }
-      if (port1.internal_port != port2.internal_port)
-      {
-        return false;
-      }
-      if (port1.path_prefix != port2.path_prefix)
-      {
-        return false;
-      }
-      if (port1.proto != port2.proto)
-      {
-        return false;
-      }
-      if (!port1.public_port.Equals(port2.public_port))
-      {
-        return false;
-      }
-      return true;
-    }
-
-    public static AppPort ValidatePublicPort(FindCloudletReply findCloudletReply, AppPort appPort, LProto proto, int portNum)
-    {
-      AppPort found = null;
-      foreach (AppPort aPort in findCloudletReply.ports)
-      {
-        // See if spec matches:
-        if (aPort.proto != proto)
+        public NetworkInterfaceName GetNetworkInterfaceName()
         {
-          continue;
+            throw new NotImplementedException("Required NetInferface is not defined!");
         }
-        if (IsInPortRange(appPort, portNum) && AppPortIsEqual(aPort, appPort))
+        public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
         {
-          found = aPort;
+            throw new NotImplementedException("Required NetInferface is not defined!");
         }
-      }
-      return found;
-    }
 
-    // Create a L7Path URL from an app port:
-    public static string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, int portNum)
-    {
-      int aPortNum = portNum <= 0 ? appPort.public_port : portNum;
-      AppPort foundPort = ValidatePublicPort(findCloudletReply, appPort, LProto.L_PROTO_TCP, aPortNum);
-      if (foundPort == null)
-      {
-        return null;
-      }
-      string url = "http://" +
-              appPort.fqdn_prefix +
-              findCloudletReply.fqdn +
-              ":" +
-              aPortNum +
-              appPort.path_prefix;
-
-      return url;
-    }
-
-    // Checks if the specified port is within the range of public_port and end_port
-    private static bool IsInPortRange(AppPort appPort, int port)
-    {
-      // Checks if range exists -> if not, check if specified port equals public port
-      if (appPort.end_port == 0 || appPort.end_port < appPort.public_port)
-      {
-        return port == appPort.public_port;
-      }
-      return (port >= appPort.public_port && port <= appPort.end_port);
-    }
-
-    // Gets IP Address of the specified network interface
-    private IPEndPoint GetLocalIP(int port = 0)
-    {
-      if (netInterface == null)
-      {
-        throw new GetConnectionException("Have not integrated NetworkInterface");
-      }
-
-      string host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().CELLULAR);
-      if (host == null || host == "")
-      {
-        throw new GetConnectionException("Could not get Cellular interface");
-      }
-      // Gets IP address of host
-      IPAddress localIP = Dns.GetHostAddresses(host)[0];
-      IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
-      return localEndPoint;
-    }
-
-    public Dictionary<int, AppPort> GetAppPortsByProtocol(FindCloudletReply reply, LProto proto)
-    {
-      Dictionary<int, AppPort> appPortsByProtocol = new Dictionary<int, AppPort>();
-      AppPort[] ports = reply.ports;
-      foreach (AppPort port in ports)
-      {
-        if (port.proto == proto)
+        public string GetIPAddress(String netInterface, AddressFamily addressFamily = AddressFamily.InterNetwork)
         {
-          appPortsByProtocol.Add(port.internal_port, port);
+            throw new NotImplementedException("Required NetInterface is not defined!");
         }
-      }
-      return appPortsByProtocol;
+
+        public bool HasWifi()
+        {
+            throw new NotImplementedException("Required NetInterface is not defined!");
+        }
+
+        public bool HasCellular()
+        {
+            throw new NotImplementedException("Required NetInterface is not defined!");
+        }
     }
 
-    public Dictionary<int, AppPort> GetTCPAppPorts(FindCloudletReply reply)
+    public class NetworkInterfaceName
     {
-      Dictionary<int, AppPort> tcpAppPorts = new Dictionary<int, AppPort>();
-      AppPort[] ports = reply.ports;
-      foreach (AppPort port in ports)
-      {
-        if (port.proto == LProto.L_PROTO_TCP)
-        {
-          tcpAppPorts.Add(port.internal_port, port);
-        }
-      }
-      return tcpAppPorts;
+        public string CELLULAR = null;
+        public string WIFI = null;
     }
 
-    public Dictionary<int, AppPort> GetUDPAppPorts(FindCloudletReply reply)
+    // Some known network interface profiles:
+    public class IOSNetworkInterfaceName : NetworkInterfaceName
     {
-      Dictionary<int, AppPort> udpAppPorts = new Dictionary<int, AppPort>();
-      AppPort[] ports = reply.ports;
-      foreach (AppPort port in ports)
-      {
-        if (port.proto == LProto.L_PROTO_UDP)
+        public IOSNetworkInterfaceName()
         {
-          udpAppPorts.Add(port.internal_port, port);
+            CELLULAR = "pdp_ip0";
+            WIFI = "en0";
         }
-      }
-      return udpAppPorts;
     }
 
-    public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
+    public class AndroidNetworkInterfaceName : NetworkInterfaceName
     {
-      Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();
-      AppPort[] ports = reply.ports;
-      foreach (AppPort port in ports)
-      {
-        if (port.proto == LProto.L_PROTO_HTTP)
+        public AndroidNetworkInterfaceName()
         {
-          httpAppPorts.Add(port.internal_port, port);
+            CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
+            WIFI = "wlan0";
         }
-      }
-      return httpAppPorts;
     }
-  }
+
+    public class MacNetworkInterfaceName : NetworkInterfaceName
+    {
+        public MacNetworkInterfaceName()
+        {
+            CELLULAR = "en0";
+            WIFI = "en0";
+        }
+    }
+
+    public partial class MatchingEngine
+    {
+        private static bool ValidateServerCertificate(object sender,
+          X509Certificate certificate,
+          X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            if (sslPolicyErrors == SslPolicyErrors.None) return true;
+
+            Log.E(string.Format("Certificate error: {0}", sslPolicyErrors));
+
+            // Do not allow this client to communicate with unauthenticated servers.
+            return false;
+        }
+
+        // Maybe move to the DataContract instead.
+        private static bool AppPortIsEqual(AppPort port1, AppPort port2)
+        {
+            if (port1.end_port != port2.end_port)
+            {
+                return false;
+            }
+            if (!port1.fqdn_prefix.Equals(port2.fqdn_prefix))
+            {
+                return false;
+            }
+            if (port1.internal_port != port2.internal_port)
+            {
+                return false;
+            }
+            if (port1.path_prefix != port2.path_prefix)
+            {
+                return false;
+            }
+            if (port1.proto != port2.proto)
+            {
+                return false;
+            }
+            if (!port1.public_port.Equals(port2.public_port))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static AppPort ValidatePublicPort(FindCloudletReply findCloudletReply, AppPort appPort, LProto proto, int portNum)
+        {
+            AppPort found = null;
+            foreach (AppPort aPort in findCloudletReply.ports)
+            {
+                // See if spec matches:
+                if (aPort.proto != proto)
+                {
+                    continue;
+                }
+                if (IsInPortRange(appPort, portNum) && AppPortIsEqual(aPort, appPort))
+                {
+                    found = aPort;
+                }
+            }
+            return found;
+        }
+
+        // Create a L7Path URL from an app port:
+        public static string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, int portNum)
+        {
+            int aPortNum = portNum <= 0 ? appPort.public_port : portNum;
+            AppPort foundPort = ValidatePublicPort(findCloudletReply, appPort, LProto.L_PROTO_TCP, aPortNum);
+            if (foundPort == null)
+            {
+                return null;
+            }
+            string url = "http://" +
+                    appPort.fqdn_prefix +
+                    findCloudletReply.fqdn +
+                    ":" +
+                    aPortNum +
+                    appPort.path_prefix;
+
+            return url;
+        }
+
+        // Checks if the specified port is within the range of public_port and end_port
+        private static bool IsInPortRange(AppPort appPort, int port)
+        {
+            // Checks if range exists -> if not, check if specified port equals public port
+            if (appPort.end_port == 0 || appPort.end_port < appPort.public_port)
+            {
+                return port == appPort.public_port;
+            }
+            return (port >= appPort.public_port && port <= appPort.end_port);
+        }
+
+        // Gets IP Address of the specified network interface
+        private IPEndPoint GetLocalIP(int port = 0)
+        {
+            if (netInterface == null)
+            {
+                throw new GetConnectionException("Have not integrated NetworkInterface");
+            }
+
+            string host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().CELLULAR);
+            if (host == null || host == "")
+            {
+                throw new GetConnectionException("Could not get Cellular interface");
+            }
+            // Gets IP address of host
+            IPAddress localIP = Dns.GetHostAddresses(host)[0];
+            IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
+            return localEndPoint;
+        }
+
+        public Dictionary<int, AppPort> GetAppPortsByProtocol(FindCloudletReply reply, LProto proto)
+        {
+            Dictionary<int, AppPort> appPortsByProtocol = new Dictionary<int, AppPort>();
+            AppPort[] ports = reply.ports;
+            foreach (AppPort port in ports)
+            {
+                if (port.proto == proto)
+                {
+                    appPortsByProtocol.Add(port.internal_port, port);
+                }
+            }
+            return appPortsByProtocol;
+        }
+
+        public Dictionary<int, AppPort> GetTCPAppPorts(FindCloudletReply reply)
+        {
+            Dictionary<int, AppPort> tcpAppPorts = new Dictionary<int, AppPort>();
+            AppPort[] ports = reply.ports;
+            foreach (AppPort port in ports)
+            {
+                if (port.proto == LProto.L_PROTO_TCP)
+                {
+                    tcpAppPorts.Add(port.internal_port, port);
+                }
+            }
+            return tcpAppPorts;
+        }
+
+        public Dictionary<int, AppPort> GetUDPAppPorts(FindCloudletReply reply)
+        {
+            Dictionary<int, AppPort> udpAppPorts = new Dictionary<int, AppPort>();
+            AppPort[] ports = reply.ports;
+            foreach (AppPort port in ports)
+            {
+                if (port.proto == LProto.L_PROTO_UDP)
+                {
+                    udpAppPorts.Add(port.internal_port, port);
+                }
+            }
+            return udpAppPorts;
+        }
+
+        public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
+        {
+            Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();
+            AppPort[] ports = reply.ports;
+            foreach (AppPort port in ports)
+            {
+                if (port.proto == LProto.L_PROTO_HTTP)
+                {
+                    httpAppPorts.Add(port.internal_port, port);
+                }
+            }
+            return httpAppPorts;
+        }
+    }
 }

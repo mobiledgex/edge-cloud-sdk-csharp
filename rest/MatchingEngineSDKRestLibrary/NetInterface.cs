@@ -21,107 +21,107 @@ using System.Net.Sockets;
 
 namespace DistributedMatchEngine
 {
-  public interface NetInterface
-  {
-    NetworkInterfaceName GetNetworkInterfaceName();
-    void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName);
-    string GetIPAddress(String netInterfaceType, AddressFamily adressFamily = AddressFamily.InterNetwork);
-    bool HasWifi();
-    bool HasCellular();
-  }
-
-  // A generic network interface for most systems, with an interface names parameter.
-  public class SimpleNetInterface : NetInterface
-  {
-
-    NetworkInterfaceName networkInterfaceName;
-
-    public SimpleNetInterface(NetworkInterfaceName networkInterfaceName)
+    public interface NetInterface
     {
-      SetNetworkInterfaceName(networkInterfaceName);
+        NetworkInterfaceName GetNetworkInterfaceName();
+        void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName);
+        string GetIPAddress(String netInterfaceType, AddressFamily adressFamily = AddressFamily.InterNetwork);
+        bool HasWifi();
+        bool HasCellular();
     }
 
-    public NetworkInterfaceName GetNetworkInterfaceName()
+    // A generic network interface for most systems, with an interface names parameter.
+    public class SimpleNetInterface : NetInterface
     {
-      return networkInterfaceName;
-    }
-    public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
-    {
-      this.networkInterfaceName = networkInterfaceName;
-    }
-    private NetworkInterface[] GetInterfaces()
-    {
-      return NetworkInterface.GetAllNetworkInterfaces();
-    }
-    public string GetIPAddress(string sourceNetInterfaceName, AddressFamily addressfamily = AddressFamily.InterNetwork)
-    {
-      if (!NetworkInterface.GetIsNetworkAvailable())
-      {
-        return null;
-      }
 
-      NetworkInterface[] netInterfaces = GetInterfaces();
+        NetworkInterfaceName networkInterfaceName;
 
-      string ipAddress = null;
-      string ipAddressV4 = null;
-      string ipAddressV6 = null;
-      Log.S("Looking for: " + sourceNetInterfaceName + ", known Wifi: " + networkInterfaceName.WIFI + ", known Cellular: " + networkInterfaceName.CELLULAR);
-
-      foreach (NetworkInterface iface in netInterfaces)
-      {
-        if (iface.Name.Equals(sourceNetInterfaceName))
+        public SimpleNetInterface(NetworkInterfaceName networkInterfaceName)
         {
-          IPInterfaceProperties ipifaceProperties = iface.GetIPProperties();
-          foreach (UnicastIPAddressInformation ip in ipifaceProperties.UnicastAddresses)
-          {
-            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+            SetNetworkInterfaceName(networkInterfaceName);
+        }
+
+        public NetworkInterfaceName GetNetworkInterfaceName()
+        {
+            return networkInterfaceName;
+        }
+        public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
+        {
+            this.networkInterfaceName = networkInterfaceName;
+        }
+        private NetworkInterface[] GetInterfaces()
+        {
+            return NetworkInterface.GetAllNetworkInterfaces();
+        }
+        public string GetIPAddress(string sourceNetInterfaceName, AddressFamily addressfamily = AddressFamily.InterNetwork)
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
             {
-              ipAddressV4 = ip.Address.ToString();
+                return null;
             }
-            if (ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
+
+            NetworkInterface[] netInterfaces = GetInterfaces();
+
+            string ipAddress = null;
+            string ipAddressV4 = null;
+            string ipAddressV6 = null;
+            Log.S("Looking for: " + sourceNetInterfaceName + ", known Wifi: " + networkInterfaceName.WIFI + ", known Cellular: " + networkInterfaceName.CELLULAR);
+
+            foreach (NetworkInterface iface in netInterfaces)
             {
-              ipAddressV6 = ip.Address.ToString();
+                if (iface.Name.Equals(sourceNetInterfaceName))
+                {
+                    IPInterfaceProperties ipifaceProperties = iface.GetIPProperties();
+                    foreach (UnicastIPAddressInformation ip in ipifaceProperties.UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            ipAddressV4 = ip.Address.ToString();
+                        }
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
+                        {
+                            ipAddressV6 = ip.Address.ToString();
+                        }
+                    }
+
+                    if (addressfamily == AddressFamily.InterNetworkV6)
+                    {
+                        return ipAddressV6;
+                    }
+
+                    if (addressfamily == AddressFamily.InterNetwork)
+                    {
+                        return ipAddressV4;
+                    }
+                }
             }
-          }
-
-          if (addressfamily == AddressFamily.InterNetworkV6)
-          {
-            return ipAddressV6;
-          }
-
-          if (addressfamily == AddressFamily.InterNetwork)
-          {
-            return ipAddressV4;
-          }
+            return ipAddress;
         }
-      }
-      return ipAddress;
-    }
 
-    public bool HasCellular()
-    {
-      NetworkInterface[] netInterfaces = GetInterfaces();
-      foreach (NetworkInterface iface in netInterfaces)
-      {
-        if (iface.Name.Equals(networkInterfaceName.CELLULAR))
+        public bool HasCellular()
         {
-          return iface.OperationalStatus == OperationalStatus.Up;
+            NetworkInterface[] netInterfaces = GetInterfaces();
+            foreach (NetworkInterface iface in netInterfaces)
+            {
+                if (iface.Name.Equals(networkInterfaceName.CELLULAR))
+                {
+                    return iface.OperationalStatus == OperationalStatus.Up;
+                }
+            }
+            return false;
         }
-      }
-      return false;
-    }
 
-    public bool HasWifi()
-    {
-      NetworkInterface[] netInterfaces = GetInterfaces();
-      foreach (NetworkInterface iface in netInterfaces)
-      {
-        if (iface.Name.Equals(networkInterfaceName.WIFI))
+        public bool HasWifi()
         {
-          return iface.OperationalStatus == OperationalStatus.Up;
+            NetworkInterface[] netInterfaces = GetInterfaces();
+            foreach (NetworkInterface iface in netInterfaces)
+            {
+                if (iface.Name.Equals(networkInterfaceName.WIFI))
+                {
+                    return iface.OperationalStatus == OperationalStatus.Up;
+                }
+            }
+            return false;
         }
-      }
-      return false;
     }
-  }
 }
