@@ -14,7 +14,7 @@
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
     <AssemblyVersion>1.4.19</AssemblyVersion>
     <FileVersion>1.4.19</FileVersion>
-    <Copyright>Copyright 2019 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
+    <Copyright>Copyright 2020 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
