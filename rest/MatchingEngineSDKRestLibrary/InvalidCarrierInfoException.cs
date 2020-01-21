@@ -18,20 +18,20 @@
 using System;
 namespace DistributedMatchEngine
 {
-    public class InvalidCarrierInfoException : Exception
+  public class InvalidCarrierInfoException : Exception
+  {
+    public InvalidCarrierInfoException()
     {
-        public InvalidCarrierInfoException()
-        {
-        }
-
-        public InvalidCarrierInfoException(string message)
-            : base(message)
-        {
-        }
-
-        public InvalidCarrierInfoException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
     }
+
+    public InvalidCarrierInfoException(string message)
+        : base(message)
+    {
+    }
+
+    public InvalidCarrierInfoException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
+  }
 }

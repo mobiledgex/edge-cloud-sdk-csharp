@@ -20,72 +20,72 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
-    [DataContract]
-    public class RegisterClientRequest
+  [DataContract]
+  public class RegisterClientRequest
+  {
+    [DataMember]
+    public UInt32 ver;
+    [DataMember]
+    public string dev_name;
+    [DataMember]
+    public string app_name;
+    [DataMember]
+    public string app_vers;
+    [DataMember]
+    public string carrier_name;
+    [DataMember]
+    public string auth_token;
+    // Cell ID of base station where client is
+    [DataMember]
+    public UInt32 cell_id;
+    // Type of unique id provided by client
+    [DataMember]
+    public string unique_id_type;
+    [DataMember]
+    // Optional. Unique identification of the client device or user. May be overridden by the server.
+    public string unique_id;
+    [DataMember]
+    public Tag[] tags;
+  }
+
+  [DataContract]
+  public class RegisterClientReply
+  {
+    [DataMember]
+    public UInt32 Ver;
+
+    public ReplyStatus status = ReplyStatus.RS_UNDEFINED;
+
+    [DataMember(Name = "status")]
+    private string reply_status_string
     {
-        [DataMember]
-        public UInt32 ver;
-        [DataMember]
-        public string dev_name;
-        [DataMember]
-        public string app_name;
-        [DataMember]
-        public string app_vers;
-        [DataMember]
-        public string carrier_name;
-        [DataMember]
-        public string auth_token;
-        // Cell ID of base station where client is
-        [DataMember]
-        public UInt32 cell_id;
-        // Type of unique id provided by client
-        [DataMember]
-        public string unique_id_type;
-        [DataMember]
-        // Optional. Unique identification of the client device or user. May be overridden by the server.
-        public string unique_id;
-        [DataMember]
-        public Tag[] tags;
-    }
-
-    [DataContract]
-    public class RegisterClientReply
-    {
-        [DataMember]
-        public UInt32 Ver;
-
-        public ReplyStatus status = ReplyStatus.RS_UNDEFINED;
-
-        [DataMember(Name = "status")]
-        private string reply_status_string
+      get
+      {
+        return status.ToString();
+      }
+      set
+      {
+        try
         {
-            get
-            {
-                return status.ToString();
-            }
-            set
-            {
-                try
-                {
-                    status = (ReplyStatus)Enum.Parse(typeof(ReplyStatus), value);
-                }
-                catch
-                {
-                    status = ReplyStatus.RS_UNDEFINED;
-                }
-            }
+          status = (ReplyStatus)Enum.Parse(typeof(ReplyStatus), value);
         }
-
-        [DataMember]
-        public string session_cookie;
-        [DataMember]
-        public string token_server_uri;
-        [DataMember]
-        public string unique_id_type;
-        [DataMember]
-        public string unique_id;
-        [DataMember]
-        public Tag[] tags;
+        catch
+        {
+          status = ReplyStatus.RS_UNDEFINED;
+        }
+      }
     }
+
+    [DataMember]
+    public string session_cookie;
+    [DataMember]
+    public string token_server_uri;
+    [DataMember]
+    public string unique_id_type;
+    [DataMember]
+    public string unique_id;
+    [DataMember]
+    public Tag[] tags;
+  }
 
 }

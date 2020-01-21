@@ -19,13 +19,13 @@ using System;
 
 namespace DistributedMatchEngine
 {
-    /**
-     * CarrierInfo telephony interface for the platform
-     */
-    public interface CarrierInfo
-    {
-        string GetCurrentCarrierName();
-        string GetMccMnc();
-        UInt32 GetCellID();
-    }
+  /**
+   * CarrierInfo telephony interface for the platform
+   */
+  public interface CarrierInfo
+  {
+    string GetCurrentCarrierName();
+    string GetMccMnc();
+    UInt32 GetCellID();
+  }
 }

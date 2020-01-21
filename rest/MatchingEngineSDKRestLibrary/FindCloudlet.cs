@@ -20,73 +20,73 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
-    [DataContract]
-    public class FindCloudletRequest
+  [DataContract]
+  public class FindCloudletRequest
+  {
+    [DataMember]
+    public UInt32 ver = 1;
+    [DataMember]
+    public string session_cookie;
+    [DataMember]
+    public string carrier_name;
+    [DataMember]
+    public Loc gps_location;
+    [DataMember]
+    public string dev_name;
+    [DataMember]
+    public string app_name;
+    [DataMember]
+    public string app_vers;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
+  }
+
+  [DataContract]
+  public class FindCloudletReply
+  {
+    // Standard Enum. DataContract Enum is converted to int64, not string.
+    public enum FindStatus
     {
-        [DataMember]
-        public UInt32 ver = 1;
-        [DataMember]
-        public string session_cookie;
-        [DataMember]
-        public string carrier_name;
-        [DataMember]
-        public Loc gps_location;
-        [DataMember]
-        public string dev_name;
-        [DataMember]
-        public string app_name;
-        [DataMember]
-        public string app_vers;
-        [DataMember]
-        public UInt32 cell_id;
-        [DataMember]
-        public Tag[] tags;
+      FIND_UNKNOWN = 0,
+      FIND_FOUND = 1,
+      FIND_NOTFOUND = 2
     }
 
-    [DataContract]
-    public class FindCloudletReply
+    [DataMember]
+    public UInt32 ver;
+
+    public FindStatus status = FindStatus.FIND_UNKNOWN;
+
+    [DataMember(Name = "status")]
+    private string find_status_string
     {
-        // Standard Enum. DataContract Enum is converted to int64, not string.
-        public enum FindStatus
+      get
+      {
+        return status.ToString();
+      }
+      set
+      {
+        try
         {
-            FIND_UNKNOWN = 0,
-            FIND_FOUND = 1,
-            FIND_NOTFOUND = 2
+          status = (FindStatus)Enum.Parse(typeof(FindStatus), value);
         }
-
-        [DataMember]
-        public UInt32 ver;
-
-        public FindStatus status = FindStatus.FIND_UNKNOWN;
-
-        [DataMember(Name = "status")]
-        private string find_status_string
+        catch
         {
-            get
-            {
-                return status.ToString();
-            }
-            set
-            {
-                try
-                {
-                    status = (FindStatus)Enum.Parse(typeof(FindStatus), value);
-                }
-                catch
-                {
-                    status = FindStatus.FIND_UNKNOWN;
-                }
-            }
+          status = FindStatus.FIND_UNKNOWN;
         }
-
-        [DataMember]
-        public string fqdn;
-        [DataMember]
-        public AppPort[] ports;
-        [DataMember]
-        public Loc cloudlet_location;
-        [DataMember]
-        public Tag[] tags;
+      }
     }
+
+    [DataMember]
+    public string fqdn;
+    [DataMember]
+    public AppPort[] ports;
+    [DataMember]
+    public Loc cloudlet_location;
+    [DataMember]
+    public Tag[] tags;
+  }
 
 }
