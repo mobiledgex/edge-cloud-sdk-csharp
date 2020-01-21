@@ -37,9 +37,9 @@ namespace DistributedMatchEngine {
             "dXRlZF9tYXRjaF9lbmdpbmUuRGxnUmVwbHkiAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DlgMessage), global::DistributedMatchEngine.DlgMessage.Parser, new[]{ "Ver", "LgId", "GroupCookie", "MessageId", "AckType", "Message" }, null, new[]{ typeof(global::DistributedMatchEngine.DlgMessage.Types.DlgAck) }, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DlgReply), global::DistributedMatchEngine.DlgReply.Parser, new[]{ "Ver", "AckId", "GroupCookie" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DlgMessage), global::DistributedMatchEngine.DlgMessage.Parser, new[]{ "Ver", "LgId", "GroupCookie", "MessageId", "AckType", "Message" }, null, new[]{ typeof(global::DistributedMatchEngine.DlgMessage.Types.DlgAck) }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DlgReply), global::DistributedMatchEngine.DlgReply.Parser, new[]{ "Ver", "AckId", "GroupCookie" }, null, null, null, null)
           }));
     }
     #endregion
@@ -140,7 +140,7 @@ namespace DistributedMatchEngine {
 
     /// <summary>Field number for the "ack_type" field.</summary>
     public const int AckTypeFieldNumber = 5;
-    private global::DistributedMatchEngine.DlgMessage.Types.DlgAck ackType_ = 0;
+    private global::DistributedMatchEngine.DlgMessage.Types.DlgAck ackType_ = global::DistributedMatchEngine.DlgMessage.Types.DlgAck.EachMessage;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.DlgMessage.Types.DlgAck AckType {
       get { return ackType_; }
@@ -192,7 +192,7 @@ namespace DistributedMatchEngine {
       if (LgId != 0UL) hash ^= LgId.GetHashCode();
       if (GroupCookie.Length != 0) hash ^= GroupCookie.GetHashCode();
       if (MessageId != 0UL) hash ^= MessageId.GetHashCode();
-      if (AckType != 0) hash ^= AckType.GetHashCode();
+      if (AckType != global::DistributedMatchEngine.DlgMessage.Types.DlgAck.EachMessage) hash ^= AckType.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -223,7 +223,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(32);
         output.WriteUInt64(MessageId);
       }
-      if (AckType != 0) {
+      if (AckType != global::DistributedMatchEngine.DlgMessage.Types.DlgAck.EachMessage) {
         output.WriteRawTag(40);
         output.WriteEnum((int) AckType);
       }
@@ -251,7 +251,7 @@ namespace DistributedMatchEngine {
       if (MessageId != 0UL) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MessageId);
       }
-      if (AckType != 0) {
+      if (AckType != global::DistributedMatchEngine.DlgMessage.Types.DlgAck.EachMessage) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) AckType);
       }
       if (Message.Length != 0) {
@@ -280,7 +280,7 @@ namespace DistributedMatchEngine {
       if (other.MessageId != 0UL) {
         MessageId = other.MessageId;
       }
-      if (other.AckType != 0) {
+      if (other.AckType != global::DistributedMatchEngine.DlgMessage.Types.DlgAck.EachMessage) {
         AckType = other.AckType;
       }
       if (other.Message.Length != 0) {
