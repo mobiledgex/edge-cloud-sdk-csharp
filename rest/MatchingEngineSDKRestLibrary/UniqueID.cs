@@ -18,9 +18,9 @@
 
 namespace DistributedMatchEngine
 {
-    public interface UniqueID
-    {
-        string GetUniqueIDType();
-        string GetUniqueID();
-    }
+  public interface UniqueID
+  {
+    string GetUniqueIDType();
+    string GetUniqueID();
+  }
 }

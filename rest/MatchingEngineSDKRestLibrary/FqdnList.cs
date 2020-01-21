@@ -20,79 +20,79 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
-    [DataContract]
-    public class AppFqdn
+  [DataContract]
+  public class AppFqdn
+  {
+    // App  Name
+    [DataMember]
+    public string app_ame;
+    // App Version
+    [DataMember]
+    public string app_vers;
+    // developer name
+    [DataMember]
+    public string dev_name;
+    // App FQDN
+    [DataMember]
+    public string[] fqdns;
+    // optional android package name
+    [DataMember]
+    public string android_package_name;
+  }
+
+  [DataContract]
+  public class FqdnListRequest
+  {
+    [DataMember]
+    public UInt32 ver;
+    [DataMember]
+    public string session_cookie;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
+  };
+
+  [DataContract]
+  public class FqdnListReply
+  {
+    // Status of the reply
+    public enum FLStatus
     {
-        // App  Name
-        [DataMember]
-        public string app_ame;
-        // App Version
-        [DataMember]
-        public string app_vers;
-        // developer name
-        [DataMember]
-        public string dev_name;
-        // App FQDN
-        [DataMember]
-        public string[] fqdns;
-        // optional android package name
-        [DataMember]
-        public string android_package_name;
+      FL_UNDEFINED = 0,
+      FL_SUCCESS = 1,
+      FL_FAIL = 2
     }
 
-    [DataContract]
-    public class FqdnListRequest
+    [DataMember]
+    // API version
+    public UInt32 ver;
+
+    [DataMember]
+    public AppFqdn[] app_fqdns;
+
+    public FLStatus status = FLStatus.FL_UNDEFINED;
+
+    [DataMember(Name = "status")]
+    private string fl_status_string
     {
-        [DataMember]
-        public UInt32 ver;
-        [DataMember]
-        public string session_cookie;
-        [DataMember]
-        public UInt32 cell_id;
-        [DataMember]
-        public Tag[] tags;
-    };
-
-    [DataContract]
-    public class FqdnListReply
-    {
-        // Status of the reply
-        public enum FLStatus
+      get
+      {
+        return status.ToString();
+      }
+      set
+      {
+        try
         {
-            FL_UNDEFINED = 0,
-            FL_SUCCESS = 1,
-            FL_FAIL = 2
+          status = (FLStatus)Enum.Parse(typeof(FLStatus), value);
         }
-
-        [DataMember]
-        // API version
-        public UInt32 ver;
-
-        [DataMember]
-        public AppFqdn[] app_fqdns;
-
-        public FLStatus status = FLStatus.FL_UNDEFINED;
-
-        [DataMember(Name = "status")]
-        private string fl_status_string
+        catch
         {
-            get
-            {
-                return status.ToString();
-            }
-            set
-            {
-                try
-                {
-                    status = (FLStatus)Enum.Parse(typeof(FLStatus), value);
-                }
-                catch
-                {
-                    status = FLStatus.FL_UNDEFINED;
-                }
-            }
+          status = FLStatus.FL_UNDEFINED;
         }
-        [DataMember]
-        public static Tag[] tags;
+      }
     }
+    [DataMember]
+    public static Tag[] tags;
+  }
 }

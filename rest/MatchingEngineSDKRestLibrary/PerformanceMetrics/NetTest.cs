@@ -109,7 +109,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
       stopWatch = new Stopwatch();
       sites = new ConcurrentQueue<Site>();
       this.matchingEngine = matchingEngine;
-      
+
       httpClient = new HttpClient();
       // TODO: GetConnection to connect from a particular network interface endpoint
       // httpClient.SocketsHttpHandler
