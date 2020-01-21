@@ -33,9 +33,9 @@ namespace DistributedMatchEngine {
             "aF9lbmdpbmUuVGltZXN0YW1wYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Timestamp), global::DistributedMatchEngine.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Loc), global::DistributedMatchEngine.Loc.Parser, new[]{ "Latitude", "Longitude", "HorizontalAccuracy", "VerticalAccuracy", "Altitude", "Course", "Speed", "Timestamp" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Timestamp), global::DistributedMatchEngine.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Loc), global::DistributedMatchEngine.Loc.Parser, new[]{ "Latitude", "Longitude", "HorizontalAccuracy", "VerticalAccuracy", "Altitude", "Course", "Speed", "Timestamp" }, null, null, null, null)
           }));
     }
     #endregion
@@ -204,6 +204,10 @@ namespace DistributedMatchEngine {
 
   }
 
+  /// <summary>
+  ///
+  /// GPS Location
+  /// </summary>
   public sealed partial class Loc : pb::IMessage<Loc> {
     private static readonly pb::MessageParser<Loc> _parser = new pb::MessageParser<Loc>(() => new Loc());
     private pb::UnknownFieldSet _unknownFields;
@@ -291,7 +295,7 @@ namespace DistributedMatchEngine {
     public const int VerticalAccuracyFieldNumber = 4;
     private double verticalAccuracy_;
     /// <summary>
-    /// veritical accuracy (meters)
+    /// vertical accuracy (meters)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double VerticalAccuracy {
