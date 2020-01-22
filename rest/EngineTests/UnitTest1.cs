@@ -42,6 +42,10 @@ namespace Tests
     const string appName = "PongGame2";
     const string appVers = "2019-09-26";
     const string developerAuthToken = "";
+    const UInt32 cellID = 0;
+    const string uniqueIDType = "";
+    const string uniqueID = "";
+    static Tag[] tags = new Tag[0];
     const string connectionTestFqdn = "mextest-app-cluster.frankfurt-main.tdg.mobiledgex.net";
     const string aWebSocketServerFqdn = "ponggame2-tcp.frankfurt-main.tdg.mobiledgex.net"; // or, localhost.
 
@@ -57,6 +61,24 @@ namespace Tests
       string CarrierInfo.GetMccMnc()
       {
         return "26010";
+      }
+
+      UInt32 CarrierInfo.GetCellID()
+      {
+        return 0;
+      }
+    }
+
+    class TestUniqueID : UniqueID
+    {
+      string UniqueID.GetUniqueIDType()
+      {
+        return "";
+      }
+
+      string UniqueID.GetUniqueID()
+      {
+        return "";
       }
     }
 
@@ -318,7 +340,7 @@ namespace Tests
         stream.Write(Encoding.UTF8.GetBytes(data));
 
         await Task.Delay(500);
-        byte[] readBuffer = new byte[4096*2];
+        byte[] readBuffer = new byte[4096 * 2];
 
         Assert.True(stream.CanRead);
         stream.Read(readBuffer);
@@ -353,14 +375,16 @@ namespace Tests
       try
       {
         socket = await me.GetWebsocketConnection(aWebSocketServerFqdn, 3000, 5000);
-      } catch (Exception e)
+      }
+      catch (Exception e)
       {
         Console.WriteLine("Websocket Initial GetConnectionException is " + e.Message);
         Assert.ByVal(socket, Is.Not.Null);
         Assert.True(socket.State == WebSocketState.Open);
       }
 
-      try {
+      try
+      {
         // Send message
         ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
         CancellationTokenSource source = new CancellationTokenSource();
@@ -413,7 +437,7 @@ namespace Tests
 
       try
       {
-        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
+        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
       }
       catch (DmeDnsException dde)
       {
@@ -478,7 +502,7 @@ namespace Tests
 
       try
       {
-        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc);
+        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
       }
       catch (DmeDnsException dde)
       {

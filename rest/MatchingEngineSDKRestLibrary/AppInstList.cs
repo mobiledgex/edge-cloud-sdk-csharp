@@ -47,9 +47,10 @@ namespace DistributedMatchEngine
     [DataMember]
     string cloudlet_name;
     // The GPS Location of the user
-    Loc gps_location;
     [DataMember]
+    Loc gps_location;
     // Distance of cloudlet vs loc in request
+    [DataMember]
     double distance;
     // App instances
     [DataMember]
@@ -67,6 +68,10 @@ namespace DistributedMatchEngine
     public string carrier_name;
     [DataMember]
     public Loc gps_location;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
   }
 
   [DataContract]
@@ -107,5 +112,7 @@ namespace DistributedMatchEngine
 
     [DataMember]
     public CloudletLocation[] cloudlets;
+    [DataMember]
+    public Tag[] tags;
   }
 }

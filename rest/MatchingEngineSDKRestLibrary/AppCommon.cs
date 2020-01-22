@@ -20,6 +20,37 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  // Vendor specific data
+  [DataContract]
+  public class Tag
+  {
+    [DataMember]
+    public string type;
+    [DataMember]
+    public string data;
+  }
+
+  [DataContract]
+  public class Loc
+  {
+    [DataMember]
+    public double latitude;
+    [DataMember]
+    public double longitude;
+    [DataMember]
+    public double horizontal_accuracy;
+    [DataMember]
+    public double vertical_accuracy;
+    [DataMember]
+    public double altitude;
+    [DataMember]
+    public double course;
+    [DataMember]
+    public double speed;
+    [DataMember]
+    public Timestamp timestamp;
+  }
+
   public enum LProto
   {
     // Unknown protocol

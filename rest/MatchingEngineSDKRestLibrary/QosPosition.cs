@@ -61,6 +61,10 @@ namespace DistributedMatchEngine
     // Band list used by the client, optional
     [DataMember]
     public BandSelection band_selection;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
   }
 
   [DataContract]
@@ -125,6 +129,8 @@ namespace DistributedMatchEngine
     // kpi details
     [DataMember]
     public QosPositionResult[] position_results;
+    [DataMember]
+    public Tag[] tags;
   }
 
   [DataContract]
@@ -135,5 +141,4 @@ namespace DistributedMatchEngine
     [DataMember]
     public RuntimeStreamError error;
   }
-
 }

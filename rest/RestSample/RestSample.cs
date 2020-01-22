@@ -40,6 +40,8 @@ namespace RestSample
     static string appName = "PongGame2";
     static string appVers = "2019-09-26";
     static string developerAuthToken = "";
+    static UInt32 cellID = 0;
+    static Tag[] tags = new Tag[0];
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
@@ -54,7 +56,7 @@ namespace RestSample
 
       var timestamp = new Timestamp
       {
-        seconds = (sec+futureSeconds).ToString(),
+        seconds = (sec + futureSeconds).ToString(),
         nanos = nanos
       };
 
@@ -84,7 +86,8 @@ namespace RestSample
         var qloc = new QosPosition
         {
           positionid = id.ToString(),
-          gps_location = new Loc {
+          gps_location = new Loc
+          {
             longitude = longitude,
             latitude = latitude,
             timestamp = createTimestamp(100)
@@ -100,7 +103,6 @@ namespace RestSample
     }
 
 
-
     async static Task Main(string[] args)
     {
       try
@@ -114,9 +116,7 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
-
-        var registerClientRequest = me.CreateRegisterClientRequest(me.GetCarrierName(), devName, appName, appVers, developerAuthToken);
-
+        var registerClientRequest = me.CreateRegisterClientRequest(me.GetCarrierName(), devName, appName, appVers, developerAuthToken, cellID, me.GetUniqueIDType(), me.GetUniqueIDType(), tags);
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
         try
@@ -142,9 +142,9 @@ namespace RestSample
         var loc = await locTask;
 
         // Independent requests:
-        var verifyLocationRequest = me.CreateVerifyLocationRequest(carrierName, loc);
-        var findCloudletRequest = me.CreateFindCloudletRequest(carrierName, devName, appName, appVers, loc);
-        var getLocationRequest = me.CreateGetLocationRequest(carrierName);
+        var verifyLocationRequest = me.CreateVerifyLocationRequest(carrierName, loc, cellID, tags);
+        var findCloudletRequest = me.CreateFindCloudletRequest(carrierName, devName, appName, appVers, loc, cellID, tags);
+        var getLocationRequest = me.CreateGetLocationRequest(carrierName, cellID, tags);
 
 
         // These are asynchronious calls, of independent REST APIs.
@@ -252,13 +252,14 @@ namespace RestSample
           };
           var requestList = CreateQosPositionList(firstLoc, 45, 2, 1);
 
-          var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null);
+          var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null, cellID, tags);
 
           QosPositionKpiStream qosReplyStream = null;
           try
           {
             qosReplyStream = await me.GetQosPositionKpi(qosPositionRequest);
-          } catch (DmeDnsException)
+          }
+          catch (DmeDnsException)
           {
             qosReplyStream = await me.GetQosPositionKpi(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
           }

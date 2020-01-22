@@ -47,6 +47,10 @@ namespace DistributedMatchEngine
     public UInt32 ver;
     [DataMember]
     public string session_cookie;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
   };
 
   [DataContract]
@@ -88,5 +92,7 @@ namespace DistributedMatchEngine
         }
       }
     }
+    [DataMember]
+    public static Tag[] tags;
   }
 }
