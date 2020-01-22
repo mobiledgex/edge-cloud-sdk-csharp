@@ -55,6 +55,10 @@ namespace DistributedMatchEngine
 
     [DataMember]
     public string user_data;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
   }
 
   [DataContract]
@@ -93,5 +97,7 @@ namespace DistributedMatchEngine
     // Group Cookie for Secure Group Communication
     [DataMember]
     public string group_cookie;
+    [DataMember]
+    public Tag[] tags;
   }
 }

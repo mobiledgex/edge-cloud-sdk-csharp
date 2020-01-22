@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace DistributedMatchEngine
 {
   /**
@@ -24,5 +26,6 @@ namespace DistributedMatchEngine
   {
     string GetCurrentCarrierName();
     string GetMccMnc();
+    UInt32 GetCellID();
   }
 }

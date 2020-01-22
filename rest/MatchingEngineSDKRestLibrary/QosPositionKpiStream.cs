@@ -220,7 +220,8 @@ namespace DistributedMatchEngine
       if (jsObj != null && jsObj.TryGetValue("result", out JsonValue resultValue))
       {
         statusStr = resultValue["status"];
-        if (statusStr != null) {
+        if (statusStr != null)
+        {
           ReplyStatus replyStatus;
           try
           {

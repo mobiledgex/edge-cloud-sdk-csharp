@@ -24,7 +24,7 @@ namespace DistributedMatchEngine
   public class VerifyLocationRequest
   {
     [DataMember]
-    public UInt32 Ver = 1;
+    public UInt32 ver = 1;
     [DataMember]
     public string session_cookie;
     [DataMember]
@@ -33,6 +33,10 @@ namespace DistributedMatchEngine
     public Loc gps_location;
     [DataMember]
     public string verify_loc_token;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
   };
 
   [DataContract]
@@ -107,5 +111,7 @@ namespace DistributedMatchEngine
 
     [DataMember]
     public double gps_location_accuracy_km;
+    [DataMember]
+    public Tag[] tags;
   }
 }

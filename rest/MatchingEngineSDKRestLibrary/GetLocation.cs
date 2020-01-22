@@ -29,6 +29,10 @@ namespace DistributedMatchEngine
     public string session_cookie;
     [DataMember]
     public string carrier_name;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
   }
 
   [DataContract]
@@ -72,5 +76,7 @@ namespace DistributedMatchEngine
     public string tower;
     [DataMember]
     public Loc network_location;
+    [DataMember]
+    public Tag[] tags;
   }
 }

@@ -35,6 +35,17 @@ namespace DistributedMatchEngine
     public string carrier_name;
     [DataMember]
     public string auth_token;
+    // Cell ID of base station where client is
+    [DataMember]
+    public UInt32 cell_id;
+    // Type of unique id provided by client
+    [DataMember]
+    public string unique_id_type;
+    [DataMember]
+    // Optional. Unique identification of the client device or user. May be overridden by the server.
+    public string unique_id;
+    [DataMember]
+    public Tag[] tags;
   }
 
   [DataContract]
@@ -69,6 +80,12 @@ namespace DistributedMatchEngine
     public string session_cookie;
     [DataMember]
     public string token_server_uri;
+    [DataMember]
+    public string unique_id_type;
+    [DataMember]
+    public string unique_id;
+    [DataMember]
+    public Tag[] tags;
   }
 
 }

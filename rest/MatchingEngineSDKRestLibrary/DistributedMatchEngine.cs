@@ -29,7 +29,7 @@ using System.Runtime.Serialization.Json;
 
 namespace DistributedMatchEngine
 {
-  public class DmeDnsException: Exception
+  public class DmeDnsException : Exception
   {
     public DmeDnsException(string message)
         : base(message)
@@ -105,7 +105,7 @@ namespace DistributedMatchEngine
 
   }
 
-  class EmptyCarrierInfo: CarrierInfo
+  class EmptyCarrierInfo : CarrierInfo
   {
     public string GetCurrentCarrierName()
     {
@@ -116,13 +116,31 @@ namespace DistributedMatchEngine
     {
       return null;
     }
+
+    public UInt32 GetCellID()
+    {
+      return 0;
+    }
+  }
+
+  class EmptyUniqueID : UniqueID
+  {
+    public string GetUniqueIDType()
+    {
+      return null;
+    }
+
+    public string GetUniqueID()
+    {
+      return null;
+    }
   }
 
   public enum OperatingSystem
   {
-     ANDROID,
-     IOS,
-     OTHER
+    ANDROID,
+    IOS,
+    OTHER
   }
 
 
@@ -140,6 +158,7 @@ namespace DistributedMatchEngine
 
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
+    public UniqueID uniqueID { get; set; }
 
     // API Paths:
     private string registerAPI = "/v1/registerclient";
@@ -160,7 +179,7 @@ namespace DistributedMatchEngine
     string tokenServerURI;
     string authToken { get; set; }
 
-    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
@@ -181,6 +200,15 @@ namespace DistributedMatchEngine
       {
         this.netInterface = netInterface;
       }
+
+      if (uniqueID == null)
+      {
+        this.uniqueID = new EmptyUniqueID();
+      }
+      else
+      {
+        this.uniqueID = uniqueID;
+      }
     }
 
     // Set the REST timeout for DME APIs.
@@ -191,6 +219,21 @@ namespace DistributedMatchEngine
         return httpClient.Timeout = TimeSpan.FromTicks(timeout_in_milliseconds * TICKS_PER_MS);
       }
       return httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
+    }
+
+    public string GetUniqueIDType()
+    {
+      return uniqueID.GetUniqueID();
+    }
+
+    public string GetUniqueID()
+    {
+      return uniqueID.GetUniqueID();
+    }
+
+    public UInt32 GetCellID()
+    {
+      return carrierInfo.GetCellID();
     }
 
     public string GetCarrierName()
@@ -393,7 +436,7 @@ namespace DistributedMatchEngine
       return token;
     }
 
-    public RegisterClientRequest CreateRegisterClientRequest(string carrierName, string developerName, string appName, string appVersion, string authToken)
+    public RegisterClientRequest CreateRegisterClientRequest(string carrierName, string developerName, string appName, string appVersion, string authToken, UInt32 cellID, string uniqueIDType, string uniqueID, Tag[] tags)
     {
       return new RegisterClientRequest
       {
@@ -402,7 +445,11 @@ namespace DistributedMatchEngine
         dev_name = developerName,
         app_name = appName,
         app_vers = appVersion,
-        auth_token = authToken
+        auth_token = authToken,
+        cell_id = cellID,
+        unique_id_type = uniqueIDType,
+        unique_id = uniqueID,
+        tags = tags
       };
     }
 
@@ -455,7 +502,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public FindCloudletRequest CreateFindCloudletRequest(string carrierName, string devName, string appName, string appVers, Loc loc)
+    public FindCloudletRequest CreateFindCloudletRequest(string carrierName, string devName, string appName, string appVers, Loc loc, UInt32 cellID, Tag[] tags)
     {
       if (sessionCookie == null)
       {
@@ -469,7 +516,9 @@ namespace DistributedMatchEngine
         dev_name = devName,
         app_name = appName,
         app_vers = appVers,
-        gps_location = loc
+        gps_location = loc,
+        cell_id = cellID,
+        tags = tags
       };
     }
 
@@ -547,51 +596,54 @@ namespace DistributedMatchEngine
     }
 
     // Wrapper function for RegisterClient and FindCloudlet
-    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
+    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc, UInt32 cellID, string uniqueIDType, string uniqueID, Tag[] tags)
     {
-        // Register Client
-        RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-        RegisterClientReply registerClientReply = await RegisterClient(registerRequest);
-        if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
-        {
-            throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
-        }
-        // Find Cloudlet
-        FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
-        FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
+      // Register Client
+      RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
+      RegisterClientReply registerClientReply = await RegisterClient(registerRequest);
+      if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
+      {
+        throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
+      }
+      // Find Cloudlet
+      FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc, cellID, tags);
+      FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
 
-        return findCloudletReply;
+      return findCloudletReply;
     }
 
     // Override with specified dme host and port
-    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port, string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc)
+    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port, string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc, UInt32 cellID, string uniqueIDType, string uniqueID, Tag[] tags)
     {
-        // Register Client
-        RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken);
-        RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
-        if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
-        {
-            throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
-        }
-        // Find Cloudlet 
-        FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc);
-        FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest);
+      // Register Client
+      RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
+      RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
+      if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
+      {
+        throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
+      }
+      // Find Cloudlet 
+      FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc, cellID, tags);
+      FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest);
 
-        return findCloudletReply;
+      return findCloudletReply;
     }
 
-    public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc)
+    public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc, UInt32 cellID, Tag[] tags)
     {
       if (sessionCookie == null)
       {
         return null;
       }
-      return new VerifyLocationRequest {
-        Ver = 1,
+      return new VerifyLocationRequest
+      {
+        ver = 1,
         carrier_name = carrierName,
         gps_location = loc,
         session_cookie = this.sessionCookie,
-        verify_loc_token = null
+        verify_loc_token = null,
+        cell_id = cellID,
+        tags = tags
       };
     }
 
@@ -663,7 +715,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public GetLocationRequest CreateGetLocationRequest(string carrierName)
+    public GetLocationRequest CreateGetLocationRequest(string carrierName, UInt32 cellID, Tag[] tags)
     {
       if (sessionCookie == null)
       {
@@ -673,7 +725,9 @@ namespace DistributedMatchEngine
       {
         ver = 1,
         carrier_name = carrierName,
-        session_cookie = this.sessionCookie
+        session_cookie = this.sessionCookie,
+        cell_id = cellID,
+        tags = tags
       };
     }
 
@@ -726,7 +780,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public AppInstListRequest CreateAppInstListRequest(string carrierName, Loc loc)
+    public AppInstListRequest CreateAppInstListRequest(string carrierName, Loc loc, UInt32 cellID, Tag[] tags)
     {
       if (sessionCookie == null)
       {
@@ -742,7 +796,9 @@ namespace DistributedMatchEngine
         ver = 1,
         carrier_name = carrierName,
         session_cookie = this.sessionCookie,
-        gps_location = loc
+        gps_location = loc,
+        cell_id = cellID,
+        tags = tags
       };
     }
 
@@ -792,7 +848,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public FqdnListRequest CreateFqdnListRequest()
+    public FqdnListRequest CreateFqdnListRequest(UInt32 cellID, Tag[] tags)
     {
       if (sessionCookie == null)
       {
@@ -802,7 +858,9 @@ namespace DistributedMatchEngine
       return new FqdnListRequest
       {
         ver = 1,
-        session_cookie = this.sessionCookie
+        session_cookie = this.sessionCookie,
+        cell_id = cellID,
+        tags = tags
       };
     }
 
@@ -851,7 +909,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public DynamicLocGroupRequest CreateDynamicLocGroupRequest(UInt64 lgId, DlgCommType dlgCommType, string userData)
+    public DynamicLocGroupRequest CreateDynamicLocGroupRequest(UInt64 lgId, DlgCommType dlgCommType, string userData, UInt32 cellID, Tag[] tags)
     {
       if (sessionCookie == null)
       {
@@ -864,7 +922,9 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         lg_id = lgId,
         comm_type = dlgCommType,
-        user_data = userData
+        user_data = userData,
+        cell_id = cellID,
+        tags = tags
       };
     }
 
@@ -897,7 +957,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection)
+    public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection, UInt32 cellID, Tag[] tags)
     {
       if (sessionCookie == null)
       {
@@ -910,7 +970,9 @@ namespace DistributedMatchEngine
         positions = QosPositions.ToArray(),
         session_cookie = this.sessionCookie,
         lte_category = lteCategory,
-        band_selection = bandSelection
+        band_selection = bandSelection,
+        cell_id = cellID,
+        tags = tags
       };
     }
 

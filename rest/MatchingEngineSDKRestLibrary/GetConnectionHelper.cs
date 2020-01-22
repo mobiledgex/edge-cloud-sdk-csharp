@@ -61,10 +61,10 @@ namespace DistributedMatchEngine
             try
             {
               Console.WriteLine("Connect try: " + remoteEndPoint);
-              // Retrieve the socket from the state object.
-              Socket client = (Socket)ar.AsyncState;
-              // Complete the connection.
-              client.EndConnect(ar);
+                    // Retrieve the socket from the state object.
+                    Socket client = (Socket)ar.AsyncState;
+                    // Complete the connection.
+                    client.EndConnect(ar);
               TimeoutObj.Set();
             }
             catch (Exception e)
@@ -178,10 +178,10 @@ namespace DistributedMatchEngine
           {
             try
             {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
-                // Complete the connection.  
-                client.EndConnect(ar);
+                    // Retrieve the socket from the state object.  
+                    Socket client = (Socket)ar.AsyncState;
+                    // Complete the connection.  
+                    client.EndConnect(ar);
               TimeoutObj.Set();
             }
             catch (Exception e)

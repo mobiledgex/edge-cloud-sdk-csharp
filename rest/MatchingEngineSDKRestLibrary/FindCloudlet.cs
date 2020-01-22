@@ -37,6 +37,10 @@ namespace DistributedMatchEngine
     public string app_name;
     [DataMember]
     public string app_vers;
+    [DataMember]
+    public UInt32 cell_id;
+    [DataMember]
+    public Tag[] tags;
   }
 
   [DataContract]
@@ -81,6 +85,8 @@ namespace DistributedMatchEngine
     public AppPort[] ports;
     [DataMember]
     public Loc cloudlet_location;
+    [DataMember]
+    public Tag[] tags;
   }
 
 }
