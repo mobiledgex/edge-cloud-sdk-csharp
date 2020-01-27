@@ -98,16 +98,43 @@ namespace DistributedMatchEngine {
     [grpc::BindServiceMethod(typeof(MatchEngineApi), "BindService")]
     public abstract partial class MatchEngineApiBase
     {
+      /// <summary>
+      ///
+      /// RegisterClient
+      ///
+      /// Register the device
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       public virtual global::System.Threading.Tasks.Task<global::DistributedMatchEngine.RegisterClientReply> RegisterClient(global::DistributedMatchEngine.RegisterClientRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      ///
+      /// FindCloudlet
+      ///
+      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       public virtual global::System.Threading.Tasks.Task<global::DistributedMatchEngine.FindCloudletReply> FindCloudlet(global::DistributedMatchEngine.FindCloudletRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      ///
+      /// VerifyLocation
+      ///
+      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       public virtual global::System.Threading.Tasks.Task<global::DistributedMatchEngine.VerifyLocationReply> VerifyLocation(global::DistributedMatchEngine.VerifyLocationRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
@@ -163,50 +190,170 @@ namespace DistributedMatchEngine {
       {
       }
 
+      /// <summary>
+      ///
+      /// RegisterClient
+      ///
+      /// Register the device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::DistributedMatchEngine.RegisterClientReply RegisterClient(global::DistributedMatchEngine.RegisterClientRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return RegisterClient(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /// RegisterClient
+      ///
+      /// Register the device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::DistributedMatchEngine.RegisterClientReply RegisterClient(global::DistributedMatchEngine.RegisterClientRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_RegisterClient, null, options, request);
       }
+      /// <summary>
+      ///
+      /// RegisterClient
+      ///
+      /// Register the device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.RegisterClientReply> RegisterClientAsync(global::DistributedMatchEngine.RegisterClientRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return RegisterClientAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /// RegisterClient
+      ///
+      /// Register the device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.RegisterClientReply> RegisterClientAsync(global::DistributedMatchEngine.RegisterClientRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_RegisterClient, null, options, request);
       }
+      /// <summary>
+      ///
+      /// FindCloudlet
+      ///
+      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::DistributedMatchEngine.FindCloudletReply FindCloudlet(global::DistributedMatchEngine.FindCloudletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return FindCloudlet(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /// FindCloudlet
+      ///
+      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::DistributedMatchEngine.FindCloudletReply FindCloudlet(global::DistributedMatchEngine.FindCloudletRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_FindCloudlet, null, options, request);
       }
+      /// <summary>
+      ///
+      /// FindCloudlet
+      ///
+      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.FindCloudletReply> FindCloudletAsync(global::DistributedMatchEngine.FindCloudletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return FindCloudletAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /// FindCloudlet
+      ///
+      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.FindCloudletReply> FindCloudletAsync(global::DistributedMatchEngine.FindCloudletRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_FindCloudlet, null, options, request);
       }
+      /// <summary>
+      ///
+      /// VerifyLocation
+      ///
+      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::DistributedMatchEngine.VerifyLocationReply VerifyLocation(global::DistributedMatchEngine.VerifyLocationRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return VerifyLocation(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /// VerifyLocation
+      ///
+      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::DistributedMatchEngine.VerifyLocationReply VerifyLocation(global::DistributedMatchEngine.VerifyLocationRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_VerifyLocation, null, options, request);
       }
+      /// <summary>
+      ///
+      /// VerifyLocation
+      ///
+      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.VerifyLocationReply> VerifyLocationAsync(global::DistributedMatchEngine.VerifyLocationRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return VerifyLocationAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /// VerifyLocation
+      ///
+      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.VerifyLocationReply> VerifyLocationAsync(global::DistributedMatchEngine.VerifyLocationRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_VerifyLocation, null, options, request);
