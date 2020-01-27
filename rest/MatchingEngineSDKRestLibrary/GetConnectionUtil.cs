@@ -23,33 +23,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
 
 namespace DistributedMatchEngine
-{
-  class EmptyNetInterface : NetInterface
-  {
-    public NetworkInterfaceName GetNetworkInterfaceName()
-    {
-      throw new NotImplementedException("Required NetInferface is not defined!");
-    }
-    public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
-    {
-      throw new NotImplementedException("Required NetInferface is not defined!");
-    }
-
-    public string GetIPAddress(String netInterface, AddressFamily addressFamily = AddressFamily.InterNetwork)
-    {
-      throw new NotImplementedException("Required NetInterface is not defined!");
-    }
-
-    public bool HasWifi()
-    {
-      throw new NotImplementedException("Required NetInterface is not defined!");
-    }
-
-    public bool HasCellular()
-    {
-      throw new NotImplementedException("Required NetInterface is not defined!");
-    }
-  }
+{ 
 
   public class NetworkInterfaceName
   {

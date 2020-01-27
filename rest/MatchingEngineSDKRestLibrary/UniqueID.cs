@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+ using System;
 
 namespace DistributedMatchEngine
 {
@@ -22,5 +23,18 @@ namespace DistributedMatchEngine
   {
     string GetUniqueIDType();
     string GetUniqueID();
+  }
+
+  public class EmptyUniqueID : UniqueID
+  {
+    public string GetUniqueIDType()
+    {
+      throw new NotImplementedException("Required UniqueID is not defined!");
+    }
+
+    public string GetUniqueID()
+    {
+      throw new NotImplementedException("Required UniqueID is not defined");
+    }
   }
 }
