@@ -33,8 +33,8 @@ namespace DistributedMatchEngine {
             "UBACEhAKDExfUFJPVE9fSFRUUBADYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "PathPrefix", "FqdnPrefix", "EndPort" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), }, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "PathPrefix", "FqdnPrefix", "EndPort" }, null, null, null, null)
           }));
     }
     #endregion
@@ -110,7 +110,7 @@ namespace DistributedMatchEngine {
 
     /// <summary>Field number for the "proto" field.</summary>
     public const int ProtoFieldNumber = 1;
-    private global::DistributedMatchEngine.LProto proto_ = 0;
+    private global::DistributedMatchEngine.LProto proto_ = global::DistributedMatchEngine.LProto.Unknown;
     /// <summary>
     /// TCP (L4), UDP (L4), or HTTP (L7) protocol
     /// </summary>
@@ -182,7 +182,7 @@ namespace DistributedMatchEngine {
     public const int EndPortFieldNumber = 6;
     private int endPort_;
     /// <summary>
-    /// A non-zero end port indicates this is a port range from internal port to end port, inclusive.
+    /// A non-zero end port indicates a port range from internal port to end port, inclusive.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int EndPort {
@@ -217,7 +217,7 @@ namespace DistributedMatchEngine {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Proto != 0) hash ^= Proto.GetHashCode();
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) hash ^= Proto.GetHashCode();
       if (InternalPort != 0) hash ^= InternalPort.GetHashCode();
       if (PublicPort != 0) hash ^= PublicPort.GetHashCode();
       if (PathPrefix.Length != 0) hash ^= PathPrefix.GetHashCode();
@@ -236,7 +236,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Proto != 0) {
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) {
         output.WriteRawTag(8);
         output.WriteEnum((int) Proto);
       }
@@ -268,7 +268,7 @@ namespace DistributedMatchEngine {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Proto != 0) {
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Proto);
       }
       if (InternalPort != 0) {
@@ -297,7 +297,7 @@ namespace DistributedMatchEngine {
       if (other == null) {
         return;
       }
-      if (other.Proto != 0) {
+      if (other.Proto != global::DistributedMatchEngine.LProto.Unknown) {
         Proto = other.Proto;
       }
       if (other.InternalPort != 0) {
