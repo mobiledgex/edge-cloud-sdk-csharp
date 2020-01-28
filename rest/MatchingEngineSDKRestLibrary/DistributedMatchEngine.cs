@@ -436,7 +436,9 @@ namespace DistributedMatchEngine
       return token;
     }
 
-    public RegisterClientRequest CreateRegisterClientRequest(string carrierName, string developerName, string appName, string appVersion, string authToken, UInt32 cellID, string uniqueIDType, string uniqueID, Tag[] tags)
+    public RegisterClientRequest CreateRegisterClientRequest(
+      string carrierName, string developerName, string appName, string appVersion, string authToken = null,
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       return new RegisterClientRequest
       {
@@ -502,7 +504,9 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public FindCloudletRequest CreateFindCloudletRequest(string carrierName, string devName, string appName, string appVers, Loc loc, UInt32 cellID, Tag[] tags)
+    public FindCloudletRequest CreateFindCloudletRequest(
+      string carrierName, string devName, string appName, string appVers, Loc loc,
+      UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
@@ -596,7 +600,9 @@ namespace DistributedMatchEngine
     }
 
     // Wrapper function for RegisterClient and FindCloudlet
-    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc, UInt32 cellID, string uniqueIDType, string uniqueID, Tag[] tags)
+    public async Task<FindCloudletReply> RegisterAndFindCloudlet(
+      string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc,
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
@@ -613,7 +619,9 @@ namespace DistributedMatchEngine
     }
 
     // Override with specified dme host and port
-    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port, string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc, UInt32 cellID, string uniqueIDType, string uniqueID, Tag[] tags)
+    public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
+      string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc,
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
@@ -629,7 +637,7 @@ namespace DistributedMatchEngine
       return findCloudletReply;
     }
 
-    public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc, UInt32 cellID, Tag[] tags)
+    public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
@@ -715,12 +723,13 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public GetLocationRequest CreateGetLocationRequest(string carrierName, UInt32 cellID, Tag[] tags)
+    public GetLocationRequest CreateGetLocationRequest(string carrierName, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
         return null;
       }
+
       return new GetLocationRequest
       {
         ver = 1,
@@ -780,7 +789,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public AppInstListRequest CreateAppInstListRequest(string carrierName, Loc loc, UInt32 cellID, Tag[] tags)
+    public AppInstListRequest CreateAppInstListRequest(string carrierName, Loc loc, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
@@ -848,7 +857,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public FqdnListRequest CreateFqdnListRequest(UInt32 cellID, Tag[] tags)
+    public FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
@@ -909,7 +918,8 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public DynamicLocGroupRequest CreateDynamicLocGroupRequest(UInt64 lgId, DlgCommType dlgCommType, string userData, UInt32 cellID, Tag[] tags)
+    public DynamicLocGroupRequest CreateDynamicLocGroupRequest(UInt64 lgId, DlgCommType dlgCommType,
+      string userData = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
@@ -957,7 +967,8 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection, UInt32 cellID, Tag[] tags)
+    public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
+      UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
