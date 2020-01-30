@@ -45,7 +45,7 @@ namespace RestSample
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = "260-10.dme.mobiledgex.net";
+    static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
 
     static Timestamp createTimestamp(int futureSeconds)
     {
@@ -116,7 +116,7 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
-        var registerClientRequest = me.CreateRegisterClientRequest(me.GetCarrierName(), devName, appName, appVers, developerAuthToken, cellID, me.GetUniqueIDType(), me.GetUniqueIDType(), tags);
+        var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken, cellID, me.GetUniqueIDType(), me.GetUniqueIDType(), tags);
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
         try
@@ -129,6 +129,11 @@ namespace RestSample
           catch (DmeDnsException)
           {
             // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
+            registerClientReply = await me.RegisterClient(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
+            Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
+          }
+          catch (NotImplementedException)
+          {
             registerClientReply = await me.RegisterClient(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
             Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
           }
@@ -160,6 +165,10 @@ namespace RestSample
           catch (DmeDnsException)
           {
             // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
+            findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
+          }
+          catch (NotImplementedException)
+          {
             findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
           }
           Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
@@ -203,6 +212,10 @@ namespace RestSample
           {
             getLocationReply = await me.GetLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, getLocationRequest);
           }
+          catch (NotImplementedException)
+          {
+            getLocationReply = await me.GetLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, getLocationRequest);
+          }
           Console.WriteLine("GetLocation Reply: " + getLocationReply);
 
           var location = getLocationReply.network_location;
@@ -223,6 +236,10 @@ namespace RestSample
             verifyLocationReply = await me.VerifyLocation(verifyLocationRequest);
           }
           catch (DmeDnsException)
+          {
+            verifyLocationReply = await me.VerifyLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, verifyLocationRequest);
+          }
+          catch (NotImplementedException)
           {
             verifyLocationReply = await me.VerifyLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, verifyLocationRequest);
           }
@@ -261,6 +278,10 @@ namespace RestSample
           }
           catch (DmeDnsException)
           {
+            qosReplyStream = await me.GetQosPositionKpi(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
+          }
+          catch (NotImplementedException)
+          { 
             qosReplyStream = await me.GetQosPositionKpi(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
           }
 

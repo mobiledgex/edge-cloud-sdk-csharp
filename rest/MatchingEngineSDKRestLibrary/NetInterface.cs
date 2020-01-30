@@ -38,6 +38,7 @@ namespace DistributedMatchEngine
     {
       throw new NotImplementedException("Required NetInferface is not defined!");
     }
+
     public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
     {
       throw new NotImplementedException("Required NetInferface is not defined!");
