@@ -29,12 +29,12 @@ namespace DistributedMatchEngine
   {
     public string GetUniqueIDType()
     {
-      throw new NotImplementedException("Required UniqueID is not defined!");
+      throw new NotImplementedException("Required UniqueID interface function: GetUniqueIDType() is not defined!");
     }
 
     public string GetUniqueID()
     {
-      throw new NotImplementedException("Required UniqueID is not defined");
+      throw new NotImplementedException("Required UniqueID interface function: GetUniqueID() is not defined");
     }
   }
 }

@@ -33,17 +33,17 @@ namespace DistributedMatchEngine
   {
     public string GetCurrentCarrierName()
     {
-      throw new NotImplementedException("Required CarrierInfo is not defined!");
+      throw new NotImplementedException("Required CarrierInfo interface function: GetCurrentCarrierName() is not defined!");
     }
 
     public string GetMccMnc()
     {
-      throw new NotImplementedException("Required CarrierInfo is not defined!");
+      throw new NotImplementedException("Required CarrierInfo interface function: GetMccMnc() is not defined!");
     }
 
     public UInt32 GetCellID()
     {
-      throw new NotImplementedException("Required CarrierInfo is not defined!");
+      throw new NotImplementedException("Required CarrierInfo interface function: GetCellID() is not defined!");
     }
   }
 }
