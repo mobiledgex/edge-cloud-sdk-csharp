@@ -31,6 +31,35 @@ namespace DistributedMatchEngine
     bool HasCellular();
   }
 
+  // Empty implementation of NetInterface that throws NotImplementedExceptions
+  public class EmptyNetInterface : NetInterface
+  {
+    public NetworkInterfaceName GetNetworkInterfaceName()
+    {
+      throw new NotImplementedException("Required NetInferface interface function: GetNetworkInterfaceName() is not defined!");
+    }
+
+    public void SetNetworkInterfaceName(NetworkInterfaceName networkInterfaceName)
+    {
+      throw new NotImplementedException("Required NetInferface interface function: SetNetworkInterfaceName() is not defined!");
+    }
+
+    public string GetIPAddress(String netInterface, AddressFamily addressFamily = AddressFamily.InterNetwork)
+    {
+      throw new NotImplementedException("Required NetInterface interface function: GetIPAddress() is not defined!");
+    }
+
+    public bool HasWifi()
+    {
+      throw new NotImplementedException("Required NetInterface interface function: HasWifi() is not defined!");
+    }
+
+    public bool HasCellular()
+    {
+      throw new NotImplementedException("Required NetInterface interface function: HasCellular() is not defined!");
+    }
+  }
+
   // A generic network interface for most systems, with an interface names parameter.
   public class SimpleNetInterface : NetInterface
   {

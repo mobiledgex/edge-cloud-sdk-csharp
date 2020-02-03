@@ -105,37 +105,6 @@ namespace DistributedMatchEngine
 
   }
 
-  class EmptyCarrierInfo : CarrierInfo
-  {
-    public string GetCurrentCarrierName()
-    {
-      return null;
-    }
-
-    public string GetMccMnc()
-    {
-      return null;
-    }
-
-    public UInt32 GetCellID()
-    {
-      return 0;
-    }
-  }
-
-  class EmptyUniqueID : UniqueID
-  {
-    public string GetUniqueIDType()
-    {
-      return null;
-    }
-
-    public string GetUniqueID()
-    {
-      return null;
-    }
-  }
-
   public enum OperatingSystem
   {
     ANDROID,
