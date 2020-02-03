@@ -443,6 +443,10 @@ namespace Tests
       {
         Console.WriteLine("Workflow DmeDnsException is " + dde);
       }
+      catch (NotImplementedException nie)
+      {
+        Console.WriteLine("NotImplementedException is " + nie);
+      }
       catch (RegisterClientException rce)
       {
         Console.WriteLine("Workflow RegisterClient is " + rce);
