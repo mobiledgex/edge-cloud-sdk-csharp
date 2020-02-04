@@ -97,7 +97,7 @@ namespace DistributedMatchEngine
       return s;
     }
 
-    public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
+    public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
     {
       if (timeoutMs <= 0)
       {
@@ -116,20 +116,20 @@ namespace DistributedMatchEngine
       }
 
       // prepend fqdn prefix given in AppPort to fqdn and append path_prefix to uri
-      string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix;
+      string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix + path;
       UriBuilder uriBuilder = new UriBuilder("http", uriString);
       Uri uri = uriBuilder.Uri;
       HttpClient client = await GetHTTPClient(uri);
       return client;
     }
 
-    public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
+    public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
     {
       if (timeoutMs <= 0)
       {
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
-
+      
       // If desiredPort is not specified, then default to public_port
       if (desiredPort == -1)
       {
@@ -142,14 +142,14 @@ namespace DistributedMatchEngine
       }
 
       // prepend fqdn prefix given in AppPort to fqdn and append path_prefix to uri
-      string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix;
+      string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix + path;
       UriBuilder uriBuilder = new UriBuilder("https", uriString);
       Uri uri = uriBuilder.Uri;
       HttpClient client = await GetHTTPClient(uri);
       return client;
     }
 
-    public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
+    public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
     {
       if (timeoutMs <= 0)
       {
@@ -168,11 +168,11 @@ namespace DistributedMatchEngine
       }
 
       string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-      ClientWebSocket s = await GetWebsocketConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
+      ClientWebSocket s = await GetWebsocketConnection(host, desiredPort, path, timeoutMs).ConfigureAwait(false);
       return s;
     }
 
-    public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
+    public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
     {
       if (timeoutMs <= 0)
       {
@@ -191,7 +191,7 @@ namespace DistributedMatchEngine
       }
 
       string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-      ClientWebSocket s = await GetSecureWebsocketConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
+      ClientWebSocket s = await GetSecureWebsocketConnection(host, desiredPort, path, timeoutMs).ConfigureAwait(false);
       return s;
     }
   }

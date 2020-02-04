@@ -234,12 +234,12 @@ namespace DistributedMatchEngine
 
     // GetWebsocketConnection helper function, if interface available.
     // TODO: This requires a socket handler to set network interfaces.
-    public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeoutMs, bool waitForOpen = true)
+    public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, string path, int timeoutMs, bool waitForOpen = true)
     {
       // Initialize websocket client
       ClientWebSocket webSocket = new ClientWebSocket();
-      UriBuilder uriBuilder = new UriBuilder("ws", host, port);
-      Uri uri = uriBuilder.Uri;
+      string server = "ws://" + host + ":" + port;
+      Uri uri = new Uri(server + path);
 
       // Token is used to notify listeners/ delegates of task state
       CancellationTokenSource source = new CancellationTokenSource();
@@ -291,12 +291,12 @@ namespace DistributedMatchEngine
 
     // GetSecureWebsocketConnection helper function
     // TODO: This requires a socket handler to set network interfaces.
-    public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeoutMs, bool waitForOpen = true)
+    public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, string path, int timeoutMs, bool waitForOpen = true)
     {
       // Initialize websocket class
       ClientWebSocket webSocket = new ClientWebSocket();
-      UriBuilder uriBuilder = new UriBuilder("wss", host, port);
-      Uri uri = uriBuilder.Uri;
+      string server = "wss://" + host + ":" + port;
+      Uri uri = new Uri(server + path);
 
       // Token is used to notify listeners/ delegates of task state
       CancellationTokenSource source = new CancellationTokenSource();
