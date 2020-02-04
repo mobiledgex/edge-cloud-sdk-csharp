@@ -591,8 +591,6 @@ namespace Tests
           Assert.True(s.average < 2000);
         }
 
-
-        // FIXME: Not strictly correct, as the servers could all be down and be 0.
         Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
         netTest.doTest(false);
       }
