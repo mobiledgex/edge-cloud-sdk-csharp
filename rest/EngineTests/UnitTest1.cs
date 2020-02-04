@@ -37,17 +37,17 @@ namespace Tests
 {
   public class Tests
   {
-    const string carrierName = "GDDT";
+    const string carrierName = "wifi";
     const string devName = "MobiledgeX";
-    const string appName = "PongGame2";
-    const string appVers = "2019-09-26";
+    const string appName = "PingPong";
+    const string appVers = "2020-02-03";
     const string developerAuthToken = "";
     const UInt32 cellID = 0;
     const string uniqueIDType = "";
     const string uniqueID = "";
     static Tag[] tags = new Tag[0];
     const string connectionTestFqdn = "mextest-app-cluster.fairview-main.gddt.mobiledgex.net";
-    const string aWebSocketServerFqdn = "ponggame2-tcp.fairview-main.gddt.mobiledgex.net"; // or, localhost.
+    const string aWebSocketServerFqdn = "ponggame-tcp.fairview-main.gddt.mobiledgex.net"; // or, localhost.
 
     static MatchingEngine me;
 
@@ -55,12 +55,12 @@ namespace Tests
     {
       string CarrierInfo.GetCurrentCarrierName()
       {
-        return carrierName;
+        return null;
       }
 
       string CarrierInfo.GetMccMnc()
       {
-        return "26010";
+        return null;
       }
 
       UInt32 CarrierInfo.GetCellID()
@@ -502,11 +502,11 @@ namespace Tests
     public async static Task TestNetTest()
     {
       var loc = await Util.GetLocationFromDevice();
-      FindCloudletReply reply = null;
+      FindCloudletReply reply1 = null;
 
       try
       {
-        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
+        reply1 = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
       }
       catch (DmeDnsException dde)
       {
@@ -517,47 +517,93 @@ namespace Tests
         Console.WriteLine("Workflow RegisterClient is " + rce);
         return;
       }
-      Assert.ByVal(reply, Is.Not.Null);
-
-      Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
-
-      int public_port = reply.ports[0].public_port; // We happen to know it's the first one.
-      AppPort appPort = appPortsDict[public_port];
+      Assert.ByVal(reply1, Is.Not.Null);
 
       NetTest netTest = new NetTest(me);
 
-      string l7Url = MatchingEngine.CreateUrl(reply, appPort, appPort.public_port);
-      Site site = new Site
-      {
-        L7Path = MatchingEngine.CreateUrl(reply, appPort, appPort.public_port),
-        testType = TestType.CONNECT
-      };
+      // Site 1
+      Dictionary<int, AppPort> appPortsDict1 = me.GetTCPAppPorts(reply1);
+      int public_port1 = reply1.ports[0].public_port; // We happen to know it's the first one.
+      AppPort appPort1 = appPortsDict1[public_port1];
+      Site site1 = new Site { host = appPort1.fqdn_prefix + reply1.fqdn, port = public_port1 };
+
       // In case you want a local test server:
       /*
-      site = new Site
+      site2 = new Site
       {
         host = "localhost",
         port = 3000,
         testType = TestType.CONNECT
       };
       */
-      netTest.sites.Enqueue(site);
+      netTest.sites.Enqueue(site1);
 
-      netTest.PingIntervalMS = 1000;
-      netTest.doTest(true);
-      await Task.Delay(6000).ConfigureAwait(false);
-      foreach (Site s in netTest.sites)
+      try
       {
-        for (int i = 0; i < s.samples.Length; i++)
-        {
-          Console.WriteLine("Sample: " + s.samples[i]);
-        }
-        Assert.True(s.average < 2000);
-      }
-      // FIXME: Not strictly correct, as the servers could all be down and be 0.
-      Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
-      netTest.doTest(false);
+        Site siteOne = new Site();
 
+        netTest.PingIntervalMS = 500;
+        netTest.doTest(true);
+        await Task.Delay(5000).ConfigureAwait(false);
+        netTest.doTest(false);
+        netTest.sites.TryPeek(out siteOne);
+        double avg1 = siteOne.average;
+        Console.WriteLine("Average 1: " + siteOne.average + ", Test running? " + netTest.runTest);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample 1: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+
+        await Task.Delay(3000).ConfigureAwait(false);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample 1.5: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+        netTest.sites.TryPeek(out siteOne);
+        double avg15 = siteOne.average;
+        Console.WriteLine("Average 1.5: " + siteOne.average + ", Test running? " + netTest.runTest);
+        Assert.True(avg1 == avg15, "Thread didn't stop. Averages are not equal (or subject to noise)!");
+
+
+        netTest.doTest(true);
+        await Task.Delay(6000).ConfigureAwait(false);
+        netTest.doTest(false);
+        netTest.sites.TryPeek(out siteOne);
+        Console.WriteLine("Average 2: " + siteOne.average);
+        Assert.True(avg15 != siteOne.average, "Thread didn't restart!");
+
+
+        netTest.sites.TryPeek(out siteOne);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+
+
+        // FIXME: Not strictly correct, as the servers could all be down and be 0.
+        Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
+        netTest.doTest(false);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Excepton while testing: " + e.Message);
+        if (e.InnerException != null)
+        {
+          Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
+        }
+      }
     }
 
     [Test]
