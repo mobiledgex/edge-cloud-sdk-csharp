@@ -16,16 +16,15 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Json;
-using System.Text;
-using System.Collections.Generic;
-
+using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DistributedMatchEngine
 {
@@ -118,7 +117,7 @@ namespace DistributedMatchEngine
     public const string TAG = "MatchingEngine";
     private static HttpClient httpClient;
     public const UInt32 defaultDmeRestPort = 38001;
-    public const string carrierNameDefault = "tdg";
+    public const string carrierNameDefault = "wifi";
     public const string wifiCarrier = "wifi";
     public const string wifiOnlyDmeHost = wifiCarrier + "." + baseDmeHost; // Demo mode only.
     public const string baseDmeHost = "dme.mobiledgex.net";
@@ -142,7 +141,7 @@ namespace DistributedMatchEngine
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
     public const long TICKS_PER_MS = 10000;
 
-    private bool useOnlyWifi { get; set; } = false;
+    public bool useOnlyWifi { get; set; } = false;
 
     public string sessionCookie { get; set; }
     string tokenServerURI;
@@ -237,6 +236,12 @@ namespace DistributedMatchEngine
       {
         Log.E("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string.");
         return wifiOnlyDmeHost; // fallback to wifi, this hostname must/should always exist.
+      }
+
+      if (mccmnc.Equals(wifiOnlyDmeHost))
+      {
+        Log.D("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string.");
+        return wifiOnlyDmeHost;
       }
 
       // Check minimum size:

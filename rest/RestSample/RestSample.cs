@@ -37,8 +37,8 @@ namespace RestSample
   {
     static string carrierName = "TDG";
     static string devName = "MobiledgeX";
-    static string appName = "PongGame2";
-    static string appVers = "2019-09-26";
+    static string appName = "PingPong";
+    static string appVers = "2020-02-03";
     static string developerAuthToken = "";
     static UInt32 cellID = 0;
     static Tag[] tags = new Tag[0];
@@ -312,6 +312,10 @@ namespace RestSample
       catch (Exception e) // Catch All
       {
         Console.WriteLine(e.Message + "\n" + e.StackTrace);
+        if (e.InnerException != null)
+        {
+          Console.WriteLine(e.InnerException.Message + "\n" + e.InnerException.StackTrace);
+        }
       }
     }
   };

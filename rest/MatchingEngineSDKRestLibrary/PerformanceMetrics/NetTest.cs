@@ -93,7 +93,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
     }
     private Stopwatch stopWatch;
 
-    public bool runTest;
+    public bool runTest = false;
 
     private Thread pingThread;
     public int PingIntervalMS { get; set; } = 5000;
@@ -113,7 +113,10 @@ namespace DistributedMatchEngine.PerformanceMetrics
       httpClient = new HttpClient();
       // TODO: GetConnection to connect from a particular network interface endpoint
       // httpClient.SocketsHttpHandler
-      httpClient.Timeout = new TimeSpan(0, 0, TestTimeoutMS / 1000); // seconds
+      if (TestTimeoutMS / 1000 > 0)
+      {
+        httpClient.Timeout = new TimeSpan(0, 0, TestTimeoutMS / 1000); // seconds
+      }
     }
 
     // Create a client and connect/disconnect on a server port. Not quite ping ICMP.
@@ -168,30 +171,33 @@ namespace DistributedMatchEngine.PerformanceMetrics
 
     public bool doTest(bool enable)
     {
-      if (runTest == true && enable == true)
+      if ((enable && pingThread != null) ||
+          (!enable && pingThread == null)) // Already running or already not running.
       {
+        runTest = enable;
         return runTest;
       }
-
-      runTest = enable;
-      if (runTest)
+      else if (enable && pingThread == null) // Start thread
       {
+        runTest = true;
         pingThread = new Thread(RunNetTest);
         if (pingThread == null)
         {
           throw new Exception("Unable to create a thread!");
         }
         pingThread.Start();
+        return runTest;
       }
-      else
+      else // Stop thread:
       {
+        runTest = false;
         if (pingThread != null)
         {
           pingThread.Join(PingIntervalMS);
         }
         pingThread = null;
+        return runTest;
       }
-      return runTest;
     }
 
     // Basic utility funtion to connect and disconnect from any TCP port.
@@ -230,7 +236,13 @@ namespace DistributedMatchEngine.PerformanceMetrics
                 catch (Exception e)
                 {
                   Log.S("Error testing l7Path site: " + site.L7Path);
+                  Log.S(e.Message);
                   Log.S(e.StackTrace);
+                  if (e.InnerException != null)
+                  {
+                    Log.S(e.InnerException.Message);
+                    Log.S(e.InnerException.StackTrace);
+                  }
                   elapsed = -1;
                 }
               }
