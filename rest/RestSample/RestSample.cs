@@ -21,18 +21,24 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
 using System.IO;
-using System.Net.Sockets;
-using System.Net.Security;
-using System.Text;
-using System.Security.Authentication;
-using System.Net.Http;
-using System.Net.WebSockets;
-using System.Threading;
 
 using DistributedMatchEngine;
 
 namespace RestSample
 {
+  // This interface is optional but is used in the sample.
+  class DummyUniqueID : UniqueID
+  {
+    string UniqueID.GetUniqueIDType()
+    {
+      return "";
+    }
+
+    string UniqueID.GetUniqueID()
+    {
+      return "";
+    }
+  }
   class Program
   {
     static string carrierName = "TDG";
@@ -109,7 +115,7 @@ namespace RestSample
       {
         Console.WriteLine("MobiledgeX RestSample!");
 
-        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()));
+        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID());
         me.SetTimeout(15000);
 
         // Start location task. This is for test use only. The source of the
