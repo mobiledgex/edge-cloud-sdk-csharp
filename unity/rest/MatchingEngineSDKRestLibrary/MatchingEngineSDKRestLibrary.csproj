@@ -12,7 +12,7 @@
     <Title>MobiledgeX MatchingEngineSDK Unity Rest Library</Title>
     <PackageId>MobiledgeX.MatchingEngineUnityRestSDKLibrary</PackageId>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
-    <Copyright>Copyright 2020 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
+    <Copyright>Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
