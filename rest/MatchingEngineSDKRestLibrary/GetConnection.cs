@@ -97,7 +97,7 @@ namespace DistributedMatchEngine
       return s;
     }
 
-    public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
+    public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -123,7 +123,7 @@ namespace DistributedMatchEngine
       return client;
     }
 
-    public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
+    public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -149,7 +149,7 @@ namespace DistributedMatchEngine
       return client;
     }
 
-    public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
+    public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -168,11 +168,11 @@ namespace DistributedMatchEngine
       }
 
       string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-      ClientWebSocket s = await GetWebsocketConnection(host, desiredPort, path, timeoutMs).ConfigureAwait(false);
+      ClientWebSocket s = await GetWebsocketConnection(host, desiredPort, timeoutMs, path).ConfigureAwait(false);
       return s;
     }
 
-    public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, string path, int timeoutMs)
+    public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -191,7 +191,7 @@ namespace DistributedMatchEngine
       }
 
       string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-      ClientWebSocket s = await GetSecureWebsocketConnection(host, desiredPort, path, timeoutMs).ConfigureAwait(false);
+      ClientWebSocket s = await GetSecureWebsocketConnection(host, desiredPort, timeoutMs, path).ConfigureAwait(false);
       return s;
     }
   }

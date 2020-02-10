@@ -234,7 +234,7 @@ namespace DistributedMatchEngine
 
     // GetWebsocketConnection helper function, if interface available.
     // TODO: This requires a socket handler to set network interfaces.
-    public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, string path, int timeoutMs, bool waitForOpen = true)
+    public async Task<ClientWebSocket> GetWebsocketConnection(string host, int port, int timeoutMs, string path, bool waitForOpen = true)
     {
       // Initialize websocket client
       ClientWebSocket webSocket = new ClientWebSocket();
@@ -291,7 +291,7 @@ namespace DistributedMatchEngine
 
     // GetSecureWebsocketConnection helper function
     // TODO: This requires a socket handler to set network interfaces.
-    public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, string path, int timeoutMs, bool waitForOpen = true)
+    public async Task<ClientWebSocket> GetSecureWebsocketConnection(string host, int port, int timeoutMs, string path, bool waitForOpen = true)
     {
       // Initialize websocket class
       ClientWebSocket webSocket = new ClientWebSocket();
