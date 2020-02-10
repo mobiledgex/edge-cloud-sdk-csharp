@@ -374,7 +374,7 @@ namespace Tests
       ClientWebSocket socket = null;
       try
       {
-        socket = await me.GetWebsocketConnection(aWebSocketServerFqdn, 3000, 5000);
+        socket = await me.GetWebsocketConnection(aWebSocketServerFqdn, 3000, 5000, "");
       }
       catch (Exception e)
       {
