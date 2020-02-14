@@ -28,7 +28,7 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		description = MatchingEngineSDK Library based on REST backend
-		version = 1.4.19.2
+		version = 1.4.19.3
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
