@@ -47,7 +47,7 @@ namespace Tests
     const string uniqueID = "";
     static Tag[] tags = new Tag[0];
     const string connectionTestFqdn = "mextest-app-cluster.frankfurt-main.tdg.mobiledgex.net";
-    const string aWebSocketServerFqdn = "ponggame-tcp.frankfurt-main.tdg.mobiledgex.net"; // or, localhost.
+    const string aWebSocketServerFqdn = "pingpong-tcp.frankfurt-main.tdg.mobiledgex.net"; // or, localhost.
 
     static MatchingEngine me;
 
