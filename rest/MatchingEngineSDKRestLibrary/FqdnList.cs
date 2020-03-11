@@ -29,9 +29,9 @@ namespace DistributedMatchEngine
     // App Version
     [DataMember]
     public string app_vers;
-    // developer name
+    // organization name
     [DataMember]
-    public string dev_name;
+    public string org_name;
     // App FQDN
     [DataMember]
     public string[] fqdns;

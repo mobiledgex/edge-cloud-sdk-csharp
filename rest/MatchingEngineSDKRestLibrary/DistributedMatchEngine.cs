@@ -411,14 +411,14 @@ namespace DistributedMatchEngine
     }
 
     public RegisterClientRequest CreateRegisterClientRequest(
-      string carrierName, string developerName, string appName, string appVersion, string authToken = null,
+      string carrierName, string orgName, string appName, string appVersion, string authToken = null,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       return new RegisterClientRequest
       {
         ver = 1,
         carrier_name = carrierName,
-        dev_name = developerName,
+        org_name = orgName,
         app_name = appName,
         app_vers = appVersion,
         auth_token = authToken,
@@ -479,7 +479,7 @@ namespace DistributedMatchEngine
     }
 
     public FindCloudletRequest CreateFindCloudletRequest(
-      string carrierName, string devName, string appName, string appVers, Loc loc,
+      string carrierName, string orgName, string appName, string appVers, Loc loc,
       UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -491,7 +491,7 @@ namespace DistributedMatchEngine
       {
         session_cookie = this.sessionCookie,
         carrier_name = carrierName,
-        dev_name = devName,
+        org_name = orgName,
         app_name = appName,
         app_vers = appVers,
         gps_location = loc,
@@ -575,18 +575,18 @@ namespace DistributedMatchEngine
 
     // Wrapper function for RegisterClient and FindCloudlet
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
-      string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc,
+      string carrierName, string orgName, string appName, string appVersion, string authToken, Loc loc,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       // Register Client
-      RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
+      RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, orgName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
       RegisterClientReply registerClientReply = await RegisterClient(registerRequest);
       if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
       {
         throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
       }
       // Find Cloudlet
-      FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc, cellID, tags);
+      FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, orgName, appName, appVersion, loc, cellID, tags);
       FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
 
       return findCloudletReply;
@@ -594,18 +594,18 @@ namespace DistributedMatchEngine
 
     // Override with specified dme host and port
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
-      string carrierName, string developerName, string appName, string appVersion, string authToken, Loc loc,
+      string carrierName, string orgName, string appName, string appVersion, string authToken, Loc loc,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       // Register Client
-      RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, developerName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
+      RegisterClientRequest registerRequest = CreateRegisterClientRequest(carrierName, orgName, appName, appVersion, authToken, cellID, uniqueIDType, uniqueID, tags);
       RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
       if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
       {
         throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
       }
       // Find Cloudlet 
-      FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, developerName, appName, appVersion, loc, cellID, tags);
+      FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(carrierName, orgName, appName, appVersion, loc, cellID, tags);
       FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest);
 
       return findCloudletReply;
