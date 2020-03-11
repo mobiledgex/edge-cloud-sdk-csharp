@@ -38,10 +38,10 @@ namespace Tests
   public class Tests
   {
     const string carrierName = "wifi";
-    const string devName = "MobiledgeX";
+    const string orgName = "MobiledgeX";
     const string appName = "PingPong";
     const string appVers = "2020-02-03";
-    const string developerAuthToken = "";
+    const string authToken = "";
     const UInt32 cellID = 0;
     const string uniqueIDType = "";
     const string uniqueID = "";
@@ -423,9 +423,9 @@ namespace Tests
     [Test]
     public async static Task TestGetConnectionWorkflow()
     {
-      // MatchingEngine APIs Developer workflow:
+      // MatchingEngine APIs developer workflow:
 
-      // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, authToken, loc)
+      // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, orgName, appName, appVers, authToken, loc)
       // appPortsDict = me.GetTCpPorts(findCloudletReply)
       // appPort = appPortsDict[internal_port]
       //      internal_port is the Container port specified in the Dockerfile
@@ -437,7 +437,7 @@ namespace Tests
 
       try
       {
-        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
+        reply = await me.RegisterAndFindCloudlet(carrierName, orgName, appName, appVers, authToken, loc, cellID, uniqueIDType, uniqueID, tags);
       }
       catch (DmeDnsException dde)
       {
@@ -506,7 +506,7 @@ namespace Tests
 
       try
       {
-        reply1 = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
+        reply1 = await me.RegisterAndFindCloudlet(carrierName, orgName, appName, appVers, authToken, loc, cellID, uniqueIDType, uniqueID, tags);
       }
       catch (DmeDnsException dde)
       {

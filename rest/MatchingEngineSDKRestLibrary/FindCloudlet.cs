@@ -32,7 +32,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public Loc gps_location;
     [DataMember]
-    public string dev_name;
+    public string org_name;
     [DataMember]
     public string app_name;
     [DataMember]

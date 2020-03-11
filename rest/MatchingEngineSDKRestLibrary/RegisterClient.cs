@@ -26,7 +26,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public UInt32 ver;
     [DataMember]
-    public string dev_name;
+    public string org_name;
     [DataMember]
     public string app_name;
     [DataMember]
