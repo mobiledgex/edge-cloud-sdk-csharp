@@ -43,15 +43,15 @@ namespace RestSample
   {
     static string carrierName = "GDDT";
     static string orgName = "MobiledgeX";
-    static string appName = "PingPong";
-    static string appVers = "2020-02-03";
+    static string appName = "MobiledgeX SDK Demo";
+    static string appVers = "2.0";
     static string authToken = "";
     static UInt32 cellID = 0;
     static Tag[] tags = new Tag[0];
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
+    static string fallbackDmeHost = "eu-stage.dme.mobiledgex.net";
 
     static Timestamp createTimestamp(int futureSeconds)
     {
@@ -122,7 +122,7 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
-        var registerClientRequest = me.CreateRegisterClientRequest(carrierName, orgName, appName, appVers, authToken, cellID, me.GetUniqueIDType(), me.GetUniqueIDType(), tags);
+        var registerClientRequest = me.CreateRegisterClientRequest(carrierName, orgName, appName, appVers, authToken);
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
         try
@@ -153,8 +153,8 @@ namespace RestSample
         var loc = await locTask;
 
         // Independent requests:
-        var verifyLocationRequest = me.CreateVerifyLocationRequest(carrierName, loc, cellID, tags);
-        var findCloudletRequest = me.CreateFindCloudletRequest(carrierName, orgName, appName, appVers, loc, cellID, tags);
+        var verifyLocationRequest = me.CreateVerifyLocationRequest(carrierName: carrierName, loc: loc);
+        var findCloudletRequest = me.CreateFindCloudletRequest(carrierName: carrierName, loc: loc);
         var getLocationRequest = me.CreateGetLocationRequest(carrierName, cellID, tags);
 
 
