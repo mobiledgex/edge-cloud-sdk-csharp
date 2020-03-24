@@ -42,10 +42,10 @@ namespace RestSample
   class Program
   {
     static string carrierName = "TDG";
-    static string devName = "MobiledgeX";
-    static string appName = "PingPong";
-    static string appVers = "2020-02-03";
-    static string developerAuthToken = "";
+    static string orgName = "MobiledgeX";
+    static string appName = "MobiledgeX SDK Demo";
+    static string appVers = "2.0";
+    static string authToken = "";
     static UInt32 cellID = 0;
     static Tag[] tags = new Tag[0];
 
@@ -122,7 +122,7 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
-        var registerClientRequest = me.CreateRegisterClientRequest(carrierName, devName, appName, appVers, developerAuthToken, cellID, me.GetUniqueIDType(), me.GetUniqueIDType(), tags);
+        var registerClientRequest = me.CreateRegisterClientRequest(carrierName, orgName, appName, appVers, authToken);
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
         try
@@ -153,8 +153,8 @@ namespace RestSample
         var loc = await locTask;
 
         // Independent requests:
-        var verifyLocationRequest = me.CreateVerifyLocationRequest(carrierName, loc, cellID, tags);
-        var findCloudletRequest = me.CreateFindCloudletRequest(carrierName, devName, appName, appVers, loc, cellID, tags);
+        var verifyLocationRequest = me.CreateVerifyLocationRequest(carrierName: carrierName, loc: loc);
+        var findCloudletRequest = me.CreateFindCloudletRequest(carrierName: carrierName, loc: loc);
         var getLocationRequest = me.CreateGetLocationRequest(carrierName, cellID, tags);
 
 

@@ -117,12 +117,21 @@ namespace DistributedMatchEngine
 
       // prepend fqdn prefix given in AppPort to fqdn and append path_prefix to uri
       string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix + path;
-      UriBuilder uriBuilder = new UriBuilder("http", uriString);
+      UriBuilder uriBuilder;
+      if (appPort.tls)
+      {
+        uriBuilder = new UriBuilder("http", uriString);
+      }
+      else
+      {
+        uriBuilder = new UriBuilder("https", uriString);
+      }
       Uri uri = uriBuilder.Uri;
       HttpClient client = await GetHTTPClient(uri);
       return client;
     }
 
+    // FIXME: This API seems redundant outside testing purposes.
     public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
