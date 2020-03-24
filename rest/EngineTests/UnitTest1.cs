@@ -37,11 +37,13 @@ namespace Tests
 {
   public class Tests
   {
-    const string carrierName = "wifi";
-    const string devName = "MobiledgeX";
-    const string appName = "PingPong";
-    const string appVers = "2020-02-03";
-    const string developerAuthToken = "";
+    // Test to a staging server:
+    const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
+    const string carrierName = "GDDT";
+    const string orgName = "MobiledgeX";
+    const string appName = "MobiledgeX SDK Demo";
+    const string appVers = "2.0";
+    const string authToken = "";
     const UInt32 cellID = 0;
     const string uniqueIDType = "";
     const string uniqueID = "";
@@ -423,9 +425,9 @@ namespace Tests
     [Test]
     public async static Task TestGetConnectionWorkflow()
     {
-      // MatchingEngine APIs Developer workflow:
+      // MatchingEngine APIs developer workflow:
 
-      // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, authToken, loc)
+      // findCloudletReply = me.RegisterAndFindCloudlet(carrierName, orgName, appName, appVers, authToken, loc)
       // appPortsDict = me.GetTCpPorts(findCloudletReply)
       // appPort = appPortsDict[internal_port]
       //      internal_port is the Container port specified in the Dockerfile
@@ -437,7 +439,18 @@ namespace Tests
 
       try
       {
-        reply = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
+        reply = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
+          carrierName: carrierName,
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers,
+          authToken: authToken,
+          loc: loc,
+          cellID: cellID,
+          uniqueIDType:
+          uniqueIDType,
+          uniqueID: uniqueID,
+          tags: tags);
       }
       catch (DmeDnsException dde)
       {
@@ -506,7 +519,18 @@ namespace Tests
 
       try
       {
-        reply1 = await me.RegisterAndFindCloudlet(carrierName, devName, appName, appVers, developerAuthToken, loc, cellID, uniqueIDType, uniqueID, tags);
+        // Overide, test to a staging server:
+        reply1 = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
+          carrierName: carrierName,
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers,
+          authToken: authToken,
+          loc: loc,
+          cellID: cellID,
+          uniqueIDType: uniqueIDType,
+          uniqueID: uniqueID,
+          tags: tags);
       }
       catch (DmeDnsException dde)
       {
@@ -518,11 +542,35 @@ namespace Tests
         return;
       }
       Assert.ByVal(reply1, Is.Not.Null);
+      Assert.ByVal(reply1.fqdn, Is.Not.Null);
+      if (reply1 != null)
+      {
+        Console.WriteLine("FindCloudlet Reply Status: " + reply1.status);
+        Console.WriteLine("FindCloudlet:" +
+                " ver: " + reply1.ver +
+                ", fqdn: " + reply1.fqdn +
+                ", cloudlet_location: " +
+                " long: " + reply1.cloudlet_location.longitude +
+                ", lat: " + reply1.cloudlet_location.latitude);
+        // App Ports:
+        foreach (AppPort p in reply1.ports)
+        {
+          Console.WriteLine("Port: fqdn_prefix: " + p.fqdn_prefix +
+                ", protocol: " + p.proto +
+                ", public_port: " + p.public_port +
+                ", internal_port: " + p.internal_port +
+                ", path_prefix: " + p.path_prefix +
+                ", end_port: " + p.end_port);
+        }
+      }
 
       NetTest netTest = new NetTest(me);
 
       // Site 1
       Dictionary<int, AppPort> appPortsDict1 = me.GetTCPAppPorts(reply1);
+      Assert.True(appPortsDict1.Count > 0, "No dictionary results for TCP Port!");
+      Assert.True(reply1.ports.Length > 0, "No Ports!");
+
       int public_port1 = reply1.ports[0].public_port; // We happen to know it's the first one.
       AppPort appPort1 = appPortsDict1[public_port1];
       Site site1 = new Site { host = appPort1.fqdn_prefix + reply1.fqdn, port = public_port1 };

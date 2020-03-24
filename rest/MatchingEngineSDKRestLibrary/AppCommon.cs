@@ -104,6 +104,9 @@ namespace DistributedMatchEngine
     // A non-zero end port indicates this is a port range from public port to end port, inclusive.
     [DataMember]
     public Int32 end_port;
+    [DataMember]
+    // TLS termination for this port
+    public bool tls;
   }
 
   public enum IDTypes
