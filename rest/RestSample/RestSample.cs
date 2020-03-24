@@ -51,7 +51,7 @@ namespace RestSample
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = "eu-stage.dme.mobiledgex.net";
+    static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
 
     static Timestamp createTimestamp(int futureSeconds)
     {
