@@ -56,8 +56,12 @@ namespace MexGrpcSampleConsoleApp
     Loc location;
     string sessionCookie;
 
-    string dmeHost = "sdkdemo.global.dme.mobiledgex.net"; // demo DME server hostname or ip.
+    string dmeHost = "wifi.dme.mobiledgex.net"; // demo DME server hostname or ip.
     int dmePort = 50051; // DME port.
+    string carrierName = "GDDT";
+    string orgName = "MobiledgeX";
+    string appName = "MobiledgeX SDK Demo";
+    string appVers = "2.0";
 
     MatchEngineApi.MatchEngineApiClient client;
 
@@ -65,8 +69,6 @@ namespace MexGrpcSampleConsoleApp
     {
       location = getLocation();
       string uri = dmeHost + ":" + dmePort;
-      string devName = "MobiledgeX";
-      string appName = "MobiledgeX SDK Demo";
 
       // Channel:
       ChannelCredentials channelCredentials = new SslCredentials();
@@ -74,7 +76,7 @@ namespace MexGrpcSampleConsoleApp
 
       client = new DistributedMatchEngine.MatchEngineApi.MatchEngineApiClient(channel);
 
-      var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), devName, appName, "1.0", "");
+      var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, "2.0", "");
       var regReply = client.RegisterClient(registerClientRequest);
 
       Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
@@ -126,13 +128,13 @@ namespace MexGrpcSampleConsoleApp
     }
 
 
-    RegisterClientRequest CreateRegisterClientRequest(string carrierName, string devName, string appName, string appVersion, string authToken)
+    RegisterClientRequest CreateRegisterClientRequest(string carrierName, string orgName, string appName, string appVersion, string authToken)
     {
       var request = new RegisterClientRequest
       {
         Ver = 1,
         CarrierName = carrierName,
-        DevName = devName,
+        OrgName = orgName,
         AppName = appName,
         AppVers = appVersion,
         AuthToken = authToken
@@ -263,7 +265,7 @@ namespace MexGrpcSampleConsoleApp
     // TODO: The app must retrieve form they platform this case sensitive value before each DME GRPC call.
     // The device is potentially mobile and may have data roaming.
     String getCarrierName() {
-      return "GDDT";
+      return carrierName;
     }
 
     // TODO: The client must retrieve a real GPS location from the platform, even if it is just the last known location,
