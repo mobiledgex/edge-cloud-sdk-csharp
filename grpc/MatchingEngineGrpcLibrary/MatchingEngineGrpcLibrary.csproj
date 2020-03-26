@@ -2,22 +2,22 @@
 
   <PropertyGroup>
     <PackageId>MobiledgeX.MatchingEngineGrpcLibrary</PackageId>
-    <Version>1.4.10</Version>
+    <Version>1.5</Version>
     <Authors>MobiledgeX, Inc</Authors>
     <Company>MobiledgeX, Inc.</Company>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <ReleaseVersion>1.4.10</ReleaseVersion>
+    <ReleaseVersion>1.5</ReleaseVersion>
     <Copyright>MobiledgeX, Inc.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Api.Gax" Version="2.7.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
-    <PackageReference Include="Grpc.Tools" Version="1.21.0">
+    <PackageReference Include="Google.Api.Gax" Version="3.0.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.11.4" />
+    <PackageReference Include="Grpc.Tools" Version="2.27.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Grpc" Version="1.21.0" />
+    <PackageReference Include="Grpc" Version="2.27.0" />
   </ItemGroup>
 </Project>
