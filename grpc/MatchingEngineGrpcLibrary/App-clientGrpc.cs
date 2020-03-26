@@ -102,7 +102,9 @@ namespace DistributedMatchEngine {
       ///
       /// RegisterClient
       ///
-      /// Register the device
+      /// Registers the client with the closest Distributed Matching Engine (the
+      /// nearest edge location in the Operator network) and validates the
+      /// legitimacy of the mobile subscriber. All session information is encrypted.
       /// </summary>
       /// <param name="request">The request received from the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
@@ -116,7 +118,11 @@ namespace DistributedMatchEngine {
       ///
       /// FindCloudlet
       ///
-      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// Locates the most optimal edge computing footprint and allows the
+      /// registered application to find the application backend by leveraging the
+      /// location, application subscription, and service provider agreement. If
+      /// there are no suitable cloudlet instances available, the client may connect
+      /// to the application server located in the public cloud.
       /// </summary>
       /// <param name="request">The request received from the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
@@ -130,7 +136,7 @@ namespace DistributedMatchEngine {
       ///
       /// VerifyLocation
       ///
-      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// Verifies that the GPS coordinates accurately report the actual location of the device.
       /// </summary>
       /// <param name="request">The request received from the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
@@ -194,7 +200,9 @@ namespace DistributedMatchEngine {
       ///
       /// RegisterClient
       ///
-      /// Register the device
+      /// Registers the client with the closest Distributed Matching Engine (the
+      /// nearest edge location in the Operator network) and validates the
+      /// legitimacy of the mobile subscriber. All session information is encrypted.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -209,7 +217,9 @@ namespace DistributedMatchEngine {
       ///
       /// RegisterClient
       ///
-      /// Register the device
+      /// Registers the client with the closest Distributed Matching Engine (the
+      /// nearest edge location in the Operator network) and validates the
+      /// legitimacy of the mobile subscriber. All session information is encrypted.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
@@ -222,7 +232,9 @@ namespace DistributedMatchEngine {
       ///
       /// RegisterClient
       ///
-      /// Register the device
+      /// Registers the client with the closest Distributed Matching Engine (the
+      /// nearest edge location in the Operator network) and validates the
+      /// legitimacy of the mobile subscriber. All session information is encrypted.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -237,7 +249,9 @@ namespace DistributedMatchEngine {
       ///
       /// RegisterClient
       ///
-      /// Register the device
+      /// Registers the client with the closest Distributed Matching Engine (the
+      /// nearest edge location in the Operator network) and validates the
+      /// legitimacy of the mobile subscriber. All session information is encrypted.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
@@ -250,7 +264,11 @@ namespace DistributedMatchEngine {
       ///
       /// FindCloudlet
       ///
-      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// Locates the most optimal edge computing footprint and allows the
+      /// registered application to find the application backend by leveraging the
+      /// location, application subscription, and service provider agreement. If
+      /// there are no suitable cloudlet instances available, the client may connect
+      /// to the application server located in the public cloud.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -265,7 +283,11 @@ namespace DistributedMatchEngine {
       ///
       /// FindCloudlet
       ///
-      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// Locates the most optimal edge computing footprint and allows the
+      /// registered application to find the application backend by leveraging the
+      /// location, application subscription, and service provider agreement. If
+      /// there are no suitable cloudlet instances available, the client may connect
+      /// to the application server located in the public cloud.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
@@ -278,7 +300,11 @@ namespace DistributedMatchEngine {
       ///
       /// FindCloudlet
       ///
-      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// Locates the most optimal edge computing footprint and allows the
+      /// registered application to find the application backend by leveraging the
+      /// location, application subscription, and service provider agreement. If
+      /// there are no suitable cloudlet instances available, the client may connect
+      /// to the application server located in the public cloud.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -293,7 +319,11 @@ namespace DistributedMatchEngine {
       ///
       /// FindCloudlet
       ///
-      /// Determines, with our current GPS co-ordinates, the closest cloudlet running our backend
+      /// Locates the most optimal edge computing footprint and allows the
+      /// registered application to find the application backend by leveraging the
+      /// location, application subscription, and service provider agreement. If
+      /// there are no suitable cloudlet instances available, the client may connect
+      /// to the application server located in the public cloud.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
@@ -306,7 +336,7 @@ namespace DistributedMatchEngine {
       ///
       /// VerifyLocation
       ///
-      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// Verifies that the GPS coordinates accurately report the actual location of the device.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -321,7 +351,7 @@ namespace DistributedMatchEngine {
       ///
       /// VerifyLocation
       ///
-      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// Verifies that the GPS coordinates accurately report the actual location of the device.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
@@ -334,7 +364,7 @@ namespace DistributedMatchEngine {
       ///
       /// VerifyLocation
       ///
-      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// Verifies that the GPS coordinates accurately report the actual location of the device.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -349,7 +379,7 @@ namespace DistributedMatchEngine {
       ///
       /// VerifyLocation
       ///
-      /// Verifies that the GPS coordinates accurately report actual location of device
+      /// Verifies that the GPS coordinates accurately report the actual location of the device.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>

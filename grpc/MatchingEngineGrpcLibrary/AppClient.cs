@@ -28,7 +28,7 @@ namespace DistributedMatchEngine {
             "HGdvb2dsZS9hcGkvYW5ub3RhdGlvbnMucHJvdG8aCWxvYy5wcm90bxoPYXBw",
             "Y29tbW9uLnByb3RvIiEKA1RhZxIMCgR0eXBlGAEgASgJEgwKBGRhdGEYAiAB",
             "KAki7QEKFVJlZ2lzdGVyQ2xpZW50UmVxdWVzdBILCgN2ZXIYASABKA0SEAoI",
-            "ZGV2X25hbWUYAiABKAkSEAoIYXBwX25hbWUYAyABKAkSEAoIYXBwX3ZlcnMY",
+            "b3JnX25hbWUYAiABKAkSEAoIYXBwX25hbWUYAyABKAkSEAoIYXBwX3ZlcnMY",
             "BCABKAkSFAoMY2Fycmllcl9uYW1lGAUgASgJEhIKCmF1dGhfdG9rZW4YBiAB",
             "KAkSDwoHY2VsbF9pZBgHIAEoDRIWCg51bmlxdWVfaWRfdHlwZRgIIAEoCRIR",
             "Cgl1bmlxdWVfaWQYCSABKAkSKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVk",
@@ -40,7 +40,7 @@ namespace DistributedMatchEngine {
             "YnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyL5AQoTRmluZENsb3VkbGV0UmVxdWVz",
             "dBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9jb29raWUYAiABKAkSFAoMY2Fy",
             "cmllcl9uYW1lGAMgASgJEjMKDGdwc19sb2NhdGlvbhgEIAEoCzIdLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSEAoIZGV2X25hbWUYBSABKAkSEAoI",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSEAoIb3JnX25hbWUYBSABKAkSEAoI",
             "YXBwX25hbWUYBiABKAkSEAoIYXBwX3ZlcnMYByABKAkSDwoHY2VsbF9pZBgI",
             "IAEoDRIrCgR0YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
             "LlRhZyLSAgoRRmluZENsb3VkbGV0UmVwbHkSCwoDdmVyGAEgASgNEkYKBnN0",
@@ -84,109 +84,110 @@ namespace DistributedMatchEngine {
             "EhQKDGNhcnJpZXJfbmFtZRgDIAEoCRIzCgxncHNfbG9jYXRpb24YBCABKAsy",
             "HS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEg8KB2NlbGxfaWQYBSAB",
             "KA0SKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5U",
-            "YWcicQoLQXBwaW5zdGFuY2USEAoIYXBwX25hbWUYASABKAkSEAoIYXBwX3Zl",
-            "cnMYAiABKAkSDAoEZnFkbhgDIAEoCRIwCgVwb3J0cxgEIAMoCzIhLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBQb3J0IsMBChBDbG91ZGxldExvY2F0",
-            "aW9uEhQKDGNhcnJpZXJfbmFtZRgBIAEoCRIVCg1jbG91ZGxldF9uYW1lGAIg",
-            "ASgJEjMKDGdwc19sb2NhdGlvbhgDIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5Mb2MSEAoIZGlzdGFuY2UYBCABKAESOwoMYXBwaW5zdGFuY2Vz",
-            "GAUgAygLMiUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcGluc3RhbmNl",
-            "IosCChBBcHBJbnN0TGlzdFJlcGx5EgsKA3ZlchgBIAEoDRJDCgZzdGF0dXMY",
-            "AiABKA4yMy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwSW5zdExpc3RS",
-            "ZXBseS5BSVN0YXR1cxI9CgljbG91ZGxldHMYAyADKAsyKi5kaXN0cmlidXRl",
-            "ZF9tYXRjaF9lbmdpbmUuQ2xvdWRsZXRMb2NhdGlvbhIrCgR0YWdzGGMgAygL",
-            "Mh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyI5CghBSVN0YXR1cxIQ",
-            "CgxBSV9VTkRFRklORUQQABIOCgpBSV9TVUNDRVNTEAESCwoHQUlfRkFJTBAC",
-            "InQKD0ZxZG5MaXN0UmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9j",
-            "b29raWUYAiABKAkSDwoHY2VsbF9pZBgDIAEoDRIrCgR0YWdzGGMgAygLMh0u",
-            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyJsCgdBcHBGcWRuEhAKCGFw",
-            "cF9uYW1lGAEgASgJEhAKCGFwcF92ZXJzGAIgASgJEhAKCGRldl9uYW1lGAMg",
-            "ASgJEg0KBWZxZG5zGAQgAygJEhwKFGFuZHJvaWRfcGFja2FnZV9uYW1lGAUg",
-            "ASgJIvwBCg1GcWRuTGlzdFJlcGx5EgsKA3ZlchgBIAEoDRI0CglhcHBfZnFk",
-            "bnMYAyADKAsyIS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwRnFkbhJA",
-            "CgZzdGF0dXMYBCABKA4yMC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFk",
-            "bkxpc3RSZXBseS5GTFN0YXR1cxIrCgR0YWdzGGMgAygLMh0uZGlzdHJpYnV0",
-            "ZWRfbWF0Y2hfZW5naW5lLlRhZyI5CghGTFN0YXR1cxIQCgxGTF9VTkRFRklO",
-            "RUQQABIOCgpGTF9TVUNDRVNTEAESCwoHRkxfRkFJTBACIq4CChZEeW5hbWlj",
-            "TG9jR3JvdXBSZXF1ZXN0EgsKA3ZlchgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tp",
-            "ZRgCIAEoCRINCgVsZ19pZBgDIAEoBBJPCgljb21tX3R5cGUYCyABKA4yPC5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRHluYW1pY0xvY0dyb3VwUmVxdWVz",
-            "dC5EbGdDb21tVHlwZRIRCgl1c2VyX2RhdGEYDCABKAkSDwoHY2VsbF9pZBgN",
-            "IAEoDRIrCgR0YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
-            "LlRhZyI+CgtEbGdDb21tVHlwZRIRCg1ETEdfVU5ERUZJTkVEEAASDgoKRExH",
-            "X1NFQ1VSRRABEgwKCERMR19PUEVOEAIisQEKFER5bmFtaWNMb2NHcm91cFJl",
-            "cGx5EgsKA3ZlchgBIAEoDRI1CgZzdGF0dXMYAiABKA4yJS5kaXN0cmlidXRl",
-            "ZF9tYXRjaF9lbmdpbmUuUmVwbHlTdGF0dXMSEgoKZXJyb3JfY29kZRgDIAEo",
-            "DRIUCgxncm91cF9jb29raWUYBSABKAkSKwoEdGFncxhjIAMoCzIdLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciVgoLUW9zUG9zaXRpb24SEgoKcG9z",
-            "aXRpb25pZBgBIAEoAxIzCgxncHNfbG9jYXRpb24YAiABKAsyHS5kaXN0cmli",
-            "dXRlZF9tYXRjaF9lbmdpbmUuTG9jIk8KDUJhbmRTZWxlY3Rpb24SDgoGcmF0",
-            "XzJnGAEgAygJEg4KBnJhdF8zZxgCIAMoCRIOCgZyYXRfNGcYAyADKAkSDgoG",
-            "cmF0XzVnGAQgAygJIogCChJRb3NQb3NpdGlvblJlcXVlc3QSCwoDdmVyGAEg",
-            "ASgNEhYKDnNlc3Npb25fY29va2llGAIgASgJEjgKCXBvc2l0aW9ucxgDIAMo",
-            "CzIlLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQb3NpdGlvbhIUCgxs",
-            "dGVfY2F0ZWdvcnkYBCABKAUSPwoOYmFuZF9zZWxlY3Rpb24YBSABKAsyJy5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQmFuZFNlbGVjdGlvbhIPCgdjZWxs",
-            "X2lkGAYgASgNEisKBHRhZ3MYYyADKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9l",
-            "bmdpbmUuVGFnItICChRRb3NQb3NpdGlvbktwaVJlc3VsdBISCgpwb3NpdGlv",
-            "bmlkGAEgASgDEjMKDGdwc19sb2NhdGlvbhgCIAEoCzIdLmRpc3RyaWJ1dGVk",
-            "X21hdGNoX2VuZ2luZS5Mb2MSHAoUZGx1c2VydGhyb3VnaHB1dF9taW4YAyAB",
-            "KAISHAoUZGx1c2VydGhyb3VnaHB1dF9hdmcYBCABKAISHAoUZGx1c2VydGhy",
-            "b3VnaHB1dF9tYXgYBSABKAISHAoUdWx1c2VydGhyb3VnaHB1dF9taW4YBiAB",
-            "KAISHAoUdWx1c2VydGhyb3VnaHB1dF9hdmcYByABKAISHAoUdWx1c2VydGhy",
-            "b3VnaHB1dF9tYXgYCCABKAISEwoLbGF0ZW5jeV9taW4YCSABKAISEwoLbGF0",
-            "ZW5jeV9hdmcYCiABKAISEwoLbGF0ZW5jeV9tYXgYCyABKAIi0AEKE1Fvc1Bv",
-            "c2l0aW9uS3BpUmVwbHkSCwoDdmVyGAEgASgNEjUKBnN0YXR1cxgCIAEoDjIl",
-            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5SZXBseVN0YXR1cxJIChBwb3Np",
-            "dGlvbl9yZXN1bHRzGAMgAygLMi4uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
-            "LlFvc1Bvc2l0aW9uS3BpUmVzdWx0EisKBHRhZ3MYYyADKAsyHS5kaXN0cmli",
-            "dXRlZF9tYXRjaF9lbmdpbmUuVGFnKj0KB0lEVHlwZXMSEAoMSURfVU5ERUZJ",
-            "TkVEEAASCAoESU1FSRABEgoKBk1TSVNEThACEgoKBklQQUREUhADKjwKC1Jl",
-            "cGx5U3RhdHVzEhAKDFJTX1VOREVGSU5FRBAAEg4KClJTX1NVQ0NFU1MQARIL",
-            "CgdSU19GQUlMEAIy+ggKDk1hdGNoRW5naW5lQXBpEo8BCg5SZWdpc3RlckNs",
-            "aWVudBIvLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5SZWdpc3RlckNsaWVu",
-            "dFJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUmVnaXN0ZXJD",
-            "bGllbnRSZXBseSIdgtPkkwIXIhIvdjEvcmVnaXN0ZXJjbGllbnQ6ASoShwEK",
-            "DEZpbmRDbG91ZGxldBItLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5k",
-            "Q2xvdWRsZXRSZXF1ZXN0GisuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZp",
-            "bmRDbG91ZGxldFJlcGx5IhuC0+STAhUiEC92MS9maW5kY2xvdWRsZXQ6ASoS",
-            "jwEKDlZlcmlmeUxvY2F0aW9uEi8uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
-            "LlZlcmlmeUxvY2F0aW9uUmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
-            "Z2luZS5WZXJpZnlMb2NhdGlvblJlcGx5Ih2C0+STAhciEi92MS92ZXJpZnls",
-            "b2NhdGlvbjoBKhKDAQoLR2V0TG9jYXRpb24SLC5kaXN0cmlidXRlZF9tYXRj",
-            "aF9lbmdpbmUuR2V0TG9jYXRpb25SZXF1ZXN0GiouZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLkdldExvY2F0aW9uUmVwbHkiGoLT5JMCFCIPL3YxL2dldGxv",
-            "Y2F0aW9uOgEqEpEBCg5BZGRVc2VyVG9Hcm91cBIwLmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5EeW5hbWljTG9jR3JvdXBSZXF1ZXN0Gi4uZGlzdHJpYnV0",
-            "ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91cFJlcGx5Ih2C0+STAhci",
-            "Ei92MS9hZGR1c2VydG9ncm91cDoBKhKJAQoOR2V0QXBwSW5zdExpc3QSLC5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwSW5zdExpc3RSZXF1ZXN0Giou",
-            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RMaXN0UmVwbHkiHYLT",
-            "5JMCFyISL3YxL2dldGFwcGluc3RsaXN0OgEqEn0KC0dldEZxZG5MaXN0Eiku",
-            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZxZG5MaXN0UmVxdWVzdBonLmRp",
-            "c3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GcWRuTGlzdFJlcGx5IhqC0+STAhQi",
-            "Dy92MS9nZXRmcWRubGlzdDoBKhKUAQoRR2V0UW9zUG9zaXRpb25LcGkSLC5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRpb25SZXF1ZXN0Gi0u",
-            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uS3BpUmVwbHki",
-            "IILT5JMCGiIVL3YxL2dldHFvc3Bvc2l0aW9ua3BpOgEqMAFiBnByb3RvMw=="));
+            "YWcigwEKC0FwcGluc3RhbmNlEhAKCGFwcF9uYW1lGAEgASgJEhAKCGFwcF92",
+            "ZXJzGAIgASgJEgwKBGZxZG4YAyABKAkSMAoFcG9ydHMYBCADKAsyIS5kaXN0",
+            "cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwUG9ydBIQCghvcmdfbmFtZRgFIAEo",
+            "CSLDAQoQQ2xvdWRsZXRMb2NhdGlvbhIUCgxjYXJyaWVyX25hbWUYASABKAkS",
+            "FQoNY2xvdWRsZXRfbmFtZRgCIAEoCRIzCgxncHNfbG9jYXRpb24YAyABKAsy",
+            "HS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEhAKCGRpc3RhbmNlGAQg",
+            "ASgBEjsKDGFwcGluc3RhbmNlcxgFIAMoCzIlLmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5BcHBpbnN0YW5jZSKLAgoQQXBwSW5zdExpc3RSZXBseRILCgN2",
+            "ZXIYASABKA0SQwoGc3RhdHVzGAIgASgOMjMuZGlzdHJpYnV0ZWRfbWF0Y2hf",
+            "ZW5naW5lLkFwcEluc3RMaXN0UmVwbHkuQUlTdGF0dXMSPQoJY2xvdWRsZXRz",
+            "GAMgAygLMiouZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkNsb3VkbGV0TG9j",
+            "YXRpb24SKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5UYWciOQoIQUlTdGF0dXMSEAoMQUlfVU5ERUZJTkVEEAASDgoKQUlfU1VD",
+            "Q0VTUxABEgsKB0FJX0ZBSUwQAiJ0Cg9GcWRuTGlzdFJlcXVlc3QSCwoDdmVy",
+            "GAEgASgNEhYKDnNlc3Npb25fY29va2llGAIgASgJEg8KB2NlbGxfaWQYAyAB",
+            "KA0SKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5U",
+            "YWcibAoHQXBwRnFkbhIQCghhcHBfbmFtZRgBIAEoCRIQCghhcHBfdmVycxgC",
+            "IAEoCRIQCghvcmdfbmFtZRgDIAEoCRINCgVmcWRucxgEIAMoCRIcChRhbmRy",
+            "b2lkX3BhY2thZ2VfbmFtZRgFIAEoCSL8AQoNRnFkbkxpc3RSZXBseRILCgN2",
+            "ZXIYASABKA0SNAoJYXBwX2ZxZG5zGAMgAygLMiEuZGlzdHJpYnV0ZWRfbWF0",
+            "Y2hfZW5naW5lLkFwcEZxZG4SQAoGc3RhdHVzGAQgASgOMjAuZGlzdHJpYnV0",
+            "ZWRfbWF0Y2hfZW5naW5lLkZxZG5MaXN0UmVwbHkuRkxTdGF0dXMSKwoEdGFn",
+            "cxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciOQoIRkxT",
+            "dGF0dXMSEAoMRkxfVU5ERUZJTkVEEAASDgoKRkxfU1VDQ0VTUxABEgsKB0ZM",
+            "X0ZBSUwQAiKuAgoWRHluYW1pY0xvY0dyb3VwUmVxdWVzdBILCgN2ZXIYASAB",
+            "KA0SFgoOc2Vzc2lvbl9jb29raWUYAiABKAkSDQoFbGdfaWQYAyABKAQSTwoJ",
+            "Y29tbV90eXBlGAsgASgOMjwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5",
+            "bmFtaWNMb2NHcm91cFJlcXVlc3QuRGxnQ29tbVR5cGUSEQoJdXNlcl9kYXRh",
+            "GAwgASgJEg8KB2NlbGxfaWQYDSABKA0SKwoEdGFncxhjIAMoCzIdLmRpc3Ry",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciPgoLRGxnQ29tbVR5cGUSEQoNRExH",
+            "X1VOREVGSU5FRBAAEg4KCkRMR19TRUNVUkUQARIMCghETEdfT1BFThACIrEB",
+            "ChREeW5hbWljTG9jR3JvdXBSZXBseRILCgN2ZXIYASABKA0SNQoGc3RhdHVz",
+            "GAIgASgOMiUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlJlcGx5U3RhdHVz",
+            "EhIKCmVycm9yX2NvZGUYAyABKA0SFAoMZ3JvdXBfY29va2llGAUgASgJEisK",
+            "BHRhZ3MYYyADKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVGFnIlYK",
+            "C1Fvc1Bvc2l0aW9uEhIKCnBvc2l0aW9uaWQYASABKAMSMwoMZ3BzX2xvY2F0",
+            "aW9uGAIgASgLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxvYyJPCg1C",
+            "YW5kU2VsZWN0aW9uEg4KBnJhdF8yZxgBIAMoCRIOCgZyYXRfM2cYAiADKAkS",
+            "DgoGcmF0XzRnGAMgAygJEg4KBnJhdF81ZxgEIAMoCSKIAgoSUW9zUG9zaXRp",
+            "b25SZXF1ZXN0EgsKA3ZlchgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tpZRgCIAEo",
+            "CRI4Cglwb3NpdGlvbnMYAyADKAsyJS5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
+            "bmUuUW9zUG9zaXRpb24SFAoMbHRlX2NhdGVnb3J5GAQgASgFEj8KDmJhbmRf",
+            "c2VsZWN0aW9uGAUgASgLMicuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkJh",
+            "bmRTZWxlY3Rpb24SDwoHY2VsbF9pZBgGIAEoDRIrCgR0YWdzGGMgAygLMh0u",
+            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyLSAgoUUW9zUG9zaXRpb25L",
+            "cGlSZXN1bHQSEgoKcG9zaXRpb25pZBgBIAEoAxIzCgxncHNfbG9jYXRpb24Y",
+            "AiABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEhwKFGRsdXNl",
+            "cnRocm91Z2hwdXRfbWluGAMgASgCEhwKFGRsdXNlcnRocm91Z2hwdXRfYXZn",
+            "GAQgASgCEhwKFGRsdXNlcnRocm91Z2hwdXRfbWF4GAUgASgCEhwKFHVsdXNl",
+            "cnRocm91Z2hwdXRfbWluGAYgASgCEhwKFHVsdXNlcnRocm91Z2hwdXRfYXZn",
+            "GAcgASgCEhwKFHVsdXNlcnRocm91Z2hwdXRfbWF4GAggASgCEhMKC2xhdGVu",
+            "Y3lfbWluGAkgASgCEhMKC2xhdGVuY3lfYXZnGAogASgCEhMKC2xhdGVuY3lf",
+            "bWF4GAsgASgCItABChNRb3NQb3NpdGlvbktwaVJlcGx5EgsKA3ZlchgBIAEo",
+            "DRI1CgZzdGF0dXMYAiABKA4yJS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
+            "UmVwbHlTdGF0dXMSSAoQcG9zaXRpb25fcmVzdWx0cxgDIAMoCzIuLmRpc3Ry",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQb3NpdGlvbktwaVJlc3VsdBIrCgR0",
+            "YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyo9CgdJ",
+            "RFR5cGVzEhAKDElEX1VOREVGSU5FRBAAEggKBElNRUkQARIKCgZNU0lTRE4Q",
+            "AhIKCgZJUEFERFIQAyo8CgtSZXBseVN0YXR1cxIQCgxSU19VTkRFRklORUQQ",
+            "ABIOCgpSU19TVUNDRVNTEAESCwoHUlNfRkFJTBACMvoICg5NYXRjaEVuZ2lu",
+            "ZUFwaRKPAQoOUmVnaXN0ZXJDbGllbnQSLy5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuUmVnaXN0ZXJDbGllbnRSZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0",
+            "Y2hfZW5naW5lLlJlZ2lzdGVyQ2xpZW50UmVwbHkiHYLT5JMCFyISL3YxL3Jl",
+            "Z2lzdGVyY2xpZW50OgEqEocBCgxGaW5kQ2xvdWRsZXQSLS5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuRmluZENsb3VkbGV0UmVxdWVzdBorLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xvdWRsZXRSZXBseSIbgtPkkwIVIhAv",
+            "djEvZmluZGNsb3VkbGV0OgEqEo8BCg5WZXJpZnlMb2NhdGlvbhIvLmRpc3Ry",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5WZXJpZnlMb2NhdGlvblJlcXVlc3QaLS5k",
+            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVyaWZ5TG9jYXRpb25SZXBseSId",
+            "gtPkkwIXIhIvdjEvdmVyaWZ5bG9jYXRpb246ASoSgwEKC0dldExvY2F0aW9u",
+            "EiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkdldExvY2F0aW9uUmVxdWVz",
+            "dBoqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5HZXRMb2NhdGlvblJlcGx5",
+            "IhqC0+STAhQiDy92MS9nZXRsb2NhdGlvbjoBKhKRAQoOQWRkVXNlclRvR3Jv",
+            "dXASMC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRHluYW1pY0xvY0dyb3Vw",
+            "UmVxdWVzdBouLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5EeW5hbWljTG9j",
+            "R3JvdXBSZXBseSIdgtPkkwIXIhIvdjEvYWRkdXNlcnRvZ3JvdXA6ASoSiQEK",
+            "DkdldEFwcEluc3RMaXN0EiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFw",
+            "cEluc3RMaXN0UmVxdWVzdBoqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5B",
+            "cHBJbnN0TGlzdFJlcGx5Ih2C0+STAhciEi92MS9nZXRhcHBpbnN0bGlzdDoB",
+            "KhJ9CgtHZXRGcWRuTGlzdBIpLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5G",
+            "cWRuTGlzdFJlcXVlc3QaJy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFk",
+            "bkxpc3RSZXBseSIagtPkkwIUIg8vdjEvZ2V0ZnFkbmxpc3Q6ASoSlAEKEUdl",
+            "dFFvc1Bvc2l0aW9uS3BpEiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFv",
+            "c1Bvc2l0aW9uUmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5R",
+            "b3NQb3NpdGlvbktwaVJlcGx5IiCC0+STAhoiFS92MS9nZXRxb3Nwb3NpdGlv",
+            "bmtwaToBKjABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::DistributedMatchEngine.LocReflection.Descriptor, global::DistributedMatchEngine.AppcommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.IDTypes), typeof(global::DistributedMatchEngine.ReplyStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Tag), global::DistributedMatchEngine.Tag.Parser, new[]{ "Type", "Data" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientRequest), global::DistributedMatchEngine.RegisterClientRequest.Parser, new[]{ "Ver", "DevName", "AppName", "AppVers", "CarrierName", "AuthToken", "CellId", "UniqueIdType", "UniqueId", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientRequest), global::DistributedMatchEngine.RegisterClientRequest.Parser, new[]{ "Ver", "OrgName", "AppName", "AppVers", "CarrierName", "AuthToken", "CellId", "UniqueIdType", "UniqueId", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientReply), global::DistributedMatchEngine.RegisterClientReply.Parser, new[]{ "Ver", "Status", "SessionCookie", "TokenServerUri", "UniqueIdType", "UniqueId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletRequest), global::DistributedMatchEngine.FindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "DevName", "AppName", "AppVers", "CellId", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletRequest), global::DistributedMatchEngine.FindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "OrgName", "AppName", "AppVers", "CellId", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletReply), global::DistributedMatchEngine.FindCloudletReply.Parser, new[]{ "Ver", "Status", "Fqdn", "Ports", "CloudletLocation", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FindCloudletReply.Types.FindStatus) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationRequest), global::DistributedMatchEngine.VerifyLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "VerifyLocToken", "CellId", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationReply), global::DistributedMatchEngine.VerifyLocationReply.Parser, new[]{ "Ver", "TowerStatus", "GpsLocationStatus", "GpsLocationAccuracyKm", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.TowerStatus), typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.GPSLocationStatus) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.GetLocationRequest), global::DistributedMatchEngine.GetLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "CellId", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.GetLocationReply), global::DistributedMatchEngine.GetLocationReply.Parser, new[]{ "Ver", "Status", "CarrierName", "Tower", "NetworkLocation", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.GetLocationReply.Types.LocStatus) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppInstListRequest), global::DistributedMatchEngine.AppInstListRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "CellId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Appinstance), global::DistributedMatchEngine.Appinstance.Parser, new[]{ "AppName", "AppVers", "Fqdn", "Ports" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Appinstance), global::DistributedMatchEngine.Appinstance.Parser, new[]{ "AppName", "AppVers", "Fqdn", "Ports", "OrgName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.CloudletLocation), global::DistributedMatchEngine.CloudletLocation.Parser, new[]{ "CarrierName", "CloudletName", "GpsLocation", "Distance", "Appinstances" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppInstListReply), global::DistributedMatchEngine.AppInstListReply.Parser, new[]{ "Ver", "Status", "Cloudlets", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.AppInstListReply.Types.AIStatus) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FqdnListRequest), global::DistributedMatchEngine.FqdnListRequest.Parser, new[]{ "Ver", "SessionCookie", "CellId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppFqdn), global::DistributedMatchEngine.AppFqdn.Parser, new[]{ "AppName", "AppVers", "DevName", "Fqdns", "AndroidPackageName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppFqdn), global::DistributedMatchEngine.AppFqdn.Parser, new[]{ "AppName", "AppVers", "OrgName", "Fqdns", "AndroidPackageName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FqdnListReply), global::DistributedMatchEngine.FqdnListReply.Parser, new[]{ "Ver", "AppFqdns", "Status", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FqdnListReply.Types.FLStatus) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupRequest), global::DistributedMatchEngine.DynamicLocGroupRequest.Parser, new[]{ "Ver", "SessionCookie", "LgId", "CommType", "UserData", "CellId", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.DynamicLocGroupRequest.Types.DlgCommType) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupReply), global::DistributedMatchEngine.DynamicLocGroupReply.Parser, new[]{ "Ver", "Status", "ErrorCode", "GroupCookie", "Tags" }, null, null, null, null),
@@ -406,7 +407,7 @@ namespace DistributedMatchEngine {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public RegisterClientRequest(RegisterClientRequest other) : this() {
       ver_ = other.ver_;
-      devName_ = other.devName_;
+      orgName_ = other.orgName_;
       appName_ = other.appName_;
       appVers_ = other.appVers_;
       carrierName_ = other.carrierName_;
@@ -437,17 +438,17 @@ namespace DistributedMatchEngine {
       }
     }
 
-    /// <summary>Field number for the "dev_name" field.</summary>
-    public const int DevNameFieldNumber = 2;
-    private string devName_ = "";
+    /// <summary>Field number for the "org_name" field.</summary>
+    public const int OrgNameFieldNumber = 2;
+    private string orgName_ = "";
     /// <summary>
     /// App Developer Name
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DevName {
-      get { return devName_; }
+    public string OrgName {
+      get { return orgName_; }
       set {
-        devName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        orgName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -503,7 +504,7 @@ namespace DistributedMatchEngine {
     ///
     /// Authentication Token
     ///
-    /// More details about the auth token here
+    /// _(optional)_ An authentication token supplied by the application.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string AuthToken {
@@ -520,7 +521,7 @@ namespace DistributedMatchEngine {
     ///
     /// Cell ID
     ///
-    /// Cell ID where the client is
+    /// _(optional)_ Cellular ID of where the client is connected.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -554,7 +555,7 @@ namespace DistributedMatchEngine {
     ///
     /// Unique ID
     ///
-    /// Optional. Unique identification of the client device or user. May be overridden by the server.
+    /// _(optional)_ Unique identification of the client device or user. May be overridden by the server.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string UniqueId {
@@ -573,7 +574,7 @@ namespace DistributedMatchEngine {
     ///
     /// Tags
     ///
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -594,7 +595,7 @@ namespace DistributedMatchEngine {
         return true;
       }
       if (Ver != other.Ver) return false;
-      if (DevName != other.DevName) return false;
+      if (OrgName != other.OrgName) return false;
       if (AppName != other.AppName) return false;
       if (AppVers != other.AppVers) return false;
       if (CarrierName != other.CarrierName) return false;
@@ -610,7 +611,7 @@ namespace DistributedMatchEngine {
     public override int GetHashCode() {
       int hash = 1;
       if (Ver != 0) hash ^= Ver.GetHashCode();
-      if (DevName.Length != 0) hash ^= DevName.GetHashCode();
+      if (OrgName.Length != 0) hash ^= OrgName.GetHashCode();
       if (AppName.Length != 0) hash ^= AppName.GetHashCode();
       if (AppVers.Length != 0) hash ^= AppVers.GetHashCode();
       if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
@@ -636,9 +637,9 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(8);
         output.WriteUInt32(Ver);
       }
-      if (DevName.Length != 0) {
+      if (OrgName.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(DevName);
+        output.WriteString(OrgName);
       }
       if (AppName.Length != 0) {
         output.WriteRawTag(26);
@@ -680,8 +681,8 @@ namespace DistributedMatchEngine {
       if (Ver != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Ver);
       }
-      if (DevName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DevName);
+      if (OrgName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrgName);
       }
       if (AppName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppName);
@@ -719,8 +720,8 @@ namespace DistributedMatchEngine {
       if (other.Ver != 0) {
         Ver = other.Ver;
       }
-      if (other.DevName.Length != 0) {
-        DevName = other.DevName;
+      if (other.OrgName.Length != 0) {
+        OrgName = other.OrgName;
       }
       if (other.AppName.Length != 0) {
         AppName = other.AppName;
@@ -760,7 +761,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 18: {
-            DevName = input.ReadString();
+            OrgName = input.ReadString();
             break;
           }
           case 26: {
@@ -921,7 +922,7 @@ namespace DistributedMatchEngine {
     ///
     /// Unique ID
     ///
-    /// Optional. Unique identification of the client device or user
+    /// _(optional)_ Unique identification of the client device or user
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string UniqueId {
@@ -938,6 +939,8 @@ namespace DistributedMatchEngine {
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
     /// Vendor specific data
+    ///
+    /// _(optional)_ Array of Tags.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -1146,7 +1149,7 @@ namespace DistributedMatchEngine {
       sessionCookie_ = other.sessionCookie_;
       carrierName_ = other.carrierName_;
       gpsLocation_ = other.gpsLocation_ != null ? other.gpsLocation_.Clone() : null;
-      devName_ = other.devName_;
+      orgName_ = other.orgName_;
       appName_ = other.appName_;
       appVers_ = other.appVers_;
       cellId_ = other.cellId_;
@@ -1224,20 +1227,20 @@ namespace DistributedMatchEngine {
       }
     }
 
-    /// <summary>Field number for the "dev_name" field.</summary>
-    public const int DevNameFieldNumber = 5;
-    private string devName_ = "";
+    /// <summary>Field number for the "org_name" field.</summary>
+    public const int OrgNameFieldNumber = 5;
+    private string orgName_ = "";
     /// <summary>
     ///
-    /// Dev Name
+    /// Organization Name
     ///
     /// Applicable to Platform apps only
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DevName {
-      get { return devName_; }
+    public string OrgName {
+      get { return orgName_; }
       set {
-        devName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        orgName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1282,7 +1285,7 @@ namespace DistributedMatchEngine {
     ///
     /// Cell ID
     ///
-    /// Cell ID where the client is
+    /// _(optional)_ Cell ID where the client is
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -1301,7 +1304,7 @@ namespace DistributedMatchEngine {
     ///
     /// Tags
     ///
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -1325,7 +1328,7 @@ namespace DistributedMatchEngine {
       if (SessionCookie != other.SessionCookie) return false;
       if (CarrierName != other.CarrierName) return false;
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
-      if (DevName != other.DevName) return false;
+      if (OrgName != other.OrgName) return false;
       if (AppName != other.AppName) return false;
       if (AppVers != other.AppVers) return false;
       if (CellId != other.CellId) return false;
@@ -1340,7 +1343,7 @@ namespace DistributedMatchEngine {
       if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
       if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
-      if (DevName.Length != 0) hash ^= DevName.GetHashCode();
+      if (OrgName.Length != 0) hash ^= OrgName.GetHashCode();
       if (AppName.Length != 0) hash ^= AppName.GetHashCode();
       if (AppVers.Length != 0) hash ^= AppVers.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
@@ -1374,9 +1377,9 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(34);
         output.WriteMessage(GpsLocation);
       }
-      if (DevName.Length != 0) {
+      if (OrgName.Length != 0) {
         output.WriteRawTag(42);
-        output.WriteString(DevName);
+        output.WriteString(OrgName);
       }
       if (AppName.Length != 0) {
         output.WriteRawTag(50);
@@ -1411,8 +1414,8 @@ namespace DistributedMatchEngine {
       if (gpsLocation_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(GpsLocation);
       }
-      if (DevName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DevName);
+      if (OrgName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrgName);
       }
       if (AppName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppName);
@@ -1450,8 +1453,8 @@ namespace DistributedMatchEngine {
         }
         GpsLocation.MergeFrom(other.GpsLocation);
       }
-      if (other.DevName.Length != 0) {
-        DevName = other.DevName;
+      if (other.OrgName.Length != 0) {
+        OrgName = other.OrgName;
       }
       if (other.AppName.Length != 0) {
         AppName = other.AppName;
@@ -1494,7 +1497,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 42: {
-            DevName = input.ReadString();
+            OrgName = input.ReadString();
             break;
           }
           case 50: {
@@ -1633,7 +1636,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -1938,7 +1941,7 @@ namespace DistributedMatchEngine {
     ///
     /// Cell ID
     ///
-    /// Cell ID where the client is
+    /// _(optional)_ Cell ID where the client is
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -1957,7 +1960,7 @@ namespace DistributedMatchEngine {
     ///
     /// Tags
     ///
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -2239,7 +2242,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -2498,7 +2501,7 @@ namespace DistributedMatchEngine {
     public const int CellIdFieldNumber = 4;
     private uint cellId_;
     /// <summary>
-    /// Cell id where the client is
+    /// _(optional)_ Cell id where the client is
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -2514,7 +2517,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -2771,7 +2774,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -3059,7 +3062,7 @@ namespace DistributedMatchEngine {
     public const int CellIdFieldNumber = 5;
     private uint cellId_;
     /// <summary>
-    /// Cell id where the client is
+    /// _(optional)_ Cell id where the client is
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -3075,7 +3078,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -3274,6 +3277,7 @@ namespace DistributedMatchEngine {
       appVers_ = other.appVers_;
       fqdn_ = other.fqdn_;
       ports_ = other.ports_.Clone();
+      orgName_ = other.orgName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3337,6 +3341,20 @@ namespace DistributedMatchEngine {
       get { return ports_; }
     }
 
+    /// <summary>Field number for the "org_name" field.</summary>
+    public const int OrgNameFieldNumber = 5;
+    private string orgName_ = "";
+    /// <summary>
+    /// App Organization Name
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string OrgName {
+      get { return orgName_; }
+      set {
+        orgName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as Appinstance);
@@ -3354,6 +3372,7 @@ namespace DistributedMatchEngine {
       if (AppVers != other.AppVers) return false;
       if (Fqdn != other.Fqdn) return false;
       if(!ports_.Equals(other.ports_)) return false;
+      if (OrgName != other.OrgName) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3364,6 +3383,7 @@ namespace DistributedMatchEngine {
       if (AppVers.Length != 0) hash ^= AppVers.GetHashCode();
       if (Fqdn.Length != 0) hash ^= Fqdn.GetHashCode();
       hash ^= ports_.GetHashCode();
+      if (OrgName.Length != 0) hash ^= OrgName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3390,6 +3410,10 @@ namespace DistributedMatchEngine {
         output.WriteString(Fqdn);
       }
       ports_.WriteTo(output, _repeated_ports_codec);
+      if (OrgName.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(OrgName);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3408,6 +3432,9 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Fqdn);
       }
       size += ports_.CalculateSize(_repeated_ports_codec);
+      if (OrgName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrgName);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3429,6 +3456,9 @@ namespace DistributedMatchEngine {
         Fqdn = other.Fqdn;
       }
       ports_.Add(other.ports_);
+      if (other.OrgName.Length != 0) {
+        OrgName = other.OrgName;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3454,6 +3484,10 @@ namespace DistributedMatchEngine {
           }
           case 34: {
             ports_.AddEntriesFrom(input, _repeated_ports_codec);
+            break;
+          }
+          case 42: {
+            OrgName = input.ReadString();
             break;
           }
         }
@@ -3794,7 +3828,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -4004,7 +4038,7 @@ namespace DistributedMatchEngine {
     public const int CellIdFieldNumber = 3;
     private uint cellId_;
     /// <summary>
-    /// Cell id where the client is
+    /// _(optional)_ Cell id where the client is
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -4020,7 +4054,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -4179,7 +4213,7 @@ namespace DistributedMatchEngine {
     public AppFqdn(AppFqdn other) : this() {
       appName_ = other.appName_;
       appVers_ = other.appVers_;
-      devName_ = other.devName_;
+      orgName_ = other.orgName_;
       fqdns_ = other.fqdns_.Clone();
       androidPackageName_ = other.androidPackageName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -4218,17 +4252,17 @@ namespace DistributedMatchEngine {
       }
     }
 
-    /// <summary>Field number for the "dev_name" field.</summary>
-    public const int DevNameFieldNumber = 3;
-    private string devName_ = "";
+    /// <summary>Field number for the "org_name" field.</summary>
+    public const int OrgNameFieldNumber = 3;
+    private string orgName_ = "";
     /// <summary>
-    /// developer name
+    /// App organization name
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DevName {
-      get { return devName_; }
+    public string OrgName {
+      get { return orgName_; }
       set {
-        devName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        orgName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -4249,7 +4283,7 @@ namespace DistributedMatchEngine {
     public const int AndroidPackageNameFieldNumber = 5;
     private string androidPackageName_ = "";
     /// <summary>
-    /// Optional. Android package name
+    /// _(optional)_ Android package name
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string AndroidPackageName {
@@ -4274,7 +4308,7 @@ namespace DistributedMatchEngine {
       }
       if (AppName != other.AppName) return false;
       if (AppVers != other.AppVers) return false;
-      if (DevName != other.DevName) return false;
+      if (OrgName != other.OrgName) return false;
       if(!fqdns_.Equals(other.fqdns_)) return false;
       if (AndroidPackageName != other.AndroidPackageName) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -4285,7 +4319,7 @@ namespace DistributedMatchEngine {
       int hash = 1;
       if (AppName.Length != 0) hash ^= AppName.GetHashCode();
       if (AppVers.Length != 0) hash ^= AppVers.GetHashCode();
-      if (DevName.Length != 0) hash ^= DevName.GetHashCode();
+      if (OrgName.Length != 0) hash ^= OrgName.GetHashCode();
       hash ^= fqdns_.GetHashCode();
       if (AndroidPackageName.Length != 0) hash ^= AndroidPackageName.GetHashCode();
       if (_unknownFields != null) {
@@ -4309,9 +4343,9 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(18);
         output.WriteString(AppVers);
       }
-      if (DevName.Length != 0) {
+      if (OrgName.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(DevName);
+        output.WriteString(OrgName);
       }
       fqdns_.WriteTo(output, _repeated_fqdns_codec);
       if (AndroidPackageName.Length != 0) {
@@ -4332,8 +4366,8 @@ namespace DistributedMatchEngine {
       if (AppVers.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppVers);
       }
-      if (DevName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DevName);
+      if (OrgName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrgName);
       }
       size += fqdns_.CalculateSize(_repeated_fqdns_codec);
       if (AndroidPackageName.Length != 0) {
@@ -4356,8 +4390,8 @@ namespace DistributedMatchEngine {
       if (other.AppVers.Length != 0) {
         AppVers = other.AppVers;
       }
-      if (other.DevName.Length != 0) {
-        DevName = other.DevName;
+      if (other.OrgName.Length != 0) {
+        OrgName = other.OrgName;
       }
       fqdns_.Add(other.fqdns_);
       if (other.AndroidPackageName.Length != 0) {
@@ -4383,7 +4417,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 26: {
-            DevName = input.ReadString();
+            OrgName = input.ReadString();
             break;
           }
           case 34: {
@@ -4478,7 +4512,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -4727,7 +4761,7 @@ namespace DistributedMatchEngine {
     public const int CellIdFieldNumber = 13;
     private uint cellId_;
     /// <summary>
-    /// Cell id where the client is
+    /// _(optional)_ Cell id where the client is
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -4743,7 +4777,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -5036,7 +5070,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -5628,7 +5662,7 @@ namespace DistributedMatchEngine {
     public const int LteCategoryFieldNumber = 4;
     private int lteCategory_;
     /// <summary>
-    /// Optional. Client's device LTE category number.
+    /// _(optional)_ Client's device LTE category number.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int LteCategory {
@@ -5642,7 +5676,7 @@ namespace DistributedMatchEngine {
     public const int BandSelectionFieldNumber = 5;
     private global::DistributedMatchEngine.BandSelection bandSelection_;
     /// <summary>
-    /// Optional. Band list used by the client.
+    /// _(optional)_ Band list used by the client.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.BandSelection BandSelection {
@@ -5656,7 +5690,7 @@ namespace DistributedMatchEngine {
     public const int CellIdFieldNumber = 6;
     private uint cellId_;
     /// <summary>
-    /// Cell id where the client is
+    /// _(optional)_ Cell id where the client is
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint CellId {
@@ -5672,7 +5706,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
@@ -6356,7 +6390,7 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
     /// <summary>
-    /// Vendor specific data
+    /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {

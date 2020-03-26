@@ -24,17 +24,17 @@ namespace DistributedMatchEngine {
     static AppcommonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZSKi",
+            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZSKv",
             "AQoHQXBwUG9ydBIvCgVwcm90bxgBIAEoDjIgLmRpc3RyaWJ1dGVkX21hdGNo",
             "X2VuZ2luZS5MUHJvdG8SFQoNaW50ZXJuYWxfcG9ydBgCIAEoBRITCgtwdWJs",
             "aWNfcG9ydBgDIAEoBRITCgtwYXRoX3ByZWZpeBgEIAEoCRITCgtmcWRuX3By",
-            "ZWZpeBgFIAEoCRIQCghlbmRfcG9ydBgGIAEoBSpRCgZMUHJvdG8SEwoPTF9Q",
-            "Uk9UT19VTktOT1dOEAASDwoLTF9QUk9UT19UQ1AQARIPCgtMX1BST1RPX1VE",
-            "UBACEhAKDExfUFJPVE9fSFRUUBADYgZwcm90bzM="));
+            "ZWZpeBgFIAEoCRIQCghlbmRfcG9ydBgGIAEoBRILCgN0bHMYByABKAgqUQoG",
+            "TFByb3RvEhMKD0xfUFJPVE9fVU5LTk9XThAAEg8KC0xfUFJPVE9fVENQEAES",
+            "DwoLTF9QUk9UT19VRFAQAhIQCgxMX1BST1RPX0hUVFAQA2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "PathPrefix", "FqdnPrefix", "EndPort" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "PathPrefix", "FqdnPrefix", "EndPort", "Tls" }, null, null, null, null)
           }));
     }
     #endregion
@@ -67,6 +67,8 @@ namespace DistributedMatchEngine {
 
   #region Messages
   /// <summary>
+  /// Application Port
+  ///
   /// AppPort describes an L4 or L7 public access port/path mapping. This is used to track external to internal mappings for access via a shared load balancer or reverse proxy.
   /// </summary>
   public sealed partial class AppPort : pb::IMessage<AppPort> {
@@ -100,6 +102,7 @@ namespace DistributedMatchEngine {
       pathPrefix_ = other.pathPrefix_;
       fqdnPrefix_ = other.fqdnPrefix_;
       endPort_ = other.endPort_;
+      tls_ = other.tls_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -192,6 +195,20 @@ namespace DistributedMatchEngine {
       }
     }
 
+    /// <summary>Field number for the "tls" field.</summary>
+    public const int TlsFieldNumber = 7;
+    private bool tls_;
+    /// <summary>
+    /// TLS termination for this port
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Tls {
+      get { return tls_; }
+      set {
+        tls_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as AppPort);
@@ -211,6 +228,7 @@ namespace DistributedMatchEngine {
       if (PathPrefix != other.PathPrefix) return false;
       if (FqdnPrefix != other.FqdnPrefix) return false;
       if (EndPort != other.EndPort) return false;
+      if (Tls != other.Tls) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -223,6 +241,7 @@ namespace DistributedMatchEngine {
       if (PathPrefix.Length != 0) hash ^= PathPrefix.GetHashCode();
       if (FqdnPrefix.Length != 0) hash ^= FqdnPrefix.GetHashCode();
       if (EndPort != 0) hash ^= EndPort.GetHashCode();
+      if (Tls != false) hash ^= Tls.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -260,6 +279,10 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(48);
         output.WriteInt32(EndPort);
       }
+      if (Tls != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(Tls);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -285,6 +308,9 @@ namespace DistributedMatchEngine {
       }
       if (EndPort != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(EndPort);
+      }
+      if (Tls != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -314,6 +340,9 @@ namespace DistributedMatchEngine {
       }
       if (other.EndPort != 0) {
         EndPort = other.EndPort;
+      }
+      if (other.Tls != false) {
+        Tls = other.Tls;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -348,6 +377,10 @@ namespace DistributedMatchEngine {
           }
           case 48: {
             EndPort = input.ReadInt32();
+            break;
+          }
+          case 56: {
+            Tls = input.ReadBool();
             break;
           }
         }
