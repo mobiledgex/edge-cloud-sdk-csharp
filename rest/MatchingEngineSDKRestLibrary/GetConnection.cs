@@ -120,11 +120,11 @@ namespace DistributedMatchEngine
       UriBuilder uriBuilder;
       if (appPort.tls)
       {
-        uriBuilder = new UriBuilder("http", uriString);
+        uriBuilder = new UriBuilder("https", uriString);
       }
       else
       {
-        uriBuilder = new UriBuilder("https", uriString);
+        uriBuilder = new UriBuilder("http", uriString);
       }
       Uri uri = uriBuilder.Uri;
       HttpClient client = await GetHTTPClient(uri);
