@@ -131,7 +131,9 @@ namespace DistributedMatchEngine.PerformanceMetrics
       {
         ts = stopWatch.Elapsed;
         stopWatch.Stop();
+        socket.Close();
       }
+
       return ts.TotalMilliseconds;
     }
 
