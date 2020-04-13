@@ -159,10 +159,20 @@ namespace DistributedMatchEngine
         throw new GetConnectionException("Have not integrated NetworkInterface");
       }
 
-      string host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().CELLULAR);
+      string host;
+      if (useOnlyWifi || !netInterface.HasCellular())
+      {
+        host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().WIFI);
+      }
+      else
+      {
+        host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().CELLULAR);
+      }
+
       if (host == null || host == "")
       {
-        throw new GetConnectionException("Could not get Cellular interface");
+        string type = useOnlyWifi ? "Wifi" : "Cellular";
+        throw new GetConnectionException("Could not get " + type + " interface");
       }
       // Gets IP address of host
       IPAddress localIP = Dns.GetHostAddresses(host)[0];
