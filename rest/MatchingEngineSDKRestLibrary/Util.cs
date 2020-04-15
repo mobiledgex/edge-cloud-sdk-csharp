@@ -27,7 +27,11 @@ namespace DistributedMatchEngine
     {
 
     }
-
+    /// <summary>
+    /// Converts a Stream (sequence of bytes) to a string (JSON String)
+    /// </summary>
+    /// <param name="ms">Stream (Sequence of Bytes)</param>
+    /// <returns>returns JSON String</returns>
     public static string StreamToString(Stream ms)
     {
       ms.Position = 0;
@@ -35,7 +39,12 @@ namespace DistributedMatchEngine
       string jsonStr = reader.ReadToEnd();
       return jsonStr;
     }
-
+    /// <summary>
+    /// Get Location from device, returns Loc Object (Location)
+    /// </summary>
+    /// <returns>
+    /// Returns Location using Loc Object 
+    /// </returns>
     // FIXME: This function needs per device customization.
     public async static Task<Loc> GetLocationFromDevice()
     {
