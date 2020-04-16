@@ -25,6 +25,7 @@ using System.Threading;
 
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace DistributedMatchEngine.PerformanceMetrics
 {
@@ -53,6 +54,8 @@ namespace DistributedMatchEngine.PerformanceMetrics
 
       public double average;
       public double stddev;
+
+      public Appinstance appInst;
 
       public Site(TestType testType = TestType.CONNECT, int numSamples = 5)
       {
@@ -202,69 +205,119 @@ namespace DistributedMatchEngine.PerformanceMetrics
       }
     }
 
-    // Basic utility funtion to connect and disconnect from any TCP port.
+    // NetTest Runloop
     public async void RunNetTest()
     {
       Log.D("Run Net Test");
       while (runTest)
       {
         Log.D("..");
-        double elapsed = -1d;
         foreach (Site site in sites)
         {
-
-          switch (site.testType)
-          {
-            case TestType.CONNECT:
-              if (site.L7Path == null) // Simple host and port ping.
-              {
-                try
-                {
-                  elapsed = await ConnectAndDisconnectSocket(site);
-                }
-                catch (Exception e)
-                {
-                  Log.S("Error testing site: " + site.host + ":" + site.port);
-                  Log.S(e.StackTrace);
-                  elapsed = -1;
-                }
-              }
-              else // Use L7 Path.
-              {
-                try
-                {
-                  elapsed = await ConnectAndDisconnect(site);
-                }
-                catch (Exception e)
-                {
-                  Log.S("Error testing l7Path site: " + site.L7Path);
-                  Log.S(e.Message);
-                  Log.S(e.StackTrace);
-                  if (e.InnerException != null)
-                  {
-                    Log.S(e.InnerException.Message);
-                    Log.S(e.InnerException.StackTrace);
-                  }
-                  elapsed = -1;
-                }
-              }
-              break;
-            case TestType.PING:
-              {
-                elapsed = Ping(site);
-              }
-              break;
-          }
-          site.lastPingMs = elapsed;
-          if (elapsed >= 0)
-          {
-            site.addSample(elapsed);
-            site.recalculateStats();
-          }
-          Log.S("Round trip to host: " + site.host + ", port: " + site.port + ", l7Path: " + site.L7Path + ", elapsed: " + elapsed + ", average: " + site.average + ", stddev: " + site.stddev);
+           await TestSite(site); 
         }
         await Task.Delay(PingIntervalMS).ConfigureAwait(false);
       }
+    }
+
+    // NetTest each site for numSamples. Returns sorted list of sites task.
+    public async Task<Site[]> RunNetTest(int numSamples)
+    {
+      Log.D("Running NetTest for " + numSamples + " iterations.");
+
+      var tasks = new List<Task>();
+      for (int i = 0; i < numSamples; i++)
+      {
+        foreach (Site site in sites)
+        {
+          tasks.Add(TestSite(site));
+        }
+      }
+
+      try
+      {
+        await Task.WhenAll(tasks.ToArray());
+        return GetSortedSites();
+      }
+      catch (AggregateException ae)
+      {
+        Log.E("Unable to complete all NetTest Tasks. Exception is " + ae.Message);
+        return null;
+      }
+    }
+
+    // Tests site based on TestType of site and protocol (l7Path)
+    public async Task TestSite(Site site)
+    {
+      double elapsed = -1d;
+      switch (site.testType)
+      {
+
+        case TestType.CONNECT:
+          if (site.L7Path == null) // Simple host and port ping.
+          {
+            try
+            {
+              elapsed = await ConnectAndDisconnectSocket(site);
+            }
+            catch (Exception e)
+            {
+              Log.S("Error testing site: " + site.host + ":" + site.port);
+              Log.S(e.StackTrace);
+              elapsed = -1;
+            }
+          }
+          else // Use L7 Path.
+          {
+            try
+            {
+              elapsed = await ConnectAndDisconnect(site);
+            }
+            catch (Exception e)
+            {
+              Log.S("Error testing l7Path site: " + site.L7Path);
+              Log.S(e.Message);
+              Log.S(e.StackTrace);
+            if (e.InnerException != null)
+            {
+              Log.S(e.InnerException.Message);
+              Log.S(e.InnerException.StackTrace);
+            }
+              elapsed = -1;
+            }
+          }
+          break;
+
+        case TestType.PING:
+          elapsed = Ping(site);
+          break;
+      }
+
+      site.lastPingMs = elapsed;
+      if (elapsed >= 0)
+      {
+        site.addSample(elapsed);
+        site.recalculateStats();
+      }
+      Log.S("Round trip to host: " + site.host + ", port: " + site.port + ", l7Path: " + site.L7Path + ", elapsed: " + elapsed + ", average: " + site.average + ", stddev: " + site.stddev);
+    }
+
+    // Sort array of sites by lowest avg and lowest stddev
+    public Site[] GetSortedSites()
+    {
+      var siteArr = sites.ToArray();
+      Array.Sort(siteArr, delegate(Site x, Site y)
+        {
+          if (x.average != y.average)
+          {
+            return x.average < y.average ? -1 : 1;
+          }
+
+          if (x.stddev == y.stddev) return 0;
+          return x.stddev < y.stddev ? -1 : 1;
+        }
+      );
+      return siteArr;
     }
 
     public void Dispose()
