@@ -19,31 +19,49 @@ using System;
 
 namespace DistributedMatchEngine
 {
-  /**
-   * CarrierInfo telephony interface for the platform
-   */
-  public interface CarrierInfo
-  {
-    string GetCurrentCarrierName();
-    string GetMccMnc();
-    UInt32 GetCellID();
-  }
-
-  public class EmptyCarrierInfo : CarrierInfo
-  {
-    public string GetCurrentCarrierName()
+    /// <summary>
+    /// CarrierInfo telephony interface for the platform
+    /// </summary>
+    public interface CarrierInfo
     {
-      throw new NotImplementedException("Required CarrierInfo interface function: GetCurrentCarrierName() is not defined!");
+        /// <summary>
+        /// Gets Carrier Name
+        /// </summary>
+        /// <returns>string representing Carrier Name</returns>
+        string GetCurrentCarrierName();
+        /// <summary>
+        /// A combination of MCC (Mobile Country Code) and MNC (Mobile Network Code)
+        /// <see cref="https://en.wikipedia.org/wiki/Mobile_country_code"/>
+        /// </summary>
+        /// <returns>string representing MccMnc Code </returns>
+        string GetMccMnc();
+        /// <summary>
+        /// Gets the Cell ID ,GSM Cell ID is a generally unique number used to identify each base transceiver station
+        /// <para>
+        /// <see cref="https://en.wikipedia.org/wiki/GSM_Cell_ID"/>
+        /// </para>
+        /// </summary>
+        UInt32 GetCellID();
     }
 
-    public string GetMccMnc()
+    /// <summary>
+    /// Implementation of  CarrierInfo interface throws NotImplementedException
+    /// </summary>
+    public class EmptyCarrierInfo : CarrierInfo
     {
-      throw new NotImplementedException("Required CarrierInfo interface function: GetMccMnc() is not defined!");
-    }
+        public string GetCurrentCarrierName()
+        {
+            throw new NotImplementedException("Required CarrierInfo interface function: GetCurrentCarrierName() is not defined!");
+        }
 
-    public UInt32 GetCellID()
-    {
-      throw new NotImplementedException("Required CarrierInfo interface function: GetCellID() is not defined!");
+        public string GetMccMnc()
+        {
+            throw new NotImplementedException("Required CarrierInfo interface function: GetMccMnc() is not defined!");
+        }
+
+        public UInt32 GetCellID()
+        {
+            throw new NotImplementedException("Required CarrierInfo interface function: GetCellID() is not defined!");
+        }
     }
-  }
 }
