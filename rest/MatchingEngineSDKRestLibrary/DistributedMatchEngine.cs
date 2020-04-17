@@ -81,14 +81,14 @@ namespace DistributedMatchEngine
     }
   }
 
-  public class AppInstListException : Exception
+  public class FindCloudletException : Exception
   {
-    public AppInstListException(string message)
+    public FindCloudletException(string message)
         : base(message)
     {
     }
 
-    public AppInstListException(string message, Exception innerException)
+    public FindCloudletException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
@@ -699,10 +699,14 @@ namespace DistributedMatchEngine
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
       if (aiReply.status != AppInstListReply.AIStatus.AI_SUCCESS)
       {
-        throw new AppInstListException("GetAppInstList status is " + aiReply.status);
+        throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.status);
       }
 
       NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply);
+      if (sites.Length == 0)
+      {
+        throw new FindCloudletException("No sites returned from GetAppInstList");
+      }
 
       NetTest netTest = new NetTest(this);
       foreach (NetTest.Site site in sites)
@@ -710,7 +714,13 @@ namespace DistributedMatchEngine
         netTest.sites.Enqueue(site);
       }
 
-      sites = await netTest.RunNetTest(10);
+      try {
+        sites = await netTest.RunNetTest(10);
+      }
+      catch (AggregateException ae)
+      {
+        throw new FindCloudletException("Unable to RunNetTest. AggregateException is " + ae.Message);
+      }
 
       return CreateFindCloudletReplyFromBestSite(fcReply, sites[0]);
     }

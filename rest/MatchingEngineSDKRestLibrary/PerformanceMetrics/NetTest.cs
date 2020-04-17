@@ -242,7 +242,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
       catch (AggregateException ae)
       {
         Log.E("Unable to complete all NetTest Tasks. Exception is " + ae.Message);
-        return null;
+        throw ae;
       }
     }
 
