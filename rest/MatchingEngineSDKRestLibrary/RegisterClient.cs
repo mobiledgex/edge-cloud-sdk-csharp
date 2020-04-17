@@ -31,20 +31,20 @@ namespace DistributedMatchEngine
     public string app_name;
     [DataMember]
     public string app_vers;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public string carrier_name;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public string auth_token;
     // Cell ID of base station where client is
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
     // Type of unique id provided by client
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public string unique_id_type;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     // Optional. Unique identification of the client device or user. May be overridden by the server.
     public string unique_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
@@ -80,11 +80,11 @@ namespace DistributedMatchEngine
     public string session_cookie;
     [DataMember]
     public string token_server_uri;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public string unique_id_type;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public string unique_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 

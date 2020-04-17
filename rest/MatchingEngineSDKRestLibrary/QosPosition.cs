@@ -56,14 +56,14 @@ namespace DistributedMatchEngine
     [DataMember]
     public QosPosition[] positions;
     // client's device LTE category number, optional
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Int32 lte_category;
     // Band list used by the client, optional
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public BandSelection band_selection;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
@@ -129,7 +129,7 @@ namespace DistributedMatchEngine
     // kpi details
     [DataMember]
     public QosPositionResult[] position_results;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 

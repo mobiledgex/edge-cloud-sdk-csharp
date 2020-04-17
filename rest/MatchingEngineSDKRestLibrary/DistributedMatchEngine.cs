@@ -81,14 +81,14 @@ namespace DistributedMatchEngine
     }
   }
 
-  public class FindCloudletException : Exception
-  {
-    public FindCloudletException(string message)
+  public class SessionCookieException : Exception
+  { 
+    public SessionCookieException(string message)
         : base(message)
     {
     }
 
-    public FindCloudletException(string message, Exception innerException)
+    public SessionCookieException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
@@ -424,17 +424,32 @@ namespace DistributedMatchEngine
       return token;
     }
 
-    public RegisterClientRequest CreateRegisterClientRequest(
-      string carrierName, string orgName, string appName, string appVersion, string authToken = null,
+    public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string carrierName = null, string authToken = null,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
+ 
+      if (carrierName == null) {
+        try
+        {
+          string mccMnc = carrierInfo.GetMccMnc();
+          if (mccMnc != null && mccMnc != "")
+          {
+            carrierName = mccMnc;
+          }
+        }
+        catch (NotImplementedException nie)
+        {
+          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+        }
+      }
+
       return new RegisterClientRequest
       {
         ver = 1,
-        carrier_name = carrierName,
         org_name = orgName,
         app_name = appName,
         app_vers = appVersion,
+        carrier_name = carrierName,
         auth_token = authToken,
         cell_id = cellID,
         unique_id_type = uniqueIDType,
@@ -492,24 +507,34 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public FindCloudletRequest CreateFindCloudletRequest(
-      string carrierName, Loc loc,
-      string orgName = null, string appName = null, string appVers = null, // Optionals
-      UInt32 cellID = 0, Tag[] tags = null)
+    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
-        // Exceptions.
-        return null;
+        throw new SessionCookieException("Unable to find session cookie. Please register client again");
       }
+
+      if (carrierName == null) {
+        try
+        {
+          string mccMnc = carrierInfo.GetMccMnc();
+          if (mccMnc != null && mccMnc != "")
+          {
+            carrierName = mccMnc;
+          }
+        }
+        catch (NotImplementedException nie)
+        {
+          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+          carrierName = wifiCarrier;
+        }
+      }
+
       return new FindCloudletRequest
       {
         session_cookie = this.sessionCookie,
-        carrier_name = carrierName,
-        org_name = orgName,
-        app_name = appName,
-        app_vers = appVers,
         gps_location = loc,
+        carrier_name = carrierName,
         cell_id = cellID,
         tags = tags
       };
@@ -727,47 +752,25 @@ namespace DistributedMatchEngine
 
     // Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
-      string carrierName, string orgName, string appName, string appVersion, string authToken, Loc loc,
+      string orgName, string appName, string appVersion, Loc loc, string carrierName = null, string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
-      // Register Client
-      RegisterClientRequest registerRequest = CreateRegisterClientRequest(
-        carrierName: carrierName,
-        orgName: orgName,
-        appName: appName,
-        appVersion: appVersion,
-        authToken: authToken,
-        cellID: cellID,
-        uniqueIDType: uniqueIDType,
-        uniqueID: uniqueID,
-        tags: tags);
-      RegisterClientReply registerClientReply = await RegisterClient(registerRequest);
-      if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
-      {
-        throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
-      }
-      // Find Cloudlet
-      FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(
-        carrierName: carrierName,
-        loc: loc,
-        cellID: cellID,
-        tags: tags);
-      FindCloudletReply findCloudletReply = await FindCloudlet(findCloudletRequest);
-
-      return findCloudletReply;
+      return await RegisterAndFindCloudlet(GenerateDmeHostName(), defaultDmeRestPort,
+        orgName, appName, appVersion, loc,
+        carrierName, authToken, cellID, uniqueIDType, uniqueID, tags);
     }
 
     // Override with specified dme host and port. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
-      string carrierName, string orgName, string appName, string appVersion, string authToken, Loc loc,
+       string orgName, string appName, string appVersion, Loc loc, string carrierName = null, string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(
-        carrierName: carrierName,
         orgName: orgName,
         appName: appName,
         appVersion: appVersion,
+        carrierName: carrierName,
         authToken: authToken,
         cellID: cellID,
         uniqueIDType: uniqueIDType,
@@ -780,8 +783,8 @@ namespace DistributedMatchEngine
       }
       // Find Cloudlet 
       FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(
-        carrierName: carrierName,
         loc: loc,
+        carrierName: carrierName,
         cellID: cellID,
         tags: tags);
       FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest);
@@ -789,18 +792,35 @@ namespace DistributedMatchEngine
       return findCloudletReply;
     }
 
-    public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc, UInt32 cellID = 0, Tag[] tags = null)
+    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
         return null;
       }
+
+      if (carrierName == null) {
+        try
+        {
+          string mccMnc = carrierInfo.GetMccMnc();
+          if (mccMnc != null && mccMnc != "")
+          {
+            carrierName = mccMnc;
+          }
+        }
+        catch (NotImplementedException nie)
+        {
+          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+          carrierName = wifiCarrier;
+        }
+      }
+
       return new VerifyLocationRequest
       {
         ver = 1,
-        carrier_name = carrierName,
-        gps_location = loc,
         session_cookie = this.sessionCookie,
+        gps_location = loc,
+        carrier_name = carrierName,
         verify_loc_token = null,
         cell_id = cellID,
         tags = tags
@@ -875,11 +895,27 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public GetLocationRequest CreateGetLocationRequest(string carrierName, UInt32 cellID = 0, Tag[] tags = null)
+    public GetLocationRequest CreateGetLocationRequest(string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
         return null;
+      }
+
+      if (carrierName == null) {
+        try
+        {
+          string mccMnc = carrierInfo.GetMccMnc();
+          if (mccMnc != null && mccMnc != "")
+          {
+            carrierName = mccMnc;
+          }
+        }
+        catch (NotImplementedException nie)
+        {
+          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+          carrierName = wifiCarrier;
+        }
       }
 
       return new GetLocationRequest
@@ -941,23 +977,40 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public AppInstListRequest CreateAppInstListRequest(string carrierName, Loc loc, UInt32 cellID = 0, Tag[] tags = null)
+    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
         return null;
       }
+
       if (loc == null)
       {
         return null;
       }
 
+      if (carrierName == null) {
+        try
+        {
+          string mccMnc = carrierInfo.GetMccMnc();
+          if (mccMnc != null && mccMnc != "")
+          {
+            carrierName = mccMnc;
+          }
+        }
+        catch (NotImplementedException nie)
+        {
+          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+          carrierName = wifiCarrier;
+        }
+      }
+
       return new AppInstListRequest
       {
         ver = 1,
-        carrier_name = carrierName,
         session_cookie = this.sessionCookie,
         gps_location = loc,
+        carrier_name = carrierName,
         cell_id = cellID,
         tags = tags
       };
@@ -1070,7 +1123,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public DynamicLocGroupRequest CreateDynamicLocGroupRequest(UInt64 lgId, DlgCommType dlgCommType,
+    public DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
       string userData = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -1082,8 +1135,8 @@ namespace DistributedMatchEngine
       {
         ver = 1,
         session_cookie = this.sessionCookie,
-        lg_id = lgId,
         comm_type = dlgCommType,
+        lg_id = lgId,
         user_data = userData,
         cell_id = cellID,
         tags = tags
