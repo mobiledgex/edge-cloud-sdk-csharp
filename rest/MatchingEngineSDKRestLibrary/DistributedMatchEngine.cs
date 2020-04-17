@@ -605,7 +605,7 @@ namespace DistributedMatchEngine
       };
     }
 
-    private NetTest.Site initHttpSite(AppPort appPort, Appinstance appinstance)
+    private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance)
     {
       NetTest.Site site = new NetTest.Site(numSamples: 10);
 
@@ -617,7 +617,7 @@ namespace DistributedMatchEngine
       return site;
     }
 
-    private NetTest.Site initTcpSite(AppPort appPort, Appinstance appinstance)
+    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance)
     {
       NetTest.Site site = new NetTest.Site(numSamples: 10);
 
@@ -628,7 +628,7 @@ namespace DistributedMatchEngine
       return site;
     }
 
-    private NetTest.Site initUdpSite(AppPort appPort, Appinstance appinstance)
+    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance)
     {
       NetTest.Site site = new NetTest.Site(testType: NetTest.TestType.PING, numSamples: 10);
 
@@ -654,22 +654,22 @@ namespace DistributedMatchEngine
           {
 
             case LProto.L_PROTO_HTTP:
-              sites.Add(initHttpSite(appPort, appinstance));
+              sites.Add(InitHttpSite(appPort, appinstance));
               break;
 
             case LProto.L_PROTO_TCP:
               if (appPort.path_prefix == null || appPort.path_prefix == "")
               {
-                sites.Add(initTcpSite(appPort, appinstance));
+                sites.Add(InitTcpSite(appPort, appinstance));
               }
               else
               {
-                sites.Add(initHttpSite(appPort, appinstance));
+                sites.Add(InitHttpSite(appPort, appinstance));
               }
               break;
 
             case LProto.L_PROTO_UDP:
-              sites.Add(initUdpSite(appPort, appinstance));
+              sites.Add(InitUdpSite(appPort, appinstance));
               break;
 
             default:
