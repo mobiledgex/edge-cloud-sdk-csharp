@@ -203,7 +203,6 @@ namespace DistributedMatchEngine
     }
     /// <summary>
     /// A timestamp is a sequence of characters or encoded information identifying when a certain event occurred.
-    /// <para> <see cref="https://en.wikipedia.org/wiki/Timestamp"/></para>
     /// </summary>
     public class Timestamp
     {
