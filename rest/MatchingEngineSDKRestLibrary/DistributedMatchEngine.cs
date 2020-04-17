@@ -27,6 +27,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DistributedMatchEngine.PerformanceMetrics;
 
+using DistributedMatchEngine.Mel;
+
 namespace DistributedMatchEngine
 {
   public class DmeDnsException : Exception
@@ -154,6 +156,7 @@ namespace DistributedMatchEngine
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
+    public MelMessagingInterface melMessaging { get; set; }
 
     // API Paths:
     private string registerAPI = "/v1/registerclient";
@@ -203,6 +206,19 @@ namespace DistributedMatchEngine
       else
       {
         this.uniqueID = uniqueID;
+      }
+    }
+
+    // An device specific interface.
+    public void SetMel(MelMessagingInterface melInterface)
+    {
+      if (melInterface != null)
+      {
+        this.melMessaging = melInterface;
+      }
+      else
+      {
+        this.melMessaging = new EmptyMelMessaging();
       }
     }
 
@@ -486,6 +502,25 @@ namespace DistributedMatchEngine
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
+      }
+
+      RegisterClientRequest oldRequest = request;
+      // MEL platform should have a UUID from a previous platform level registration, include it for App registration.
+      if (melMessaging.IsMelEnabled())
+      {
+        request = new RegisterClientRequest()
+        {
+          ver = oldRequest.ver,
+          org_name = oldRequest.org_name,
+          app_name = oldRequest.app_name,
+          app_vers = oldRequest.app_vers,
+          carrier_name = oldRequest.carrier_name,
+          auth_token = oldRequest.auth_token,
+          cell_id = oldRequest.cell_id,
+          unique_id = melMessaging.GetUuid(),
+          unique_id_type = "mel_unique_id", // FIXME: Unknown type.
+          tags = oldRequest.tags
+        };
       }
 
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
