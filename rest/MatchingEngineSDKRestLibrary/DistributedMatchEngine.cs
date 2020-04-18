@@ -207,10 +207,13 @@ namespace DistributedMatchEngine
       {
         this.uniqueID = uniqueID;
       }
+
+      // Default to empty.
+      SetMelMessaging(null);
     }
 
     // An device specific interface.
-    public void SetMel(MelMessagingInterface melInterface)
+    public void SetMelMessaging(MelMessagingInterface melInterface)
     {
       if (melInterface != null)
       {
