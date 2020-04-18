@@ -507,14 +507,14 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
+    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = "", UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
       {
         throw new SessionCookieException("Unable to find session cookie. Please register client again");
       }
 
-      if (carrierName == null) {
+      if (carrierName == "") {
         try
         {
           string mccMnc = carrierInfo.GetMccMnc();
@@ -526,7 +526,6 @@ namespace DistributedMatchEngine
         catch (NotImplementedException nie)
         {
           Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
-          carrierName = wifiCarrier;
         }
       }
 
