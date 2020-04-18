@@ -435,7 +435,6 @@ namespace Tests
       try
       {
         reply = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
-          carrierName: carrierName,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
@@ -510,7 +509,6 @@ namespace Tests
       {
         // Overide, test to a staging server:
         reply1 = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
-          carrierName: carrierName,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
