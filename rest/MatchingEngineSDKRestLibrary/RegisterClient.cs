@@ -32,8 +32,6 @@ namespace DistributedMatchEngine
     [DataMember]
     public string app_vers;
     [DataMember(EmitDefaultValue = false)]
-    public string carrier_name;
-    [DataMember(EmitDefaultValue = false)]
     public string auth_token;
     // Cell ID of base station where client is
     [DataMember(EmitDefaultValue = false)]

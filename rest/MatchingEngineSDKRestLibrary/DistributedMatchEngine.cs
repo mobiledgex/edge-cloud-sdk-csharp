@@ -424,32 +424,15 @@ namespace DistributedMatchEngine
       return token;
     }
 
-    public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string carrierName = null, string authToken = null,
+    public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
- 
-      if (carrierName == null) {
-        try
-        {
-          string mccMnc = carrierInfo.GetMccMnc();
-          if (mccMnc != null && mccMnc != "")
-          {
-            carrierName = mccMnc;
-          }
-        }
-        catch (NotImplementedException nie)
-        {
-          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
-        }
-      }
-
       return new RegisterClientRequest
       {
         ver = 1,
         org_name = orgName,
         app_name = appName,
         app_vers = appVersion,
-        carrier_name = carrierName,
         auth_token = authToken,
         cell_id = cellID,
         unique_id_type = uniqueIDType,
@@ -751,7 +734,7 @@ namespace DistributedMatchEngine
 
     // Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
-      string orgName, string appName, string appVersion, Loc loc, string carrierName = null, string authToken = null, 
+      string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostName(), defaultDmeRestPort,
@@ -761,7 +744,7 @@ namespace DistributedMatchEngine
 
     // Override with specified dme host and port. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
-       string orgName, string appName, string appVersion, Loc loc, string carrierName = null, string authToken = null, 
+       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
       // Register Client
@@ -769,7 +752,6 @@ namespace DistributedMatchEngine
         orgName: orgName,
         appName: appName,
         appVersion: appVersion,
-        carrierName: carrierName,
         authToken: authToken,
         cellID: cellID,
         uniqueIDType: uniqueIDType,
