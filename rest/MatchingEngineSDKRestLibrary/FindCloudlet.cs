@@ -28,18 +28,12 @@ namespace DistributedMatchEngine
     [DataMember]
     public string session_cookie;
     [DataMember]
-    public string carrier_name;
-    [DataMember]
     public Loc gps_location;
     [DataMember]
-    public string org_name;
-    [DataMember]
-    public string app_name;
-    [DataMember]
-    public string app_vers;
-    [DataMember]
+    public string carrier_name;
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
@@ -85,7 +79,7 @@ namespace DistributedMatchEngine
     public AppPort[] ports;
     [DataMember]
     public Loc cloudlet_location;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 

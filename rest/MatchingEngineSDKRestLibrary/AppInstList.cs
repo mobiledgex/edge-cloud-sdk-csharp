@@ -65,12 +65,12 @@ namespace DistributedMatchEngine
     [DataMember]
     public string session_cookie;
     [DataMember]
-    public string carrier_name;
-    [DataMember]
     public Loc gps_location;
     [DataMember]
+    public string carrier_name;
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
@@ -112,7 +112,7 @@ namespace DistributedMatchEngine
 
     [DataMember]
     public CloudletLocation[] cloudlets;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 }

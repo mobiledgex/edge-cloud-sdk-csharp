@@ -25,7 +25,7 @@ namespace DistributedMatchEngine
   {
     // App  Name
     [DataMember]
-    public string app_ame;
+    public string app_name;
     // App Version
     [DataMember]
     public string app_vers;
@@ -47,9 +47,9 @@ namespace DistributedMatchEngine
     public UInt32 ver;
     [DataMember]
     public string session_cookie;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   };
 
@@ -92,7 +92,7 @@ namespace DistributedMatchEngine
         }
       }
     }
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public static Tag[] tags;
   }
 }
