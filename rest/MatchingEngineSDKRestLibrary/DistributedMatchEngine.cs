@@ -94,6 +94,19 @@ namespace DistributedMatchEngine
     }
   }
 
+  public class FindCloudletException : Exception
+  {
+    public FindCloudletException(string message)
+        : base(message)
+    {
+    }
+
+    public FindCloudletException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+  }
+
   // Minimal logger without log levels:
   static class Log
   {
@@ -702,7 +715,7 @@ namespace DistributedMatchEngine
       };
       Tag[] tags = { tag };
 
-      AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.carrier_name, request.gps_location, tags: tags);
+      AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.gps_location, request.carrier_name, tags: tags);
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
       if (aiReply.status != AppInstListReply.AIStatus.AI_SUCCESS)
       {

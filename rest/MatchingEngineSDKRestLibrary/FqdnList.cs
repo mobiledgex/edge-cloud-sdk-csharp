@@ -25,7 +25,7 @@ namespace DistributedMatchEngine
   {
     // App  Name
     [DataMember]
-    public string app_ame;
+    public string app_name;
     // App Version
     [DataMember]
     public string app_vers;
