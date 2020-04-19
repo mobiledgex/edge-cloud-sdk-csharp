@@ -166,6 +166,7 @@ namespace DistributedMatchEngine
     private string appinstlistAPI = "/v1/getappinstlist";
     private string dynamiclocgroupAPI = "/v1/dynamiclocgroup";
     private string getfqdnlistAPI = "/v1/getfqdnlist";
+    private string appofficialfqdnAPI = "/v1/getappofficialfqdn";
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
@@ -176,6 +177,8 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
+
+    public RegisterClientRequest LastRegisterClientRequest { get; private set; }
 
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
@@ -538,6 +541,11 @@ namespace DistributedMatchEngine
       // Some platforms won't parse emums with same library binary.
       reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
 
+      if (reply.status == ReplyStatus.RS_SUCCESS)
+      {
+        LastRegisterClientRequest = request;
+      }
+
       return reply;
     }
 
@@ -571,6 +579,22 @@ namespace DistributedMatchEngine
         cell_id = cellID,
         tags = tags
       };
+    }
+
+    private AppOfficialFqdnReply.AOFStatus ParseAofStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      AppOfficialFqdnReply.AOFStatus status;
+      try
+      {
+        status = (AppOfficialFqdnReply.AOFStatus)Enum.Parse(typeof(AppOfficialFqdnReply.AOFStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED;
+      }
+      return status;
     }
 
     private FindCloudletReply.FindStatus ParseFindStatus(string responseStr)
@@ -618,8 +642,68 @@ namespace DistributedMatchEngine
       return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
 
-    // FindCloudlet REST API
-    public async Task<FindCloudletReply> FindCloudletApi(string host, uint port, FindCloudletRequest request)
+    private async Task<FindCloudletReply> FindCloudletMelMode(string host, uint port, FindCloudletRequest request)
+    {
+      AppOfficialFqdnRequest appOfficialFqdnRequest = new AppOfficialFqdnRequest
+      {
+        ver = 1,
+        session_cookie = request.session_cookie,
+        gps_location = request.gps_location,
+        tags = request.tags
+      };
+
+
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest));
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, request);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream = await PostRequest(CreateUri(host, port) + appofficialfqdnAPI, jsonStr);
+      if (responseStream == null || !responseStream.CanRead)
+      {
+        return null;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnReply));
+      AppOfficialFqdnReply reply = (AppOfficialFqdnReply)deserializer.ReadObject(ms);
+
+      // Reparse if default value.
+      reply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED ? ParseAofStatus(responseStr) : reply.status;
+
+      // Inform Mel Messaging:
+      if (melMessaging.IsMelEnabled())
+      {
+        melMessaging.SetLocationToken(reply.client_token, LastRegisterClientRequest.app_name);
+      }
+
+      // Repackage as FindCloudletReply:
+      FindCloudletReply fcReply = new FindCloudletReply
+      {
+        ver = 1,
+        fqdn = reply.app_official_fqdn,
+        // Don't set location.
+        ports = new AppPort[1]
+      };
+      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.FIND_FOUND : FindCloudletReply.FindStatus.FIND_NOTFOUND;
+      // attach empty port:
+      fcReply.ports[0] = new AppPort
+      {
+        proto = LProto.L_PROTO_TCP,
+        internal_port = 0,
+        public_port = 0,
+        path_prefix = "",
+        fqdn_prefix = "",
+        end_port = 0,
+        tls = false // FIXME: Unknown channel state!
+      };
+
+      return fcReply;
+    }
+
+    private async Task<FindCloudletReply> FindCloudletProximityMode(string host, uint port, FindCloudletRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest));
       MemoryStream ms = new MemoryStream();
@@ -647,140 +731,17 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    // Helper function for FindCloudlet
-    private FindCloudletReply CreateFindCloudletReplyFromBestSite(FindCloudletReply reply, NetTest.Site site)
-    {
-      Appinstance appinstance = site.appInst;
-
-      return new FindCloudletReply
-      {
-        ver = reply.ver,
-        status = reply.status,
-        fqdn = appinstance.fqdn,
-        ports = appinstance.ports,
-        cloudlet_location = reply.cloudlet_location,
-        tags = reply.tags
-      };
-    }
-
-    private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance)
-    {
-      NetTest.Site site = new NetTest.Site(numSamples: 10);
-
-      int port = appPort.public_port;
-      string host = appPort.fqdn_prefix + appinstance.fqdn;
-
-      site.L7Path = host + ":" + port + appPort.path_prefix;
-      site.appInst = appinstance;
-      return site;
-    }
-
-    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance)
-    {
-      NetTest.Site site = new NetTest.Site(numSamples: 10);
-
-      site.host = appPort.fqdn_prefix + appinstance.fqdn;
-      site.port = appPort.public_port;
-
-      site.appInst = appinstance;
-      return site;
-    }
-
-    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance)
-    {
-      NetTest.Site site = new NetTest.Site(testType: NetTest.TestType.PING, numSamples: 10);
-
-      site.host = appPort.fqdn_prefix + appinstance.fqdn;
-      site.port = appPort.public_port;
-
-      site.appInst = appinstance;
-      return site;
-    }
-
-    // Helper function for FindCloudlet
-    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply)
-    {
-      List<NetTest.Site> sites = new List<NetTest.Site>();
-
-      foreach (CloudletLocation cloudlet in reply.cloudlets)
-      {
-        foreach (Appinstance appinstance in cloudlet.appinstances)
-        {
-          AppPort appPort = appinstance.ports[0];
-
-          switch (appPort.proto)
-          {
-
-            case LProto.L_PROTO_HTTP:
-              sites.Add(InitHttpSite(appPort, appinstance));
-              break;
-
-            case LProto.L_PROTO_TCP:
-              if (appPort.path_prefix == null || appPort.path_prefix == "")
-              {
-                sites.Add(InitTcpSite(appPort, appinstance));
-              }
-              else
-              {
-                sites.Add(InitHttpSite(appPort, appinstance));
-              }
-              break;
-
-            case LProto.L_PROTO_UDP:
-              sites.Add(InitUdpSite(appPort, appinstance));
-              break;
-
-            default:
-              Log.E("Unsupported protocol " + appPort.proto + " found when trying to create sites for NetTest");
-              break;
-          }
-        }
-      }
-      return sites.ToArray();
-    }
-
-    // FindCloudlet with GetAppInstList and NetTest
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request)
     {
-      FindCloudletReply fcReply = await FindCloudletApi(host, port, request);
-      if (fcReply.status != FindCloudletReply.FindStatus.FIND_FOUND) return fcReply;
-
-      // Dummy bytes to load cellular network path
-      Byte[] bytes = new Byte[2048];
-      Tag tag = new Tag {
-        type = "buffer",
-        data = bytes.ToString()
-      };
-      Tag[] tags = { tag };
-
-      AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.gps_location, request.carrier_name, tags: tags);
-      AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
-      if (aiReply.status != AppInstListReply.AIStatus.AI_SUCCESS)
+      if (melMessaging.IsMelEnabled())
       {
-        throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.status);
+        return await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
       }
-
-      NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply);
-      if (sites.Length == 0)
+      else
       {
-        throw new FindCloudletException("No sites returned from GetAppInstList");
+        // Normal Proximity Only Mode:
+        return await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
       }
-
-      NetTest netTest = new NetTest(this);
-      foreach (NetTest.Site site in sites)
-      {
-        netTest.sites.Enqueue(site);
-      }
-
-      try {
-        sites = await netTest.RunNetTest(10);
-      }
-      catch (AggregateException ae)
-      {
-        throw new FindCloudletException("Unable to RunNetTest. AggregateException is " + ae.Message);
-      }
-
-      return CreateFindCloudletReplyFromBestSite(fcReply, sites[0]);
     }
 
     // Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
