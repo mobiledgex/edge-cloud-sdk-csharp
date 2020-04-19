@@ -25,16 +25,16 @@ namespace DistributedMatchEngine
   {
     // App Instance Name
     [DataMember]
-    string app_name;
+    public string app_name;
     // App Instance Version
     [DataMember]
-    string app_vers;
+    public string app_vers;
     // App Instance FQDN
     [DataMember]
-    string fqdn;
+    public string fqdn;
     // ports to access app
     [DataMember]
-    AppPort[] ports;
+    public AppPort[] ports;
   }
 
   [DataContract]
@@ -42,19 +42,19 @@ namespace DistributedMatchEngine
   {
     // The carrier name that user is connected to ("Cellular Carrier Name")
     [DataMember]
-    string carrier_name;
+    public string carrier_name;
     // Cloudlet Name
     [DataMember]
-    string cloudlet_name;
+    public string cloudlet_name;
     // The GPS Location of the user
     [DataMember]
-    Loc gps_location;
+    public Loc gps_location;
     // Distance of cloudlet vs loc in request
     [DataMember]
-    double distance;
+    public double distance;
     // App instances
     [DataMember]
-    Appinstance[] appinstances;
+    public Appinstance[] appinstances;
   }
 
   [DataContract]

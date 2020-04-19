@@ -538,7 +538,12 @@ namespace Tests
       }
       catch (RegisterClientException rce)
       {
-        Console.WriteLine("Workflow RegisterClient is " + rce);
+        Console.WriteLine("Workflow RegisterClientException is " + rce);
+        return;
+      }
+      catch (FindCloudletException fce)
+      {
+        Console.WriteLine("Workflow FindCloudletException is " + fce);
         return;
       }
       Assert.ByVal(reply1, Is.Not.Null);

@@ -177,6 +177,11 @@ namespace RestSample
           {
             findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
           }
+          catch (FindCloudletException fce)
+          {
+            Console.WriteLine("FindCloudletException is " + fce.Message);
+          }
+
           Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
 
           if (findCloudletReply != null)
