@@ -45,13 +45,11 @@ namespace RestSample
     static string orgName = "MobiledgeX";
     static string appName = "MobiledgeX SDK Demo";
     static string appVers = "2.0";
-    static string authToken = "";
-    static UInt32 cellID = 0;
-    static Tag[] tags = new Tag[0];
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
+    // static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
+    static string fallbackDmeHost = "eu-stage.dme.mobiledgex.net";
 
     static Timestamp createTimestamp(int futureSeconds)
     {
@@ -122,7 +120,7 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
-        var registerClientRequest = me.CreateRegisterClientRequest(carrierName, orgName, appName, appVers, authToken);
+        var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers);
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
         try
@@ -153,9 +151,9 @@ namespace RestSample
         var loc = await locTask;
 
         // Independent requests:
-        var verifyLocationRequest = me.CreateVerifyLocationRequest(carrierName: carrierName, loc: loc);
-        var findCloudletRequest = me.CreateFindCloudletRequest(carrierName: carrierName, loc: loc);
-        var getLocationRequest = me.CreateGetLocationRequest(carrierName, cellID, tags);
+        var verifyLocationRequest = me.CreateVerifyLocationRequest(loc);
+        var findCloudletRequest = me.CreateFindCloudletRequest(loc, carrierName);
+        var getLocationRequest = me.CreateGetLocationRequest();
 
 
         // These are asynchronious calls, of independent REST APIs.
@@ -280,7 +278,7 @@ namespace RestSample
           };
           var requestList = CreateQosPositionList(firstLoc, 45, 2, 1);
 
-          var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null, cellID, tags);
+          var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null);
 
           QosPositionKpiStream qosReplyStream = null;
           try

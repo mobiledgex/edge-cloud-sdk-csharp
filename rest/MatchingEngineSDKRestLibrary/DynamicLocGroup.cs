@@ -53,11 +53,11 @@ namespace DistributedMatchEngine
       }
     }
 
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public string user_data;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
@@ -97,7 +97,7 @@ namespace DistributedMatchEngine
     // Group Cookie for Secure Group Communication
     [DataMember]
     public string group_cookie;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 }

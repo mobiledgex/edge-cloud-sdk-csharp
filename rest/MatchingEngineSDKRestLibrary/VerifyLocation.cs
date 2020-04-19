@@ -28,14 +28,14 @@ namespace DistributedMatchEngine
     [DataMember]
     public string session_cookie;
     [DataMember]
-    public string carrier_name;
-    [DataMember]
     public Loc gps_location;
     [DataMember]
+    public string carrier_name;
+    [DataMember]
     public string verify_loc_token;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   };
 
@@ -111,7 +111,7 @@ namespace DistributedMatchEngine
 
     [DataMember]
     public double gps_location_accuracy_km;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 }

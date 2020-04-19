@@ -43,11 +43,6 @@ namespace Tests
     const string orgName = "MobiledgeX";
     const string appName = "MobiledgeX SDK Demo";
     const string appVers = "2.0";
-    const string authToken = "";
-    const UInt32 cellID = 0;
-    const string uniqueIDType = "";
-    const string uniqueID = "";
-    static Tag[] tags = new Tag[0];
     const string connectionTestFqdn = "mextest-app-cluster.fairview-main.gddt.mobiledgex.net";
     const string aWebSocketServerFqdn = "pingpong-tcp.fairview-main.gddt.mobiledgex.net"; // or, localhost.
 
@@ -440,17 +435,10 @@ namespace Tests
       try
       {
         reply = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
-          carrierName: carrierName,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
-          authToken: authToken,
-          loc: loc,
-          cellID: cellID,
-          uniqueIDType:
-          uniqueIDType,
-          uniqueID: uniqueID,
-          tags: tags);
+          loc: loc);
       }
       catch (DmeDnsException dde)
       {
@@ -521,16 +509,10 @@ namespace Tests
       {
         // Overide, test to a staging server:
         reply1 = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
-          carrierName: carrierName,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
-          authToken: authToken,
-          loc: loc,
-          cellID: cellID,
-          uniqueIDType: uniqueIDType,
-          uniqueID: uniqueID,
-          tags: tags);
+          loc: loc);
       }
       catch (DmeDnsException dde)
       {
