@@ -154,7 +154,7 @@ namespace RestSample
         var verifyLocationRequest = me.CreateVerifyLocationRequest(loc);
         var findCloudletRequest = me.CreateFindCloudletRequest(loc, carrierName);
         var getLocationRequest = me.CreateGetLocationRequest();
-
+        var appInstListRequest = me.CreateAppInstListRequest(loc, carrierName);
 
         // These are asynchronious calls, of independent REST APIs.
 
@@ -265,6 +265,66 @@ namespace RestSample
         catch (InvalidTokenServerTokenException itste)
         {
           Console.WriteLine(itste.Message + "\n" + itste.StackTrace);
+        }
+
+        // GetAppInstList:
+        try
+        {
+          AppInstListReply appInstListReply;
+          try
+          {
+            appInstListReply = await me.GetAppInstList(appInstListRequest);
+          }
+          catch (DmeDnsException)
+          {
+            appInstListReply = await me.GetAppInstList(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, appInstListRequest);
+          }
+          catch (NotImplementedException)
+          {
+            appInstListReply = await me.GetAppInstList(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, appInstListRequest);
+          }
+
+          if (appInstListReply == null)
+          {
+            Console.WriteLine("Unable to GetAppInstList. Reply is null");
+          }
+          else
+          {
+            Console.WriteLine("AppInstListReply: " + appInstListReply);
+            CloudletLocation[] cloudlets = appInstListReply.cloudlets;
+
+            if (cloudlets.Length == 0)
+            {
+              Console.WriteLine("AppInstListReply has no cloudlets");
+            }
+            else
+            {
+              CloudletLocation cloudlet = cloudlets[0];
+              Appinstance[] appinstances = cloudlet.appinstances;
+
+              if (cloudlets.Length == 0)
+              {
+                Console.WriteLine("Cloudlet has no appinstances");
+              }
+              else
+              {
+                Appinstance appinstance = appinstances[0];
+                Console.WriteLine("Appinstance app_name: " + appinstance.app_name);
+                Console.WriteLine("Appinstance app_vers: " + appinstance.app_vers);
+                Console.WriteLine("Appinstance fqdn: " + appinstance.fqdn);
+                Console.WriteLine("Appinstance org_name: " + appinstance.org_name);
+
+                if (appinstance.ports.Length == 0)
+                {
+                  Console.WriteLine("Appinstance has not AppPorts");
+                }
+              }
+            }
+          }
+        }
+        catch (HttpException httpe)
+        {
+          Console.WriteLine("GetAppInstList Exception: " + httpe.Message + ", HTTP StatusCode: " + httpe.HttpStatusCode + ", API ErrorCode: " + httpe.ErrorCode + "\nStack: " + httpe.StackTrace);
         }
 
         // Get QosPositionKpi:
