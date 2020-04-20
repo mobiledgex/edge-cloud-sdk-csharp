@@ -288,6 +288,10 @@ namespace RestSample
           {
             Console.WriteLine("Unable to GetAppInstList. Reply is null");
           }
+          else if (appInstListReply.status != AppInstListReply.AIStatus.AI_SUCCESS)
+          {
+            Console.WriteLine("GetAppInstList failed. Status is " + appInstListReply.status);
+          }
           else
           {
             Console.WriteLine("AppInstListReply: " + appInstListReply);
