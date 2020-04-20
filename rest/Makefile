@@ -14,13 +14,13 @@
 # limitations under the License.
 
 VSPROJECTROOT := MatchingEngineSDKRestLibrary
-APPLIBBASE := $(VSPROJECTROOT)/MatchingEngineSDKRestLibrary
+APPLIBBASE := $(VSPROJECTROOT)
 BINOUT := $(APPLIBBASE)/lib
 
 SOLUTIONLOG := /tmp/$(VSPROJECTROOT)_out.log
 PUBLISHLOG := /tmp/nuget_out.log
 
-REST_SDK_VERSION=1.5
+REST_SDK_VERSION=2.0
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/artifactory/nuget-releases/
 
 all: packageRestore build-all
@@ -40,7 +40,7 @@ build-release:
 
 publish:
 	@echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
-	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineRestLibrary.$(REST_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
+	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineSDKRestLibrary.$(REST_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
 
 clean:
 ifneq ("$(APPLIBBASE)", "/bin")
