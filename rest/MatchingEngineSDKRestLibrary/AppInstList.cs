@@ -35,6 +35,8 @@ namespace DistributedMatchEngine
     // ports to access app
     [DataMember]
     public AppPort[] ports;
+    [DataMember]
+    public string org_name;
   }
 
   [DataContract]
