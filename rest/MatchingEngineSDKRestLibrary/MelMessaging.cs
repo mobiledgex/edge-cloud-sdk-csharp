@@ -6,7 +6,7 @@ namespace DistributedMatchEngine.Mel
   {
     bool IsMelReady();
     bool IsMelEnabled();
-    string GetUuid();
+    string GetCookie();
     string SetLocationToken(string location_token, string app_name);
   }
 
@@ -14,7 +14,7 @@ namespace DistributedMatchEngine.Mel
   {
     public bool IsMelReady() { return false;  }
     public bool IsMelEnabled() { return false; }
-    public string GetUuid() { return ""; }
+    public string GetCookie() { return ""; }
     public string SetLocationToken(string location_token, string app_name) { return ""; }
   }
 }
