@@ -20,37 +20,70 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /// <summary>
+  /// Defines the (RegisterClient) request  
+  /// </summary>
+  /// <remarks>
+  /// Called by MatchingEngine.CreateRegisterClientRequest
+  /// </remarks>
   [DataContract]
   public class RegisterClientRequest
   {
+    /// <summary>
+    /// API Version
+    /// </summary>
     [DataMember]
     public UInt32 ver;
+    /// <summary>
+    /// Organization Name
+    /// </summary>
     [DataMember]
     public string org_name;
+    /// <summary>
+    /// Application Name
+    /// </summary>
     [DataMember]
     public string app_name;
+    /// <summary>
+    /// Application Version
+    /// </summary>
     [DataMember]
     public string app_vers;
-    [DataMember]
-    public string carrier_name;
-    [DataMember]
+    /// <summary>
+    /// Authentication token,can be set to authorize access to use backend deployed at MobiledgeX
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
     public string auth_token;
-    // Cell ID of base station where client is
-    [DataMember]
+    /// <summary>
+    /// GSM Cell ID is a generally unique number used to identify each base transceiver station
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    // Type of unique id provided by client
-    [DataMember]
+    /// <summary>
+    /// Type of unique id provided by client
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
     public string unique_id_type;
-    [DataMember]
-    // Optional. Unique identification of the client device or user. May be overridden by the server.
+    [DataMember(EmitDefaultValue = false)]
+    /// <summary>
+    ///  Optional. Unique identification of the client device or user. May be overridden by the server.
+    /// </summary>
     public string unique_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
-
+  /// <summary>
+  /// Defines the (RegisterClientReply)  
+  /// </summary>
+  /// <remarks>
+  /// Returned by MatchingEngine.RegisterClient
+  /// </remarks>
   [DataContract]
   public class RegisterClientReply
   {
+    /// <summary>
+    /// API Version
+    /// </summary>
     [DataMember]
     public UInt32 Ver;
 
@@ -80,11 +113,17 @@ namespace DistributedMatchEngine
     public string session_cookie;
     [DataMember]
     public string token_server_uri;
-    [DataMember]
+    /// <summary>
+    /// Type of unique id provided by client
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
     public string unique_id_type;
-    [DataMember]
+    /// <summary>
+    ///  Optional. Unique identification of the client device or user. May be overridden by the server.
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
     public string unique_id;
-    [DataMember]
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
