@@ -117,7 +117,7 @@ namespace DistributedMatchEngine
         /// <summary>
         /// Returns objects that describe the network interfaces on the local device.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Array of NetworkInterface Objects</returns>
         private NetworkInterface[] GetInterfaces()
         {
             return NetworkInterface.GetAllNetworkInterfaces();
