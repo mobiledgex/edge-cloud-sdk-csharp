@@ -20,15 +20,30 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /// <summary>
+  /// Defines the (GetLocationRequest)  
+  /// </summary>
+  /// <remarks>
+  /// Returned by MatchingEngine.CreateGetLocationRequest
+  /// </remarks>
   [DataContract]
   public class GetLocationRequest
   {
+    /// <summary>
+    /// API Version
+    /// </summary>
     [DataMember]
     public UInt32 ver;
     [DataMember]
     public string session_cookie;
+    /// <summary>
+    /// Carrier Name 
+    /// </summary>
     [DataMember]
     public string carrier_name;
+    /// <summary>
+    /// GSM Cell ID is a generally unique number used to identify each base transceiver station
+    /// </summary>
     [DataMember]
     public UInt32 cell_id;
     [DataMember]
@@ -38,6 +53,18 @@ namespace DistributedMatchEngine
   [DataContract]
   public class GetLocationReply
   {
+    /// <summary>
+    /// Enum to hold the (GPS Location Reply) status
+    /// <para>
+    /// LOC_UNKNOWN = 0
+    /// </para>
+    ///  <para>
+    /// LOC_FOUND = 1
+    /// </para>
+    ///  <para>
+    /// LOC_DENIED = 2  (The user does not allow his location to be tracked)
+    /// </para>
+    /// </summary>
     public enum LocStatus
     {
       LOC_UNKNOWN = 0,
@@ -45,6 +72,9 @@ namespace DistributedMatchEngine
       // The user does not allow his location to be tracked
       LOC_DENIED = 2
     }
+    /// <summary>
+    /// API Version
+    /// </summary>
     [DataMember]
     public UInt32 ver;
 
@@ -69,11 +99,19 @@ namespace DistributedMatchEngine
         }
       }
     }
-
+    /// <summary>
+    /// Carrier Name 
+    /// </summary>
     [DataMember]
     public string carrier_name;
+    /// <summary>
+    /// Tower Name
+    /// </summary>
     [DataMember]
     public string tower;
+    /// <summary>
+    /// Loc Object defining the geolocation of the network tower
+    /// </summary>
     [DataMember]
     public Loc network_location;
     [DataMember]
