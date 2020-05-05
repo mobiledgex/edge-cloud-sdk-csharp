@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
@@ -27,7 +27,14 @@ namespace DistributedMatchEngine
 {
   public partial class MatchingEngine
   {
-
+    /// <summary>
+    /// Gets TCP Connection
+    /// </summary>
+    /// <param name="reply"> FindCloudlet Reply Object </param>
+    /// <param name="appPort">AppPort Object </param>
+    /// <param name="desiredPort"> Desired port number for TCP connection</param>
+    /// <param name="timeoutMs"> (integer value)time in milliseconds to enforce end of connection trail(if response took longer than expected)</param>
+    /// <returns>Socket Object (Socket class is part of System.Net.Sockets)</returns>
     public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
     {
       if (timeoutMs <= 0)
@@ -50,7 +57,15 @@ namespace DistributedMatchEngine
       Socket s = await GetTCPConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
       return s;
     }
-
+    
+    /// <summary>
+    /// Gets TCP TLS Connection
+    /// </summary>
+    /// <param name="reply"> FindCloudlet Reply Object </param>
+    /// <param name="appPort">AppPort Object </param>
+    /// <param name="desiredPort"> Desired port number for TCP connection</param>
+    /// <param name="timeoutMs"> (integer value)time in milliseconds to enforce end of connection trail(if response took longer than expected)</param>
+    /// <returns>SslStream Object (SslStream class is part of System.Net.Security)</returns>
     public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
     {
       if (timeoutMs <= 0)
@@ -74,6 +89,14 @@ namespace DistributedMatchEngine
       return stream;
     }
 
+    /// <summary>
+    /// Gets UDP Connection
+    /// </summary>
+    /// <param name="reply"> FindCloudlet Reply Object </param>
+    /// <param name="appPort">AppPort Object </param>
+    /// <param name="desiredPort"> Desired port number for udp connection</param>
+    /// <param name="timeoutMs"> (integer value)time in milliseconds to enforce end of connection trail(if response took longer than expected)</param>
+    /// <returns>Socket Object (Socket class is part of System.Net.Sockets)</returns>
     public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
     {
       if (timeoutMs <= 0)
@@ -96,7 +119,16 @@ namespace DistributedMatchEngine
       Socket s = await GetUDPConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
       return s;
     }
-
+    
+    /// <summary>
+    /// Gets HTTP Connection
+    /// </summary>
+    /// <param name="reply"> FindCloudlet Reply Object </param>
+    /// <param name="appPort">AppPort Object </param>
+    /// <param name="desiredPort"> Desired port number for http connection</param>
+    /// <param name="timeoutMs"> (integer value)time in milliseconds to enforce end of connection trail(if response took longer than expected)</param>
+    /// <param name="path">Optional query parameters for ex. roomid=room1 </param>
+    /// <returns>HttpClient Object (HttpClient class is part of System.Net.Http)</returns>
     public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
@@ -158,6 +190,15 @@ namespace DistributedMatchEngine
       return client;
     }
 
+    /// <summary>
+    /// Gets Websocket Connection
+    /// </summary>
+    /// <param name="reply"> FindCloudlet Reply Object </param>
+    /// <param name="appPort">AppPort Object </param>
+    /// <param name="desiredPort"> Desired port number for websocket connection</param>
+    /// <param name="timeoutMs"> (integer value)time in milliseconds to enforce end of connection trail(if response took longer than expected)</param>
+    /// <param name="path">Optional query parameters for ex. roomid=room1 </param>
+    /// <returns>ClientWebSocket Object (ClientWebSocket class is part of System.Net.WebSockets)</returns>
     public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
@@ -180,7 +221,16 @@ namespace DistributedMatchEngine
       ClientWebSocket s = await GetWebsocketConnection(host, desiredPort, timeoutMs, path).ConfigureAwait(false);
       return s;
     }
-
+    
+    /// <summary>
+    /// Gets Secure Websocket Connection
+    /// </summary>
+    /// <param name="reply"> FindCloudlet Reply Object </param>
+    /// <param name="appPort">AppPort Object </param>
+    /// <param name="desiredPort"> Desired port number for websocket connection</param>
+    /// <param name="timeoutMs"> (integer value)time in milliseconds to enforce end of connection trail(if response took longer than expected)</param>
+    /// <param name="path">Optional query parameters for ex. roomid=room1 </param>
+    /// <returns>ClientWebSocket Object (ClientWebSocket class is part of System.Net.WebSockets)</returns>
     public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
