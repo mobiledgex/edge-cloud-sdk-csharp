@@ -20,145 +20,151 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /// <summary>
+  /// Application Instance 
+  /// </summary>
+  [DataContract]
+  public class Appinstance
+  {
+     /// <summary>
+     /// Application Instance Name
+     /// </summary>
+    [DataMember]
+    public string app_name;
     /// <summary>
-    /// Application Instance 
+    /// Application Instance Version
     /// </summary>
-    [DataContract]
-    public class Appinstance
+    [DataMember]
+    public string app_vers;
+    /// <summary>
+    /// Application Instance FQDN (Fully Qualified Domain Name)
+    /// </summary>
+    [DataMember]
+    public string fqdn;
+    /// <summary>
+    /// Application Port Array
+    /// </summary>
+    [DataMember]
+    public AppPort[] ports;
+    /// <summary>
+    /// Organization Name 
+    /// </summary>
+    [DataMember]
+    public string org_name;
+  }
+  /// <summary>
+  /// Cloudlet Location, Cloudlet is a mobility-enhanced small-scale cloud datacenter
+  /// </summary>
+  [DataContract]
+  public class CloudletLocation
+  {
+    /// <summary>
+    /// The carrier name that user is connected to ("Cellular Carrier Name")
+    /// </summary>
+    [DataMember]
+    public string carrier_name;
+    /// <summary>
+    /// Cloudlet Name
+    /// </summary>
+    [DataMember]
+    public string cloudlet_name;
+    /// <summary>
+    /// GPS Location of Cloudlet
+    /// </summary>
+    [DataMember]
+    public Loc gps_location;
+    /// <summary>
+    /// Distance of cloudlet vs the location in request
+    /// </summary> 
+    [DataMember]
+    public double distance;
+    /// <summary>
+    /// Array of your running Application Instances 
+    /// </summary>
+    [DataMember]
+    public Appinstance[] appinstances;
+  }
+  /// <summary>
+  /// (Application Instances) Request Structure
+  /// </summary>
+  [DataContract]
+  public class AppInstListRequest
+  {
+    /// <summary>
+    /// API Version
+    /// </summary>
+    [DataMember]
+    public UInt32 ver;
+    [DataMember]
+    public string session_cookie;
+    [DataMember]
+    public Loc gps_location;
+    /// <summary>
+    /// Carrier Name
+    /// </summary>
+    [DataMember]
+    public string carrier_name;
+    /// <summary>
+    /// GSM Cell ID is a generally unique number used to identify each base transceiver station
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
+    public UInt32 cell_id;
+    [DataMember(EmitDefaultValue = false)]
+    public Tag[] tags;
+  }
+  /// <summary>
+  /// (Application Instances) Reply Structure
+  /// </summary>
+  [DataContract]
+  public class AppInstListReply
+  {
+    /// <summary>
+    /// Status of the reply
+    /// <para>AI_UNDEFINED = 0</para>
+    /// <para>AI_SUCCESS = 1</para>
+    /// <para>AI_FAIL = 2</para>
+    /// </summary>
+    public enum AIStatus
     {
-        /// <summary>
-        /// Application Instance Name
-        /// </summary>
-        [DataMember]
-        string app_name;
-        /// <summary>
-        /// Application Instance Version
-        /// </summary>
-        [DataMember]
-        string app_vers;
-        /// <summary>
-        /// Application Instance FQDN (Fully Qualified Domain Name)
-        /// </summary>
-        [DataMember]
-        string fqdn;
-        /// <summary>
-        /// Application Port Array
-        /// </summary>
-        [DataMember]
-        AppPort[] ports;
+      AI_UNDEFINED = 0,
+      AI_SUCCESS = 1,
+      AI_FAIL = 2
     }
     /// <summary>
-    /// Cloudlet Location, Cloudlet is a mobility-enhanced small-scale cloud datacenter
+    /// API Version
     /// </summary>
-    [DataContract]
-    public class CloudletLocation
-    {
-        /// <summary>
-        /// The carrier name that user is connected to ("Cellular Carrier Name")
-        /// </summary>
-        [DataMember]
-        string carrier_name;
-        /// <summary>
-        /// Cloudlet Name
-        /// </summary>
-        [DataMember]
-        string cloudlet_name;
-        /// <summary>
-        /// GPS Location of Cloudlet
-        /// </summary>
-        [DataMember]
-        Loc gps_location;
-        /// <summary>
-        /// Distance of cloudlet vs loc in request
-        /// </summary> 
-        [DataMember]
-        double distance;
-        /// <summary>
-        /// Application Instances Array
-        /// </summary>
-        [DataMember]
-        Appinstance[] appinstances;
-    }
+    [DataMember]
+    public UInt32 ver;
     /// <summary>
-    /// (Application Instances) Request Structure
+    /// Application Instance Reply Status
     /// </summary>
-    [DataContract]
-    public class AppInstListRequest
-    {
-        /// <summary>
-        /// API Version
-        /// </summary>
-        [DataMember]
-        public UInt32 ver;
-        [DataMember]
-        public string session_cookie;
-        /// <summary>
-        /// Carrier Name
-        /// </summary>
-        [DataMember]
-        public string carrier_name;
-        [DataMember]
-        public Loc gps_location;
-        /// <summary>
-        /// GSM Cell ID is a generally unique number used to identify each base transceiver station
-        /// </summary>
-        [DataMember]
-        public UInt32 cell_id;
-        [DataMember]
-        public Tag[] tags;
-    }
-    /// <summary>
-    /// (Application Instances) Reply Structure
-    /// </summary>
-    [DataContract]
-    public class AppInstListReply
-    {
-        /// <summary>
-        /// Status of the reply
-        /// <para>AI_UNDEFINED = 0</para>
-        /// <para>AI_SUCCESS = 1</para>
-        /// <para>AI_FAIL = 2</para>
-        /// </summary>
-        public enum AIStatus
-        {
-            AI_UNDEFINED = 0,
-            AI_SUCCESS = 1,
-            AI_FAIL = 2
-        }
-        /// <summary>
-        /// API Version
-        /// </summary>
-        [DataMember]
-        public UInt32 ver;
-        /// <summary>
-        /// Application Instance Reply Status
-        /// </summary>
-        public AIStatus status;
+    public AIStatus status;
 
-        [DataMember(Name = "status")]
-        private string ai_status_string
+    [DataMember(Name = "status")]
+    private string ai_status_string
+    {
+      get
+      {
+        return status.ToString();
+      }
+      set
+      {
+        try
         {
-            get
-            {
-                return status.ToString();
-            }
-            set
-            {
-                try
-                {
-                    status = (AIStatus)Enum.Parse(typeof(AIStatus), value);
-                }
-                catch
-                {
-                    status = AIStatus.AI_UNDEFINED;
-                }
-            }
+          status = (AIStatus)Enum.Parse(typeof(AIStatus), value);
         }
-        /// <summary>
-        /// Array of Cloudlet Locations
-        /// </summary>
-        [DataMember]
-        public CloudletLocation[] cloudlets;
-   
+        catch
+        {
+          status = AIStatus.AI_UNDEFINED;
+        }
+      }
     }
+    /// <summary>
+    /// Array of Cloudlet Locations
+    /// </summary>
+    [DataMember]
+    public CloudletLocation[] cloudlets;
+    [DataMember(EmitDefaultValue = false)]
+    public Tag[] tags;
+  }
 }
