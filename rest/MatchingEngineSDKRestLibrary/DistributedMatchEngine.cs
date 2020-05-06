@@ -146,7 +146,13 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
-
+    
+    /// <summary>
+    /// Constructor for Matching Engine 
+    /// </summary>
+    /// <param name="carrierInfo">Telephony Interface</param>
+    /// <param name="netInterface">Network Interface</param>
+    /// <param name="uniqueID">Unique ID specified by the user</param>
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
       httpClient = new HttpClient();
@@ -179,7 +185,11 @@ namespace DistributedMatchEngine
       }
     }
 
-    // Set the REST timeout for DME APIs.
+    /// <summary>
+    /// Set the REST timeout for DME APIs
+    /// </summary>
+    /// <param name="timeout_in_milliseconds"> (integer) Time in milliseconds</param>
+    /// <returns></returns>
     public TimeSpan SetTimeout(int timeout_in_milliseconds)
     {
       if (timeout_in_milliseconds > 1)
@@ -198,12 +208,20 @@ namespace DistributedMatchEngine
     {
       return uniqueID.GetUniqueID();
     }
-
+    
+    /// <summary>
+    /// Gets the Cell Id ,GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// </summary>
+    /// <returns>(Unsigned 32 bits Integer) Cell Id</returns>
     public UInt32 GetCellID()
     {
       return carrierInfo.GetCellID();
     }
-
+    
+    /// <summary>
+    /// Gets MccMnc (Mobile Network Code - Mobile Country Code) or wifi if useOnlyWifi bool is true 
+    /// </summary>
+    /// <returns>MccMnc code or wifi</returns>
     public string GetCarrierName()
     {
       if (useOnlyWifi)
@@ -219,6 +237,15 @@ namespace DistributedMatchEngine
       return mccmnc;
     }
 
+    /// <summary>
+    /// Generate Distributed Matching Engine Host Name
+    /// For Telephony devices ( it uses MncMcc code )
+    /// <para>
+    /// for example for TMobile in the US (310-260)
+    /// Where 310 is US Mobile Country Code and 260 is TMobile Mobile Network Code
+    /// </para>
+    /// </summary>
+    /// <returns>(string)Distributed Matching Engine Host Name to be used in the API call</returns>
     public string GenerateDmeHostName()
     {
       if (carrierInfo == null)
@@ -266,12 +293,24 @@ namespace DistributedMatchEngine
       // Let the caller handle an unsupported DME configuration.
       throw new DmeDnsException("Generated mcc-mnc." + baseDmeHost + " hostname not found: " + potentialDmeHost);
     }
-
+    
+    /// <summary>
+    /// Creates a uri using a host and port 
+    /// </summary>
+    /// <param name="host">host name</param>
+    /// <param name="port">port number</param>
+    /// <returns> uri string </returns>
     private string CreateUri(string host, uint port)
     {
       return "https://" + host + ":" + port;
     }
-
+    
+    /// <summary>
+    /// Performs a post request
+    /// </summary>
+    /// <param name="uri"> the uri for the post request </param>
+    /// <param name="jsonStr">the json string as the body for the Post request</param>
+    /// <returns>Stream (Sequence of bytes)</returns>
     private async Task<Stream> PostRequest(string uri, string jsonStr)
     {
       // FIXME: Choose network TBD (.Net Core 2.1)
@@ -409,7 +448,20 @@ namespace DistributedMatchEngine
 
       return token;
     }
-
+    
+    /// <summary>
+    /// Creates Register Client Request
+    /// </summary>
+    /// <param name="carrierName"> Carrier Name (ex. TDG)</param>
+    /// <param name="orgName"> Organization Name</param>
+    /// <param name="appName"> Application Name</param>
+    /// <param name="appVersion"> Application Version</param>
+    /// <param name="authToken">Authentication Token supplied by developer</param>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="uniqueIDType"></param>
+    /// <param name="uniqueID"></param>
+    /// <param name="tags"></param>
+    /// <returns>RegisterClientRequest Object</returns>
     public RegisterClientRequest CreateRegisterClientRequest(
       string carrierName, string orgName, string appName, string appVersion, string authToken = null,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
@@ -429,6 +481,11 @@ namespace DistributedMatchEngine
       };
     }
 
+    /// <summary>
+    /// Parse Reply Status 
+    /// </summary>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>ReplyStatus Object</returns>
     private ReplyStatus ParseReplyStatus(string responseStr)
     {
       string key = "status";
@@ -444,12 +501,24 @@ namespace DistributedMatchEngine
       }
       return replyStatus;
     }
-
+    
+    /// <summary>
+    /// Register Client,called by the client
+    /// </summary>
+    /// <param name="request">RegisterClientRequest Object</param>
+    /// <returns>RegisterClientReply Object</returns>
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
       return await RegisterClient(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
-
+    
+    /// <summary>
+    /// Register Client 
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="request">RegisterClientRequest Object</param>
+    /// <returns>RegisterClientReply Object</returns>
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
@@ -478,6 +547,17 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /// <summary>
+    /// Creates FindCloudlet Request
+    /// </summary>
+    /// <param name="carrierName"> Carrier Name (ex. TDG)</param>
+    /// <param name="loc">Loc Object representing Location</param>
+    /// <param name="orgName">Organization Name</param>
+    /// <param name="appName">Application Name</param>
+    /// <param name="appVers">Application Version</param>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="tags"></param>
+    /// <returns>FindCloudletRequest Object</returns>
     public FindCloudletRequest CreateFindCloudletRequest(
       string carrierName, Loc loc,
       string orgName = null, string appName = null, string appVers = null, // Optionals
@@ -500,7 +580,12 @@ namespace DistributedMatchEngine
         tags = tags
       };
     }
-
+    
+    /// <summary>
+    /// Parse FindCloudletReply Status
+    /// </summary>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>FindCloudlet Reply Status</returns>
     private FindCloudletReply.FindStatus ParseFindStatus(string responseStr)
     {
       string key = "status";
@@ -516,7 +601,13 @@ namespace DistributedMatchEngine
       }
       return status;
     }
-
+    
+    /// <summary>
+    /// Parse Application port types
+    /// </summary>
+    /// <param name="appports">AppPort Array</param>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>AppPort Array </returns>
     private AppPort[] ParseAppPortTypes(AppPort[] appports, string responseStr)
     {
       JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
@@ -540,12 +631,24 @@ namespace DistributedMatchEngine
       }
       return appports;
     }
-
+    
+    /// <summary>
+    /// FindCloudlet called by the client
+    /// </summary>
+    /// <param name="request">FindCloudletRequest Object</param>
+    /// <returns>FindCloudletReply Object</returns>
     public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request)
     {
       return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
-
+    
+    /// <summary>
+    /// Find Cloudlet
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="request">FindCloudletRequest Object</param>
+    /// <returns>FindCloudletReply Object</returns>
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest));
@@ -573,7 +676,21 @@ namespace DistributedMatchEngine
 
       return reply;
     }
-
+    
+    /// <summary>
+    /// Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
+    /// </summary>
+    /// <param name="carrierName"> Carrier Name (ex. TDG)</param>
+    /// <param name="orgName">Organization Name</param>
+    /// <param name="appName">Application Name</param>
+    /// <param name="appVersion">Application Version</param>
+    /// <param name="authToken">Authentication Token supplied by developer</param>
+    /// <param name="loc">Loc Object represents Location</param>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="uniqueIDType"></param>
+    /// <param name="uniqueID"></param>
+    /// <param name="tags"></param>
+    /// <returns>FindCloudletReply Object</returns>
     // Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string carrierName, string orgName, string appName, string appVersion, string authToken, Loc loc,
@@ -605,7 +722,24 @@ namespace DistributedMatchEngine
 
       return findCloudletReply;
     }
-
+    
+    /// <summary>
+    /// Register Client And Find Cloudlet
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="carrierName"> Carrier Name (ex. TDG)</param>
+    /// <param name="orgName">Organization Name</param>
+    /// <param name="appName">Application Name</param>
+    /// <param name="appVersion">Application Version</param>
+    /// <param name="authToken">Authentication Token supplied by developer</param>
+    /// <param name="loc">Loc Object represents Location</param>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="uniqueIDType"></param>
+    /// <param name="uniqueID"></param>
+    /// <param name="tags"></param>
+    /// <returns></returns>
+    // Override with specified dme host and port. This API cannot be used for Non-Platform APPs.
     // Override with specified dme host and port. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
       string carrierName, string orgName, string appName, string appVersion, string authToken, Loc loc,
@@ -637,7 +771,15 @@ namespace DistributedMatchEngine
 
       return findCloudletReply;
     }
-
+    
+    /// <summary>
+    /// Create Verify Location Request
+    /// </summary>
+    /// <param name="carrierName"> Carrier Name (ex. TDG)</param>
+    /// <param name="loc">Location Object</param>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="tags"></param>
+    /// <returns>VerifyLocationRequest Object</returns>
     public VerifyLocationRequest CreateVerifyLocationRequest(string carrierName, Loc loc, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -655,7 +797,12 @@ namespace DistributedMatchEngine
         tags = tags
       };
     }
-
+    
+    /// <summary>
+    /// Parse Tower Status
+    /// </summary>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>TowerStatus</returns>
     private VerifyLocationReply.TowerStatus ParseTowerStatus(string responseStr)
     {
       string key = "tower_status";
@@ -671,7 +818,12 @@ namespace DistributedMatchEngine
       }
       return status;
     }
-
+    
+    /// <summary>
+    /// Parse GpsLocation Status
+    /// </summary>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>VerifyLocationReply GPSLocationStatus </returns>
     private VerifyLocationReply.GPSLocationStatus ParseGpsLocationStatus(string responseStr)
     {
       string key = "gps_location_status";
@@ -687,12 +839,24 @@ namespace DistributedMatchEngine
       }
       return status;
     }
-
+    
+    /// <summary>
+    /// VerifyLocation, called by the client
+    /// </summary>
+    /// <param name="request">VerifyLocationRequest Object</param>
+    /// <returns>VerifyLocationReply Object</returns>
     public async Task<VerifyLocationReply> VerifyLocation(VerifyLocationRequest request)
     {
       return await VerifyLocation(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
-
+    
+    /// <summary>
+    /// Verify Location
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="request">VerifyLocationRequest Object</param>
+    /// <returns>VerifyLocationReply Object</returns>
     public async Task<VerifyLocationReply> VerifyLocation(string host, uint port, VerifyLocationRequest request)
     {
       string token = RetrieveToken(tokenServerURI);
@@ -723,7 +887,14 @@ namespace DistributedMatchEngine
 
       return reply;
     }
-
+    
+    /// <summary>
+    /// Create Get Location Request
+    /// </summary>
+    /// <param name="carrierName"> Carrier Name (ex. TDG)</param>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="tags"></param>
+    /// <returns>GetLocationRequest Object</returns>
     public GetLocationRequest CreateGetLocationRequest(string carrierName, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -740,7 +911,12 @@ namespace DistributedMatchEngine
         tags = tags
       };
     }
-
+    
+    /// <summary>
+    /// Parse Location Reply Status
+    /// </summary>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>Location Reply Status</returns>
     private GetLocationReply.LocStatus ParseLocationStatus(string responseStr)
     {
       string key = "status";
@@ -756,15 +932,23 @@ namespace DistributedMatchEngine
       }
       return status;
     }
-
-    /*
-     * Retrieves the carrier based network based geolocation of the network device.
-     */
+  
+    /// <summary>
+    /// Gets Location of the carrier based network based geolocation of the network device.
+    /// </summary>
+    /// <param name="request">GetLocationRequest Object</param>
+    /// <returns>GetLocationReply Object</returns>
     public async Task<GetLocationReply> GetLocation(GetLocationRequest request)
     {
       return await GetLocation(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
-
+    /// <summary>
+    /// Gets Location of the carrier based network based geolocation of the network device.
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="request">GetLocationRequest Object</param>
+    /// <returns>GetLocationReply Object</returns>
     public async Task<GetLocationReply> GetLocation(string host, uint port, GetLocationRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(GetLocationRequest));
@@ -789,7 +973,15 @@ namespace DistributedMatchEngine
 
       return reply;
     }
-
+    
+    /// <summary>
+    /// Create Application Instance List Request 
+    /// </summary>
+    /// <param name="carrierName"> Carrier Name (ex. TDG)</param>
+    /// <param name="loc">Loc Object representing Location</param>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="tags"></param>
+    /// <returns>AppInstListRequest Object</returns>
     public AppInstListRequest CreateAppInstListRequest(string carrierName, Loc loc, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -811,7 +1003,12 @@ namespace DistributedMatchEngine
         tags = tags
       };
     }
-
+    
+    /// <summary>
+    /// Checks Application Instance Reply Status
+    /// </summary>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>AppInstListReply  Status</returns>
     private AppInstListReply.AIStatus ParseAIStatus(string responseStr)
     {
       string key = "status";
@@ -827,12 +1024,24 @@ namespace DistributedMatchEngine
       }
       return status;
     }
-
+    
+    /// <summary>
+    /// Gets Application Instances list called by the client
+    /// </summary>
+    /// <param name="request">AppInstListRequest Object</param>
+    /// <returns> AppInstListReply Object</returns>
     public async Task<AppInstListReply> GetAppInstList(AppInstListRequest request)
     {
       return await GetAppInstList(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
-
+    
+    /// <summary>
+    /// Gets Application Instances list 
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="request">AppInstListRequest Object</param>
+    /// <returns>AppInstListReply Object</returns>
     public async Task<AppInstListReply> GetAppInstList(string host, uint port, AppInstListRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppInstListRequest));
@@ -857,7 +1066,13 @@ namespace DistributedMatchEngine
 
       return reply;
     }
-
+    
+    /// <summary>
+    /// Create Fqdn List Request (Fqdn = Fully Qualified Domain Name)
+    /// </summary>
+    /// <param name="cellID">GSM Cell ID is a generally unique number used to identify each base transceiver station</param>
+    /// <param name="tags"></param>
+    /// <returns>FqdnListRequest (Fqdn = Fully Qualified Domain Name) </returns>
     public FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -873,7 +1088,12 @@ namespace DistributedMatchEngine
         tags = tags
       };
     }
-
+    
+    /// <summary>
+    /// Parse FqdnListReply Status (Fqdn = Fully Qualified Domain Name)
+    /// </summary>
+    /// <param name="responseStr">the returned string from the API call</param>
+    /// <returns>FqdnListReply Status</returns>
     private FqdnListReply.FLStatus ParseFLStatus(string responseStr)
     {
       string key = "status";
@@ -889,12 +1109,24 @@ namespace DistributedMatchEngine
       }
       return status;
     }
-
+    
+    /// <summary>
+    /// Gets FqdnList called by the client (Fqdn = Fully Qualified Domain Name)
+    /// </summary>
+    /// <param name="request">FqdnListRequest Object</param>
+    /// <returns>FqdnListReply object</returns>
     public async Task<FqdnListReply> GetFqdnList(FqdnListRequest request)
     {
       return await GetFqdnList(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
-
+    
+    /// <summary>
+    /// Gets FqdnList (Fqdn = Fully Qualified Domain Name)
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="request">FqdnListRequest Object</param>
+    /// <returns>FqdnListReply Object</returns>
     public async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FqdnListRequest));
@@ -987,12 +1219,24 @@ namespace DistributedMatchEngine
         tags = tags
       };
     }
-
+    
+    /// <summary>
+    ///  Gets Quality of Service Position data used by the client
+    /// </summary>
+    /// <param name="request"> QosPositionRequest Object </param>
+    /// <returns> QosPositionKpiStream </returns>
     public async Task<QosPositionKpiStream> GetQosPositionKpi(QosPositionRequest request)
     {
       return await GetQosPositionKpi(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
-
+    
+    /// <summary>
+    /// Gets Quality of Service Position data
+    /// </summary>
+    /// <param name="host"> host for the api call</param>
+    /// <param name="port"> port for the api call</param>
+    /// <param name="request">QosPositionRequest Object</param>
+    /// <returns>QosPositionKpiStream Object</returns>
     public async Task<QosPositionKpiStream> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionRequest));
