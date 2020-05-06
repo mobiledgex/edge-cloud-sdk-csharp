@@ -20,32 +20,61 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /// <summary>
+  /// Defines FindCloudletRequest structure
+  /// </summary>
   [DataContract]
   public class FindCloudletRequest
-  {
+  {       
+    /// <summary>
+    /// API Version
+    /// </summary>
     [DataMember]
     public UInt32 ver = 1;
     [DataMember]
     public string session_cookie;
+    /// <summary>
+    /// Carrier Name
+    /// </summary>
     [DataMember]
     public string carrier_name;
     [DataMember]
     public Loc gps_location;
+    /// <summary>
+    /// Organization Name
+    /// </summary>
     [DataMember]
     public string org_name;
+    /// <summary>
+    /// Application Name
+    /// </summary>
     [DataMember]
     public string app_name;
+    /// <summary>
+    /// Application Version
+    /// </summary>
     [DataMember]
     public string app_vers;
+    /// <summary>
+    /// GSM Cell ID is a generally unique number used to identify each base transceiver station
+    /// </summary>
     [DataMember]
     public UInt32 cell_id;
     [DataMember]
     public Tag[] tags;
   }
-
+  /// <summary>
+  /// Defines FindCloudletReply structure
+  /// </summary>
   [DataContract]
   public class FindCloudletReply
   {
+    /// <summary>
+    /// FindCloudlet Reply Status
+    /// <para>FIND_UNKNOWN = 0</para>
+    /// <para>FIND_FOUND = 1</para>
+    /// <para>FIND_NOTFOUND = 2</para>
+    /// </summary>
     // Standard Enum. DataContract Enum is converted to int64, not string.
     public enum FindStatus
     {
@@ -53,7 +82,9 @@ namespace DistributedMatchEngine
       FIND_FOUND = 1,
       FIND_NOTFOUND = 2
     }
-
+    /// <summary>
+    /// API Version
+    /// </summary>
     [DataMember]
     public UInt32 ver;
 
@@ -78,11 +109,19 @@ namespace DistributedMatchEngine
         }
       }
     }
-
+    /// <summary>
+    /// Fully Qualified Domain Name
+    /// </summary>
     [DataMember]
     public string fqdn;
+    /// <summary>
+    /// Array of AppPort Objects
+    /// </summary>
     [DataMember]
     public AppPort[] ports;
+    /// <summary>
+    /// Loc Object representing CLoudlet Location
+    /// </summary>
     [DataMember]
     public Loc cloudlet_location;
     [DataMember]
