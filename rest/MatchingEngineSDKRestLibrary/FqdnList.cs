@@ -20,119 +20,104 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+   /// <summary>
+   /// Application Fully Qualified Domain Class
+   /// </summary>
+  [DataContract]
+  public class AppFqdn
+  {
     /// <summary>
-    /// Application Fully Qualified Domain Class
+    /// Application Name
     /// </summary>
-    [DataContract]
-    public class AppFqdn
+    [DataMember]
+    public string app_name;
+    /// <summary>
+    /// Application Version
+    /// </summary>
+    [DataMember]
+    public string app_vers;
+    /// <summary>
+    /// Organization Name
+    /// </summary>
+    [DataMember]
+    public string org_name;
+    /// <summary>
+    /// Array of Fully Qualified Domain Names
+    /// </summary>
+    [DataMember]
+    public string[] fqdns;
+    [DataMember]
+    public string android_package_name;
+  }
+  /// <summary>
+  /// Defines the Fully Qualifed Domain Name requests
+  /// </summary>
+  [DataContract]
+  public class FqdnListRequest
+  {
+    /// <summary>
+    /// API Version
+    /// </summary>
+    [DataMember]
+    public UInt32 ver;
+    [DataMember]
+    public string session_cookie;
+    /// <summary>
+    /// GSM Cell ID is a generally unique number used to identify each base transceiver station
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
+    public UInt32 cell_id;
+    [DataMember(EmitDefaultValue = false)]
+    public Tag[] tags;
+  };
+  /// <summary>
+  /// (Fully Qualified Domain) Request Structure
+  /// </summary>
+  [DataContract]
+  public class FqdnListReply
+  {
+    /// <summary>
+    /// Status of the reply
+    /// <para> FL_UNDEFINED = 0 </para>
+    /// <para> FL_SUCCESS = 1 </para>
+    /// <para> FL_FAIL = 2 </para>
+    /// </summary>
+    public enum FLStatus
     {
-
-        /// <summary>
-        /// Application Name
-        /// </summary>
-        [DataMember]
-        public string app_ame;
-        /// <summary>
-        /// Application Version
-        /// </summary>
-        [DataMember]
-        public string app_vers;
-
-        /// <summary>
-        /// Organization Name
-        /// </summary>
-        [DataMember]
-        public string org_name;
-        // App FQDN
-        /// <summary>
-        /// List of Full Qualified Names
-        /// </summary>
-        [DataMember]
-        public string[] fqdns;
-        /// <summary>
-        /// List of Android Package Name
-        /// </summary>
-        [DataMember]
-        public string android_package_name;
+      FL_UNDEFINED = 0,
+      FL_SUCCESS = 1,
+      FL_FAIL = 2
     }
     /// <summary>
-    /// (Fully Qualified Domain) Request Structure
+    /// API Version
     /// </summary>
-    [DataContract]
-    public class FqdnListRequest
+    [DataMember]
+    public UInt32 ver;
+    [DataMember]
+    public AppFqdn[] app_fqdns;
+
+    public FLStatus status = FLStatus.FL_UNDEFINED;
+
+    [DataMember(Name = "status")]
+    private string fl_status_string
     {
-        /// <summary>
-        /// API Version
-        /// </summary>
-        [DataMember]
-        public UInt32 ver;
-        [DataMember]
-        public string session_cookie;
-        /// <summary>
-        /// GSM Cell ID is a generally unique number used to identify each base transceiver station
-        /// <para>
-        /// <see cref="https://en.wikipedia.org/wiki/GSM_Cell_ID"/>
-        /// </para>
-        /// </summary>
-        [DataMember]
-        public UInt32 cell_id;
-        [DataMember]
-        public Tag[] tags;
-    };
-
-    /// <summary>
-    ///  (Fully Qualified Domain) Reply Structure
-    /// </summary>
-    [DataContract]
-    public class FqdnListReply
-    {
-        /// <summary>
-        /// Status of the reply
-        /// <para> FL_UNDEFINED = 0 </para>
-        /// <para> FL_SUCCESS = 1 </para>
-        /// <para> FL_FAIL = 2 </para>
-        /// </summary>
-        // Status of the reply
-        public enum FLStatus
+      get
+      {
+        return status.ToString();
+      }
+      set
+      {
+        try
         {
-            FL_UNDEFINED = 0,
-            FL_SUCCESS = 1,
-            FL_FAIL = 2
+          status = (FLStatus)Enum.Parse(typeof(FLStatus), value);
         }
-        /// <summary>
-        /// API Version
-        /// </summary>
-        [DataMember]
-        public UInt32 ver;
-
-
-        [DataMember]
-        public AppFqdn[] app_fqdns;
-        /// <summary>
-        /// Constructor for FLStatus defaults to Undefined
-        /// </summary>
-        public FLStatus status = FLStatus.FL_UNDEFINED;
-
-        [DataMember(Name = "status")]
-        private string fl_status_string
+        catch
         {
-            get
-            {
-                return status.ToString();
-            }
-            set
-            {
-                try
-                {
-                    status = (FLStatus)Enum.Parse(typeof(FLStatus), value);
-                }
-                catch
-                {
-                    status = FLStatus.FL_UNDEFINED;
-                }
-            }
+          status = FLStatus.FL_UNDEFINED;
         }
-        [DataMember]
-        public static Tag[] tags;
+      }
     }
+    [DataMember(EmitDefaultValue = false)]
+    public static Tag[] tags;
+  }
 }
