@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ReleaseVersion>2.0.0</ReleaseVersion>
+    <ReleaseVersion>2.0.1</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>2.0</PackageVersion>
+    <PackageVersion>2.0.1</PackageVersion>
     <Authors>MobiledgeX, Inc.</Authors>
     <Description>MobiledgeX MatchingEngineSDK Rest Library</Description>
     <Owners>MobiledgeX, Inc.</Owners>
@@ -12,8 +12,8 @@
     <Title>MobiledgeX MatchingEngineSDK Rest Library</Title>
     <PackageId>MobiledgeX.MatchingEngineSDKRestLibrary</PackageId>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
-    <AssemblyVersion>2.0</AssemblyVersion>
-    <FileVersion>2.0</FileVersion>
+    <AssemblyVersion>2.0.1</AssemblyVersion>
+    <FileVersion>2.0.1</FileVersion>
     <Copyright>Copyright 2019 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
   </PropertyGroup>
 
