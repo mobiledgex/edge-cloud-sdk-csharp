@@ -73,6 +73,8 @@ namespace DistributedMatchEngine
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
     [DataMember(EmitDefaultValue = false)]
+    public UInt32 limit;
+    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 

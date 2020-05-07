@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
@@ -214,7 +214,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
         Log.D("..");
         foreach (Site site in sites)
         {
-           await TestSite(site); 
+          await TestSite(site);
         }
         await Task.Delay(PingIntervalMS).ConfigureAwait(false);
       }
@@ -278,11 +278,11 @@ namespace DistributedMatchEngine.PerformanceMetrics
               Log.S("Error testing l7Path site: " + site.L7Path);
               Log.S(e.Message);
               Log.S(e.StackTrace);
-            if (e.InnerException != null)
-            {
-              Log.S(e.InnerException.Message);
-              Log.S(e.InnerException.StackTrace);
-            }
+              if (e.InnerException != null)
+              {
+                Log.S(e.InnerException.Message);
+                Log.S(e.InnerException.StackTrace);
+              }
               elapsed = -1;
             }
           }
@@ -306,16 +306,16 @@ namespace DistributedMatchEngine.PerformanceMetrics
     public Site[] GetSortedSites()
     {
       var siteArr = sites.ToArray();
-      Array.Sort(siteArr, delegate(Site x, Site y)
+      Array.Sort(siteArr, delegate (Site x, Site y)
+      {
+        if (x.average != y.average)
         {
-          if (x.average != y.average)
-          {
-            return x.average < y.average ? -1 : 1;
-          }
-
-          if (x.stddev == y.stddev) return 0;
-          return x.stddev < y.stddev ? -1 : 1;
+          return x.average < y.average ? -1 : 1;
         }
+
+        if (x.stddev == y.stddev) return 0;
+        return x.stddev < y.stddev ? -1 : 1;
+      }
       );
       return siteArr;
     }

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
@@ -21,42 +21,41 @@ using System.Runtime.Serialization;
 namespace DistributedMatchEngine
 {
   [DataContract]
-  public class FindCloudletRequest
+  public class AppOfficialFqdnRequest
   {
     [DataMember]
-    public UInt32 ver = 1;
+    public UInt32 ver;
     [DataMember]
     public string session_cookie;
     [DataMember]
     public Loc gps_location;
     [DataMember]
-    public string carrier_name;
-    [DataMember(EmitDefaultValue = false)]
-    public UInt32 cell_id;
-    [DataMember]
-    public string client_token;
-    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
   [DataContract]
-  public class FindCloudletReply
+  public class AppOfficialFqdnReply
   {
-    // Standard Enum. DataContract Enum is converted to int64, not string.
-    public enum FindStatus
+    public enum AOFStatus
     {
-      FIND_UNKNOWN = 0,
-      FIND_FOUND = 1,
-      FIND_NOTFOUND = 2
+      AOF_UNDEFINED = 0,
+      AOF_SUCCESS = 1,
+      // The user does not allow his location to be tracked
+      AOF_FAIL = 2
     }
-
     [DataMember]
     public UInt32 ver;
 
-    public FindStatus status = FindStatus.FIND_UNKNOWN;
+    [DataMember]
+    public string app_official_fqdn;
+
+    [DataMember]
+    public string client_token;
+
+    public AOFStatus status = AOFStatus.AOF_UNDEFINED;
 
     [DataMember(Name = "status")]
-    private string find_status_string
+    private string aof_status_string
     {
       get
       {
@@ -66,23 +65,16 @@ namespace DistributedMatchEngine
       {
         try
         {
-          status = (FindStatus)Enum.Parse(typeof(FindStatus), value);
+          status = (AOFStatus)Enum.Parse(typeof(AOFStatus), value);
         }
         catch
         {
-          status = FindStatus.FIND_UNKNOWN;
+          status = AOFStatus.AOF_UNDEFINED;
         }
       }
     }
 
     [DataMember]
-    public string fqdn;
-    [DataMember]
-    public AppPort[] ports;
-    [DataMember]
-    public Loc cloudlet_location;
-    [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
-
 }
