@@ -749,9 +749,9 @@ namespace DistributedMatchEngine
       };
     }
 
-    private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance)
+    private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
-      NetTest.Site site = new NetTest.Site(numSamples: 10);
+      NetTest.Site site = new NetTest.Site(numSamples: numSamples);
 
       int port = appPort.public_port;
       string host = appPort.fqdn_prefix + appinstance.fqdn;
@@ -761,9 +761,9 @@ namespace DistributedMatchEngine
       return site;
     }
 
-    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance)
+    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
-      NetTest.Site site = new NetTest.Site(numSamples: 10);
+      NetTest.Site site = new NetTest.Site(numSamples: numSamples);
 
       site.host = appPort.fqdn_prefix + appinstance.fqdn;
       site.port = appPort.public_port;
@@ -772,9 +772,9 @@ namespace DistributedMatchEngine
       return site;
     }
 
-    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance)
+    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
-      NetTest.Site site = new NetTest.Site(testType: NetTest.TestType.PING, numSamples: 10);
+      NetTest.Site site = new NetTest.Site(testType: NetTest.TestType.PING, numSamples: numSamples);
 
       site.host = appPort.fqdn_prefix + appinstance.fqdn;
       site.port = appPort.public_port;
@@ -784,7 +784,7 @@ namespace DistributedMatchEngine
     }
 
     // Helper function for FindCloudlet
-    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply)
+    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
       List<NetTest.Site> sites = new List<NetTest.Site>();
 
@@ -804,16 +804,16 @@ namespace DistributedMatchEngine
             case LProto.L_PROTO_TCP:
               if (appPort.path_prefix == null || appPort.path_prefix == "")
               {
-                sites.Add(InitTcpSite(appPort, appinstance));
+                sites.Add(InitTcpSite(appPort, appinstance, numSamples: numSamples));
               }
               else
               {
-                sites.Add(InitHttpSite(appPort, appinstance));
+                sites.Add(InitHttpSite(appPort, appinstance, numSamples: numSamples));
               }
               break;
 
             case LProto.L_PROTO_UDP:
-              sites.Add(InitUdpSite(appPort, appinstance));
+              sites.Add(InitUdpSite(appPort, appinstance, numSamples: numSamples));
               break;
 
             default:
@@ -826,7 +826,7 @@ namespace DistributedMatchEngine
     }
 
     // FindCloudlet with GetAppInstList and NetTest
-    public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PERFORMANCE)
+    public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       if (melMessaging.IsMelEnabled())
       {
