@@ -25,7 +25,9 @@ using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+
 using DistributedMatchEngine.PerformanceMetrics;
+using DistributedMatchEngine.Mel;
 
 namespace DistributedMatchEngine
 {
@@ -138,6 +140,14 @@ namespace DistributedMatchEngine
     OTHER
   }
 
+  public enum FindCloudletMode
+  {
+    UNDEFINED,
+    PROXIMITY,
+    PERFORMANCE,
+    MEL
+  }
+
 
   public partial class MatchingEngine
   {
@@ -154,6 +164,7 @@ namespace DistributedMatchEngine
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
+    public MelMessagingInterface melMessaging { get; set; }
 
     // API Paths:
     private string registerAPI = "/v1/registerclient";
@@ -163,6 +174,7 @@ namespace DistributedMatchEngine
     private string appinstlistAPI = "/v1/getappinstlist";
     private string dynamiclocgroupAPI = "/v1/dynamiclocgroup";
     private string getfqdnlistAPI = "/v1/getfqdnlist";
+    private string appofficialfqdnAPI = "/v1/getappofficialfqdn";
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
@@ -173,6 +185,8 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
+
+    public RegisterClientRequest LastRegisterClientRequest { get; private set; }
 
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
@@ -203,6 +217,22 @@ namespace DistributedMatchEngine
       else
       {
         this.uniqueID = uniqueID;
+      }
+
+      // Default to empty.
+      SetMelMessaging(null);
+    }
+
+    // An device specific interface.
+    public void SetMelMessaging(MelMessagingInterface melInterface)
+    {
+      if (melInterface != null)
+      {
+        this.melMessaging = melInterface;
+      }
+      else
+      {
+        this.melMessaging = new EmptyMelMessaging();
       }
     }
 
@@ -488,6 +518,24 @@ namespace DistributedMatchEngine
         return null;
       }
 
+      RegisterClientRequest oldRequest = request;
+      // MEL platform should have a UUID from a previous platform level registration, include it for App registration.
+      if (melMessaging.IsMelEnabled())
+      {
+        request = new RegisterClientRequest()
+        {
+          ver = oldRequest.ver,
+          org_name = oldRequest.org_name,
+          app_name = oldRequest.app_name,
+          app_vers = oldRequest.app_vers,
+          auth_token = oldRequest.auth_token,
+          cell_id = oldRequest.cell_id,
+          unique_id = melMessaging.GetCookie(),
+          unique_id_type = "mel_unique_id", // FIXME: Unknown type.
+          tags = oldRequest.tags
+        };
+      }
+
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
@@ -535,6 +583,22 @@ namespace DistributedMatchEngine
       };
     }
 
+    private AppOfficialFqdnReply.AOFStatus ParseAofStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      AppOfficialFqdnReply.AOFStatus status;
+      try
+      {
+        status = (AppOfficialFqdnReply.AOFStatus)Enum.Parse(typeof(AppOfficialFqdnReply.AOFStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED;
+      }
+      return status;
+    }
+
     private FindCloudletReply.FindStatus ParseFindStatus(string responseStr)
     {
       string key = "status";
@@ -580,8 +644,68 @@ namespace DistributedMatchEngine
       return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request);
     }
 
-    // FindCloudlet REST API
-    public async Task<FindCloudletReply> FindCloudletApi(string host, uint port, FindCloudletRequest request)
+    private async Task<FindCloudletReply> FindCloudletMelMode(string host, uint port, FindCloudletRequest request)
+    {
+      AppOfficialFqdnRequest appOfficialFqdnRequest = new AppOfficialFqdnRequest
+      {
+        ver = 1,
+        session_cookie = request.session_cookie,
+        gps_location = request.gps_location,
+        tags = request.tags
+      };
+
+
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnRequest));
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, request);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream = await PostRequest(CreateUri(host, port) + appofficialfqdnAPI, jsonStr);
+      if (responseStream == null || !responseStream.CanRead)
+      {
+        return null;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnReply));
+      AppOfficialFqdnReply reply = (AppOfficialFqdnReply)deserializer.ReadObject(ms);
+
+      // Reparse if default value.
+      reply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED ? ParseAofStatus(responseStr) : reply.status;
+
+      // Inform Mel Messaging:
+      if (melMessaging.IsMelEnabled())
+      {
+        melMessaging.SetLocationToken(reply.client_token, LastRegisterClientRequest.app_name);
+      }
+
+      // Repackage as FindCloudletReply:
+      FindCloudletReply fcReply = new FindCloudletReply
+      {
+        ver = 1,
+        fqdn = reply.app_official_fqdn,
+        // Don't set location.
+        ports = new AppPort[1]
+      };
+      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.FIND_FOUND : FindCloudletReply.FindStatus.FIND_NOTFOUND;
+      // attach empty port:
+      fcReply.ports[0] = new AppPort
+      {
+        proto = LProto.L_PROTO_TCP,
+        internal_port = 0,
+        public_port = 0,
+        path_prefix = "",
+        fqdn_prefix = "",
+        end_port = 0,
+        tls = true // FIXME: Unknown channel state!
+      };
+
+      return fcReply;
+    }
+
+    private async Task<FindCloudletReply> FindCloudletProximityMode(string host, uint port, FindCloudletRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest));
       MemoryStream ms = new MemoryStream();
@@ -702,14 +826,35 @@ namespace DistributedMatchEngine
     }
 
     // FindCloudlet with GetAppInstList and NetTest
-    public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request)
+    public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PERFORMANCE)
     {
-      FindCloudletReply fcReply = await FindCloudletApi(host, port, request);
-      if (fcReply.status != FindCloudletReply.FindStatus.FIND_FOUND) return fcReply;
+      if (melMessaging.IsMelEnabled())
+      {
+        return await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
+      }
+      else if (mode == FindCloudletMode.PROXIMITY)
+      {
+        return await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
+      }
+      else
+      {
+        return await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
+      }
+    }
+
+    private async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request)
+    {
+
+      FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
+      if (fcReply.status != FindCloudletReply.FindStatus.FIND_FOUND)
+      {
+        return fcReply;
+      }
 
       // Dummy bytes to load cellular network path
       Byte[] bytes = new Byte[2048];
-      Tag tag = new Tag {
+      Tag tag = new Tag
+      {
         type = "buffer",
         data = bytes.ToString()
       };
@@ -734,8 +879,9 @@ namespace DistributedMatchEngine
         netTest.sites.Enqueue(site);
       }
 
-      try {
-        sites = await netTest.RunNetTest(10);
+      try
+      {
+        sites = await netTest.RunNetTest(5);
       }
       catch (AggregateException ae)
       {
@@ -781,7 +927,7 @@ namespace DistributedMatchEngine
         carrierName: carrierName,
         cellID: cellID,
         tags: tags);
-      FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest);
+      FindCloudletReply findCloudletReply = await FindCloudletPerformanceMode(host, port, findCloudletRequest);
 
       return findCloudletReply;
     }
