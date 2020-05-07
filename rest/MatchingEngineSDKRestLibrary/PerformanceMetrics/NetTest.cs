@@ -49,15 +49,16 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public TestType testType;
 
       int idx;
-      int size;
+      public int size { get; private set; }
       public double[] samples;
+      public const int DEFAULT_NUM_SAMPLES = 3;
 
       public double average;
       public double stddev;
 
       public Appinstance appInst;
 
-      public Site(TestType testType = TestType.CONNECT, int numSamples = 5)
+      public Site(TestType testType = TestType.CONNECT, int numSamples = DEFAULT_NUM_SAMPLES)
       {
         this.testType = testType;
         samples = new double[numSamples];
@@ -308,6 +309,11 @@ namespace DistributedMatchEngine.PerformanceMetrics
       var siteArr = sites.ToArray();
       Array.Sort(siteArr, delegate (Site x, Site y)
       {
+        if (x.size == 0 || y.size == 0 )
+        {
+          return x.size > y.size ? -1 : 1;
+        }
+
         if (x.average != y.average)
         {
           return x.average < y.average ? -1 : 1;
