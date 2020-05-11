@@ -519,21 +519,22 @@ namespace DistributedMatchEngine
       }
 
       RegisterClientRequest oldRequest = request;
-      // MEL platform should have a UUID from a previous platform level registration, include it for App registration.
-      if (melMessaging.IsMelEnabled())
+      // Whether or not MEL is enabled, if UID is there, include it for App registration.
+      request = new RegisterClientRequest()
       {
-        request = new RegisterClientRequest()
-        {
           ver = oldRequest.ver,
           org_name = oldRequest.org_name,
           app_name = oldRequest.app_name,
           app_vers = oldRequest.app_vers,
           auth_token = oldRequest.auth_token,
           cell_id = oldRequest.cell_id,
-          unique_id = melMessaging.GetCookie(),
-          unique_id_type = "mel_unique_id", // FIXME: Unknown type.
           tags = oldRequest.tags
-        };
+      };
+      // MEL Enablement:
+      if (melMessaging.GetUid() != null && melMessaging.GetUid() != "")
+      {
+        request.unique_id_type = "Samsung:SamsungEnablingLayer";
+        request.unique_id = melMessaging.GetUid();
       }
 
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));

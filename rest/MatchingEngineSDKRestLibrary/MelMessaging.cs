@@ -4,17 +4,17 @@ namespace DistributedMatchEngine.Mel
 {
   public interface MelMessagingInterface
   {
-    bool IsMelReady();
     bool IsMelEnabled();
-    string GetCookie();
+    string GetMelVersion();
+    string GetUid();
     string SetLocationToken(string location_token, string app_name);
   }
 
   public class EmptyMelMessaging : MelMessagingInterface
   {
-    public bool IsMelReady() { return false;  }
     public bool IsMelEnabled() { return false; }
-    public string GetCookie() { return ""; }
+    public string GetMelVersion() { return ""; }
+    public string GetUid() { return ""; }
     public string SetLocationToken(string location_token, string app_name) { return ""; }
   }
 }
