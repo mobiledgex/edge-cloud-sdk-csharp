@@ -314,6 +314,11 @@ namespace DistributedMatchEngine.PerformanceMetrics
           return x.size > y.size ? -1 : 1;
         }
 
+        if (x.average == 0 || y.average == 0)
+        {
+          return x.average > y.average ? -1 : 1;
+        }
+
         if (x.average != y.average)
         {
           return x.average < y.average ? -1 : 1;
@@ -334,5 +339,4 @@ namespace DistributedMatchEngine.PerformanceMetrics
       }
     }
   }
-
 }
