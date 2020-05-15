@@ -7,7 +7,7 @@ namespace DistributedMatchEngine.Mel
     bool IsMelEnabled();
     string GetMelVersion();
     string GetUid();
-    string SetLocationToken(string location_token, string app_name);
+    string SetToken(string token, string app_name);
   }
 
   public class EmptyMelMessaging : MelMessagingInterface
@@ -15,6 +15,6 @@ namespace DistributedMatchEngine.Mel
     public bool IsMelEnabled() { return false; }
     public string GetMelVersion() { return ""; }
     public string GetUid() { return ""; }
-    public string SetLocationToken(string location_token, string app_name) { return ""; }
+    public string SetToken(string token, string app_name) { return ""; }
   }
 }

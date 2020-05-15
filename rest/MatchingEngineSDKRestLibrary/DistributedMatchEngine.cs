@@ -507,6 +507,25 @@ namespace DistributedMatchEngine
 
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
     {
+      RegisterClientRequest oldRequest = request;
+      // Whether or not MEL is enabled, if UID is there, include it for App registration.
+      request = new RegisterClientRequest()
+      {
+        ver = oldRequest.ver,
+        org_name = oldRequest.org_name,
+        app_name = oldRequest.app_name,
+        app_vers = oldRequest.app_vers,
+        auth_token = oldRequest.auth_token,
+        cell_id = oldRequest.cell_id,
+        tags = oldRequest.tags
+      };
+      // MEL Enablement:
+      if (melMessaging.GetUid() != null && melMessaging.GetUid() != "")
+      {
+        request.unique_id_type = "Platos:PlatosEnablingLayer";
+        request.unique_id = melMessaging.GetUid();
+      }
+
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
@@ -516,25 +535,6 @@ namespace DistributedMatchEngine
       if (responseStream == null || !responseStream.CanRead)
       {
         return null;
-      }
-
-      RegisterClientRequest oldRequest = request;
-      // Whether or not MEL is enabled, if UID is there, include it for App registration.
-      request = new RegisterClientRequest()
-      {
-          ver = oldRequest.ver,
-          org_name = oldRequest.org_name,
-          app_name = oldRequest.app_name,
-          app_vers = oldRequest.app_vers,
-          auth_token = oldRequest.auth_token,
-          cell_id = oldRequest.cell_id,
-          tags = oldRequest.tags
-      };
-      // MEL Enablement:
-      if (melMessaging.GetUid() != null && melMessaging.GetUid() != "")
-      {
-        request.unique_id_type = "Platos:PlatosEnablingLayer";
-        request.unique_id = melMessaging.GetUid();
       }
 
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
@@ -548,6 +548,11 @@ namespace DistributedMatchEngine
 
       // Some platforms won't parse emums with same library binary.
       reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+
+      if (reply.status == ReplyStatus.RS_SUCCESS)
+      {
+        LastRegisterClientRequest = request; // Update last request.
+      }
 
       return reply;
     }
@@ -655,10 +660,9 @@ namespace DistributedMatchEngine
         tags = request.tags
       };
 
-
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnRequest));
       MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
+      serializer.WriteObject(ms, appOfficialFqdnRequest);
       string jsonStr = Util.StreamToString(ms);
 
       Stream responseStream = await PostRequest(CreateUri(host, port) + appofficialfqdnAPI, jsonStr);
@@ -677,9 +681,9 @@ namespace DistributedMatchEngine
       reply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED ? ParseAofStatus(responseStr) : reply.status;
 
       // Inform Mel Messaging:
-      if (melMessaging.IsMelEnabled())
+      if (melMessaging.IsMelEnabled() && LastRegisterClientRequest != null)
       {
-        melMessaging.SetLocationToken(reply.client_token, LastRegisterClientRequest.app_name);
+        melMessaging.SetToken(reply.client_token, LastRegisterClientRequest.app_name);
       }
 
       // Repackage as FindCloudletReply:
@@ -690,6 +694,7 @@ namespace DistributedMatchEngine
         // Don't set location.
         ports = new AppPort[1]
       };
+
       fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.FIND_FOUND : FindCloudletReply.FindStatus.FIND_NOTFOUND;
       // attach empty port:
       fcReply.ports[0] = new AppPort
@@ -951,7 +956,7 @@ namespace DistributedMatchEngine
         }
         catch (NotImplementedException nie)
         {
-          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+          Log.S("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
           carrierName = wifiCarrier;
         }
       }
