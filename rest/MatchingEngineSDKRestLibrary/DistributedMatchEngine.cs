@@ -164,7 +164,7 @@ namespace DistributedMatchEngine
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
-    public MelMessagingInterface melMessaging { get; set; }
+    private MelMessagingInterface melMessaging { get; set; }
 
     // API Paths:
     private string registerAPI = "/v1/registerclient";
