@@ -834,7 +834,7 @@ namespace DistributedMatchEngine
     // FindCloudlet with GetAppInstList and NetTest
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      if (melMessaging.IsMelEnabled())
+      if (melMessaging.IsMelEnabled() && !netInterface.HasWifi())
       {
         return await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
       }
