@@ -265,13 +265,13 @@ namespace DistributedMatchEngine
     {
       if (useOnlyWifi)
       {
-        return wifiCarrier;
+        return "";
       }
 
       string mccmnc = carrierInfo.GetMccMnc();
-      if (mccmnc == "" || mccmnc == null)
+      if (mccmnc == null)
       {
-        return wifiCarrier;
+        return ""; // fallback carriername
       }
       return mccmnc;
     }
@@ -288,17 +288,18 @@ namespace DistributedMatchEngine
         return wifiOnlyDmeHost;
       }
 
-      string mccmnc = carrierInfo.GetMccMnc();
-      if (mccmnc == null)
+      string mccmnc = GetCarrierName();
+      if (mccmnc == "")
       {
         Log.E("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string.");
-        return wifiOnlyDmeHost; // fallback to wifi, this hostname must/should always exist.
-      }
-
-      if (mccmnc.Equals(wifiOnlyDmeHost))
-      {
-        Log.D("PlatformIntegration CarrierInfo interface does not have a valid MCCMNC string.");
-        return wifiOnlyDmeHost;
+        if (netInterface.HasWifi())
+        {
+          return wifiOnlyDmeHost; // fallback to wifi, this hostname must/should always exist.
+        }
+        else
+        {
+          throw new DmeDnsException("Cannot generate DME hostname, no mccmnc returned and wifi is not available.");
+        }
       }
 
       // Check minimum size:
