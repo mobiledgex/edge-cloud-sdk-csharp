@@ -256,7 +256,7 @@ namespace DistributedMatchEngine
       return uniqueID.GetUniqueID();
     }
 
-    public UInt32 GetCellID()
+    public ulong GetCellID()
     {
       return carrierInfo.GetCellID();
     }
