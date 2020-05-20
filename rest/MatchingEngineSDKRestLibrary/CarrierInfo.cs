@@ -26,7 +26,7 @@ namespace DistributedMatchEngine
   {
     string GetCurrentCarrierName();
     string GetMccMnc();
-    UInt32 GetCellID();
+    ulong GetCellID();
   }
 
   public class EmptyCarrierInfo : CarrierInfo
@@ -41,7 +41,7 @@ namespace DistributedMatchEngine
       throw new NotImplementedException("Required CarrierInfo interface function: GetMccMnc() is not defined!");
     }
 
-    public UInt32 GetCellID()
+    public ulong GetCellID()
     {
       throw new NotImplementedException("Required CarrierInfo interface function: GetCellID() is not defined!");
     }
