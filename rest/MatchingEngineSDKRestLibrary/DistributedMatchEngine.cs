@@ -646,9 +646,9 @@ namespace DistributedMatchEngine
       return appports;
     }
 
-    public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request)
+    public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request, mode);
     }
 
     private async Task<FindCloudletReply> FindCloudletMelMode(string host, uint port, FindCloudletRequest request)
@@ -832,7 +832,7 @@ namespace DistributedMatchEngine
       return sites.ToArray();
     }
 
-    // FindCloudlet with GetAppInstList and NetTest
+    // FindCloudlet
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       if (melMessaging.IsMelEnabled() && !netInterface.HasWifi())
@@ -849,6 +849,7 @@ namespace DistributedMatchEngine
       }
     }
 
+    // FindCloudlet with GetAppInstList and NetTest
     private async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request)
     {
 
@@ -901,17 +902,17 @@ namespace DistributedMatchEngine
     // Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostName(), defaultDmeRestPort,
         orgName, appName, appVersion, loc,
-        carrierName, authToken, cellID, uniqueIDType, uniqueID, tags);
+        carrierName, authToken, cellID, uniqueIDType, uniqueID, tags, mode);
     }
 
     // Override with specified dme host and port. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
        string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(
@@ -934,7 +935,7 @@ namespace DistributedMatchEngine
         carrierName: carrierName,
         cellID: cellID,
         tags: tags);
-      FindCloudletReply findCloudletReply = await FindCloudletPerformanceMode(host, port, findCloudletRequest);
+      FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode);
 
       return findCloudletReply;
     }
