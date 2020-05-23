@@ -157,7 +157,7 @@ namespace RestSample
 
         // These are asynchronious calls, of independent REST APIs.
 
-        // FindCloudlet:
+        // FindCloudlet Proximity Mode:
         try
         {
           FindCloudletReply findCloudletReply = null;
@@ -205,6 +205,56 @@ namespace RestSample
         catch (HttpException httpe)
         {
           Console.WriteLine("FindCloudlet Exception: " + httpe.Message + ", HTTP StatusCode: " + httpe.HttpStatusCode + ", API ErrorCode: " + httpe.ErrorCode + "\nStack: " + httpe.StackTrace);
+        }
+
+        // FindCloudlet Performance Mode:
+        try
+        {
+          FindCloudletReply findCloudletReplyPerformance = null;
+          try
+          {
+            findCloudletReplyPerformance = await me.FindCloudlet(findCloudletRequest, FindCloudletMode.PERFORMANCE);
+          }
+          catch (DmeDnsException)
+          {
+            // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
+            findCloudletReplyPerformance = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest, FindCloudletMode.PERFORMANCE);
+          }
+          catch (NotImplementedException)
+          {
+            findCloudletReplyPerformance = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest, FindCloudletMode.PERFORMANCE);
+          }
+          catch (FindCloudletException fce)
+          {
+            Console.WriteLine("FindCloudletPerformanceException is " + fce.Message);
+          }
+
+          Console.WriteLine("FindCloudletPerformance Reply: " + findCloudletReplyPerformance);
+
+          if (findCloudletReplyPerformance != null)
+          {
+            Console.WriteLine("FindCloudletPerformance Reply Status: " + findCloudletReplyPerformance.status);
+            Console.WriteLine("FindCloudletPerformance:" +
+                    " ver: " + findCloudletReplyPerformance.ver +
+                    ", fqdn: " + findCloudletReplyPerformance.fqdn +
+                    ", cloudlet_location: " +
+                    " long: " + findCloudletReplyPerformance.cloudlet_location.longitude +
+                    ", lat: " + findCloudletReplyPerformance.cloudlet_location.latitude);
+            // App Ports:
+            foreach (AppPort p in findCloudletReplyPerformance.ports)
+            {
+              Console.WriteLine("Port: fqdn_prefix: " + p.fqdn_prefix +
+                    ", protocol: " + p.proto +
+                    ", public_port: " + p.public_port +
+                    ", internal_port: " + p.internal_port +
+                    ", path_prefix: " + p.path_prefix +
+                    ", end_port: " + p.end_port);
+            }
+          }
+        }
+        catch (HttpException httpe)
+        {
+          Console.WriteLine("FindCloudletPerformance Exception: " + httpe.Message + ", HTTP StatusCode: " + httpe.HttpStatusCode + ", API ErrorCode: " + httpe.ErrorCode + "\nStack: " + httpe.StackTrace);
         }
 
         // Get Location:
