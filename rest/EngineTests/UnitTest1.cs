@@ -60,7 +60,7 @@ namespace Tests
         return null;
       }
 
-      UInt32 CarrierInfo.GetCellID()
+      ulong CarrierInfo.GetCellID()
       {
         return 0;
       }

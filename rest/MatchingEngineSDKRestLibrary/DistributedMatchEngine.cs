@@ -839,8 +839,9 @@ namespace DistributedMatchEngine
         string appOfficialFqdn = melModeFindCloudletReply.fqdn;
 
 
-        IPHostEntry ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
-        if (ipHostEntry.AddressList.Length > 0)
+        IPHostEntry ipHostEntry;
+        if (appOfficialFqdn != null &&
+            (ipHostEntry = Dns.GetHostEntry(appOfficialFqdn)).AddressList.Length > 0)
         {
           Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
           return melModeFindCloudletReply;
