@@ -35,18 +35,9 @@ namespace DistributedMatchEngine
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
 
-      // If desiredPort is -1, then default to public_port
-      if (desiredPort == -1)
-      {
-        desiredPort = appPort.public_port;
-      }
+      desiredPort = GetPort(appPort, desiredPort);
+      string host = GetHost(reply, appPort);
 
-      if (!IsInPortRange(appPort, desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
-
-      string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
       Socket s = await GetTCPConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
       return s;
     }
@@ -58,18 +49,9 @@ namespace DistributedMatchEngine
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
 
-      // If desiredPort is not specified, then default to public_port
-      if (desiredPort == -1)
-      {
-        desiredPort = appPort.public_port;
-      }
+      desiredPort = GetPort(appPort, desiredPort);
+      string host = GetHost(reply, appPort);
 
-      if (!IsInPortRange(appPort, desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
-
-      string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
       SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
       return stream;
     }
@@ -81,18 +63,9 @@ namespace DistributedMatchEngine
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
 
-      // If desiredPort is not specified, then default to public_port
-      if (desiredPort == -1)
-      {
-        desiredPort = appPort.public_port;
-      }
+      desiredPort = GetPort(appPort, desiredPort);
+      string host = GetHost(reply, appPort);
 
-      if (!IsInPortRange(appPort, desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
-
-      string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
       Socket s = await GetUDPConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
       return s;
     }
@@ -104,55 +77,36 @@ namespace DistributedMatchEngine
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
 
-      // If desiredPort is not specified, then default to public_port
-      if (desiredPort == -1)
-      {
-        desiredPort = appPort.public_port;
-      }
-
-      if (!IsInPortRange(appPort, desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
-
-      // prepend fqdn prefix given in AppPort to fqdn and append path_prefix to uri
-      string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix + path;
-      UriBuilder uriBuilder;
       if (appPort.tls)
       {
-        uriBuilder = new UriBuilder("https", uriString);
+        throw new GetConnectionException("Specified appPort is tls enabled. Use GetHTTPSClient instead");
       }
-      else
-      {
-        uriBuilder = new UriBuilder("http", uriString);
-      }
+
+      desiredPort = GetPort(appPort, desiredPort);
+      string url = CreateUrl(reply, appPort, desiredPort, "http", path);
+
+      UriBuilder uriBuilder = new UriBuilder(url);
       Uri uri = uriBuilder.Uri;
       HttpClient client = await GetHTTPClient(uri);
       return client;
     }
 
-    // FIXME: This API seems redundant outside testing purposes.
     public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
     {
       if (timeoutMs <= 0)
       {
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
-      
-      // If desiredPort is not specified, then default to public_port
-      if (desiredPort == -1)
+
+      if (!appPort.tls)
       {
-        desiredPort = appPort.public_port;
+        throw new GetConnectionException("Specified appPort is not tls enabled. Use GetHTTPClient instead");
       }
 
-      if (!IsInPortRange(appPort, desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
+      desiredPort = GetPort(appPort, desiredPort);
+      string url = CreateUrl(reply, appPort, desiredPort, "https", path);
 
-      // prepend fqdn prefix given in AppPort to fqdn and append path_prefix to uri
-      string uriString = appPort.fqdn_prefix + reply.fqdn + ":" + desiredPort + appPort.path_prefix + path;
-      UriBuilder uriBuilder = new UriBuilder("https", uriString);
+      UriBuilder uriBuilder = new UriBuilder(url);
       Uri uri = uriBuilder.Uri;
       HttpClient client = await GetHTTPClient(uri);
       return client;
@@ -165,19 +119,17 @@ namespace DistributedMatchEngine
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
 
-      // If desiredPort is not specified, then default to public_port
-      if (desiredPort == -1)
+      if (appPort.tls)
       {
-        desiredPort = appPort.public_port;
+        throw new GetConnectionException("Specified appPort is tls enabled. Use GetSecureWebsocketConnection instead");
       }
 
-      if (!IsInPortRange(appPort, desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
+      desiredPort = GetPort(appPort, desiredPort);
+      string url = CreateUrl(reply, appPort, desiredPort, "ws", path);
 
-      string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-      ClientWebSocket s = await GetWebsocketConnection(host, desiredPort, timeoutMs, path).ConfigureAwait(false);
+      UriBuilder uriBuilder = new UriBuilder(url);
+      Uri uri = uriBuilder.Uri;
+      ClientWebSocket s = await GetWebsocketConnection(uri, timeoutMs).ConfigureAwait(false);
       return s;
     }
 
@@ -188,19 +140,17 @@ namespace DistributedMatchEngine
         throw new GetConnectionException(timeoutMs + " is an invalid timeout");
       }
 
-      // If desiredPort is not specified, then default to public_port
-      if (desiredPort == -1)
+      if (!appPort.tls)
       {
-        desiredPort = appPort.public_port;
+        throw new GetConnectionException("Specified appPort is not tls enabled. Use GetWebsocketConnection instead");
       }
 
-      if (!IsInPortRange(appPort, desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
+      desiredPort = GetPort(appPort, desiredPort);
+      string url = CreateUrl(reply, appPort, desiredPort, "wss", path);
 
-      string host = appPort.fqdn_prefix + reply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-      ClientWebSocket s = await GetSecureWebsocketConnection(host, desiredPort, timeoutMs, path).ConfigureAwait(false);
+      UriBuilder uriBuilder = new UriBuilder(url);
+      Uri uri = uriBuilder.Uri;
+      ClientWebSocket s = await GetWebsocketConnection(uri, timeoutMs).ConfigureAwait(false);
       return s;
     }
   }

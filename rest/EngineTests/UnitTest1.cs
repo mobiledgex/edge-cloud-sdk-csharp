@@ -39,12 +39,12 @@ namespace Tests
   {
     // Test to a staging server:
     const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
-    const string carrierName = "GDDT";
+
     const string orgName = "MobiledgeX";
-    const string appName = "MobiledgeX SDK Demo";
-    const string appVers = "2.0";
+    const string appName = "HttpEcho";
+    const string appVers = "20191204";
     const string connectionTestFqdn = "mextest-app-cluster.fairview-main.gddt.mobiledgex.net";
-    const string aWebSocketServerFqdn = "pingpong-tcp.fairview-main.gddt.mobiledgex.net"; // or, localhost.
+    const string aWebSocketServerFqdn = "pingpong-cluster.fairview-main.gddt.mobiledgex.net"; // or, localhost.
 
     static MatchingEngine me;
 
@@ -60,7 +60,7 @@ namespace Tests
         return null;
       }
 
-      UInt32 CarrierInfo.GetCellID()
+      ulong CarrierInfo.GetCellID()
       {
         return 0;
       }
@@ -369,9 +369,12 @@ namespace Tests
 
       // Websocket Connection Test
       ClientWebSocket socket = null;
+      string url = "ws://" + aWebSocketServerFqdn + ":" + 3000;
+      UriBuilder uriBuilder = new UriBuilder(url);
+      Uri uri = uriBuilder.Uri;
       try
       {
-        socket = await me.GetWebsocketConnection(aWebSocketServerFqdn, 3000, 5000, "");
+        socket = await me.GetWebsocketConnection(uri, 5000);
       }
       catch (Exception e)
       {
@@ -637,24 +640,6 @@ namespace Tests
           Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
         }
       }
-    }
-
-    [Test]
-    public async static Task TestGetConnection()
-    {
-      Task websocketTest = TestWebsocketsConnection();
-      Task tcpTest = TestTCPConnection();
-      Task httpTest = TestHTTPConnection();
-      Task tcpTlsTest = TestTCPTLSConnection();
-      Task getConnectionWorkflow = TestGetConnectionWorkflow();
-      Task timeoutTest = TestTimeout();
-
-      await websocketTest;
-      await tcpTest;
-      await httpTest;
-      await tcpTlsTest;
-      await getConnectionWorkflow;
-      await timeoutTest;
     }
   }
 }

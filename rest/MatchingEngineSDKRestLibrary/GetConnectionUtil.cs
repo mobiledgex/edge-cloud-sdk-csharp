@@ -113,7 +113,7 @@ namespace DistributedMatchEngine
         {
           continue;
         }
-        if (IsInPortRange(appPort, portNum) && AppPortIsEqual(aPort, appPort))
+        if (IsInPortRange(appPort, portNum) && AppPortIsEqual(aPort, appPort) && IsValidPort(portNum))
         {
           found = aPort;
         }
@@ -121,26 +121,61 @@ namespace DistributedMatchEngine
       return found;
     }
 
-    // Create a L7Path URL from an app port:
-    public static string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, int portNum)
+    // Create a L7Path URL from an AppPort and FindCloudletReply:
+    public string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, int portNum, string protocol, string path = "")
     {
       int aPortNum = portNum <= 0 ? appPort.public_port : portNum;
       AppPort foundPort = ValidatePublicPort(findCloudletReply, appPort, LProto.L_PROTO_TCP, aPortNum);
       if (foundPort == null)
       {
-        return null;
+        throw new GetConnectionException("Unabled to validate public port");
       }
-      string url = "http://" +
+
+      string url = protocol + "://" +
               appPort.fqdn_prefix +
               findCloudletReply.fqdn +
               ":" +
               aPortNum +
-              appPort.path_prefix;
+              appPort.path_prefix +
+              path;
 
       return url;
     }
 
-    // Checks if the specified port is within the range of public_port and end_port
+    // Returns the host of the app backend based on FindCloudletReply and AppPort
+    public string GetHost(FindCloudletReply findCloudletReply, AppPort appPort)
+    {
+      return appPort.fqdn_prefix + findCloudletReply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
+    }
+
+    // Returns the desired port for app backend service from AppPort
+    public int GetPort(AppPort appPort, int desiredPort = -1)
+    {
+      // If desiredPort is -1, then default to public_port
+      if (desiredPort == -1)
+      {
+        desiredPort = appPort.public_port;
+      }
+
+      if (!IsInPortRange(appPort, desiredPort))
+      {
+        throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
+      }
+
+      if (!IsValidPort(desiredPort))
+      {
+        throw new GetConnectionException("Desired port: " + desiredPort + " is not a valid port number");
+      }
+
+      return desiredPort;
+    }
+
+    private static bool IsValidPort(int port)
+    {
+      return (port <= 65535) && (port >= 0);
+    }
+
+    // Checks if the specified port is within the range of public_port and end_port fields in AppPort
     private static bool IsInPortRange(AppPort appPort, int port)
     {
       // Checks if range exists -> if not, check if specified port equals public port
