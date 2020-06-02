@@ -142,10 +142,8 @@ namespace DistributedMatchEngine
 
   public enum FindCloudletMode
   {
-    UNDEFINED,
     PROXIMITY,
-    PERFORMANCE,
-    MEL
+    PERFORMANCE
   }
 
 
@@ -837,9 +835,23 @@ namespace DistributedMatchEngine
     {
       if (melMessaging.IsMelEnabled() && !netInterface.HasWifi())
       {
-        return await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
+        FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
+        string appOfficialFqdn = melModeFindCloudletReply.fqdn;
+
+
+        IPHostEntry ipHostEntry;
+        if (appOfficialFqdn != null &&
+            (ipHostEntry = Dns.GetHostEntry(appOfficialFqdn)).AddressList.Length > 0)
+        {
+          Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
+          return melModeFindCloudletReply;
+        }
+
+        // Else, don't return, continue to fallback:
+        Log.S("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
       }
-      else if (mode == FindCloudletMode.PROXIMITY)
+
+      if (mode == FindCloudletMode.PROXIMITY)
       {
         return await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
       }
