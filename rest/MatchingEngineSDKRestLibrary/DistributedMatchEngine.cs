@@ -274,7 +274,7 @@ namespace DistributedMatchEngine
       return mccmnc;
     }
 
-    public string GenerateDmeHostName()
+    public string GenerateDmeHostAddress()
     {
       if (carrierInfo == null)
       {
@@ -501,7 +501,7 @@ namespace DistributedMatchEngine
 
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
-      return await RegisterClient(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
@@ -646,7 +646,7 @@ namespace DistributedMatchEngine
 
     public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      return await FindCloudlet(GenerateDmeHostName(), defaultDmeRestPort, request, mode);
+      return await FindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort, request, mode);
     }
 
     private async Task<FindCloudletReply> FindCloudletMelMode(string host, uint port, FindCloudletRequest request)
@@ -916,7 +916,7 @@ namespace DistributedMatchEngine
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      return await RegisterAndFindCloudlet(GenerateDmeHostName(), defaultDmeRestPort,
+      return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort,
         orgName, appName, appVersion, loc,
         carrierName, authToken, cellID, uniqueIDType, uniqueID, tags, mode);
     }
@@ -1021,7 +1021,7 @@ namespace DistributedMatchEngine
 
     public async Task<VerifyLocationReply> VerifyLocation(VerifyLocationRequest request)
     {
-      return await VerifyLocation(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await VerifyLocation(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
     public async Task<VerifyLocationReply> VerifyLocation(string host, uint port, VerifyLocationRequest request)
@@ -1109,7 +1109,7 @@ namespace DistributedMatchEngine
      */
     public async Task<GetLocationReply> GetLocation(GetLocationRequest request)
     {
-      return await GetLocation(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await GetLocation(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
     public async Task<GetLocationReply> GetLocation(string host, uint port, GetLocationRequest request)
@@ -1194,7 +1194,7 @@ namespace DistributedMatchEngine
 
     public async Task<AppInstListReply> GetAppInstList(AppInstListRequest request)
     {
-      return await GetAppInstList(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await GetAppInstList(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
     public async Task<AppInstListReply> GetAppInstList(string host, uint port, AppInstListRequest request)
@@ -1256,7 +1256,7 @@ namespace DistributedMatchEngine
 
     public async Task<FqdnListReply> GetFqdnList(FqdnListRequest request)
     {
-      return await GetFqdnList(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await GetFqdnList(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
     public async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
@@ -1305,7 +1305,7 @@ namespace DistributedMatchEngine
 
     public async Task<DynamicLocGroupReply> AddUserToGroup(DynamicLocGroupRequest request)
     {
-      return await AddUserToGroup(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await AddUserToGroup(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
     public async Task<DynamicLocGroupReply> AddUserToGroup(string host, uint port, DynamicLocGroupRequest request)
@@ -1354,7 +1354,7 @@ namespace DistributedMatchEngine
 
     public async Task<QosPositionKpiStream> GetQosPositionKpi(QosPositionRequest request)
     {
-      return await GetQosPositionKpi(GenerateDmeHostName(), defaultDmeRestPort, request);
+      return await GetQosPositionKpi(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
     public async Task<QosPositionKpiStream> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
