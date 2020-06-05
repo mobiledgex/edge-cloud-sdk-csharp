@@ -176,7 +176,6 @@ namespace DistributedMatchEngine
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
-    public const long TICKS_PER_MS = 10000;
 
     public bool useOnlyWifi { get; set; } = false;
 
@@ -189,7 +188,7 @@ namespace DistributedMatchEngine
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
       httpClient = new HttpClient();
-      httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
+      httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
       if (carrierInfo == null)
       {
         this.carrierInfo = new EmptyCarrierInfo();
@@ -239,9 +238,9 @@ namespace DistributedMatchEngine
     {
       if (timeout_in_milliseconds > 1)
       {
-        return httpClient.Timeout = TimeSpan.FromTicks(timeout_in_milliseconds * TICKS_PER_MS);
+        return httpClient.Timeout = TimeSpan.FromMilliseconds(timeout_in_milliseconds);
       }
-      return httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
+      return httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
     }
 
     public string GetUniqueIDType()
@@ -840,15 +839,22 @@ namespace DistributedMatchEngine
 
 
         IPHostEntry ipHostEntry;
-        if (appOfficialFqdn != null &&
-            (ipHostEntry = Dns.GetHostEntry(appOfficialFqdn)).AddressList.Length > 0)
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        Task.Delay(100).Wait();
+        while (stopwatch.ElapsedMilliseconds < DEFAULT_REST_TIMEOUT_MS) // Give it a LOT of time.
         {
-          Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
-          return melModeFindCloudletReply;
+          
+          if (appOfficialFqdn != null &&
+              (ipHostEntry = Dns.GetHostEntry(appOfficialFqdn)).AddressList.Length > 0)
+          {
+            Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
+            return melModeFindCloudletReply;
+          }
+          Task.Delay(100).Wait(); // Let the system process SET_TOKEN.
         }
 
-        // Else, don't return, continue to fallback:
-        Log.S("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
+        // Else, don't return, continue to fallback to original MODE:
+        Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
       }
 
       if (mode == FindCloudletMode.PROXIMITY)
