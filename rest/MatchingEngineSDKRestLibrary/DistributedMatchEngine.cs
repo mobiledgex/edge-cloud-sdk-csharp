@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 
 using DistributedMatchEngine.PerformanceMetrics;
 using DistributedMatchEngine.Mel;
+using System.Net.Sockets;
 
 namespace DistributedMatchEngine
 {
@@ -832,25 +833,44 @@ namespace DistributedMatchEngine
     // FindCloudlet
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      if (melMessaging.IsMelEnabled() && !netInterface.HasWifi())
+      string ip = null;
+      if (netInterface.HasWifi())
+      {
+        string wifi = netInterface.GetNetworkInterfaceName().WIFI;
+        ip = netInterface.GetIPAddress(wifi);
+      }
+      if (melMessaging.IsMelEnabled() && ip == null)
       {
         FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
         string appOfficialFqdn = melModeFindCloudletReply.fqdn;
 
-
         IPHostEntry ipHostEntry;
         Stopwatch stopwatch = Stopwatch.StartNew();
-        Task.Delay(100).Wait();
-        while (stopwatch.ElapsedMilliseconds < DEFAULT_REST_TIMEOUT_MS) // Give it a LOT of time.
+        while (stopwatch.ElapsedMilliseconds < httpClient.Timeout.TotalMilliseconds)
         {
-          
-          if (appOfficialFqdn != null &&
-              (ipHostEntry = Dns.GetHostEntry(appOfficialFqdn)).AddressList.Length > 0)
+          if (appOfficialFqdn == null || appOfficialFqdn.Length == 0)
           {
-            Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
-            return melModeFindCloudletReply;
+            break;
           }
-          Task.Delay(100).Wait(); // Let the system process SET_TOKEN.
+
+          try
+          {
+            ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
+            if (ipHostEntry.AddressList.Length > 0)
+            {
+              Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
+              return melModeFindCloudletReply;
+            }
+          }
+          catch (ArgumentException ae)
+          {
+            Log.D("ArgumentException. Waiting for update: " + ae.Message);
+          }
+          catch (SocketException se)
+          {
+            Log.D("SocketException. Waiting for update: " + se.Message);
+          }
+          Task.Delay(300).Wait(); // Let the system process SET_TOKEN.
         }
 
         // Else, don't return, continue to fallback to original MODE:
