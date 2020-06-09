@@ -149,10 +149,10 @@ namespace DistributedMatchEngine
     }
 
     // Returns the desired port for app backend service from AppPort
-    public int GetPort(AppPort appPort, int desiredPort = -1)
+    public int GetPort(AppPort appPort, int desiredPort = 0)
     {
-      // If desiredPort is -1, then default to public_port
-      if (desiredPort == -1)
+      // If desiredPort is less than or equal zero, then default to public_port
+      if (desiredPort <= 0)
       {
         desiredPort = appPort.public_port;
       }
