@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 
 using DistributedMatchEngine.PerformanceMetrics;
 using DistributedMatchEngine.Mel;
+using System.Net.Sockets;
 
 namespace DistributedMatchEngine
 {
@@ -176,7 +177,6 @@ namespace DistributedMatchEngine
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
-    public const long TICKS_PER_MS = 10000;
 
     public bool useOnlyWifi { get; set; } = false;
 
@@ -189,7 +189,7 @@ namespace DistributedMatchEngine
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
       httpClient = new HttpClient();
-      httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
+      httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
       if (carrierInfo == null)
       {
         this.carrierInfo = new EmptyCarrierInfo();
@@ -239,9 +239,9 @@ namespace DistributedMatchEngine
     {
       if (timeout_in_milliseconds > 1)
       {
-        return httpClient.Timeout = TimeSpan.FromTicks(timeout_in_milliseconds * TICKS_PER_MS);
+        return httpClient.Timeout = TimeSpan.FromMilliseconds(timeout_in_milliseconds);
       }
-      return httpClient.Timeout = TimeSpan.FromTicks(DEFAULT_REST_TIMEOUT_MS * TICKS_PER_MS);
+      return httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
     }
 
     public string GetUniqueIDType()
@@ -833,22 +833,48 @@ namespace DistributedMatchEngine
     // FindCloudlet
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      if (melMessaging.IsMelEnabled() && !netInterface.HasWifi())
+      string ip = null;
+      if (netInterface.HasWifi())
+      {
+        string wifi = netInterface.GetNetworkInterfaceName().WIFI;
+        ip = netInterface.GetIPAddress(wifi);
+      }
+      if (melMessaging.IsMelEnabled() && ip == null)
       {
         FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
         string appOfficialFqdn = melModeFindCloudletReply.fqdn;
 
-
         IPHostEntry ipHostEntry;
-        if (appOfficialFqdn != null &&
-            (ipHostEntry = Dns.GetHostEntry(appOfficialFqdn)).AddressList.Length > 0)
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        while (stopwatch.ElapsedMilliseconds < httpClient.Timeout.TotalMilliseconds)
         {
-          Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
-          return melModeFindCloudletReply;
+          if (appOfficialFqdn == null || appOfficialFqdn.Length == 0)
+          {
+            break;
+          }
+
+          try
+          {
+            ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
+            if (ipHostEntry.AddressList.Length > 0)
+            {
+              Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
+              return melModeFindCloudletReply;
+            }
+          }
+          catch (ArgumentException ae)
+          {
+            Log.D("ArgumentException. Waiting for update: " + ae.Message);
+          }
+          catch (SocketException se)
+          {
+            Log.D("SocketException. Waiting for update: " + se.Message);
+          }
+          Task.Delay(300).Wait(); // Let the system process SET_TOKEN.
         }
 
-        // Else, don't return, continue to fallback:
-        Log.S("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
+        // Else, don't return, continue to fallback to original MODE:
+        Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
       }
 
       if (mode == FindCloudletMode.PROXIMITY)
