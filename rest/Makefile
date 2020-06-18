@@ -20,7 +20,7 @@ BINOUT := $(APPLIBBASE)/lib
 SOLUTIONLOG := /tmp/$(VSPROJECTROOT)_out.log
 PUBLISHLOG := /tmp/nuget_out.log
 
-REST_SDK_VERSION=2.0.8
+REST_SDK_VERSION=2.1.0
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/api/nuget/nuget-releases/
 
 all: packageRestore build-all
