@@ -1081,88 +1081,6 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public GetLocationRequest CreateGetLocationRequest(string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
-    {
-      if (sessionCookie == null)
-      {
-        return null;
-      }
-
-      if (carrierName == null) {
-        try
-        {
-          string mccMnc = carrierInfo.GetMccMnc();
-          if (mccMnc != null && mccMnc != "")
-          {
-            carrierName = mccMnc;
-          }
-        }
-        catch (NotImplementedException nie)
-        {
-          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
-          carrierName = wifiCarrier;
-        }
-      }
-
-      return new GetLocationRequest
-      {
-        ver = 1,
-        carrier_name = carrierName,
-        session_cookie = this.sessionCookie,
-        cell_id = cellID,
-        tags = tags
-      };
-    }
-
-    private GetLocationReply.LocStatus ParseLocationStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      GetLocationReply.LocStatus status;
-      try
-      {
-        status = (GetLocationReply.LocStatus)Enum.Parse(typeof(GetLocationReply.LocStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = GetLocationReply.LocStatus.LOC_UNKNOWN;
-      }
-      return status;
-    }
-
-    /*
-     * Retrieves the carrier based network based geolocation of the network device.
-     */
-    public async Task<GetLocationReply> GetLocation(GetLocationRequest request)
-    {
-      return await GetLocation(GenerateDmeHostAddress(), defaultDmeRestPort, request);
-    }
-
-    public async Task<GetLocationReply> GetLocation(string host, uint port, GetLocationRequest request)
-    {
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(GetLocationRequest));
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
-
-      Stream responseStream = await PostRequest(CreateUri(host, port) + getlocationAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
-
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(GetLocationReply));
-      GetLocationReply reply = (GetLocationReply)deserializer.ReadObject(ms);
-
-      // Reparse if unknown:
-      reply.status = reply.status == GetLocationReply.LocStatus.LOC_UNKNOWN ? ParseLocationStatus(responseStr) : reply.status;
-
-      return reply;
-    }
-
     public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -1248,116 +1166,6 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    public FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Tag[] tags = null)
-    {
-      if (sessionCookie == null)
-      {
-        return null;
-      }
-
-      return new FqdnListRequest
-      {
-        ver = 1,
-        session_cookie = this.sessionCookie,
-        cell_id = cellID,
-        tags = tags
-      };
-    }
-
-    private FqdnListReply.FLStatus ParseFLStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      FqdnListReply.FLStatus status;
-      try
-      {
-        status = (FqdnListReply.FLStatus)Enum.Parse(typeof(FqdnListReply.FLStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = FqdnListReply.FLStatus.FL_UNDEFINED;
-      }
-      return status;
-    }
-
-    public async Task<FqdnListReply> GetFqdnList(FqdnListRequest request)
-    {
-      return await GetFqdnList(GenerateDmeHostAddress(), defaultDmeRestPort, request);
-    }
-
-    public async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
-    {
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FqdnListRequest));
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
-
-      Stream responseStream = await PostRequest(CreateUri(host, port) + getfqdnlistAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
-
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FqdnListReply));
-      FqdnListReply reply = (FqdnListReply)deserializer.ReadObject(ms);
-
-      reply.status = reply.status == FqdnListReply.FLStatus.FL_UNDEFINED ? ParseFLStatus(responseStr) : reply.status;
-
-      return reply;
-    }
-
-    public DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
-      string userData = null, UInt32 cellID = 0, Tag[] tags = null)
-    {
-      if (sessionCookie == null)
-      {
-        return null;
-      }
-
-      return new DynamicLocGroupRequest
-      {
-        ver = 1,
-        session_cookie = this.sessionCookie,
-        comm_type = dlgCommType,
-        lg_id = lgId,
-        user_data = userData,
-        cell_id = cellID,
-        tags = tags
-      };
-    }
-
-    public async Task<DynamicLocGroupReply> AddUserToGroup(DynamicLocGroupRequest request)
-    {
-      return await AddUserToGroup(GenerateDmeHostAddress(), defaultDmeRestPort, request);
-    }
-
-    public async Task<DynamicLocGroupReply> AddUserToGroup(string host, uint port, DynamicLocGroupRequest request)
-    {
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DynamicLocGroupRequest));
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
-
-      Stream responseStream = await PostRequest(CreateUri(host, port) + dynamiclocgroupAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
-
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(DynamicLocGroupReply));
-      DynamicLocGroupReply reply = (DynamicLocGroupReply)deserializer.ReadObject(ms);
-
-      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
-
-      return reply;
-    }
-
     public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
       UInt32 cellID = 0, Tag[] tags = null)
     {
@@ -1399,6 +1207,198 @@ namespace DistributedMatchEngine
       var qosPositionKpiStream = new QosPositionKpiStream(responseStream);
 
       return qosPositionKpiStream;
+    }
+
+    private GetLocationRequest CreateGetLocationRequest(string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
+    {
+      if (sessionCookie == null)
+      {
+        return null;
+      }
+
+      if (carrierName == null) {
+        try
+        {
+          string mccMnc = carrierInfo.GetMccMnc();
+          if (mccMnc != null && mccMnc != "")
+          {
+            carrierName = mccMnc;
+          }
+        }
+        catch (NotImplementedException nie)
+        {
+          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+          carrierName = wifiCarrier;
+        }
+      }
+
+      return new GetLocationRequest
+      {
+        ver = 1,
+        carrier_name = carrierName,
+        session_cookie = this.sessionCookie,
+        cell_id = cellID,
+        tags = tags
+      };
+    }
+
+    private GetLocationReply.LocStatus ParseLocationStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      GetLocationReply.LocStatus status;
+      try
+      {
+        status = (GetLocationReply.LocStatus)Enum.Parse(typeof(GetLocationReply.LocStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = GetLocationReply.LocStatus.LOC_UNKNOWN;
+      }
+      return status;
+    }
+
+    /*
+     * Retrieves the carrier based network based geolocation of the network device.
+     */
+    private async Task<GetLocationReply> GetLocation(GetLocationRequest request)
+    {
+      return await GetLocation(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+    }
+
+    private async Task<GetLocationReply> GetLocation(string host, uint port, GetLocationRequest request)
+    {
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(GetLocationRequest));
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, request);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream = await PostRequest(CreateUri(host, port) + getlocationAPI, jsonStr);
+      if (responseStream == null || !responseStream.CanRead)
+      {
+        return null;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(GetLocationReply));
+      GetLocationReply reply = (GetLocationReply)deserializer.ReadObject(ms);
+
+      // Reparse if unknown:
+      reply.status = reply.status == GetLocationReply.LocStatus.LOC_UNKNOWN ? ParseLocationStatus(responseStr) : reply.status;
+
+      return reply;
+    }    
+
+    private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Tag[] tags = null)
+    {
+      if (sessionCookie == null)
+      {
+        return null;
+      }
+
+      return new FqdnListRequest
+      {
+        ver = 1,
+        session_cookie = this.sessionCookie,
+        cell_id = cellID,
+        tags = tags
+      };
+    }
+
+    private FqdnListReply.FLStatus ParseFLStatus(string responseStr)
+    {
+      string key = "status";
+      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
+      FqdnListReply.FLStatus status;
+      try
+      {
+        status = (FqdnListReply.FLStatus)Enum.Parse(typeof(FqdnListReply.FLStatus), jsObj[key]);
+      }
+      catch
+      {
+        status = FqdnListReply.FLStatus.FL_UNDEFINED;
+      }
+      return status;
+    }
+
+    private async Task<FqdnListReply> GetFqdnList(FqdnListRequest request)
+    {
+      return await GetFqdnList(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+    }
+
+    private async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
+    {
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FqdnListRequest));
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, request);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream = await PostRequest(CreateUri(host, port) + getfqdnlistAPI, jsonStr);
+      if (responseStream == null || !responseStream.CanRead)
+      {
+        return null;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FqdnListReply));
+      FqdnListReply reply = (FqdnListReply)deserializer.ReadObject(ms);
+
+      reply.status = reply.status == FqdnListReply.FLStatus.FL_UNDEFINED ? ParseFLStatus(responseStr) : reply.status;
+
+      return reply;
+    }
+
+    private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
+      string userData = null, UInt32 cellID = 0, Tag[] tags = null)
+    {
+      if (sessionCookie == null)
+      {
+        return null;
+      }
+
+      return new DynamicLocGroupRequest
+      {
+        ver = 1,
+        session_cookie = this.sessionCookie,
+        comm_type = dlgCommType,
+        lg_id = lgId,
+        user_data = userData,
+        cell_id = cellID,
+        tags = tags
+      };
+    }
+
+    private async Task<DynamicLocGroupReply> AddUserToGroup(DynamicLocGroupRequest request)
+    {
+      return await AddUserToGroup(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+    }
+
+    private async Task<DynamicLocGroupReply> AddUserToGroup(string host, uint port, DynamicLocGroupRequest request)
+    {
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DynamicLocGroupRequest));
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, request);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream = await PostRequest(CreateUri(host, port) + dynamiclocgroupAPI, jsonStr);
+      if (responseStream == null || !responseStream.CanRead)
+      {
+        return null;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(DynamicLocGroupReply));
+      DynamicLocGroupReply reply = (DynamicLocGroupReply)deserializer.ReadObject(ms);
+
+      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+
+      return reply;
     }
   };
 }

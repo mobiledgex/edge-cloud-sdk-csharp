@@ -152,7 +152,6 @@ namespace RestSample
         // Independent requests:
         var verifyLocationRequest = me.CreateVerifyLocationRequest(loc);
         var findCloudletRequest = me.CreateFindCloudletRequest(loc, carrierName);
-        var getLocationRequest = me.CreateGetLocationRequest();
         var appInstListRequest = me.CreateAppInstListRequest(loc, carrierName);
 
         // These are asynchronious calls, of independent REST APIs.
@@ -255,33 +254,6 @@ namespace RestSample
         catch (HttpException httpe)
         {
           Console.WriteLine("FindCloudletPerformance Exception: " + httpe.Message + ", HTTP StatusCode: " + httpe.HttpStatusCode + ", API ErrorCode: " + httpe.ErrorCode + "\nStack: " + httpe.StackTrace);
-        }
-
-        // Get Location:
-        GetLocationReply getLocationReply = null;
-
-        try
-        {
-          try
-          {
-            getLocationReply = await me.GetLocation(getLocationRequest);
-          }
-          catch (DmeDnsException)
-          {
-            getLocationReply = await me.GetLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, getLocationRequest);
-          }
-          catch (NotImplementedException)
-          {
-            getLocationReply = await me.GetLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, getLocationRequest);
-          }
-          Console.WriteLine("GetLocation Reply: " + getLocationReply);
-
-          var location = getLocationReply.network_location;
-          Console.WriteLine("GetLocationReply: longitude: " + location.longitude + ", latitude: " + location.latitude);
-        }
-        catch (HttpException httpe)
-        {
-          Console.WriteLine("GetLocation Exception: " + httpe.Message + ", HTTP StatusCode: " + httpe.HttpStatusCode + ", API ErrorCode: " + httpe.ErrorCode + "\nStack: " + httpe.StackTrace);
         }
 
         // Verify Location:
