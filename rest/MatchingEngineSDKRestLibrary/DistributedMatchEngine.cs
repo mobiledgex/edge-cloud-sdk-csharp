@@ -169,7 +169,6 @@ namespace DistributedMatchEngine
     private string registerAPI = "/v1/registerclient";
     private string verifylocationAPI = "/v1/verifylocation";
     private string findcloudletAPI = "/v1/findcloudlet";
-    private string getlocationAPI = "/v1/getlocation";
     private string appinstlistAPI = "/v1/getappinstlist";
     private string dynamiclocgroupAPI = "/v1/dynamiclocgroup";
     private string getfqdnlistAPI = "/v1/getfqdnlist";
@@ -1207,89 +1206,7 @@ namespace DistributedMatchEngine
       var qosPositionKpiStream = new QosPositionKpiStream(responseStream);
 
       return qosPositionKpiStream;
-    }
-
-    private GetLocationRequest CreateGetLocationRequest(string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
-    {
-      if (sessionCookie == null)
-      {
-        return null;
-      }
-
-      if (carrierName == null) {
-        try
-        {
-          string mccMnc = carrierInfo.GetMccMnc();
-          if (mccMnc != null && mccMnc != "")
-          {
-            carrierName = mccMnc;
-          }
-        }
-        catch (NotImplementedException nie)
-        {
-          Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
-          carrierName = wifiCarrier;
-        }
-      }
-
-      return new GetLocationRequest
-      {
-        ver = 1,
-        carrier_name = carrierName,
-        session_cookie = this.sessionCookie,
-        cell_id = cellID,
-        tags = tags
-      };
-    }
-
-    private GetLocationReply.LocStatus ParseLocationStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      GetLocationReply.LocStatus status;
-      try
-      {
-        status = (GetLocationReply.LocStatus)Enum.Parse(typeof(GetLocationReply.LocStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = GetLocationReply.LocStatus.LOC_UNKNOWN;
-      }
-      return status;
-    }
-
-    /*
-     * Retrieves the carrier based network based geolocation of the network device.
-     */
-    private async Task<GetLocationReply> GetLocation(GetLocationRequest request)
-    {
-      return await GetLocation(GenerateDmeHostAddress(), defaultDmeRestPort, request);
-    }
-
-    private async Task<GetLocationReply> GetLocation(string host, uint port, GetLocationRequest request)
-    {
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(GetLocationRequest));
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
-
-      Stream responseStream = await PostRequest(CreateUri(host, port) + getlocationAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
-
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(GetLocationReply));
-      GetLocationReply reply = (GetLocationReply)deserializer.ReadObject(ms);
-
-      // Reparse if unknown:
-      reply.status = reply.status == GetLocationReply.LocStatus.LOC_UNKNOWN ? ParseLocationStatus(responseStr) : reply.status;
-
-      return reply;
-    }    
+    }   
 
     private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Tag[] tags = null)
     {
