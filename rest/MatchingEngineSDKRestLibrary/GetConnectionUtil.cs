@@ -21,14 +21,15 @@ using System.Net.Sockets;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 namespace DistributedMatchEngine
 { 
 
   public class NetworkInterfaceName
   {
-    public string CELLULAR = null;
-    public string WIFI = null;
+    public string[] CELLULAR = null;
+    public string[] WIFI = null;
   }
 
   // Some known network interface profiles:
@@ -36,8 +37,8 @@ namespace DistributedMatchEngine
   {
     public IOSNetworkInterfaceName()
     {
-      CELLULAR = "pdp_ip0";
-      WIFI = "en0";
+      CELLULAR = new string[] { "pdp_ip0" };
+      WIFI = new string[] { "en0" };
     }
   }
 
@@ -45,8 +46,8 @@ namespace DistributedMatchEngine
   {
     public AndroidNetworkInterfaceName()
     {
-      CELLULAR = "radio0"; // rmnet_data0 for some older version of Android
-      WIFI = "wlan0";
+      CELLULAR = new string[] { "radio0", "rmnet_data0" };
+      WIFI = new string[] { "wlan0" };
     }
   }
 
@@ -54,8 +55,8 @@ namespace DistributedMatchEngine
   {
     public MacNetworkInterfaceName()
     {
-      CELLULAR = "en0";
-      WIFI = "en0";
+      CELLULAR = new string[] { "en0" };
+      WIFI = new string[] { "en0" };
     }
   }
 
@@ -186,6 +187,48 @@ namespace DistributedMatchEngine
       return (port >= appPort.public_port && port <= appPort.end_port);
     }
 
+    public string GetAvailableCelluarName(NetworkInterfaceName networkInterfaceName)
+    {
+      string foundName = "";
+      NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        foreach (string cellularName in networkInterfaceName.CELLULAR)
+        {
+          if (iface.Name.Equals(cellularName))
+          {
+            if (iface.OperationalStatus == OperationalStatus.Up)
+            {
+              foundName = cellularName;
+              return foundName;
+            };
+          }
+        }
+      }
+      return foundName;
+    }
+
+    public string GetAvailableWiFiName(NetworkInterfaceName networkInterfaceName)
+    {
+      string foundName = "";
+      NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        foreach (string wifiName in networkInterfaceName.WIFI)
+        {
+          if (iface.Name.Equals(wifiName))
+          {
+            if (iface.OperationalStatus == OperationalStatus.Up)
+            {
+              foundName = wifiName;
+              return foundName;
+            };
+          }
+        }
+      }
+      return foundName;
+    }
+
     // Gets IP Address of the specified network interface
     private IPEndPoint GetLocalIP(int port = 0)
     {
@@ -197,11 +240,11 @@ namespace DistributedMatchEngine
       string host;
       if (useOnlyWifi || !netInterface.HasCellular())
       {
-        host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().WIFI);
+        host = netInterface.GetIPAddress(GetAvailableWiFiName(netInterface.GetNetworkInterfaceName()));
       }
       else
       {
-        host = netInterface.GetIPAddress(netInterface.GetNetworkInterfaceName().CELLULAR);
+        host = netInterface.GetIPAddress(GetAvailableCelluarName(netInterface.GetNetworkInterfaceName()));
       }
 
       if (host == null || host == "")
