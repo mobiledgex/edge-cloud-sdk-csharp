@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using DistributedMatchEngine.PerformanceMetrics;
 using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 
 namespace DistributedMatchEngine
 {
@@ -835,7 +836,7 @@ namespace DistributedMatchEngine
       string ip = null;
       if (netInterface.HasWifi())
       {
-        string wifi = netInterface.GetNetworkInterfaceName().WIFI;
+        string wifi = GetAvailableWiFiName(netInterface.GetNetworkInterfaceName());
         ip = netInterface.GetIPAddress(wifi);
       }
       if (melMessaging.IsMelEnabled() && ip == null)
