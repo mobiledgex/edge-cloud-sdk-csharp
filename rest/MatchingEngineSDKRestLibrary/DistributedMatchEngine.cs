@@ -504,6 +504,27 @@ namespace DistributedMatchEngine
       return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
+    private RegisterClientRequest UpdateRequestFoMel(RegisterClientRequest request)
+    {
+      string uid = melMessaging.GetUid();
+      string android_id = GetUniqueID();
+      string manufacturer = melMessaging.GetManufacturer();
+
+      if (uid != null && uid != "")
+      {
+        request.unique_id_type = "Platos:PlatosEnablingLayer";
+        request.unique_id = melMessaging.GetUid();
+      }
+      else if (manufacturer != null && manufacturer.ToLower().Equals("platos") &&
+               android_id != null && android_id.Length > 0)
+      {
+        request.unique_id_type = "Platos:ANDROID_ID";
+        request.unique_id = android_id;
+      }
+
+      return request;
+    }
+
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
     {
       RegisterClientRequest oldRequest = request;
@@ -518,12 +539,9 @@ namespace DistributedMatchEngine
         cell_id = oldRequest.cell_id,
         tags = oldRequest.tags
       };
+
       // MEL Enablement:
-      if (melMessaging.GetUid() != null && melMessaging.GetUid() != "")
-      {
-        request.unique_id_type = "Platos:PlatosEnablingLayer";
-        request.unique_id = melMessaging.GetUid();
-      }
+      request = UpdateRequestFoMel(request);
 
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
       MemoryStream ms = new MemoryStream();

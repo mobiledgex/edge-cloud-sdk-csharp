@@ -8,6 +8,7 @@ namespace DistributedMatchEngine.Mel
     string GetMelVersion();
     string GetUid();
     string SetToken(string token, string app_name);
+    string GetManufacturer();
   }
 
   public class EmptyMelMessaging : MelMessagingInterface
@@ -16,5 +17,6 @@ namespace DistributedMatchEngine.Mel
     public string GetMelVersion() { return ""; }
     public string GetUid() { return ""; }
     public string SetToken(string token, string app_name) { return ""; }
+    public string GetManufacturer() { return ""; }
   }
 }
