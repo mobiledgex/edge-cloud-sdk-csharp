@@ -37,8 +37,8 @@ namespace Tests
 {
   public class Tests
   {
-    // Test to a staging server:
-    const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
+    // Test to an alternate server:
+    const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
 
     const string orgName = "MobiledgeX";
     const string appName = "HttpEcho";
@@ -70,12 +70,12 @@ namespace Tests
     {
       string UniqueID.GetUniqueIDType()
       {
-        return "";
+        return "uniqueIdType";
       }
 
       string UniqueID.GetUniqueID()
       {
-        return "";
+        return "uniqueId";
       }
     }
 
@@ -85,9 +85,10 @@ namespace Tests
       // Create a network interface abstraction, with named WiFi and Cellular interfaces.
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
+      UniqueID uniqueIdInterface = new TestUniqueID();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface);
     }
 
     private MemoryStream getMemoryStream(string jsonStr)
@@ -437,7 +438,7 @@ namespace Tests
 
       try
       {
-        reply = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
+        reply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
@@ -459,6 +460,7 @@ namespace Tests
       Assert.ByVal(reply, Is.Not.Null);
 
       Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
+      Assert.True(reply.status.Equals(FindCloudletReply.FindStatus.FIND_FOUND));
 
       int public_port = reply.ports[0].public_port; // We happen to know it's the first one.
       AppPort appPort = appPortsDict[public_port];
@@ -510,8 +512,8 @@ namespace Tests
 
       try
       {
-        // Overide, test to a staging server:
-        reply1 = await me.RegisterAndFindCloudlet( //dmeHost, MatchingEngine.defaultDmeRestPort,
+        // Overide, test to another server:
+        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
