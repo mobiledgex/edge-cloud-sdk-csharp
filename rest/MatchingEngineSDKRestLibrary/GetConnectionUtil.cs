@@ -46,7 +46,7 @@ namespace DistributedMatchEngine
   {
     public AndroidNetworkInterfaceName()
     {
-      CELLULAR = new string[] { "radio0", "rmnet_data0" };
+      CELLULAR = new string[] { "radio0", "rmnet_data0", "rmnet_data1" };
       WIFI = new string[] { "wlan0" };
     }
   }
@@ -187,7 +187,7 @@ namespace DistributedMatchEngine
       return (port >= appPort.public_port && port <= appPort.end_port);
     }
 
-    public string GetAvailableCelluarName(NetworkInterfaceName networkInterfaceName)
+    public string GetAvailableCellularName(NetworkInterfaceName networkInterfaceName)
     {
       string foundName = "";
       NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
@@ -244,7 +244,7 @@ namespace DistributedMatchEngine
       }
       else
       {
-        host = netInterface.GetIPAddress(GetAvailableCelluarName(netInterface.GetNetworkInterfaceName()));
+        host = netInterface.GetIPAddress(GetAvailableCellularName(netInterface.GetNetworkInterfaceName()));
       }
 
       if (host == null || host == "")
