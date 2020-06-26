@@ -78,7 +78,7 @@ namespace EngineTests
       Assert.NotNull(nameWifi);
       Assert.IsEmpty(nameWifi);
 
-      string nameCell = me.GetAvailableCelluarName(new AndroidNetworkInterfaceNameBad());
+      string nameCell = me.GetAvailableCellularName(new AndroidNetworkInterfaceNameBad());
       Assert.NotNull(nameCell);
       Assert.IsEmpty(nameCell);
     }
@@ -91,7 +91,7 @@ namespace EngineTests
       Assert.NotNull(nameWifi);
       Assert.AreEqual(nameWifi, "en0");
 
-      string nameCell = me.GetAvailableCelluarName(new MacNetworkInterfaceName());
+      string nameCell = me.GetAvailableCellularName(new MacNetworkInterfaceName());
       Assert.NotNull(nameCell);
       Assert.AreEqual(nameCell, "en0");
     }
@@ -105,7 +105,7 @@ namespace EngineTests
       Assert.NotNull(nameWifi);
       Assert.AreEqual(nameWifi, "Etnernet");
 
-      string nameCell = me.GetAvailableCelluarName(new WindowsNetworkInterfaceName());
+      string nameCell = me.GetAvailableCellularName(new WindowsNetworkInterfaceName());
       Assert.NotNull(nameCell);
       Assert.AreEqual(nameCell, "Ethernet");
     }
