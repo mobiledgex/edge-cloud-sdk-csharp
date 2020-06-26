@@ -46,7 +46,8 @@ namespace DistributedMatchEngine
   {
     public AndroidNetworkInterfaceName()
     {
-      CELLULAR = new string[] { "radio0", "rmnet_data0", "rmnet_data1" };
+      // Profile cellular names are rather dynamic. Callbacks don't work fast enough.
+      CELLULAR = new string[] { "radio0", "radio1", "radio2", "radio3", "rmnet_data0", "rmnet_data1", "rmnet_data2", "rmnet_data3"};
       WIFI = new string[] { "wlan0" };
     }
   }
