@@ -188,49 +188,61 @@ namespace DistributedMatchEngine
       return (port >= appPort.public_port && port <= appPort.end_port);
     }
 
-    public string GetAvailableCellularName(NetworkInterfaceName networkInterfaceName)
+    private static string GetAvailableInterface(NetInterface netInterface, string[] interfaceNames)
     {
       string foundName = "";
       NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
       foreach (NetworkInterface iface in netInterfaces)
       {
-        foreach (string cellularName in networkInterfaceName.CELLULAR)
+        foreach (string iName in interfaceNames)
         {
-          if (iface.Name.Equals(cellularName))
+          if (iface.Name.Equals(iName))
           {
+            // Unreliable:
             if (iface.OperationalStatus == OperationalStatus.Up)
             {
-              foundName = cellularName;
+              foundName = iName;
               return foundName;
             };
+
+            // Check IP assignment if not in a known state:
+            bool foundByIp = false;
+            // First one with both IPv4 and IPv6 is a heuristic without NetTest. OperationStatus seems inaccurate or "unknown".
+            if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null &&
+                netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
+            {
+              foundByIp = true;
+            }
+            else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
+            {
+              // No-op. Every interface has IpV6.
+            }
+            else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null)
+            {
+              foundByIp = true;
+            }
+            if (foundByIp)
+            {
+              return iName;
+            }
           }
         }
       }
       return foundName;
+    }
+
+    public string GetAvailableCellularName(NetworkInterfaceName networkInterfaceName)
+    {
+      return GetAvailableInterface(netInterface, networkInterfaceName.CELLULAR);
     }
 
     public string GetAvailableWiFiName(NetworkInterfaceName networkInterfaceName)
     {
-      string foundName = "";
-      NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-      foreach (NetworkInterface iface in netInterfaces)
-      {
-        foreach (string wifiName in networkInterfaceName.WIFI)
-        {
-          if (iface.Name.Equals(wifiName))
-          {
-            if (iface.OperationalStatus == OperationalStatus.Up)
-            {
-              foundName = wifiName;
-              return foundName;
-            };
-          }
-        }
-      }
-      return foundName;
+      return GetAvailableInterface(netInterface, networkInterfaceName.WIFI);
     }
 
-    // Gets IP Address of the specified network interface
+    // Gets IP Address of an available edge network interface, or wifi if that's available.
     private IPEndPoint GetLocalIP(int port = 0)
     {
       if (netInterface == null)
