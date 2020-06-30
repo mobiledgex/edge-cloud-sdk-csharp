@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
@@ -128,6 +128,7 @@ namespace DistributedMatchEngine
       return ipAddress;
     }
 
+    // This assumes the UP status is correct.
     public bool HasCellular()
     {
       NetworkInterface[] netInterfaces = GetInterfaces();
@@ -144,6 +145,7 @@ namespace DistributedMatchEngine
       return false;
     }
 
+    // This assumes the UP status is correct.
     public bool HasWifi()
     {
       NetworkInterface[] netInterfaces = GetInterfaces();
