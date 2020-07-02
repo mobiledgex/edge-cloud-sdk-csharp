@@ -323,8 +323,8 @@ namespace Tests
         byte[] bytes = Encoding.UTF8.GetBytes(rawpost);
 
         MatchingEngine.AllowSelfSignedServerCertificates(true);
-        MatchingEngine.AddClientCert("/Users/franklinhuang/go/src/github.com/mobiledgex/edge-cloud/tls/out/mex-client.crt");
         MatchingEngine.ServerRequiresClientCertificateAuthentication(true);
+        MatchingEngine.AddClientCert("/Users/franklinhuang/go/src/github.com/mobiledgex/edge-cloud/tls/out/mex-client.crt");
 
         SslStream stream = await me.GetTCPTLSConnection("porttestapp-tcp.automationfrankfurtcloudlet.tdg.mobiledgex.net", 2015, 5000);
         Assert.ByVal(stream, Is.Not.Null);
@@ -339,7 +339,7 @@ namespace Tests
         stream.Read(readBuffer);
 
         string response = Encoding.UTF8.GetString(readBuffer);
-        Console.WriteLine("response is " + response);
+        Console.WriteLine("Response: " + response);
         Assert.True(response.Contains("pong"));
         stream.Close();
       }

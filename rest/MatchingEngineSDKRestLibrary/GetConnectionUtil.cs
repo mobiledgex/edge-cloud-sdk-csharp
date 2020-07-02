@@ -75,17 +75,17 @@ namespace DistributedMatchEngine
       X509Certificate certificate,
       X509Chain chain, SslPolicyErrors sslPolicyErrors)
     {
-      Console.WriteLine("Certificate subject: {0}. Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
+      Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
 
       if (sslPolicyErrors == SslPolicyErrors.None) return true;
-      Console.WriteLine("Certificate error: {0}", sslPolicyErrors.ToString());
+      Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
 
       if (allowSelfSignedServerCerts) {
         if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
           Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
           return true;
         }
-        Console.WriteLine("Certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
+        Console.WriteLine("Server certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
       }
       // Do not allow this client to communicate with unauthenticated servers.
       return false;

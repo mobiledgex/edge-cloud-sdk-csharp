@@ -139,12 +139,15 @@ namespace DistributedMatchEngine
           if (serverRequiresClientCertAuth)
           {
             clientCerts = clientCertCollection;
+            // Print out info about Client Certificates
+            if (clientCerts != null)
+            {
+              foreach (X509Certificate2 cert in clientCerts)
+              {
+                Console.WriteLine("Client certificate subject: {0}, Effective date: {1}, Expiration date: {2}", cert.Subject, cert.GetEffectiveDateString(), cert.GetExpirationDateString());
+              }
+            }
           }
-          foreach (X509Certificate2 cert in clientCerts)
-          {
-            Console.WriteLine("client cert subject: " + cert.Subject + ", client cert effective: " + cert.GetEffectiveDateString() + ", client cert expiration " + cert.GetExpirationDateString());
-          }
-
           // This function allows for two-way TLS/SSL handshake. If no certs provided, falls back to one-way handshake
           sslStream.AuthenticateAsClient(host, clientCerts, enabledProtocols, true);
           return sslStream;
