@@ -21,6 +21,7 @@ using System.Net.Sockets;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 using System.Threading.Tasks;
 using System.Threading;
@@ -122,8 +123,6 @@ namespace DistributedMatchEngine
 
       // Create tcp client
       TcpClient tcpClient = new TcpClient(localEndPoint);
-
-      //TcpClient tcpClient = new TcpClient();
       var task = tcpClient.ConnectAsync(host, port);
 
       try
@@ -135,14 +134,26 @@ namespace DistributedMatchEngine
           SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
             new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
 
-          sslStream.AuthenticateAsClient(host);
+          // Grab client certificates if user configures server to require client certs
+          X509CertificateCollection clientCerts = null;
+          if (serverRequiresClientCertAuth)
+          {
+            clientCerts = clientCertCollection;
+          }
+          foreach (X509Certificate2 cert in clientCerts)
+          {
+            Console.WriteLine("client cert subject: " + cert.Subject + ", client cert effective: " + cert.GetEffectiveDateString() + ", client cert expiration " + cert.GetExpirationDateString());
+          }
+
+          // This function allows for two-way TLS/SSL handshake. If no certs provided, falls back to one-way handshake
+          sslStream.AuthenticateAsClient(host, clientCerts, enabledProtocols, true);
           return sslStream;
         }
         source.Cancel();
       }
       catch (TaskCanceledException tce)
       {
-        throw new GetConnectionException("Timeout", tce);
+        throw new GetConnectionException("Timeout ", tce);
       }
       finally
       {
@@ -178,10 +189,10 @@ namespace DistributedMatchEngine
           {
             try
             {
-                    // Retrieve the socket from the state object.  
-                    Socket client = (Socket)ar.AsyncState;
-                    // Complete the connection.  
-                    client.EndConnect(ar);
+              // Retrieve the socket from the state object.  
+              Socket client = (Socket)ar.AsyncState;
+              // Complete the connection.  
+              client.EndConnect(ar);
               TimeoutObj.Set();
             }
             catch (Exception e)

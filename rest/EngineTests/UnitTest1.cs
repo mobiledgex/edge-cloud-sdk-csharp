@@ -313,38 +313,34 @@ namespace Tests
       }
     }
 
-    // Test is incompete. Missing SSL test server.
-    //[Test]
+    [Test]
     public async static Task TestTCPTLSConnection()
     {
       // TLS on TCP Connection Test
       try
       {
-        string data = "{\"data\": \"Http Connection Test\"}";
-        string rawpost = "POST / HTTP/1.1\r\n" +
-                "Host: 10.227.66.62:3000\r\n" +
-                "User-Agent: curl/7.54.0\r\n" +
-                "Accept: */*\r\n" +
-                "Content-Length: " + data.Length + "\r\n" +
-                "Content-Type: application/json\r\n" +
-                "\r\n" + data;
+        string rawpost = "ping";
         byte[] bytes = Encoding.UTF8.GetBytes(rawpost);
 
-        SslStream stream = await me.GetTCPTLSConnection(connectionTestFqdn, 3001, 5000);
+        MatchingEngine.AllowSelfSignedServerCertificates(true);
+        MatchingEngine.AddClientCert("/Users/franklinhuang/go/src/github.com/mobiledgex/edge-cloud/tls/out/mex-client.crt");
+        MatchingEngine.ServerRequiresClientCertificateAuthentication(true);
+
+        SslStream stream = await me.GetTCPTLSConnection("porttestapp-tcp.automationfrankfurtcloudlet.tdg.mobiledgex.net", 2015, 5000);
         Assert.ByVal(stream, Is.Not.Null);
         Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);
 
         stream.Write(Encoding.UTF8.GetBytes(rawpost));
-        stream.Write(Encoding.UTF8.GetBytes(data));
 
         await Task.Delay(500);
-        byte[] readBuffer = new byte[4096 * 2];
+        byte[] readBuffer = new byte[rawpost.Length];
 
         Assert.True(stream.CanRead);
         stream.Read(readBuffer);
 
         string response = Encoding.UTF8.GetString(readBuffer);
-        Assert.True(response.Contains("Http Connection Test"));
+        Console.WriteLine("response is " + response);
+        Assert.True(response.Contains("pong"));
         stream.Close();
       }
       catch (AuthenticationException e)
@@ -357,6 +353,7 @@ namespace Tests
       }
       catch (IOException ioe)
       {
+        Assert.Fail("ioe exception is " + ioe.Message);
         // FIXME: The test server doesn't have HTTPs.
         Assert.False(ioe.Message.Contains("The handshake failed due to an unexpected packet format."));
       }
