@@ -113,7 +113,7 @@ namespace DistributedMatchEngine
     }
 
     // GetTCPTLSConnection helper function
-    public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs)
+    public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs, bool allowSelfSignedCerts = false)
     {
       CancellationTokenSource source = new CancellationTokenSource();
       CancellationToken token = source.Token;
@@ -133,7 +133,8 @@ namespace DistributedMatchEngine
           // Create ssl stream on top of tcp client and validate server cert
           SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
             new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
-
+          // Map this sslStream to the allowSelfSignedCerts value set by the developer
+          allowSelfSignedServerCertsDict[sslStream.GetHashCode()] = allowSelfSignedCerts;
           // Grab client certificates if user configures server to require client certs
           X509CertificateCollection clientCerts = null;
           if (serverRequiresClientCertAuth)
@@ -156,7 +157,7 @@ namespace DistributedMatchEngine
       }
       catch (TaskCanceledException tce)
       {
-        throw new GetConnectionException("Timeout ", tce);
+        throw new GetConnectionException("Task cancelled: ", tce);
       }
       finally
       {

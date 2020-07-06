@@ -322,11 +322,10 @@ namespace Tests
         string rawpost = "ping";
         byte[] bytes = Encoding.UTF8.GetBytes(rawpost);
 
-        MatchingEngine.AllowSelfSignedServerCertificates(true);
         MatchingEngine.ServerRequiresClientCertificateAuthentication(true);
-        MatchingEngine.AddClientCert("/Users/franklinhuang/go/src/github.com/mobiledgex/edge-cloud/tls/out/mex-client.crt");
+        MatchingEngine.AddClientCert("/Users/franlinhuang/go/src/github.com/mobiledgex/edge-cloud/tls/out/mex-client.crt");
 
-        SslStream stream = await me.GetTCPTLSConnection("porttestapp-tcp.automationfrankfurtcloudlet.tdg.mobiledgex.net", 2015, 5000);
+        SslStream stream = await me.GetTCPTLSConnection("porttestapp-tcp.automationfrankfurtcloudlet.tdg.mobiledgex.net", 2015, 5000, true);
         Assert.ByVal(stream, Is.Not.Null);
         Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);
 

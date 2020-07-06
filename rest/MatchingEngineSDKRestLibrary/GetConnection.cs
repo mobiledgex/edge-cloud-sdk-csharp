@@ -42,7 +42,7 @@ namespace DistributedMatchEngine
       return s;
     }
 
-    public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
+    public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, bool allowSelfSignedCerts = false)
     {
       if (timeoutMs <= 0)
       {
@@ -52,7 +52,7 @@ namespace DistributedMatchEngine
       desiredPort = GetPort(appPort, desiredPort);
       string host = GetHost(reply, appPort);
 
-      SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
+      SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeoutMs, allowSelfSignedCerts).ConfigureAwait(false);
       return stream;
     }
 

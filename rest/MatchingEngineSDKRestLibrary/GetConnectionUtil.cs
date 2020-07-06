@@ -65,7 +65,7 @@ namespace DistributedMatchEngine
   public partial class MatchingEngine
   {
     // TLS Utility Variables + Functions
-    private static bool allowSelfSignedServerCerts = false;
+    private static Dictionary<int, bool> allowSelfSignedServerCertsDict = new Dictionary<int, bool>();
     private static bool serverRequiresClientCertAuth = false;
     private static SslProtocols enabledProtocols = SslProtocols.None; // os chooses the best protocol to use
     private static X509Certificate2Collection clientCertCollection = new X509Certificate2Collection();
@@ -80,7 +80,9 @@ namespace DistributedMatchEngine
       if (sslPolicyErrors == SslPolicyErrors.None) return true;
       Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
 
-      if (allowSelfSignedServerCerts) {
+      // Check if the sender (eg. the specific sslStream) allows self signed server certs
+      bool allowed;
+      if (allowSelfSignedServerCertsDict.TryGetValue(sender.GetHashCode(), out allowed) && allowed) {
         if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
           Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
           return true;
@@ -89,11 +91,6 @@ namespace DistributedMatchEngine
       }
       // Do not allow this client to communicate with unauthenticated servers.
       return false;
-    }
-
-    public static void AllowSelfSignedServerCertificates(bool allow)
-    {
-      allowSelfSignedServerCerts = allow;
     }
 
     public static void ServerRequiresClientCertificateAuthentication(bool required)
