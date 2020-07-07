@@ -71,10 +71,13 @@ namespace DistributedMatchEngine
     private static X509Certificate2Collection clientCertCollection = new X509Certificate2Collection();
 
     // Delegate for SSLStream
-    private static bool ValidateServerCertificate(object sender,
-      X509Certificate certificate,
-      X509Chain chain, SslPolicyErrors sslPolicyErrors)
+    private static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
     {
+      foreach (KeyValuePair<int, bool> kvp in allowSelfSignedServerCertsDict)
+      {
+        Console.WriteLine("Connection Object hash = {0},  Allows Self Signed Server Certs = {1}", kvp.Key, kvp.Value);
+      }
+
       Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
 
       if (sslPolicyErrors == SslPolicyErrors.None) return true;

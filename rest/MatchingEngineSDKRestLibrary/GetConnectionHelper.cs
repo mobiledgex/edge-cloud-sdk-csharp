@@ -26,6 +26,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
+using System.Security.Authentication;
 
 namespace DistributedMatchEngine
 {
@@ -125,45 +126,49 @@ namespace DistributedMatchEngine
       TcpClient tcpClient = new TcpClient(localEndPoint);
       var task = tcpClient.ConnectAsync(host, port);
 
-      try
+      // Wait returns true if Task completes execution before timeout, false otherwise
+      if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
       {
-        // Wait returns true if Task completes execution before timeout, false otherwise
-        if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
+        // Create ssl stream on top of tcp client and validate server cert
+        SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
+          new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+        // Map this sslStream to the allowSelfSignedCerts value set by the developer
+        allowSelfSignedServerCertsDict[sslStream.GetHashCode()] = allowSelfSignedCerts;
+        // Grab client certificates if user configures server to require client certs
+        X509CertificateCollection clientCerts = null;
+        if (serverRequiresClientCertAuth)
         {
-          // Create ssl stream on top of tcp client and validate server cert
-          SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
-            new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
-          // Map this sslStream to the allowSelfSignedCerts value set by the developer
-          allowSelfSignedServerCertsDict[sslStream.GetHashCode()] = allowSelfSignedCerts;
-          // Grab client certificates if user configures server to require client certs
-          X509CertificateCollection clientCerts = null;
-          if (serverRequiresClientCertAuth)
+          clientCerts = clientCertCollection;
+          // Print out info about Client Certificates
+          if (clientCerts != null)
           {
-            clientCerts = clientCertCollection;
-            // Print out info about Client Certificates
-            if (clientCerts != null)
+            foreach (X509Certificate2 cert in clientCerts)
             {
-              foreach (X509Certificate2 cert in clientCerts)
-              {
-                Console.WriteLine("Client certificate subject: {0}, Effective date: {1}, Expiration date: {2}", cert.Subject, cert.GetEffectiveDateString(), cert.GetExpirationDateString());
-              }
+              Console.WriteLine("Client certificate subject: {0}, Effective date: {1}, Expiration date: {2}", cert.Subject, cert.GetEffectiveDateString(), cert.GetExpirationDateString());
             }
           }
+        }
+        try {
           // This function allows for two-way TLS/SSL handshake. If no certs provided, falls back to one-way handshake
           sslStream.AuthenticateAsClient(host, clientCerts, enabledProtocols, true);
           return sslStream;
         }
-        source.Cancel();
+        catch (Exception e)
+        {
+          if (sslStream != null && allowSelfSignedServerCertsDict.ContainsKey(sslStream.GetHashCode()))
+          {
+            allowSelfSignedServerCertsDict.Remove(sslStream.GetHashCode());
+          }
+          if (e is TaskCanceledException) throw new GetConnectionException("Task cancelled: ", e.InnerException);
+          throw e;
+        }
+        finally
+        {
+          source.Dispose();
+        }
       }
-      catch (TaskCanceledException tce)
-      {
-        throw new GetConnectionException("Task cancelled: ", tce);
-      }
-      finally
-      {
-        source.Dispose();
-      }
-      throw new GetConnectionException("Timeout");
+      source.Cancel();
+      throw new GetConnectionException("Timeout: TCP Client unable to connect");
     }
 
     // GetUDPConnection helper function
