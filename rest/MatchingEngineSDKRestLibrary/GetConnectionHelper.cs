@@ -26,7 +26,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
-using System.Security.Authentication;
 
 namespace DistributedMatchEngine
 {
@@ -131,9 +130,30 @@ namespace DistributedMatchEngine
       {
         // Create ssl stream on top of tcp client and validate server cert
         SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
-          new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
-        // Map this sslStream to the allowSelfSignedCerts value set by the developer
-        allowSelfSignedServerCertsDict[sslStream.GetHashCode()] = allowSelfSignedCerts;
+          new RemoteCertificateValidationCallback((object sender,
+                                                   X509Certificate certificate,
+                                                   X509Chain chain,
+                                                   SslPolicyErrors sslPolicyErrors) => {
+
+            // Callback when receive server certificate/validation
+            Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
+            if (sslPolicyErrors == SslPolicyErrors.None) return true;
+
+            // Print server certificate information
+            Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
+
+            // Check if the sender (eg. the specific sslStream) allows self signed server certs
+            if (allowSelfSignedCerts) {
+              if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
+                Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
+                return true;
+              }
+              Console.WriteLine("Server certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
+            }
+            // Do not allow this client to communicate with unauthenticated servers.
+            return false;
+          }), null);
+
         // Grab client certificates if user configures server to require client certs
         X509CertificateCollection clientCerts = null;
         if (serverRequiresClientCertAuth)
@@ -148,19 +168,16 @@ namespace DistributedMatchEngine
             }
           }
         }
+
+        // Start TLS/SSL Handshake
         try {
           // This function allows for two-way TLS/SSL handshake. If no certs provided, falls back to one-way handshake
           sslStream.AuthenticateAsClient(host, clientCerts, enabledProtocols, true);
           return sslStream;
         }
-        catch (Exception e)
+        catch (TaskCanceledException e)
         {
-          if (sslStream != null && allowSelfSignedServerCertsDict.ContainsKey(sslStream.GetHashCode()))
-          {
-            allowSelfSignedServerCertsDict.Remove(sslStream.GetHashCode());
-          }
-          if (e is TaskCanceledException) throw new GetConnectionException("Task cancelled: ", e.InnerException);
-          throw e;
+          throw new GetConnectionException("Task cancelled: ", e.InnerException);
         }
         finally
         {

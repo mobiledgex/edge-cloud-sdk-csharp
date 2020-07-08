@@ -65,36 +65,9 @@ namespace DistributedMatchEngine
   public partial class MatchingEngine
   {
     // TLS Utility Variables + Functions
-    private static Dictionary<int, bool> allowSelfSignedServerCertsDict = new Dictionary<int, bool>();
     private static bool serverRequiresClientCertAuth = false;
     private static SslProtocols enabledProtocols = SslProtocols.None; // os chooses the best protocol to use
     private static X509Certificate2Collection clientCertCollection = new X509Certificate2Collection();
-
-    // Delegate for SSLStream
-    private static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-    {
-      foreach (KeyValuePair<int, bool> kvp in allowSelfSignedServerCertsDict)
-      {
-        Console.WriteLine("Connection Object hash = {0},  Allows Self Signed Server Certs = {1}", kvp.Key, kvp.Value);
-      }
-
-      Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
-
-      if (sslPolicyErrors == SslPolicyErrors.None) return true;
-      Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
-
-      // Check if the sender (eg. the specific sslStream) allows self signed server certs
-      bool allowed;
-      if (allowSelfSignedServerCertsDict.TryGetValue(sender.GetHashCode(), out allowed) && allowed) {
-        if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
-          Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
-          return true;
-        }
-        Console.WriteLine("Server certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
-      }
-      // Do not allow this client to communicate with unauthenticated servers.
-      return false;
-    }
 
     public static void ServerRequiresClientCertificateAuthentication(bool required)
     {
