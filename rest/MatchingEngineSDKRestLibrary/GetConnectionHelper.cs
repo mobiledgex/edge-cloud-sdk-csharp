@@ -21,6 +21,7 @@ using System.Net.Sockets;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 using System.Threading.Tasks;
 using System.Threading;
@@ -112,7 +113,7 @@ namespace DistributedMatchEngine
     }
 
     // GetTCPTLSConnection helper function
-    public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs)
+    public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs, bool allowSelfSignedCerts = false)
     {
       CancellationTokenSource source = new CancellationTokenSource();
       CancellationToken token = source.Token;
@@ -122,33 +123,69 @@ namespace DistributedMatchEngine
 
       // Create tcp client
       TcpClient tcpClient = new TcpClient(localEndPoint);
-
-      //TcpClient tcpClient = new TcpClient();
       var task = tcpClient.ConnectAsync(host, port);
 
-      try
+      // Wait returns true if Task completes execution before timeout, false otherwise
+      if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
       {
-        // Wait returns true if Task completes execution before timeout, false otherwise
-        if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
-        {
-          // Create ssl stream on top of tcp client and validate server cert
-          SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
-            new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+        // Create ssl stream on top of tcp client and validate server cert
+        SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
+          new RemoteCertificateValidationCallback((object sender,
+                                                   X509Certificate certificate,
+                                                   X509Chain chain,
+                                                   SslPolicyErrors sslPolicyErrors) => {
 
-          sslStream.AuthenticateAsClient(host);
+            // Callback when receive server certificate/validation
+            Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
+            if (sslPolicyErrors == SslPolicyErrors.None) return true;
+
+            // Print server certificate information
+            Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
+
+            // Check if the sender (eg. the specific sslStream) allows self signed server certs
+            if (allowSelfSignedCerts) {
+              if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
+                Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
+                return true;
+              }
+              Console.WriteLine("Server certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
+            }
+            // Do not allow this client to communicate with unauthenticated servers.
+            return false;
+          }), null);
+
+        // Grab client certificates if user configures server to require client certs
+        X509CertificateCollection clientCerts = null;
+        if (serverRequiresClientCertAuth)
+        {
+          clientCerts = clientCertCollection;
+          // Print out info about Client Certificates
+          if (clientCerts != null)
+          {
+            foreach (X509Certificate2 cert in clientCerts)
+            {
+              Console.WriteLine("Client certificate subject: {0}, Effective date: {1}, Expiration date: {2}", cert.Subject, cert.GetEffectiveDateString(), cert.GetExpirationDateString());
+            }
+          }
+        }
+
+        // Start TLS/SSL Handshake
+        try {
+          // This function allows for two-way TLS/SSL handshake. If no certs provided, falls back to one-way handshake
+          sslStream.AuthenticateAsClient(host, clientCerts, enabledProtocols, true);
           return sslStream;
         }
-        source.Cancel();
+        catch (TaskCanceledException e)
+        {
+          throw new GetConnectionException("Task cancelled: ", e.InnerException);
+        }
+        finally
+        {
+          source.Dispose();
+        }
       }
-      catch (TaskCanceledException tce)
-      {
-        throw new GetConnectionException("Timeout", tce);
-      }
-      finally
-      {
-        source.Dispose();
-      }
-      throw new GetConnectionException("Timeout");
+      source.Cancel();
+      throw new GetConnectionException("Timeout: TCP Client unable to connect");
     }
 
     // GetUDPConnection helper function
@@ -178,10 +215,10 @@ namespace DistributedMatchEngine
           {
             try
             {
-                    // Retrieve the socket from the state object.  
-                    Socket client = (Socket)ar.AsyncState;
-                    // Complete the connection.  
-                    client.EndConnect(ar);
+              // Retrieve the socket from the state object.  
+              Socket client = (Socket)ar.AsyncState;
+              // Complete the connection.  
+              client.EndConnect(ar);
               TimeoutObj.Set();
             }
             catch (Exception e)
