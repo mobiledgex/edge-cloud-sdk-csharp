@@ -57,6 +57,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public double stddev;
 
       public Appinstance appInst;
+      public Loc cloudletLocation;
 
       public Site(TestType testType = TestType.CONNECT, int numSamples = DEFAULT_NUM_SAMPLES)
       {
