@@ -20,6 +20,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Authentication;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
@@ -63,16 +64,28 @@ namespace DistributedMatchEngine
 
   public partial class MatchingEngine
   {
-    private static bool ValidateServerCertificate(object sender,
-      X509Certificate certificate,
-      X509Chain chain, SslPolicyErrors sslPolicyErrors)
+    // TLS Utility Variables + Functions
+    private static bool serverRequiresClientCertAuth = false;
+    private static SslProtocols enabledProtocols = SslProtocols.None; // os chooses the best protocol to use
+    private static X509Certificate2Collection clientCertCollection = new X509Certificate2Collection();
+
+    public static void ServerRequiresClientCertificateAuthentication(bool required)
     {
-      if (sslPolicyErrors == SslPolicyErrors.None) return true;
+      serverRequiresClientCertAuth = required;
+    }
 
-      Log.E(string.Format("Certificate error: {0}", sslPolicyErrors));
+    public static void EnableSSLProtocols(SslProtocols[] protocols)
+    {
+      foreach (SslProtocols protocol in protocols)
+      {
+        enabledProtocols |= protocol;
+      }
+    }
 
-      // Do not allow this client to communicate with unauthenticated servers.
-      return false;
+    public static void AddClientCert(string clientCertPath)
+    {
+      X509Certificate2 cert = new X509Certificate2(clientCertPath);
+      clientCertCollection.Add(cert);
     }
 
     // Maybe move to the DataContract instead.
