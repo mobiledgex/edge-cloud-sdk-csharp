@@ -125,14 +125,12 @@ namespace DistributedMatchEngine
       TextWriter errorWriter = Console.Error;
       errorWriter.WriteLine(msg);
     }
-
     // Stdout:
     [ConditionalAttribute("DEBUG")]
     public static void D(string msg)
     {
       Console.WriteLine(msg);
     }
-
   }
 
   public enum OperatingSystem
