@@ -277,7 +277,7 @@ namespace DistributedMatchEngine
       }
       catch (NotImplementedException nie)
       {
-        Log.D("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
+        Log.S("GetMccMnc is not implemented. NotImplementedException: " + nie.Message);
         return "";
       }
     }
@@ -339,7 +339,7 @@ namespace DistributedMatchEngine
     private async Task<Stream> PostRequest(string uri, string jsonStr)
     {
       // FIXME: Choose network TBD (.Net Core 2.1)
-      Log.D("URI: " + uri);
+      Log.S("URI: " + uri);
       var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
       Log.D("Post Body: " + jsonStr);
       HttpResponseMessage response = await httpClient.PostAsync(uri, stringContent).ConfigureAwait(false);
@@ -462,7 +462,7 @@ namespace DistributedMatchEngine
 
       if (uriLocation != null)
       {
-        Log.D("uriLocation: " + uriLocation);
+        Log.S("uriLocation: " + uriLocation);
         token = ParseToken(uriLocation);
       }
 
