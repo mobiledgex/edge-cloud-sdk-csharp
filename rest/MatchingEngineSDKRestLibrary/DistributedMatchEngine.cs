@@ -764,12 +764,12 @@ namespace DistributedMatchEngine
         status = reply.status,
         fqdn = appinstance.fqdn,
         ports = appinstance.ports,
-        cloudlet_location = reply.cloudlet_location,
+        cloudlet_location = site.cloudletLocation,
         tags = reply.tags
       };
     }
 
-    private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
+    private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
       NetTest.Site site = new NetTest.Site(numSamples: numSamples);
 
@@ -778,10 +778,11 @@ namespace DistributedMatchEngine
 
       site.L7Path = host + ":" + port + appPort.path_prefix;
       site.appInst = appinstance;
+      site.cloudletLocation = cloudletLocation;
       return site;
     }
 
-    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
+    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
       NetTest.Site site = new NetTest.Site(numSamples: numSamples);
 
@@ -789,10 +790,11 @@ namespace DistributedMatchEngine
       site.port = appPort.public_port;
 
       site.appInst = appinstance;
+      site.cloudletLocation = cloudletLocation;
       return site;
     }
 
-    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
+    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
       NetTest.Site site = new NetTest.Site(testType: NetTest.TestType.PING, numSamples: numSamples);
 
@@ -800,6 +802,7 @@ namespace DistributedMatchEngine
       site.port = appPort.public_port;
 
       site.appInst = appinstance;
+      site.cloudletLocation = cloudletLocation;
       return site;
     }
 
@@ -818,22 +821,22 @@ namespace DistributedMatchEngine
           {
 
             case LProto.L_PROTO_HTTP:
-              sites.Add(InitHttpSite(appPort, appinstance));
+              sites.Add(InitHttpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location));
               break;
 
             case LProto.L_PROTO_TCP:
               if (appPort.path_prefix == null || appPort.path_prefix == "")
               {
-                sites.Add(InitTcpSite(appPort, appinstance, numSamples: numSamples));
+                sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
               }
               else
               {
-                sites.Add(InitHttpSite(appPort, appinstance, numSamples: numSamples));
+                sites.Add(InitHttpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
               }
               break;
 
             case LProto.L_PROTO_UDP:
-              sites.Add(InitUdpSite(appPort, appinstance, numSamples: numSamples));
+              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
               break;
 
             default:
