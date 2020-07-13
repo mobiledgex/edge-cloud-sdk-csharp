@@ -48,7 +48,7 @@ namespace DistributedMatchEngine
     // Cloudlet Name
     [DataMember]
     public string cloudlet_name;
-    // The GPS Location of the user
+    // The GPS Location of the cloudlet
     [DataMember]
     public Loc gps_location;
     // Distance of cloudlet vs loc in request
