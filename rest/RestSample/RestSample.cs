@@ -23,6 +23,7 @@ using System.Runtime.Serialization.Json;
 using System.IO;
 
 using DistributedMatchEngine;
+using DistributedMatchEngine.Mel;
 
 namespace RestSample
 {
@@ -31,14 +32,24 @@ namespace RestSample
   {
     string UniqueID.GetUniqueIDType()
     {
-      return "";
+      return "dummyModel";
     }
 
     string UniqueID.GetUniqueID()
     {
-      return "";
+      return "abcdef0123456789";
     }
   }
+
+  public class TestMelMessaging : MelMessagingInterface
+  {
+    public bool IsMelEnabled() { return false; }
+    public string GetMelVersion() { return ""; }
+    public string GetUid() { return ""; }
+    public string SetToken(string token, string app_name) { return ""; }
+    public string GetManufacturer() { return "DummyManufacturer"; }
+  }
+
   class Program
   {
     static string carrierName = "GDDT";
@@ -113,6 +124,7 @@ namespace RestSample
         Console.WriteLine("MobiledgeX RestSample!");
 
         MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID());
+        me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
 
         // Start location task. This is for test use only. The source of the
