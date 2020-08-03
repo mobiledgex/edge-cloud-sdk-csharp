@@ -526,7 +526,7 @@ namespace DistributedMatchEngine
         aUniqueIdType != null && aUniqueIdType.Length > 0 &&
         aUniqueId != null && aUniqueId.Length > 0)
       {
-        request.unique_id_type = manufacturer + ":" + aUniqueIdType + ":HASH_ADVERTISING_ID";
+        request.unique_id_type = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
         request.unique_id = aUniqueId;
       }
 
