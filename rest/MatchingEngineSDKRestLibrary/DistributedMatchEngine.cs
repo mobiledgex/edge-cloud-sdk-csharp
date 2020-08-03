@@ -704,7 +704,8 @@ namespace DistributedMatchEngine
       if (reply.ports != null && reply.ports.Length > 0)
       {
         ports = reply.ports;
-      } else
+      }
+      else
       {
         // attach empty 0 port, indicating app must determine it's own public port.
         ports = new AppPort[1];
