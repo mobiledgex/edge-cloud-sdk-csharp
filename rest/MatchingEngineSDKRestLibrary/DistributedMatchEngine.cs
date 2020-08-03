@@ -244,7 +244,7 @@ namespace DistributedMatchEngine
 
     public string GetUniqueIDType()
     {
-      return uniqueID.GetUniqueID();
+      return uniqueID.GetUniqueIDType();
     }
 
     public string GetUniqueID()
@@ -510,10 +510,11 @@ namespace DistributedMatchEngine
       return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
-    private RegisterClientRequest UpdateRequestFoMel(RegisterClientRequest request)
+    private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
     {
       string uid = melMessaging.GetUid();
-      string android_id = GetUniqueID();
+      string aUniqueIdType = GetUniqueIDType();
+      string aUniqueId = GetUniqueID();
       string manufacturer = melMessaging.GetManufacturer();
 
       if (uid != null && uid != "")
@@ -521,11 +522,12 @@ namespace DistributedMatchEngine
         request.unique_id_type = "Samsung:SamsungEnablingLayer";
         request.unique_id = melMessaging.GetUid();
       }
-      else if (manufacturer != null && manufacturer.ToLower().Equals("samsung") &&
-               android_id != null && android_id.Length > 0)
+      else if (manufacturer != null &&
+        aUniqueIdType != null && aUniqueIdType.Length > 0 &&
+        aUniqueId != null && aUniqueId.Length > 0)
       {
-        request.unique_id_type = "Samsung:ANDROID_ID";
-        request.unique_id = android_id;
+        request.unique_id_type = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
+        request.unique_id = aUniqueId;
       }
 
       return request;
@@ -547,7 +549,7 @@ namespace DistributedMatchEngine
       };
 
       // MEL Enablement:
-      request = UpdateRequestFoMel(request);
+      request = UpdateRequestForUniqueID(request);
 
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
       MemoryStream ms = new MemoryStream();
