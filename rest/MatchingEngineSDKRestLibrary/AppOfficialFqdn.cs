@@ -75,6 +75,9 @@ namespace DistributedMatchEngine
     }
 
     [DataMember]
+    public AppPort[] ports;
+
+    [DataMember]
     public Tag[] tags;
   }
 }
