@@ -57,8 +57,27 @@ namespace DistributedMatchEngine
   {
     public MacNetworkInterfaceName()
     {
-      CELLULAR = new string[] { "en0" };
-      WIFI = new string[] { "en0" };
+      // en0 and en1 should be Wifi and Ethernet or vice versa
+      CELLULAR = new string[] { "en0", "en1" };
+      WIFI = new string[] { "en0", "en1" };
+    }
+  }
+
+  public class LinuxNetworkInterfaceName : NetworkInterfaceName
+  {
+    public LinuxNetworkInterfaceName()
+    {
+      CELLULAR = new string[] { "eth0", "wlan0" };
+      WIFI = new string[] { "eth0", "wlan0" };
+    }
+  }
+
+  public class Windows10NetworkInterfaceName : NetworkInterfaceName
+  {
+    public Windows10NetworkInterfaceName()
+    {
+      CELLULAR = new string[] { "Ethernet adapter Ethernet",  "Wireless LAN adapter Wi-Fi", "Ethernet", "WiFi" };
+      WIFI = new string[] { "Ethernet adapter Ethernet",  "Wireless LAN adapter Wi-Fi", "Ethernet", "WiFi" };
     }
   }
 
