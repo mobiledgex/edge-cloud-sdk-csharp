@@ -700,17 +700,31 @@ namespace DistributedMatchEngine
         melMessaging.SetToken(reply.client_token, LastRegisterClientRequest.app_name);
       }
 
+      AppPort[] ports = null;
+      if (reply.ports != null && reply.ports.Length > 0)
+      {
+        ports = reply.ports;
+        foreach (AppPort aPort in ports)
+        {
+          aPort.public_port = aPort.public_port == 0 ? aPort.internal_port : aPort.public_port;
+        }
+      }
+      else
+      {
+        // attach empty 0 port, indicating app must determine it's own public port.
+        ports = new AppPort[1];
+      }
+
       // Repackage as FindCloudletReply:
       FindCloudletReply fcReply = new FindCloudletReply
       {
         ver = 1,
         fqdn = reply.app_official_fqdn,
         // Don't set location.
-        ports = new AppPort[1]
+        ports = ports
       };
 
       fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.FIND_FOUND : FindCloudletReply.FindStatus.FIND_NOTFOUND;
-      // attach empty port:
       fcReply.ports[0] = new AppPort
       {
         proto = LProto.L_PROTO_TCP,
