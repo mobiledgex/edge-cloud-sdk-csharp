@@ -704,6 +704,10 @@ namespace DistributedMatchEngine
       if (reply.ports != null && reply.ports.Length > 0)
       {
         ports = reply.ports;
+        foreach (AppPort aPort in ports)
+        {
+          aPort.public_port = aPort.public_port == 0 ? aPort.internal_port : aPort.public_port;
+        }
       }
       else
       {
