@@ -27,8 +27,16 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+/*!
+ * PerformanceMetrics Namespace
+ * \ingroup namespaces
+ */
 namespace DistributedMatchEngine.PerformanceMetrics
 {
+  /*!
+   * NetTest
+   * \ingroup classes_util
+   */
   public class NetTest : IDisposable
   {
     private MatchingEngine matchingEngine;

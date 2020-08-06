@@ -20,6 +20,10 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /*!
+   * FindCloudletRequest data structure
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class FindCloudletRequest
   {

@@ -131,7 +131,9 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
+        //! [createregisterexample]
         var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers);
+        //! [createregisterexample]
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
         try

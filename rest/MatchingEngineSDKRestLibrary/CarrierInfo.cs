@@ -19,8 +19,9 @@ using System;
 
 namespace DistributedMatchEngine
 {
-  /**
+  /*!
    * CarrierInfo telephony interface for the platform
+   * \ingroup classes_integration
    */
   public interface CarrierInfo
   {
@@ -29,6 +30,10 @@ namespace DistributedMatchEngine
     ulong GetCellID();
   }
 
+  /*!
+   * Empty implementation of CarrierInfo interface
+   * \ingroup classes_integration
+   */
   public class EmptyCarrierInfo : CarrierInfo
   {
     public string GetCurrentCarrierName()

@@ -88,6 +88,9 @@ namespace DistributedMatchEngine
     private static SslProtocols enabledProtocols = SslProtocols.None; // os chooses the best protocol to use
     private static X509Certificate2Collection clientCertCollection = new X509Certificate2Collection();
 
+    /*!
+     * \ingroup functions_getconnectionutils
+     */
     public static void ServerRequiresClientCertificateAuthentication(bool required)
     {
       serverRequiresClientCertAuth = required;

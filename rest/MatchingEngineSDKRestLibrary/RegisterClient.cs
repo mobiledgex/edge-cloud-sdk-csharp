@@ -20,6 +20,10 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /*!
+   * RegisterClient data structure
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class RegisterClientRequest
   {

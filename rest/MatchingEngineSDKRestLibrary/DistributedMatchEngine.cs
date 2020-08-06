@@ -31,8 +31,13 @@ using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
 
+/*!
+ * DistributedMatchEngine Namespace
+ * \ingroup namespaces
+ */
 namespace DistributedMatchEngine
 {
+  
   public class DmeDnsException : Exception
   {
     public DmeDnsException(string message)
@@ -40,6 +45,7 @@ namespace DistributedMatchEngine
     {
     }
   }
+
   public class HttpException : Exception
   {
     public HttpStatusCode HttpStatusCode { get; set; }
@@ -86,7 +92,7 @@ namespace DistributedMatchEngine
   }
 
   public class SessionCookieException : Exception
-  { 
+  {
     public SessionCookieException(string message)
         : base(message)
     {
@@ -98,6 +104,10 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * FindCloudletException 
+   * \ingroup exceptions_dme
+   */
   public class FindCloudletException : Exception
   {
     public FindCloudletException(string message)
@@ -146,9 +156,13 @@ namespace DistributedMatchEngine
     PERFORMANCE
   }
 
-
+  /*!
+   * Main MobiledgeX SDK class. This class provides functions to find nearest cloudlet with the
+   * developer's application instance deployed and to connect to that application instance.
+   */
   public partial class MatchingEngine
-  {
+  { 
+
     public const string TAG = "MatchingEngine";
     private static HttpClient httpClient;
     public const UInt32 defaultDmeRestPort = 38001;
@@ -184,6 +198,12 @@ namespace DistributedMatchEngine
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
 
+    /*!
+     *  Constructor for MatchingEngine class.
+     *  \param carrierInfo (CarrierInfo): 
+     *  \param netInterface (NetInterface): 
+     *  \param uniqueID (UniqueID): 
+     */
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
       httpClient = new HttpClient();
@@ -219,9 +239,12 @@ namespace DistributedMatchEngine
       SetMelMessaging(null);
     }
 
-    // An device specific interface.
     public void SetMelMessaging(MelMessagingInterface melInterface)
     {
+      /*!
+       * A device specific interface.
+       * @private
+       */
       if (melInterface != null)
       {
         this.melMessaging = melInterface;
@@ -280,6 +303,9 @@ namespace DistributedMatchEngine
       }
     }
 
+    /*!
+     * \ingroup functions_dmeutils
+     */
     public string GenerateDmeHostAddress()
     {
       if (carrierInfo == null)
@@ -471,7 +497,19 @@ namespace DistributedMatchEngine
 
       return token;
     }
-
+    
+    /*!
+     *  Creates the RegisterClientRequest object that will be used in the RegisterClient function.The RegisterClientRequest object wraps the parameters that have been provided to this function. 
+     *  \ingroup functions_dmeapis
+     *  \param orgName (string): Organization name
+     *  \param appName (string): Application name
+     *  \param appVersion (string): Application version
+     *  \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     *  \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     *  \return RegisterClientRequest
+     *  \section createregisterexample Example
+     *  \snippet RestSample.cs createregisterexample
+     */
     public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
@@ -505,6 +543,16 @@ namespace DistributedMatchEngine
       return replyStatus;
     }
 
+    /*!
+     *  First DME API called. This will register the client with the MobiledgeX backend and
+     *  check to make sure that the app that the user is running exists. (ie. This confirms
+     *  that CreateApp in Console/Mcctl has been run successfully). RegisterClientReply
+     *  contains a session cookie that will be used (automatically) in later API calls.
+     *  It also contains a uri that will be used to get the verifyLocToken used in VerifyLocation.
+     *  \ingroup functions_dmeapis
+     *  \param request (RegisterClientRequest)
+     *  \return Task<RegisterClientReply>
+     */
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
       return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
@@ -582,6 +630,16 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /*!
+     *  Creates the FindCloudletRequest object that will be used in the FindCloudlet function.The FindCloudletRequest object wraps the parameters that have been provided to this function.
+     *  \ingroup functions_dmeapis
+     *  \param orgName (string): Organization name
+     *  \param appName (string): Application name
+     *  \param appVersion (string): Application version
+     *  \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     *  \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     *  \return RegisterClientRequest
+     */
     public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -969,6 +1027,16 @@ namespace DistributedMatchEngine
       return CreateFindCloudletReplyFromBestSite(fcReply, sites[0]);
     }
 
+    /*!
+     *  Creates the FindCloudletRequest object that will be used in the FindCloudlet function.The FindCloudletRequest object wraps the parameters that have been provided to this function.
+     *  \ingroup functions_dmeapis
+     *  \param orgName (string): Organization name
+     *  \param appName (string): Application name
+     *  \param appVersion (string): Application version
+     *  \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     *  \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     *  \return RegisterClientRequest
+     */
     // Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
@@ -1010,6 +1078,15 @@ namespace DistributedMatchEngine
       return findCloudletReply;
     }
 
+    /*!
+     *  Creates the FindCloudletRequest object that will be used in the FindCloudlet function.The FindCloudletRequest object wraps the parameters that have been provided to this function. 
+     *  \param orgName (string): Organization name
+     *  \param appName (string): Application name
+     *  \param appVersion (string): Application version
+     *  \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     *  \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     *  \return RegisterClientRequest
+     */
     public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -1101,6 +1178,15 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /*!
+     *  Creates the FindCloudletRequest object that will be used in the FindCloudlet function.The FindCloudletRequest object wraps the parameters that have been provided to this function. 
+     *  \param orgName (string): Organization name
+     *  \param appName (string): Application name
+     *  \param appVersion (string): Application version
+     *  \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     *  \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     *  \return RegisterClientRequest
+     */
     public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -1174,6 +1260,15 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /*!
+     *  Creates the FindCloudletRequest object that will be used in the FindCloudlet function.The FindCloudletRequest object wraps the parameters that have been provided to this function. 
+     *  \param orgName (string): Organization name
+     *  \param appName (string): Application name
+     *  \param appVersion (string): Application version
+     *  \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     *  \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     *  \return RegisterClientRequest
+     */
     public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
       UInt32 cellID = 0, Tag[] tags = null)
     {

@@ -30,6 +30,9 @@ namespace DistributedMatchEngine
     public const int DEFAULT_GETCONNECTION_TIMEOUT_MS = 10000;
 
     public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
+    /*!
+     * \ingroup functions_getconnection
+     */
     {
       if (timeoutMs <= 0)
       {
