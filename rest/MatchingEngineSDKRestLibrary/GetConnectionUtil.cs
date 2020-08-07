@@ -231,12 +231,13 @@ namespace DistributedMatchEngine
     // Checks if the specified port is within the range of public_port and end_port fields in AppPort
     private static bool IsInPortRange(AppPort appPort, int port)
     {
+      int mappedEndPort = appPort.public_port + (appPort.end_port - appPort.internal_port);
       // Checks if range exists -> if not, check if specified port equals public port
-      if (appPort.end_port == 0 || appPort.end_port < appPort.public_port)
+      if (appPort.end_port == 0 || mappedEndPort < appPort.public_port)
       {
         return port == appPort.public_port;
       }
-      return (port >= appPort.public_port && port <= appPort.end_port);
+      return (port >= appPort.public_port && port <= mappedEndPort);
     }
 
     private static string GetAvailableInterface(NetInterface netInterface, string[] interfaceNames)
