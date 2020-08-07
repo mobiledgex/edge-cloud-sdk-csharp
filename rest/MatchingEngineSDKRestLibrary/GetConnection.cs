@@ -27,8 +27,9 @@ namespace DistributedMatchEngine
 {
   public partial class MatchingEngine
   {
+    public const int DEFAULT_GETCONNECTION_TIMEOUT_MS = 10000;
 
-    public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
+    public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
     {
       if (timeoutMs <= 0)
       {
@@ -42,7 +43,7 @@ namespace DistributedMatchEngine
       return s;
     }
 
-    public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, bool allowSelfSignedCerts = false)
+    public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, bool allowSelfSignedCerts = false)
     {
       if (timeoutMs <= 0)
       {
@@ -56,7 +57,7 @@ namespace DistributedMatchEngine
       return stream;
     }
 
-    public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs)
+    public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
     {
       if (timeoutMs <= 0)
       {
@@ -70,7 +71,7 @@ namespace DistributedMatchEngine
       return s;
     }
 
-    public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
+    public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -83,7 +84,7 @@ namespace DistributedMatchEngine
       }
 
       desiredPort = GetPort(appPort, desiredPort);
-      string url = CreateUrl(reply, appPort, desiredPort, "http", path);
+      string url = CreateUrl(reply, appPort, "http", desiredPort, path);
 
       UriBuilder uriBuilder = new UriBuilder(url);
       Uri uri = uriBuilder.Uri;
@@ -91,7 +92,7 @@ namespace DistributedMatchEngine
       return client;
     }
 
-    public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
+    public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -104,7 +105,7 @@ namespace DistributedMatchEngine
       }
 
       desiredPort = GetPort(appPort, desiredPort);
-      string url = CreateUrl(reply, appPort, desiredPort, "https", path);
+      string url = CreateUrl(reply, appPort, "https", desiredPort, path);
 
       UriBuilder uriBuilder = new UriBuilder(url);
       Uri uri = uriBuilder.Uri;
@@ -112,7 +113,7 @@ namespace DistributedMatchEngine
       return client;
     }
 
-    public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
+    public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -125,7 +126,7 @@ namespace DistributedMatchEngine
       }
 
       desiredPort = GetPort(appPort, desiredPort);
-      string url = CreateUrl(reply, appPort, desiredPort, "ws", path);
+      string url = CreateUrl(reply, appPort, "ws", desiredPort, path);
 
       UriBuilder uriBuilder = new UriBuilder(url);
       Uri uri = uriBuilder.Uri;
@@ -133,7 +134,7 @@ namespace DistributedMatchEngine
       return s;
     }
 
-    public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort, int timeoutMs, string path = "")
+    public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)
       {
@@ -146,7 +147,7 @@ namespace DistributedMatchEngine
       }
 
       desiredPort = GetPort(appPort, desiredPort);
-      string url = CreateUrl(reply, appPort, desiredPort, "wss", path);
+      string url = CreateUrl(reply, appPort, "wss", desiredPort, path);
 
       UriBuilder uriBuilder = new UriBuilder(url);
       Uri uri = uriBuilder.Uri;

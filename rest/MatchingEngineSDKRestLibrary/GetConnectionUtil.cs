@@ -107,7 +107,70 @@ namespace DistributedMatchEngine
       clientCertCollection.Add(cert);
     }
 
-    // Maybe move to the DataContract instead.
+    // Create a L7Path URL from an AppPort and FindCloudletReply:
+    public string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, string protocol, int desiredPort = 0, string path = "")
+    {
+      AppPort foundPort = ValidateAppPort(findCloudletReply, appPort, LProto.L_PROTO_TCP);
+      if (foundPort == null)
+      {
+        throw new GetConnectionException("Unabled to validate AppPort");
+      }
+
+      int aPortNum = ValidateDesiredPort(appPort, desiredPort);
+      if (aPortNum < 0)
+      {
+        throw new GetConnectionException("Unable to validate desired port: " + desiredPort);
+      }
+
+      string url = protocol + "://" +
+              appPort.fqdn_prefix +
+              findCloudletReply.fqdn +
+              ":" +
+              aPortNum +
+              appPort.path_prefix +
+              path;
+
+      return url;
+    }
+
+    // Returns the host of the app backend based on FindCloudletReply and AppPort
+    public string GetHost(FindCloudletReply findCloudletReply, AppPort appPort)
+    {
+      return appPort.fqdn_prefix + findCloudletReply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
+    }
+
+    // Returns the desired port for app backend service from AppPort
+    public int GetPort(AppPort appPort, int desiredPort = 0)
+    {
+      int aPortNum = ValidateDesiredPort(appPort, desiredPort);
+      if (aPortNum <= 0)
+      {
+        throw new GetConnectionException("Unable to validate desired port: " + desiredPort);
+      }
+
+      return aPortNum;
+    }
+
+    // Validate specified AppPort is in FindCloudletReply
+    private static AppPort ValidateAppPort(FindCloudletReply findCloudletReply, AppPort appPort, LProto proto)
+    {
+      AppPort found = null;
+      foreach (AppPort aPort in findCloudletReply.ports)
+      {
+        // See if spec matches:
+        if (aPort.proto != proto)
+        {
+          continue;
+        }
+        if (AppPortIsEqual(aPort, appPort))
+        {
+          found = aPort;
+        }
+      }
+      return found;
+    }
+
+    // Helper function for ValidateAppPort
     private static bool AppPortIsEqual(AppPort port1, AppPort port2)
     {
       if (port1.end_port != port2.end_port)
@@ -137,68 +200,24 @@ namespace DistributedMatchEngine
       return true;
     }
 
-    public static AppPort ValidatePublicPort(FindCloudletReply findCloudletReply, AppPort appPort, LProto proto, int portNum)
+    // Validate the developer specified port is valid for AppPort
+    private static int ValidateDesiredPort(AppPort appPort, int desiredPort)
     {
-      AppPort found = null;
-      foreach (AppPort aPort in findCloudletReply.ports)
+      // Check if specified port is a valid port number
+      if (!IsValidPort(desiredPort))
       {
-        // See if spec matches:
-        if (aPort.proto != proto)
-        {
-          continue;
-        }
-        if (IsInPortRange(appPort, portNum) && AppPortIsEqual(aPort, appPort) && IsValidPort(portNum))
-        {
-          found = aPort;
-        }
-      }
-      return found;
-    }
-
-    // Create a L7Path URL from an AppPort and FindCloudletReply:
-    public string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, int portNum, string protocol, string path = "")
-    {
-      int aPortNum = portNum <= 0 ? appPort.public_port : portNum;
-      AppPort foundPort = ValidatePublicPort(findCloudletReply, appPort, LProto.L_PROTO_TCP, aPortNum);
-      if (foundPort == null)
-      {
-        throw new GetConnectionException("Unabled to validate public port");
+        throw new GetConnectionException("Desired port: " + desiredPort + " is not a valid port number");
       }
 
-      string url = protocol + "://" +
-              appPort.fqdn_prefix +
-              findCloudletReply.fqdn +
-              ":" +
-              aPortNum +
-              appPort.path_prefix +
-              path;
-
-      return url;
-    }
-
-    // Returns the host of the app backend based on FindCloudletReply and AppPort
-    public string GetHost(FindCloudletReply findCloudletReply, AppPort appPort)
-    {
-      return appPort.fqdn_prefix + findCloudletReply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
-    }
-
-    // Returns the desired port for app backend service from AppPort
-    public int GetPort(AppPort appPort, int desiredPort = 0)
-    {
-      // If desiredPort is less than or equal zero, then default to public_port
-      if (desiredPort <= 0)
+      // If desired port is the port specified in app definition or not specified (ie. 0), then return mapped public port
+      if (desiredPort == appPort.internal_port || desiredPort == 0)
       {
-        desiredPort = appPort.public_port;
+        return appPort.public_port;
       }
 
       if (!IsInPortRange(appPort, desiredPort))
       {
         throw new GetConnectionException("Desired port: " + desiredPort + " is not in AppPort range");
-      }
-
-      if (!IsValidPort(desiredPort))
-      {
-        throw new GetConnectionException("Desired port: " + desiredPort + " is not a valid port number");
       }
 
       return desiredPort;
