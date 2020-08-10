@@ -492,6 +492,108 @@ namespace Tests
     }
 
     [Test]
+    public async static Task TestAppPortMappings()
+    {
+      AppPort appPort = new AppPort();
+      appPort.proto = LProto.L_PROTO_TCP;
+      appPort.internal_port = 8008;
+      appPort.public_port = 3000;
+      appPort.end_port = 8010;
+      appPort.fqdn_prefix = "";
+      appPort.path_prefix = "";
+
+      AppPort appPort2 = new AppPort();
+      appPort2.proto = LProto.L_PROTO_TCP;
+      appPort2.internal_port = 8008;
+      appPort2.public_port = 3000;
+      appPort2.end_port = 0;
+      appPort2.fqdn_prefix = "";
+      appPort2.path_prefix = "";
+
+      FindCloudletReply fce = new FindCloudletReply();
+      fce.fqdn = "mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net";
+      AppPort[] appPorts = { appPort };
+      fce.ports = appPorts;
+
+      // Default -> Use Public Port
+      int port = me.GetPort(appPort);
+      Console.WriteLine("port is " + port);
+      Assert.True(port == appPort.public_port, "Default port did not return public port. Returned " + port);
+
+      // Desired == Internal -> Use Public Port
+      int port2 = me.GetPort(appPort, 8008);
+      Console.WriteLine("port2 is " + port2);
+      Assert.True(port2 == appPort.public_port, "Internal port did not return public port. Returned " + port2);
+
+      // Desired != Internal && Desired in range -> Use Desired Port
+      int port3 = me.GetPort(appPort, 3001);
+      Console.WriteLine("port3 is " + port3);
+      Assert.True(port3 == 3001, "Desired port in port range did not return desired port. Returned " + port3);
+
+      // Desired != Internal && Desired not in range -> Exception
+      try
+      {
+        int port4 = me.GetPort(appPort, 2999);
+        Assert.Fail("Desired port not in port range should have thrown GetConnectionException");
+      }
+      catch (GetConnectionException gce)
+      {
+        Console.WriteLine("GetConnectionException for port4 is " + gce.Message);
+        Assert.True(gce.Message.Contains("not in AppPort range"), "Wrong GetConnectionException. Should have been about not in AppPort range. " + gce.Message);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Wrong exception. " + e.Message);
+      }
+
+      try
+      {
+        int port5 = me.GetPort(appPort2, 3001);
+        Assert.Fail("Desired port not in port range should have thrown GetConnectionException");
+      }
+      catch (GetConnectionException gce)
+      {
+        Console.WriteLine("GetConnectionException for port5 is " + gce.Message);
+        Assert.True(gce.Message.Contains("not in AppPort range"), "Wrong GetConnectionException. Should have been about not in AppPort range. " + gce.Message);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Wrong exception. " + e.Message);
+      }
+
+      // AppPort that is not in FindCloudletReply -> Exception
+      try
+      {
+        string url = me.CreateUrl(fce, appPort2, "http");
+      }
+      catch (GetConnectionException gce)
+      {
+        Console.WriteLine("GetConnectionException for create url is " + gce.Message);
+        Assert.True(gce.Message.Contains("Unable to validate AppPort"), "Wrong GetConnectionException. Should have been \"Unable to validate AppPort\". " + gce.Message);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Wrong exception. " + e.Message);
+      }
+
+      try
+      {
+        string url = me.CreateUrl(fce, appPort, "http", 8008);
+        Console.WriteLine("Correct url is " + url);
+        Assert.True(url == "http://mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net:3000", "Url created is incorrect. " + url);
+      }
+      catch (GetConnectionException gce)
+      {
+        Console.WriteLine("GetConnectionException for create url is " + gce.Message);
+        Assert.Fail("Correct CreateURL GetConnectionException is: " + gce.Message);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Wrong exception. " + e.Message);
+      }
+    }
+
+    [Test]
     public async static Task TestTimeout()
     {
       try
