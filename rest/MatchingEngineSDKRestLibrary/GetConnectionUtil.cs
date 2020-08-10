@@ -113,7 +113,7 @@ namespace DistributedMatchEngine
       AppPort foundPort = ValidateAppPort(findCloudletReply, appPort, LProto.L_PROTO_TCP);
       if (foundPort == null)
       {
-        throw new GetConnectionException("Unabled to validate AppPort");
+        throw new GetConnectionException("Unable to validate AppPort");
       }
 
       int aPortNum = ValidateDesiredPort(appPort, desiredPort);
