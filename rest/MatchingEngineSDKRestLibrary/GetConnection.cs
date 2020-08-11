@@ -40,7 +40,7 @@ namespace DistributedMatchEngine
      * \param appPort (AppPort)
      * \param desiredPort (int): Optional
      * \param timeout (int): Optional
-     * \return Task<socket>
+     * \return Task<Socket>
      */
     public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
     {
@@ -56,6 +56,16 @@ namespace DistributedMatchEngine
       return s;
     }
 
+    /*!
+     * Returns a TCP socket with TLS running over it for secure data communication.
+     * Bound to local cellular interface and if no exceptions thrown and object is not null, the socket is ready to send application data to backend
+     * \ingroup functions_getconnection
+     * \param reply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     * \param timeout (int): Optional
+     * \return Task<SslStream>
+     */
     public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, bool allowSelfSignedCerts = false)
     {
       if (timeoutMs <= 0)
@@ -70,6 +80,16 @@ namespace DistributedMatchEngine
       return stream;
     }
 
+    /*!
+     * Get a UDP socket bound to the local cellular interface and connected to the application's backend server.
+     * If no exceptions thrown and object is not null, the socket is ready to send application data to backend.
+     * \ingroup functions_getconnection
+     * \param reply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     * \param timeout (int): Optional
+     * \return Task<Socket>
+     */
     public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
     {
       if (timeoutMs <= 0)
@@ -84,6 +104,15 @@ namespace DistributedMatchEngine
       return s;
     }
 
+    /*!
+     * Returns an HTTP Client configured to send requests to application backend.
+     * \ingroup functions_getconnection
+     * \param reply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     * \param timeout (int): Optional
+     * \return Task<HttpClient>
+     */
     public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)
@@ -105,6 +134,15 @@ namespace DistributedMatchEngine
       return client;
     }
 
+    /*!
+     * Returns an HTTPS Client configured to send requests to application backend.
+     * \ingroup functions_getconnection
+     * \param reply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     * \param timeout (int): Optional
+     * \return Task<HttpClient>
+     */
     public async Task<HttpClient> GetHTTPSClient(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)
@@ -126,6 +164,15 @@ namespace DistributedMatchEngine
       return client;
     }
 
+    /*!
+     * Returns an Websocket Client configured to send requests to application backend.
+     * \ingroup functions_getconnection
+     * \param reply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     * \param timeout (int): Optional
+     * \return Task<ClientWebSocket>
+     */
     public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)
@@ -147,6 +194,15 @@ namespace DistributedMatchEngine
       return s;
     }
 
+    /*!
+     * Returns a Secure Websocket Client configured to send requests to application backend.
+     * \ingroup functions_getconnection
+     * \param reply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     * \param timeout (int): Optional
+     * \return Task<ClientWebSocket>
+     */
     public async Task<ClientWebSocket> GetSecureWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
       if (timeoutMs <= 0)

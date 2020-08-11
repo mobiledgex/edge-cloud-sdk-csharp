@@ -8,20 +8,28 @@
 // Classes Modules
 /*!
  * \defgroup classes_integration Platform Integration Classes
+
  * \defgroup classes_util Utility Classes
+
  * \defgroup classes_datastructs MatchingEngine Data Structures
  */
 
 // Function Groups Modules
 /*!
  * \defgroup functions_dmeapis MatchingEngine APIs
+
  * \defgroup functions_dmeutils MatchingEngine Utility Functions
+
  * \defgroup functions_getconnection GetConnection Functions
+ * \section getconnectionworkflow GetConnection Workflow Example
+ * \snippet UnitTest1.cs getconnectionworkflow
+
  * \defgroup functions_getconnectionutils GetConnection Utility Functions
  */
 
 // Exceptions Modules
 /*!
  * \defgroup exceptions_dme MatchingEngine API Exceptions
+
  * \defgroup exceptions_getconnection GetConnection Exceptions
  */

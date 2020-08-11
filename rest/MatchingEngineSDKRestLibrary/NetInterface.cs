@@ -68,7 +68,9 @@ namespace DistributedMatchEngine
     }
   }
 
-  // A generic network interface for most systems, with an interface names parameter.
+  /*!
+   * A generic network interface for most systems, with an interface names parameter.
+   */
   public class SimpleNetInterface : NetInterface
   {
 
