@@ -21,7 +21,7 @@ using System.Runtime.Serialization;
 namespace DistributedMatchEngine
 {
   /*!
-   * RegisterClient data structure
+   * RegisterClient
    * \ingroup classes_datastructs
    */
   [DataContract]
@@ -37,19 +37,23 @@ namespace DistributedMatchEngine
     public string app_vers;
     [DataMember(EmitDefaultValue = false)]
     public string auth_token;
-    // Cell ID of base station where client is
+    //! Cell ID of base station where client is
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    // Type of unique id provided by client
+    //! Type of unique id provided by client
     [DataMember(EmitDefaultValue = false)]
     public string unique_id_type;
     [DataMember(EmitDefaultValue = false)]
-    // Optional. Unique identification of the client device or user. May be overridden by the server.
+    //! Optional. Unique identification of the client device or user. May be overridden by the server.
     public string unique_id;
     [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
+  /*!
+   * RegisterClientReply
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class RegisterClientReply
   {

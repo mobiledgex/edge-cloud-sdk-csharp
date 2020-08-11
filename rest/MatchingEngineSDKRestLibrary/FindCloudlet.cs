@@ -21,7 +21,7 @@ using System.Runtime.Serialization;
 namespace DistributedMatchEngine
 {
   /*!
-   * FindCloudletRequest data structure
+   * FindCloudletRequest
    * \ingroup classes_datastructs
    */
   [DataContract]
@@ -43,10 +43,14 @@ namespace DistributedMatchEngine
     public Tag[] tags;
   }
 
+  /*!
+   * FindCloudletReply
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class FindCloudletReply
   {
-    // Standard Enum. DataContract Enum is converted to int64, not string.
+    //! Standard Enum. DataContract Enum is converted to int64, not string.
     public enum FindStatus
     {
       FIND_UNKNOWN = 0,

@@ -22,6 +22,11 @@ using System.Net.Sockets;
 
 namespace DistributedMatchEngine
 {
+  /*!
+   * NetInterface interface for the platform
+   * Function implemented per platform
+   * \ingroup classes_integration
+   */
   public interface NetInterface
   {
     NetworkInterfaceName GetNetworkInterfaceName();
@@ -31,7 +36,10 @@ namespace DistributedMatchEngine
     bool HasCellular();
   }
 
-  // Empty implementation of NetInterface that throws NotImplementedExceptions
+  /*!
+   * Empty implementation of CarrierInfo interface
+   * \ingroup classes_integration
+   */
   public class EmptyNetInterface : NetInterface
   {
     public NetworkInterfaceName GetNetworkInterfaceName()

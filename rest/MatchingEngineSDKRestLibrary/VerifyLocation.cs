@@ -20,6 +20,10 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /*!
+   * VerifyLocationRequest
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class VerifyLocationRequest
   {
@@ -39,10 +43,14 @@ namespace DistributedMatchEngine
     public Tag[] tags;
   };
 
+  /*!
+   * VerifyLocationReply
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class VerifyLocationReply
   {
-    // Status of the reply
+    //! Status of the reply
     public enum TowerStatus
     {
       TOWER_UNKNOWN = 0,

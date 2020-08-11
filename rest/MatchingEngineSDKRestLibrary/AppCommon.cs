@@ -20,7 +20,10 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
-  // Vendor specific data
+  /*!
+   * Vendor specific data
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class Tag
   {
@@ -30,6 +33,10 @@ namespace DistributedMatchEngine
     public string data;
   }
 
+  /*!
+   * MobiledgeX GPS Location class
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class Loc
   {
@@ -51,22 +58,33 @@ namespace DistributedMatchEngine
     public Timestamp timestamp;
   }
 
+  /*!
+   * LProto indicates which protocol to use for accessing an application on a particular port.
+   * This is required by Kubernetes for port mapping.
+   * \ingroup classes_datastructs
+   */
   public enum LProto
   {
-    // Unknown protocol
+    //! Unknown protocol
     L_PROTO_UNKNOWN = 0,
-    // TCP (L4) protocol
+    //! TCP (L4) protocol
     L_PROTO_TCP = 1,
-    // UDP (L4) protocol
+    //! UDP (L4) protocol
     L_PROTO_UDP = 2,
-    // HTTP (L7 tcp) protocol
+    //! HTTP (L7 tcp) protocol
     L_PROTO_HTTP = 3
   }
 
+  /*!
+   * Application Port
+   * AppPort describes an L4 or L7 public access port/path mapping.
+   * This is used to track external to internal mappings for access via a shared load balancer or reverse proxy.
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class AppPort
   {
-    // TCP (L4), UDP (L4), or HTTP (L7) protocol
+    //! TCP (L4), UDP (L4), or HTTP (L7) protocol
     public LProto proto = LProto.L_PROTO_UNKNOWN;
 
     [DataMember(Name = "proto")]
@@ -89,23 +107,23 @@ namespace DistributedMatchEngine
       }
     }
 
-    // Container port (Specified in Dockerfile)
+    //! Container port (Specified in Dockerfile)
     [DataMember]
     public Int32 internal_port;
-    // Public facing port for TCP/UDP (may be mapped on shared LB reverse proxy)
+    //! Public facing port for TCP/UDP (may be mapped on shared LB reverse proxy)
     [DataMember]
     public Int32 public_port;
-    // Public facing path prefix for HTTP L7 access.
+    //! Public facing path prefix for HTTP L7 access.
     [DataMember]
     public string path_prefix;
-    // FQDN prefix to prepend to base FQDN in FindCloudlet response. May be empty.
+    //! FQDN prefix to prepend to base FQDN in FindCloudlet response. May be empty.
     [DataMember]
     public string fqdn_prefix;
-    // A non-zero end port indicates this is a port range from public port to end port, inclusive.
+    //! A non-zero end port indicates this is a port range from public port to end port, inclusive.
     [DataMember]
     public Int32 end_port;
     [DataMember]
-    // TLS termination for this port
+    //! TLS termination for this port
     public bool tls;
   }
 
@@ -117,6 +135,10 @@ namespace DistributedMatchEngine
     IPADDR = 3
   }
 
+  /*!
+   * Status of MatchingEngine API replies
+   * \ingroup classes_datastructs
+   */
   public enum ReplyStatus
   {
     RS_UNDEFINED = 0,
@@ -124,6 +146,10 @@ namespace DistributedMatchEngine
     RS_FAIL = 2
   }
 
+  /*!
+   * Timestamp
+   * \ingroup classes_datastructs
+   */
   public class Timestamp
   {
     public string seconds;

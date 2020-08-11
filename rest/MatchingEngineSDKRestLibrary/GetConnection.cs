@@ -27,12 +27,22 @@ namespace DistributedMatchEngine
 {
   public partial class MatchingEngine
   {
+    /*!
+     * Default value of GetConnection timeouts (10000 ms or 10 seconds)
+     */
     public const int DEFAULT_GETCONNECTION_TIMEOUT_MS = 10000;
 
-    public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
     /*!
+     * Get a TCP socket bound to the local cellular interface and connected to the application's backend server.
+     * If no exceptions thrown and object is not null, the socket is ready to send application data to backend.
      * \ingroup functions_getconnection
+     * \param reply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     * \param timeout (int): Optional
+     * \return Task<socket>
      */
+    public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
     {
       if (timeoutMs <= 0)
       {

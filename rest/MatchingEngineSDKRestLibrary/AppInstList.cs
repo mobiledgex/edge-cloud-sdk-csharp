@@ -20,45 +20,57 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /*!
+   * Appinstance
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class Appinstance
   {
-    // App Instance Name
+    //! App Instance Name
     [DataMember]
     public string app_name;
-    // App Instance Version
+    //! App Instance Version
     [DataMember]
     public string app_vers;
-    // App Instance FQDN
+    //! App Instance FQDN
     [DataMember]
     public string fqdn;
-    // ports to access app
+    //! ports to access app
     [DataMember]
     public AppPort[] ports;
     [DataMember]
     public string org_name;
   }
 
+  /*!
+   * CloudletLocation
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class CloudletLocation
   {
-    // The carrier name that user is connected to ("Cellular Carrier Name")
+    //! The carrier name that user is connected to ("Cellular Carrier Name")
     [DataMember]
     public string carrier_name;
-    // Cloudlet Name
+    //! Cloudlet Name
     [DataMember]
     public string cloudlet_name;
-    // The GPS Location of the cloudlet
+    //! The GPS Location of the cloudlet
     [DataMember]
     public Loc gps_location;
-    // Distance of cloudlet vs loc in request
+    //! Distance of cloudlet vs loc in request
     [DataMember]
     public double distance;
-    // App instances
+    //! App instances
     [DataMember]
     public Appinstance[] appinstances;
   }
 
+  /*!
+   * AppInstListRequest
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class AppInstListRequest
   {
@@ -78,10 +90,14 @@ namespace DistributedMatchEngine
     public Tag[] tags;
   }
 
+  /*!
+   * AppInstListReply
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class AppInstListReply
   {
-    // Status of the reply
+    //! Status of the reply
     public enum AIStatus
     {
       AI_UNDEFINED = 0,

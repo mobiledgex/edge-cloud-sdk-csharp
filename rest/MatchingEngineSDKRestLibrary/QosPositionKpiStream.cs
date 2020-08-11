@@ -24,7 +24,10 @@ using System.Text;
 
 namespace DistributedMatchEngine
 {
-
+  /*!
+   * QosPositionKpiStream Class with functions used to consume GetQosPositionKpi results
+   * \ingroup classes_datastructs
+   */
   public class QosPositionKpiStream
   {
     StreamReader sr = null;
