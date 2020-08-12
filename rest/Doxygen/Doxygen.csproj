@@ -22,6 +22,7 @@
   <ItemGroup>
     <None Include="DoxygenModules.txt" />
     <None Include="DoxygenLayout.xml" />
+    <None Include="Doxyfile" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
