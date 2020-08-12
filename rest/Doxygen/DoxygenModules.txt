@@ -7,29 +7,44 @@
 
 // Classes Modules
 /*!
- * \defgroup classes_integration Platform Integration Classes
+ * \defgroup classes Classes
 
- * \defgroup classes_util Utility Classes
+   * \defgroup classes_integration Platform Integration Classes
+   * \ingroup classes
 
- * \defgroup classes_datastructs MatchingEngine Data Structures
+   * \defgroup classes_util Utility Classes
+   * \ingroup classes
+
+   * \defgroup classes_datastructs MatchingEngine Data Structures
+   * \ingroup classes
  */
 
 // Function Groups Modules
 /*!
- * \defgroup functions_dmeapis MatchingEngine APIs
+ * \defgroup functiongroups Function Groups
 
- * \defgroup functions_dmeutils MatchingEngine Utility Functions
+   * \defgroup functions_dmeapis MatchingEngine APIs
+   * \ingroup functiongroups
 
- * \defgroup functions_getconnection GetConnection Functions
- * \section getconnectionworkflow GetConnection Workflow Example
- * \snippet UnitTest1.cs getconnectionworkflow
+   * \defgroup functions_dmeutils MatchingEngine Utility Functions
+   * \ingroup functiongroups
 
- * \defgroup functions_getconnectionutils GetConnection Utility Functions
+   * \defgroup functions_getconnection GetConnection Functions
+   * \ingroup functiongroups
+   * \section getconnectionworkflow GetConnection Workflow Example
+   * \snippet UnitTest1.cs getconnectionworkflow
+
+   * \defgroup functions_getconnectionutils GetConnection Utility Functions
+   * \ingroup functiongroups
  */
 
 // Exceptions Modules
 /*!
- * \defgroup exceptions_dme MatchingEngine API Exceptions
+ * \defgroup exceptions Exceptions
 
- * \defgroup exceptions_getconnection GetConnection Exceptions
+   * \defgroup exceptions_dme MatchingEngine API Exceptions
+   * \ingroup exceptions
+
+   * \defgroup exceptions_getconnection GetConnection Exceptions
+   * \ingroup exceptions
  */
