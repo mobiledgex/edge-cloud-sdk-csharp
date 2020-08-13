@@ -20,9 +20,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="DoxygenModules.txt" />
-    <None Include="DoxygenLayout.xml" />
     <None Include="Doxyfile" />
+    <None Include="src\DoxygenModules.txt" />
+    <None Include="config\customdoxygen.css" />
+    <None Include="config\DoxygenLayout.xml" />
+    <None Include="config\footer.html" />
+    <None Include="config\header.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\" />
+    <Folder Include="config\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
