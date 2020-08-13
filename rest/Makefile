@@ -42,6 +42,9 @@ build-release:
 	$(shell MSBuild $(VSPROJECTROOT)/MatchingEngineSDKRestLibrary.sln /p:Configuration=Release >> $(SOLUTIONLOG))
 
 generate-doxygen:
+ifeq (, $(shell which doxygen))
+        $(error "Doxygen not installed. Go to https://www.doxygen.nl/download.html to download")
+endif
 	@echo Generating Doxygen documentation...
 	$(shell doxygen $(DOXYGENROOT)/Doxyfile &> $(DOXYGENLOG))
 	$(shell zip -vr html.zip html >> $(DOXYGENLOG))
