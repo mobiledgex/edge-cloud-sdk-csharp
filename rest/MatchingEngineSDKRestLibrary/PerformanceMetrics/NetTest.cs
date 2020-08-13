@@ -34,7 +34,8 @@ using System.Collections.Generic;
 namespace DistributedMatchEngine.PerformanceMetrics
 {
   /*!
-   * NetTest
+   * Class that allows developers to easily test latency of their various backend servers.
+   * This is used in the implementation of FindCloudlet Performance Mode.
    * \ingroup classes_util
    */
   public class NetTest : IDisposable
@@ -47,6 +48,12 @@ namespace DistributedMatchEngine.PerformanceMetrics
       CONNECT = 1,
     };
 
+    /*!
+     * Object used by NetTest to test latency of server.
+     * Each site object contains the server path or host + port, avg latency, standard deviation, list of latency times, and the TestType.
+     * TestType is either PING or CONNECT, where PING is ICMP Ping (not implemented) and CONNECT is is actually setting up a connection and then disconnecting immediately. 
+     * \ingroup classes_util
+     */
     public class Site
     {
       public string host;
@@ -67,12 +74,20 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public Appinstance appInst;
       public Loc cloudletLocation;
 
+      /*!
+       * Constructor for Site class.
+       * \param testType (TestType): Optional. Defaults to CONNECT
+       * \param numSamples (int): Optional. Size of rolling sample set. Defaults to 3
+       */
       public Site(TestType testType = TestType.CONNECT, int numSamples = DEFAULT_NUM_SAMPLES)
       {
         this.testType = testType;
         samples = new double[numSamples];
       }
 
+      /*!
+       *
+       */
       public void addSample(double time)
       {
         samples[idx] = time;
