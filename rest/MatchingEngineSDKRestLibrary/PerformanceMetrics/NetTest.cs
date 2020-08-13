@@ -42,6 +42,9 @@ namespace DistributedMatchEngine.PerformanceMetrics
   {
     private MatchingEngine matchingEngine;
 
+    /*!
+     * TestType is either PING or CONNECT, where PING is ICMP Ping (not implemented) and CONNECT is is actually setting up a connection and then disconnecting immediately. 
+     */
     public enum TestType
     {
       PING = 0,
@@ -64,6 +67,10 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public TestType testType;
 
       int idx;
+
+      /*!
+       * Number of rolling samples. Default is 3
+       */
       public int size { get; private set; }
       public double[] samples;
       public const int DEFAULT_NUM_SAMPLES = 3;
@@ -71,6 +78,9 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public double average;
       public double stddev;
 
+      /*!
+       * Application instance of site. Used to test specific application instance
+       */
       public Appinstance appInst;
       public Loc cloudletLocation;
 
@@ -85,9 +95,6 @@ namespace DistributedMatchEngine.PerformanceMetrics
         samples = new double[numSamples];
       }
 
-      /*!
-       *
-       */
       public void addSample(double time)
       {
         samples[idx] = time;
@@ -132,6 +139,10 @@ namespace DistributedMatchEngine.PerformanceMetrics
 
     public ConcurrentQueue<Site> sites { get; }
 
+    /*!
+     * NetTest constructor
+     * \param matchingEngine (MatchingEngine)
+     */
     public NetTest(MatchingEngine matchingEngine)
     {
       stopWatch = new Stopwatch();
@@ -230,7 +241,11 @@ namespace DistributedMatchEngine.PerformanceMetrics
       }
     }
 
-    // NetTest Runloop
+    /*!
+     * NetTest Runloop
+     * Tests the list of Sites in a loop until developer cancels.
+     * Developer can access the array of sites from the NetTest object or the ordered list by calling netTest.returnSortedSites()
+     */
     public async void RunNetTest()
     {
       Log.D("Run Net Test");
@@ -245,7 +260,11 @@ namespace DistributedMatchEngine.PerformanceMetrics
       }
     }
 
-    // NetTest each site for numSamples. Returns sorted list of sites task.
+    /*!
+     * Tests each site in the list of sites for numSamples and returns a list of Sites in order from lowest latency to highest.
+     * \param numSamples (int): Number of tests per site
+     * \return Task<Site[]>: Ordered list of sites from lowest latency to highest
+     */
     public async Task<Site[]> RunNetTest(int numSamples)
     {
       Log.D("Running NetTest for " + numSamples + " iterations.");
