@@ -22,6 +22,7 @@ namespace DistributedMatchEngine
 {
   /*!
    * Appinstance
+   * Information about specific app instances
    * \ingroup classes_datastructs
    */
   [DataContract]
@@ -39,12 +40,14 @@ namespace DistributedMatchEngine
     //! ports to access app
     [DataMember]
     public AppPort[] ports;
+    //! App Organization Name
     [DataMember]
     public string org_name;
   }
 
   /*!
    * CloudletLocation
+   * Information about cloudlet. Includes list of application instances
    * \ingroup classes_datastructs
    */
   [DataContract]
@@ -69,6 +72,8 @@ namespace DistributedMatchEngine
 
   /*!
    * AppInstListRequest
+   * Request object sent via GetAppInstList from client side to DME
+   * Request requires session_cookie from RegisterClientReply, gps_location, and carrier_name
    * \ingroup classes_datastructs
    */
   [DataContract]
@@ -76,28 +81,41 @@ namespace DistributedMatchEngine
   {
     [DataMember]
     public UInt32 ver;
+    //! Session Cookie from RegisterClientRequest
     [DataMember]
     public string session_cookie;
+    //! The GPS location of the user
     [DataMember]
     public Loc gps_location;
+    /*! By default, all SDKs will automatically fill in this parameter with the MCC+MNC of your current provider.
+     * Only override this parameter if you need to filter for a specific carrier on the DME.
+     * The DME will filter for App instances that are associated with the specified carrier.
+     * If you wish to search for any App Instance on the DME regardless of carrier name, you can input “” to consider all carriers as “Any”.
+     */
     [DataMember]
     public string carrier_name;
+    //! Optional. Cell id where the client is
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
+    //! Optional. Limit the number of results, defaults to 3
     [DataMember(EmitDefaultValue = false)]
     public UInt32 limit;
+    //! Vendor specific data
     [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
   /*!
    * AppInstListReply
+   * Reply object received via GetAppInstList
+   * If an application instance exists, this will return AI_SUCCESS.
+   * Will provide information about all application instances deployed on specified carrier network
    * \ingroup classes_datastructs
    */
   [DataContract]
   public class AppInstListReply
   {
-    //! Status of the reply
+    //! Status of an AppInstListReply
     public enum AIStatus
     {
       AI_UNDEFINED = 0,
@@ -108,6 +126,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public UInt32 ver;
 
+    //! Status return
     public AIStatus status;
 
     [DataMember(Name = "status")]
@@ -132,6 +151,7 @@ namespace DistributedMatchEngine
 
     [DataMember]
     public CloudletLocation[] cloudlets;
+    //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }

@@ -22,6 +22,8 @@ namespace DistributedMatchEngine
 {
   /*!
    * VerifyLocationRequest
+   * Request object sent via VerifyLocation from client side to DME
+   * Request requires session_cookie from RegisterClientReply, gps_location to be verified, carrier_name, and verify_loc_token
    * \ingroup classes_datastructs
    */
   [DataContract]
@@ -29,28 +31,37 @@ namespace DistributedMatchEngine
   {
     [DataMember]
     public UInt32 ver = 1;
+    //! Session Cookie from RegisterClientReply
     [DataMember]
     public string session_cookie;
+    //! The GPS location to verify
     [DataMember]
     public Loc gps_location;
+    //! Unique carrier identification (typically MCC + MNC)
     [DataMember]
     public string carrier_name;
+    //! Must be retrieved from TokenServerURI. (Handled by SDK)
     [DataMember]
     public string verify_loc_token;
+    //! Optional. Cell ID where the client is
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
+    //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   };
 
   /*!
    * VerifyLocationReply
+   * Reply object received via VerifyLocation
+   * If verified, will return LOC_VERIFIED and CONNECTED_TO_SPECIFIED_TOWER
+   * Also contains information about accuracy of provided gps location
    * \ingroup classes_datastructs
    */
   [DataContract]
   public class VerifyLocationReply
   {
-    //! Status of the reply
+    //! Tower Status of a VerifyLocationReply
     public enum TowerStatus
     {
       TOWER_UNKNOWN = 0,
@@ -58,6 +69,7 @@ namespace DistributedMatchEngine
       NOT_CONNECTED_TO_SPECIFIED_TOWER = 2,
     }
 
+    //! GPS Status of VerifyLocationReply
     public enum GPSLocationStatus
     {
       LOC_UNKNOWN = 0,
@@ -73,6 +85,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public UInt32 ver;
 
+    //! Tower status
     public TowerStatus tower_status = TowerStatus.TOWER_UNKNOWN;
 
     [DataMember(Name = "tower_status")]
@@ -95,6 +108,7 @@ namespace DistributedMatchEngine
       }
     }
 
+    //! GPS location status
     public GPSLocationStatus gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
 
     [DataMember(Name = "gps_location_status")]
@@ -117,8 +131,13 @@ namespace DistributedMatchEngine
       }
     }
 
+    /*!
+     * Location accuracy, the location is verified to be within this number of kilometers.
+     * Negative value means no verification was performed
+     */
     [DataMember]
     public double gps_location_accuracy_km;
+    //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }

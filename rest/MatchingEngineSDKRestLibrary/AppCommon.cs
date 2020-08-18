@@ -27,8 +27,10 @@ namespace DistributedMatchEngine
   [DataContract]
   public class Tag
   {
+    //! type of data
     [DataMember]
     public string type;
+    //! data value
     [DataMember]
     public string data;
   }
