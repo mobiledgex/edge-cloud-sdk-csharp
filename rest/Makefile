@@ -43,7 +43,7 @@ build-release:
 
 generate-doxygen:
 ifeq (, $(shell which doxygen))
-        $(error "Doxygen not installed. Go to https://www.doxygen.nl/download.html to download")
+        $(error "Doxygen not installed. Go to https://www.doxygen.nl/download.html to download or run 'brew install doxygen' to install with Homebrew")
 endif
 	@echo Generating Doxygen documentation...
 	$(shell doxygen $(DOXYGENROOT)/Doxyfile &> $(DOXYGENLOG))
