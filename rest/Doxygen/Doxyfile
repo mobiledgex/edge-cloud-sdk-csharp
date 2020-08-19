@@ -175,7 +175,7 @@ EXAMPLE_PATH           = RestSample/RestSample.cs \
                          EngineTests/UnitTest1.cs
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
-IMAGE_PATH             =
+IMAGE_PATH             = Doxygen/src/dmeflow.png
 INPUT_FILTER           =
 FILTER_PATTERNS        =
 FILTER_SOURCE_FILES    = NO
