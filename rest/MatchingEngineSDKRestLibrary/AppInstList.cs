@@ -47,7 +47,8 @@ namespace DistributedMatchEngine
 
   /*!
    * CloudletLocation
-   * Information about cloudlet. Includes list of application instances
+   * The geo-location of Cloudlets (resources) within the Operator's Telco infrastructure, 
+   * where Developers can create and deploy application instances to the available Cloudlets. 
    * \ingroup classes_datastructs
    */
   [DataContract]
