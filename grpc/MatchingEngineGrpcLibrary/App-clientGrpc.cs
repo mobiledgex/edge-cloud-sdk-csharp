@@ -19,6 +19,7 @@ namespace DistributedMatchEngine {
     static readonly grpc::Marshaller<global::DistributedMatchEngine.RegisterClientReply> __Marshaller_distributed_match_engine_RegisterClientReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.RegisterClientReply.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletRequest> __Marshaller_distributed_match_engine_FindCloudletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FindCloudletRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletReply> __Marshaller_distributed_match_engine_FindCloudletReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FindCloudletReply.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.PlatformFindCloudletRequest> __Marshaller_distributed_match_engine_PlatformFindCloudletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.PlatformFindCloudletRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationRequest> __Marshaller_distributed_match_engine_VerifyLocationRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.VerifyLocationRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationReply> __Marshaller_distributed_match_engine_VerifyLocationReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.VerifyLocationReply.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.GetLocationRequest> __Marshaller_distributed_match_engine_GetLocationRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.GetLocationRequest.Parser.ParseFrom);
@@ -29,8 +30,12 @@ namespace DistributedMatchEngine {
     static readonly grpc::Marshaller<global::DistributedMatchEngine.AppInstListReply> __Marshaller_distributed_match_engine_AppInstListReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.AppInstListReply.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.FqdnListRequest> __Marshaller_distributed_match_engine_FqdnListRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FqdnListRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.FqdnListReply> __Marshaller_distributed_match_engine_FqdnListReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FqdnListReply.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppOfficialFqdnRequest> __Marshaller_distributed_match_engine_AppOfficialFqdnRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.AppOfficialFqdnRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppOfficialFqdnReply> __Marshaller_distributed_match_engine_AppOfficialFqdnReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.AppOfficialFqdnReply.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPositionRequest> __Marshaller_distributed_match_engine_QosPositionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPositionRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPositionKpiReply> __Marshaller_distributed_match_engine_QosPositionKpiReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPositionKpiReply.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.ClientEdgeEvent> __Marshaller_distributed_match_engine_ClientEdgeEvent = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.ClientEdgeEvent.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.ServerEdgeEvent> __Marshaller_distributed_match_engine_ServerEdgeEvent = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.ServerEdgeEvent.Parser.ParseFrom);
 
     static readonly grpc::Method<global::DistributedMatchEngine.RegisterClientRequest, global::DistributedMatchEngine.RegisterClientReply> __Method_RegisterClient = new grpc::Method<global::DistributedMatchEngine.RegisterClientRequest, global::DistributedMatchEngine.RegisterClientReply>(
         grpc::MethodType.Unary,
@@ -44,6 +49,13 @@ namespace DistributedMatchEngine {
         __ServiceName,
         "FindCloudlet",
         __Marshaller_distributed_match_engine_FindCloudletRequest,
+        __Marshaller_distributed_match_engine_FindCloudletReply);
+
+    static readonly grpc::Method<global::DistributedMatchEngine.PlatformFindCloudletRequest, global::DistributedMatchEngine.FindCloudletReply> __Method_PlatformFindCloudlet = new grpc::Method<global::DistributedMatchEngine.PlatformFindCloudletRequest, global::DistributedMatchEngine.FindCloudletReply>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "PlatformFindCloudlet",
+        __Marshaller_distributed_match_engine_PlatformFindCloudletRequest,
         __Marshaller_distributed_match_engine_FindCloudletReply);
 
     static readonly grpc::Method<global::DistributedMatchEngine.VerifyLocationRequest, global::DistributedMatchEngine.VerifyLocationReply> __Method_VerifyLocation = new grpc::Method<global::DistributedMatchEngine.VerifyLocationRequest, global::DistributedMatchEngine.VerifyLocationReply>(
@@ -81,12 +93,26 @@ namespace DistributedMatchEngine {
         __Marshaller_distributed_match_engine_FqdnListRequest,
         __Marshaller_distributed_match_engine_FqdnListReply);
 
+    static readonly grpc::Method<global::DistributedMatchEngine.AppOfficialFqdnRequest, global::DistributedMatchEngine.AppOfficialFqdnReply> __Method_GetAppOfficialFqdn = new grpc::Method<global::DistributedMatchEngine.AppOfficialFqdnRequest, global::DistributedMatchEngine.AppOfficialFqdnReply>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetAppOfficialFqdn",
+        __Marshaller_distributed_match_engine_AppOfficialFqdnRequest,
+        __Marshaller_distributed_match_engine_AppOfficialFqdnReply);
+
     static readonly grpc::Method<global::DistributedMatchEngine.QosPositionRequest, global::DistributedMatchEngine.QosPositionKpiReply> __Method_GetQosPositionKpi = new grpc::Method<global::DistributedMatchEngine.QosPositionRequest, global::DistributedMatchEngine.QosPositionKpiReply>(
         grpc::MethodType.ServerStreaming,
         __ServiceName,
         "GetQosPositionKpi",
         __Marshaller_distributed_match_engine_QosPositionRequest,
         __Marshaller_distributed_match_engine_QosPositionKpiReply);
+
+    static readonly grpc::Method<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> __Method_SendEdgeEvent = new grpc::Method<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent>(
+        grpc::MethodType.DuplexStreaming,
+        __ServiceName,
+        "SendEdgeEvent",
+        __Marshaller_distributed_match_engine_ClientEdgeEvent,
+        __Marshaller_distributed_match_engine_ServerEdgeEvent);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -134,6 +160,21 @@ namespace DistributedMatchEngine {
 
       /// <summary>
       ///
+      /// PlatformFindCloudlet
+      ///
+      /// Similar to FindCloudlet, except uses a token for client data.
+      /// This API is only applicable for Platform Applications.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      public virtual global::System.Threading.Tasks.Task<global::DistributedMatchEngine.FindCloudletReply> PlatformFindCloudlet(global::DistributedMatchEngine.PlatformFindCloudletRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      /// <summary>
+      ///
       /// VerifyLocation
       ///
       /// Verifies that the GPS coordinates accurately report the actual location of the device.
@@ -166,7 +207,17 @@ namespace DistributedMatchEngine {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      public virtual global::System.Threading.Tasks.Task<global::DistributedMatchEngine.AppOfficialFqdnReply> GetAppOfficialFqdn(global::DistributedMatchEngine.AppOfficialFqdnRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
       public virtual global::System.Threading.Tasks.Task GetQosPositionKpi(global::DistributedMatchEngine.QosPositionRequest request, grpc::IServerStreamWriter<global::DistributedMatchEngine.QosPositionKpiReply> responseStream, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task SendEdgeEvent(grpc::IAsyncStreamReader<global::DistributedMatchEngine.ClientEdgeEvent> requestStream, grpc::IServerStreamWriter<global::DistributedMatchEngine.ServerEdgeEvent> responseStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -334,6 +385,66 @@ namespace DistributedMatchEngine {
       }
       /// <summary>
       ///
+      /// PlatformFindCloudlet
+      ///
+      /// Similar to FindCloudlet, except uses a token for client data.
+      /// This API is only applicable for Platform Applications.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::DistributedMatchEngine.FindCloudletReply PlatformFindCloudlet(global::DistributedMatchEngine.PlatformFindCloudletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return PlatformFindCloudlet(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///
+      /// PlatformFindCloudlet
+      ///
+      /// Similar to FindCloudlet, except uses a token for client data.
+      /// This API is only applicable for Platform Applications.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::DistributedMatchEngine.FindCloudletReply PlatformFindCloudlet(global::DistributedMatchEngine.PlatformFindCloudletRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_PlatformFindCloudlet, null, options, request);
+      }
+      /// <summary>
+      ///
+      /// PlatformFindCloudlet
+      ///
+      /// Similar to FindCloudlet, except uses a token for client data.
+      /// This API is only applicable for Platform Applications.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.FindCloudletReply> PlatformFindCloudletAsync(global::DistributedMatchEngine.PlatformFindCloudletRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return PlatformFindCloudletAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///
+      /// PlatformFindCloudlet
+      ///
+      /// Similar to FindCloudlet, except uses a token for client data.
+      /// This API is only applicable for Platform Applications.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.FindCloudletReply> PlatformFindCloudletAsync(global::DistributedMatchEngine.PlatformFindCloudletRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_PlatformFindCloudlet, null, options, request);
+      }
+      /// <summary>
+      ///
       /// VerifyLocation
       ///
       /// Verifies that the GPS coordinates accurately report the actual location of the device.
@@ -452,6 +563,22 @@ namespace DistributedMatchEngine {
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetFqdnList, null, options, request);
       }
+      public virtual global::DistributedMatchEngine.AppOfficialFqdnReply GetAppOfficialFqdn(global::DistributedMatchEngine.AppOfficialFqdnRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetAppOfficialFqdn(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::DistributedMatchEngine.AppOfficialFqdnReply GetAppOfficialFqdn(global::DistributedMatchEngine.AppOfficialFqdnRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_GetAppOfficialFqdn, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.AppOfficialFqdnReply> GetAppOfficialFqdnAsync(global::DistributedMatchEngine.AppOfficialFqdnRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetAppOfficialFqdnAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.AppOfficialFqdnReply> GetAppOfficialFqdnAsync(global::DistributedMatchEngine.AppOfficialFqdnRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_GetAppOfficialFqdn, null, options, request);
+      }
       public virtual grpc::AsyncServerStreamingCall<global::DistributedMatchEngine.QosPositionKpiReply> GetQosPositionKpi(global::DistributedMatchEngine.QosPositionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetQosPositionKpi(request, new grpc::CallOptions(headers, deadline, cancellationToken));
@@ -459,6 +586,14 @@ namespace DistributedMatchEngine {
       public virtual grpc::AsyncServerStreamingCall<global::DistributedMatchEngine.QosPositionKpiReply> GetQosPositionKpi(global::DistributedMatchEngine.QosPositionRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncServerStreamingCall(__Method_GetQosPositionKpi, null, options, request);
+      }
+      public virtual grpc::AsyncDuplexStreamingCall<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> SendEdgeEvent(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return SendEdgeEvent(new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncDuplexStreamingCall<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> SendEdgeEvent(grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncDuplexStreamingCall(__Method_SendEdgeEvent, null, options);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override MatchEngineApiClient NewInstance(ClientBaseConfiguration configuration)
@@ -474,12 +609,15 @@ namespace DistributedMatchEngine {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_RegisterClient, serviceImpl.RegisterClient)
           .AddMethod(__Method_FindCloudlet, serviceImpl.FindCloudlet)
+          .AddMethod(__Method_PlatformFindCloudlet, serviceImpl.PlatformFindCloudlet)
           .AddMethod(__Method_VerifyLocation, serviceImpl.VerifyLocation)
           .AddMethod(__Method_GetLocation, serviceImpl.GetLocation)
           .AddMethod(__Method_AddUserToGroup, serviceImpl.AddUserToGroup)
           .AddMethod(__Method_GetAppInstList, serviceImpl.GetAppInstList)
           .AddMethod(__Method_GetFqdnList, serviceImpl.GetFqdnList)
-          .AddMethod(__Method_GetQosPositionKpi, serviceImpl.GetQosPositionKpi).Build();
+          .AddMethod(__Method_GetAppOfficialFqdn, serviceImpl.GetAppOfficialFqdn)
+          .AddMethod(__Method_GetQosPositionKpi, serviceImpl.GetQosPositionKpi)
+          .AddMethod(__Method_SendEdgeEvent, serviceImpl.SendEdgeEvent).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -490,12 +628,15 @@ namespace DistributedMatchEngine {
     {
       serviceBinder.AddMethod(__Method_RegisterClient, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.RegisterClientRequest, global::DistributedMatchEngine.RegisterClientReply>(serviceImpl.RegisterClient));
       serviceBinder.AddMethod(__Method_FindCloudlet, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.FindCloudletRequest, global::DistributedMatchEngine.FindCloudletReply>(serviceImpl.FindCloudlet));
+      serviceBinder.AddMethod(__Method_PlatformFindCloudlet, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.PlatformFindCloudletRequest, global::DistributedMatchEngine.FindCloudletReply>(serviceImpl.PlatformFindCloudlet));
       serviceBinder.AddMethod(__Method_VerifyLocation, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.VerifyLocationRequest, global::DistributedMatchEngine.VerifyLocationReply>(serviceImpl.VerifyLocation));
       serviceBinder.AddMethod(__Method_GetLocation, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.GetLocationRequest, global::DistributedMatchEngine.GetLocationReply>(serviceImpl.GetLocation));
       serviceBinder.AddMethod(__Method_AddUserToGroup, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.DynamicLocGroupRequest, global::DistributedMatchEngine.DynamicLocGroupReply>(serviceImpl.AddUserToGroup));
       serviceBinder.AddMethod(__Method_GetAppInstList, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.AppInstListRequest, global::DistributedMatchEngine.AppInstListReply>(serviceImpl.GetAppInstList));
       serviceBinder.AddMethod(__Method_GetFqdnList, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.FqdnListRequest, global::DistributedMatchEngine.FqdnListReply>(serviceImpl.GetFqdnList));
+      serviceBinder.AddMethod(__Method_GetAppOfficialFqdn, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.AppOfficialFqdnRequest, global::DistributedMatchEngine.AppOfficialFqdnReply>(serviceImpl.GetAppOfficialFqdn));
       serviceBinder.AddMethod(__Method_GetQosPositionKpi, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::DistributedMatchEngine.QosPositionRequest, global::DistributedMatchEngine.QosPositionKpiReply>(serviceImpl.GetQosPositionKpi));
+      serviceBinder.AddMethod(__Method_SendEdgeEvent, serviceImpl == null ? null : new grpc::DuplexStreamingServerMethod<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent>(serviceImpl.SendEdgeEvent));
     }
 
   }

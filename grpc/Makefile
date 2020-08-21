@@ -21,7 +21,8 @@ CURL_URL := https://www.nuget.org/api/v2/package/Grpc.Tools/$(GRPCTOOLS_VERSION)
 PROTOC := protoc
 # Run "brew install coreutils" to get "grealpath" for protoc's requirement of absolute paths
 ABSOLUTEPATH := $(shell grealpath ../..)
-DME_PROTO_PATH = $(ABSOLUTEPATH)/edge-proto/dme
+#DME_PROTO_PATH = $(ABSOLUTEPATH)/edge-proto/dme
+DME_PROTO_PATH = ~/go/src/github.com/mobiledgex/edge-proto/dme
 THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/edge-proto/third_party
 
 GRPC_SDK_VERSION := 1.4.10

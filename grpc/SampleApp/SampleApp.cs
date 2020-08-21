@@ -20,6 +20,7 @@ using System;
 using Grpc.Core;
 using System.Net;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 // MobiledgeX Matching Engine API.
 using DistributedMatchEngine;
@@ -56,7 +57,7 @@ namespace MexGrpcSampleConsoleApp
     Loc location;
     string sessionCookie;
 
-    string dmeHost = "wifi.dme.mobiledgex.net"; // demo DME server hostname or ip.
+    string dmeHost = "0.0.0.0"; // demo DME server hostname or ip.
     int dmePort = 50051; // DME port.
     string carrierName = "GDDT";
     string orgName = "MobiledgeX";
@@ -75,6 +76,9 @@ namespace MexGrpcSampleConsoleApp
       Channel channel = new Channel(uri, channelCredentials);
 
       client = new DistributedMatchEngine.MatchEngineApi.MatchEngineApiClient(channel);
+
+      var clientEdgeEvent = CreateClientEdgeEvent();
+      client.SendEdgeEvent();
 
       var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, "2.0", "");
       var regReply = client.RegisterClient(registerClientRequest);
@@ -120,7 +124,6 @@ namespace MexGrpcSampleConsoleApp
                   ", protocol: " + p.Proto +
                   ", public_port: " + p.PublicPort +
                   ", internal_port: " + p.InternalPort +
-                  ", path_prefix: " + p.PathPrefix +
                   ", end_port: " + p.EndPort);
       }
       // Straight reflection print:
@@ -165,6 +168,15 @@ namespace MexGrpcSampleConsoleApp
         GpsLocation = gpsLocation
       };
       return request;
+    }
+
+    ClientEdgeEvent CreateClientEdgeEvent()
+    {
+      var clientEvent = new ClientEdgeEvent
+      {
+        SessionCookie = "blah"
+      };
+      return clientEvent;
     }
 
     static String parseToken(String uri)

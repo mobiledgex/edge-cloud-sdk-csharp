@@ -24,17 +24,17 @@ namespace DistributedMatchEngine {
     static AppcommonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZSKv",
+            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZSKp",
             "AQoHQXBwUG9ydBIvCgVwcm90bxgBIAEoDjIgLmRpc3RyaWJ1dGVkX21hdGNo",
             "X2VuZ2luZS5MUHJvdG8SFQoNaW50ZXJuYWxfcG9ydBgCIAEoBRITCgtwdWJs",
-            "aWNfcG9ydBgDIAEoBRITCgtwYXRoX3ByZWZpeBgEIAEoCRITCgtmcWRuX3By",
-            "ZWZpeBgFIAEoCRIQCghlbmRfcG9ydBgGIAEoBRILCgN0bHMYByABKAgqUQoG",
-            "TFByb3RvEhMKD0xfUFJPVE9fVU5LTk9XThAAEg8KC0xfUFJPVE9fVENQEAES",
-            "DwoLTF9QUk9UT19VRFAQAhIQCgxMX1BST1RPX0hUVFAQA2IGcHJvdG8z"));
+            "aWNfcG9ydBgDIAEoBRITCgtmcWRuX3ByZWZpeBgFIAEoCRIQCghlbmRfcG9y",
+            "dBgGIAEoBRILCgN0bHMYByABKAgSDQoFbmdpbngYCCABKAgqPwoGTFByb3Rv",
+            "EhMKD0xfUFJPVE9fVU5LTk9XThAAEg8KC0xfUFJPVE9fVENQEAESDwoLTF9Q",
+            "Uk9UT19VRFAQAmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "PathPrefix", "FqdnPrefix", "EndPort", "Tls" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null)
           }));
     }
     #endregion
@@ -57,10 +57,6 @@ namespace DistributedMatchEngine {
     /// UDP (L4) protocol
     /// </summary>
     [pbr::OriginalName("L_PROTO_UDP")] Udp = 2,
-    /// <summary>
-    /// HTTP (L7 tcp) protocol
-    /// </summary>
-    [pbr::OriginalName("L_PROTO_HTTP")] Http = 3,
   }
 
   #endregion
@@ -99,10 +95,10 @@ namespace DistributedMatchEngine {
       proto_ = other.proto_;
       internalPort_ = other.internalPort_;
       publicPort_ = other.publicPort_;
-      pathPrefix_ = other.pathPrefix_;
       fqdnPrefix_ = other.fqdnPrefix_;
       endPort_ = other.endPort_;
       tls_ = other.tls_;
+      nginx_ = other.nginx_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -115,7 +111,7 @@ namespace DistributedMatchEngine {
     public const int ProtoFieldNumber = 1;
     private global::DistributedMatchEngine.LProto proto_ = global::DistributedMatchEngine.LProto.Unknown;
     /// <summary>
-    /// TCP (L4), UDP (L4), or HTTP (L7) protocol
+    /// TCP (L4) or UDP (L4) protocol
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.LProto Proto {
@@ -153,24 +149,11 @@ namespace DistributedMatchEngine {
       }
     }
 
-    /// <summary>Field number for the "path_prefix" field.</summary>
-    public const int PathPrefixFieldNumber = 4;
-    private string pathPrefix_ = "";
-    /// <summary>
-    /// Public facing path for HTTP L7 access.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string PathPrefix {
-      get { return pathPrefix_; }
-      set {
-        pathPrefix_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "fqdn_prefix" field.</summary>
     public const int FqdnPrefixFieldNumber = 5;
     private string fqdnPrefix_ = "";
     /// <summary>
+    /// skip 4 to preserve the numbering. 4 was path_prefix but was removed since we dont need it after removed http
     /// FQDN prefix to append to base FQDN in FindCloudlet response. May be empty.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -209,6 +192,20 @@ namespace DistributedMatchEngine {
       }
     }
 
+    /// <summary>Field number for the "nginx" field.</summary>
+    public const int NginxFieldNumber = 8;
+    private bool nginx_;
+    /// <summary>
+    /// use nginx proxy for this port if you really need a transparent proxy (udp only)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Nginx {
+      get { return nginx_; }
+      set {
+        nginx_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as AppPort);
@@ -225,10 +222,10 @@ namespace DistributedMatchEngine {
       if (Proto != other.Proto) return false;
       if (InternalPort != other.InternalPort) return false;
       if (PublicPort != other.PublicPort) return false;
-      if (PathPrefix != other.PathPrefix) return false;
       if (FqdnPrefix != other.FqdnPrefix) return false;
       if (EndPort != other.EndPort) return false;
       if (Tls != other.Tls) return false;
+      if (Nginx != other.Nginx) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -238,10 +235,10 @@ namespace DistributedMatchEngine {
       if (Proto != global::DistributedMatchEngine.LProto.Unknown) hash ^= Proto.GetHashCode();
       if (InternalPort != 0) hash ^= InternalPort.GetHashCode();
       if (PublicPort != 0) hash ^= PublicPort.GetHashCode();
-      if (PathPrefix.Length != 0) hash ^= PathPrefix.GetHashCode();
       if (FqdnPrefix.Length != 0) hash ^= FqdnPrefix.GetHashCode();
       if (EndPort != 0) hash ^= EndPort.GetHashCode();
       if (Tls != false) hash ^= Tls.GetHashCode();
+      if (Nginx != false) hash ^= Nginx.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -267,10 +264,6 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(24);
         output.WriteInt32(PublicPort);
       }
-      if (PathPrefix.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(PathPrefix);
-      }
       if (FqdnPrefix.Length != 0) {
         output.WriteRawTag(42);
         output.WriteString(FqdnPrefix);
@@ -282,6 +275,10 @@ namespace DistributedMatchEngine {
       if (Tls != false) {
         output.WriteRawTag(56);
         output.WriteBool(Tls);
+      }
+      if (Nginx != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(Nginx);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -300,9 +297,6 @@ namespace DistributedMatchEngine {
       if (PublicPort != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(PublicPort);
       }
-      if (PathPrefix.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PathPrefix);
-      }
       if (FqdnPrefix.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(FqdnPrefix);
       }
@@ -310,6 +304,9 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(EndPort);
       }
       if (Tls != false) {
+        size += 1 + 1;
+      }
+      if (Nginx != false) {
         size += 1 + 1;
       }
       if (_unknownFields != null) {
@@ -332,9 +329,6 @@ namespace DistributedMatchEngine {
       if (other.PublicPort != 0) {
         PublicPort = other.PublicPort;
       }
-      if (other.PathPrefix.Length != 0) {
-        PathPrefix = other.PathPrefix;
-      }
       if (other.FqdnPrefix.Length != 0) {
         FqdnPrefix = other.FqdnPrefix;
       }
@@ -343,6 +337,9 @@ namespace DistributedMatchEngine {
       }
       if (other.Tls != false) {
         Tls = other.Tls;
+      }
+      if (other.Nginx != false) {
+        Nginx = other.Nginx;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -367,10 +364,6 @@ namespace DistributedMatchEngine {
             PublicPort = input.ReadInt32();
             break;
           }
-          case 34: {
-            PathPrefix = input.ReadString();
-            break;
-          }
           case 42: {
             FqdnPrefix = input.ReadString();
             break;
@@ -381,6 +374,10 @@ namespace DistributedMatchEngine {
           }
           case 56: {
             Tls = input.ReadBool();
+            break;
+          }
+          case 64: {
+            Nginx = input.ReadBool();
             break;
           }
         }
