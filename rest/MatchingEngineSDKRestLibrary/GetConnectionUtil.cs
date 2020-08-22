@@ -110,7 +110,7 @@ namespace DistributedMatchEngine
     // Create a L7Path URL from an AppPort and FindCloudletReply:
     public string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, string protocol, int desiredPort = 0, string path = "")
     {
-      AppPort foundPort = ValidateAppPort(findCloudletReply, appPort, LProto.L_PROTO_TCP);
+      AppPort foundPort = ValidateAppPort(findCloudletReply, appPort);
       if (foundPort == null)
       {
         throw new GetConnectionException("Unable to validate AppPort");
@@ -152,13 +152,13 @@ namespace DistributedMatchEngine
     }
 
     // Validate specified AppPort is in FindCloudletReply
-    private static AppPort ValidateAppPort(FindCloudletReply findCloudletReply, AppPort appPort, LProto proto)
+    private static AppPort ValidateAppPort(FindCloudletReply findCloudletReply, AppPort appPort)
     {
       AppPort found = null;
       foreach (AppPort aPort in findCloudletReply.ports)
       {
         // See if spec matches:
-        if (aPort.proto != proto)
+        if (aPort.proto != appPort.proto)
         {
           continue;
         }
