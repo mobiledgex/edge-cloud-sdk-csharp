@@ -59,14 +59,12 @@ namespace DistributedMatchEngine
     L_PROTO_TCP = 1,
     // UDP (L4) protocol
     L_PROTO_UDP = 2,
-    // HTTP (L7 tcp) protocol
-    L_PROTO_HTTP = 3
   }
 
   [DataContract]
   public class AppPort
   {
-    // TCP (L4), UDP (L4), or HTTP (L7) protocol
+    // TCP (L4) or UDP (L4)
     public LProto proto = LProto.L_PROTO_UNKNOWN;
 
     [DataMember(Name = "proto")]
@@ -95,18 +93,18 @@ namespace DistributedMatchEngine
     // Public facing port for TCP/UDP (may be mapped on shared LB reverse proxy)
     [DataMember]
     public Int32 public_port;
-    // Public facing path prefix for HTTP L7 access.
-    [DataMember]
-    public string path_prefix;
     // FQDN prefix to prepend to base FQDN in FindCloudlet response. May be empty.
     [DataMember]
     public string fqdn_prefix;
     // A non-zero end port indicates this is a port range from public port to end port, inclusive.
     [DataMember]
     public Int32 end_port;
-    [DataMember]
     // TLS termination for this port
+    [DataMember]
     public bool tls;
+    // use nginx proxy for this port if you really need a transparent proxy (udp only)
+    [DataMember]
+    bool nginx;
   }
 
   public enum IDTypes

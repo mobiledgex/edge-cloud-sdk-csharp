@@ -127,7 +127,6 @@ namespace DistributedMatchEngine
               findCloudletReply.fqdn +
               ":" +
               aPortNum +
-              appPort.path_prefix +
               path;
 
       return url;
@@ -182,10 +181,6 @@ namespace DistributedMatchEngine
         return false;
       }
       if (port1.internal_port != port2.internal_port)
-      {
-        return false;
-      }
-      if (port1.path_prefix != port2.path_prefix)
       {
         return false;
       }
@@ -363,20 +358,6 @@ namespace DistributedMatchEngine
         }
       }
       return udpAppPorts;
-    }
-
-    public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
-    {
-      Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();
-      AppPort[] ports = reply.ports;
-      foreach (AppPort port in ports)
-      {
-        if (port.proto == LProto.L_PROTO_HTTP)
-        {
-          httpAppPorts.Add(port.internal_port, port);
-        }
-      }
-      return httpAppPorts;
     }
   }
 }
