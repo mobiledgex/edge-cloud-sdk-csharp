@@ -123,7 +123,10 @@ namespace RestSample
       {
         Console.WriteLine("MobiledgeX RestSample!");
 
+        //! [meconstructorexample]
         MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID());
+        //! [meconstructorexample]
+
         me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
 
@@ -131,20 +134,29 @@ namespace RestSample
         // location in an Unity application should be from an application context
         // LocationService.
         var locTask = Util.GetLocationFromDevice();
+
+        //! [createregisterexample]
         var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers);
+        //! [createregisterexample]
+
         // APIs depend on Register client to complete successfully:
         RegisterClientReply registerClientReply;
         try
         {
           try
           {
+            //! [registerexample]
             registerClientReply = await me.RegisterClient(registerClientRequest);
+            //! [registerexample]
             Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
           }
           catch (DmeDnsException)
           {
             // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
+            //! [registeroverloadexample]
             registerClientReply = await me.RegisterClient(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
+            //! [registeroverloadexample]
+
             Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
           }
           catch (NotImplementedException)
@@ -162,9 +174,17 @@ namespace RestSample
         var loc = await locTask;
 
         // Independent requests:
+        //! [createverifylocationexample]
         var verifyLocationRequest = me.CreateVerifyLocationRequest(loc);
+        //! [createverifylocationexample]
+
+        //! [createfindcloudletexample]
         var findCloudletRequest = me.CreateFindCloudletRequest(loc, carrierName);
+        //! [createfindcloudletexample]
+
+        //! [createappinstexample]
         var appInstListRequest = me.CreateAppInstListRequest(loc, carrierName);
+        //! [createappinstexample]
 
         // These are asynchronious calls, of independent REST APIs.
 
@@ -174,12 +194,16 @@ namespace RestSample
           FindCloudletReply findCloudletReply = null;
           try
           {
+            //! [findcloudletexample]
             findCloudletReply = await me.FindCloudlet(findCloudletRequest);
+            //! [findcloudletexample]
           }
           catch (DmeDnsException)
           {
             // DME doesn't exist in DNS. This is not a normal path if the SIM card is supported. Fallback to public cloud here.
+            //! [findcloudletoverloadexample]
             findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
+            //! [findcloudletoverloadexample]
           }
           catch (NotImplementedException)
           {
@@ -224,7 +248,9 @@ namespace RestSample
           FindCloudletReply findCloudletReplyPerformance = null;
           try
           {
+            //! [findcloudletperformanceexample]
             findCloudletReplyPerformance = await me.FindCloudlet(findCloudletRequest, FindCloudletMode.PERFORMANCE);
+            //! [findcloudletperformanceexample]
           }
           catch (DmeDnsException)
           {
@@ -275,11 +301,15 @@ namespace RestSample
           VerifyLocationReply verifyLocationReply = null;
           try
           {
+            //! [verifylocationexample]
             verifyLocationReply = await me.VerifyLocation(verifyLocationRequest);
+            //! [verifylocationexample]
           }
           catch (DmeDnsException)
           {
+            //! [verifylocationoverloadexample]
             verifyLocationReply = await me.VerifyLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, verifyLocationRequest);
+            //! [verifylocationoverloadexample]
           }
           catch (NotImplementedException)
           {
@@ -306,11 +336,15 @@ namespace RestSample
           AppInstListReply appInstListReply;
           try
           {
+            //! [appinstlistexample]
             appInstListReply = await me.GetAppInstList(appInstListRequest);
+            //! [appinstlistexample]
           }
           catch (DmeDnsException)
           {
+            //! [appinstlistoverloadexample]
             appInstListReply = await me.GetAppInstList(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, appInstListRequest);
+            //! [appinstlistoverloadexample]
           }
           catch (NotImplementedException)
           {
@@ -375,16 +409,22 @@ namespace RestSample
           };
           var requestList = CreateQosPositionList(firstLoc, 45, 2, 1);
 
+          //! [createqospositionexample]
           var qosPositionRequest = me.CreateQosPositionRequest(requestList, 0, null);
+          //! [createqospositionexample]
 
           QosPositionKpiStream qosReplyStream = null;
           try
           {
+            //! [getqospositionexample]
             qosReplyStream = await me.GetQosPositionKpi(qosPositionRequest);
+            //! [getqospositionexample]
           }
           catch (DmeDnsException)
           {
+            //! [getqospositionoverloadexample]
             qosReplyStream = await me.GetQosPositionKpi(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
+            //! [getqospositionoverloadexample]
           }
           catch (NotImplementedException)
           { 

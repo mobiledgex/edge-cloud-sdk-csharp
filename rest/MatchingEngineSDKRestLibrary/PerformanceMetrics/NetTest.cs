@@ -27,18 +27,36 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+/*!
+ * PerformanceMetrics Namespace
+ * \ingroup namespaces
+ */
 namespace DistributedMatchEngine.PerformanceMetrics
 {
+  /*!
+   * Class that allows developers to easily test latency of their various backend servers.
+   * This is used in the implementation of FindCloudlet Performance Mode.
+   * \ingroup classes_util
+   */
   public class NetTest : IDisposable
   {
     private MatchingEngine matchingEngine;
 
+    /*!
+     * TestType is either PING or CONNECT, where PING is ICMP Ping (not implemented) and CONNECT is is actually setting up a connection and then disconnecting immediately. 
+     */
     public enum TestType
     {
       PING = 0,
       CONNECT = 1,
     };
 
+    /*!
+     * Object used by NetTest to test latency of server.
+     * Each site object contains the server path or host + port, avg latency, standard deviation, list of latency times, and the TestType.
+     * TestType is either PING or CONNECT, where PING is ICMP Ping (not implemented) and CONNECT is is actually setting up a connection and then disconnecting immediately. 
+     * \ingroup classes_util
+     */
     public class Site
     {
       public string host;
@@ -49,6 +67,10 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public TestType testType;
 
       int idx;
+
+      /*!
+       * Number of rolling samples. Default is 3
+       */
       public int size { get; private set; }
       public double[] samples;
       public const int DEFAULT_NUM_SAMPLES = 3;
@@ -56,9 +78,17 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public double average;
       public double stddev;
 
+      /*!
+       * Application instance of site. Used to test specific application instance
+       */
       public Appinstance appInst;
       public Loc cloudletLocation;
 
+      /*!
+       * Constructor for Site class.
+       * \param testType (TestType): Optional. Defaults to CONNECT
+       * \param numSamples (int): Optional. Size of rolling sample set. Defaults to 3
+       */
       public Site(TestType testType = TestType.CONNECT, int numSamples = DEFAULT_NUM_SAMPLES)
       {
         this.testType = testType;
@@ -109,6 +139,10 @@ namespace DistributedMatchEngine.PerformanceMetrics
 
     public ConcurrentQueue<Site> sites { get; }
 
+    /*!
+     * NetTest constructor
+     * \param matchingEngine (MatchingEngine)
+     */
     public NetTest(MatchingEngine matchingEngine)
     {
       stopWatch = new Stopwatch();
@@ -207,7 +241,11 @@ namespace DistributedMatchEngine.PerformanceMetrics
       }
     }
 
-    // NetTest Runloop
+    /*!
+     * NetTest Runloop
+     * Tests the list of Sites in a loop until developer cancels.
+     * Developer can access the array of sites from the NetTest object or the ordered list by calling netTest.returnSortedSites()
+     */
     public async void RunNetTest()
     {
       Log.D("Run Net Test");
@@ -222,7 +260,11 @@ namespace DistributedMatchEngine.PerformanceMetrics
       }
     }
 
-    // NetTest each site for numSamples. Returns sorted list of sites task.
+    /*!
+     * Tests each site in the list of sites for numSamples and returns a list of Sites in order from lowest latency to highest.
+     * \param numSamples (int): Number of tests per site
+     * \return Task<Site[]>: Ordered list of sites from lowest latency to highest
+     */
     public async Task<Site[]> RunNetTest(int numSamples)
     {
       Log.D("Running NetTest for " + numSamples + " iterations.");
