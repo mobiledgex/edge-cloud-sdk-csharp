@@ -23,7 +23,10 @@ PUBLISHLOG := /tmp/nuget_out.log
 REST_SDK_VERSION=2.1.6
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/api/nuget/nuget-releases/
 
-all: packageRestore build-all
+DOXYGENROOT := Doxygen
+DOXYGENLOG := /tmp/doxygen_out.log
+
+all: packageRestore build-all generate-doxygen
 
 packageRestore:
 	dotnet restore
@@ -37,6 +40,18 @@ build-debug:
 build-release:
 	@echo Making Release Library...
 	$(shell MSBuild $(VSPROJECTROOT)/MatchingEngineSDKRestLibrary.sln /p:Configuration=Release >> $(SOLUTIONLOG))
+
+generate-doxygen:
+ifeq (, $(shell which doxygen))
+        $(error "Doxygen not installed. Go to https://www.doxygen.nl/download.html to download or run 'brew install doxygen' to install with Homebrew")
+endif
+	@echo Generating Doxygen documentation...
+	$(shell doxygen $(DOXYGENROOT)/Doxyfile &> $(DOXYGENLOG))
+	$(shell zip -vr html.zip html >> $(DOXYGENLOG))
+	$(shell rm -rf $(DOXYGENROOT)/html >> $(DOXYGENLOG))
+	$(shell rm -f $(DOXYGENROOT)/html.zip >> $(DOXYGENLOG))
+	$(shell mv html $(DOXYGENROOT) >> $(DOXYGENLOG))
+	$(shell mv html.zip $(DOXYGENROOT) >> $(DOXYGENLOG))
 
 publish:
 	@echo "Publish command will pause for password if you don't set the Artifactory publish key first..."

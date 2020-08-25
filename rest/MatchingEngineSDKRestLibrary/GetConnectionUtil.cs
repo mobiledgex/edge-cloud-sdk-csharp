@@ -27,6 +27,11 @@ using System.Net.NetworkInformation;
 namespace DistributedMatchEngine
 { 
 
+  /*!
+   * Base Network Interface Name. Aliases for Cellular and Wifi interfaces.
+   * Implement this class based on platform/device
+   * \ingroup classes_integration
+   */
   public class NetworkInterfaceName
   {
     public string[] CELLULAR = null;
@@ -34,6 +39,11 @@ namespace DistributedMatchEngine
   }
 
   // Some known network interface profiles:
+  /*!
+   * IOS Network Interface aliases for Cellular and Wifi interfaces.
+   * Use this to instantiate NetInterface if using IOS device
+   * \ingroup classes_integration
+   */
   public class IOSNetworkInterfaceName : NetworkInterfaceName
   {
     public IOSNetworkInterfaceName()
@@ -43,6 +53,11 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * Android Network Interface aliases for Cellular and Wifi interfaces.
+   * Use this to instantiate NetInterface if using Android device
+   * \ingroup classes_integration
+   */
   public class AndroidNetworkInterfaceName : NetworkInterfaceName
   {
     public AndroidNetworkInterfaceName()
@@ -53,16 +68,26 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * Mac Network Interface aliases for Cellular and Wifi interfaces.
+   * Use this to instantiate NetInterface if using Mac device
+   * \ingroup classes_integration
+   */
   public class MacNetworkInterfaceName : NetworkInterfaceName
   {
     public MacNetworkInterfaceName()
     {
-      // en0 and en1 should be Wifi and Ethernet or vice versa
+      //! en0 and en1 should be Wifi and Ethernet or vice versa
       CELLULAR = new string[] { "en0", "en1" };
       WIFI = new string[] { "en0", "en1" };
     }
   }
 
+  /*!
+   * Linux Network Interface aliases for Cellular and Wifi interfaces.
+   * Use this to instantiate NetInterface if using Linux device
+   * \ingroup classes_integration
+   */
   public class LinuxNetworkInterfaceName : NetworkInterfaceName
   {
     public LinuxNetworkInterfaceName()
@@ -72,6 +97,11 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * Windows10 Network Interface aliases for Cellular and Wifi interfaces.
+   * Use this to instantiate NetInterface if using Windows10 device
+   * \ingroup classes_integration
+   */
   public class Windows10NetworkInterfaceName : NetworkInterfaceName
   {
     public Windows10NetworkInterfaceName()
@@ -88,11 +118,20 @@ namespace DistributedMatchEngine
     private static SslProtocols enabledProtocols = SslProtocols.None; // os chooses the best protocol to use
     private static X509Certificate2Collection clientCertCollection = new X509Certificate2Collection();
 
+    /*!
+     * If server requires client certificate authentication, set to true
+     * This also requires uploading client certificates via AddClientCert function
+     * \ingroup functions_getconnectionutils
+     */
     public static void ServerRequiresClientCertificateAuthentication(bool required)
     {
       serverRequiresClientCertAuth = required;
     }
 
+    /*!
+     * Enable or disable certin SSL/TLS protocols that OS can use
+     * \ingroup functions_getconnectionutils
+     */
     public static void EnableSSLProtocols(SslProtocols[] protocols)
     {
       foreach (SslProtocols protocol in protocols)
@@ -101,13 +140,30 @@ namespace DistributedMatchEngine
       }
     }
 
+    /*!
+     * Upload Client Certificates to be used for client authentication
+     * \ingroup functions_getconnectionutils
+     */
     public static void AddClientCert(string clientCertPath)
     {
       X509Certificate2 cert = new X509Certificate2(clientCertPath);
       clientCertCollection.Add(cert);
     }
 
-    // Create a L7Path URL from an AppPort and FindCloudletReply:
+    /*!
+     * Returns the L7 path of the developers app backend based on the the findCloudletReply and appPort provided.
+     * The desired port number must be specified by the developer (use -1 if you want the SDK to choose a port number).
+     * An L7 protocol must also be provided (eg. http, https, ws, wss). The path variable is optional and will be appended to the end of the url.
+     * This function is called by L7 GetConnection functions, but can be called by developers if they are using their own communication client.
+     * Example return value: https://example.com:8888
+     * \ingroup functions_getconnectionutils
+     * \param findCloudletReply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \param protocol (string): L7 protocol to be prepended to url
+     * \param desiredPort (int): Optional
+     * \param path (string): Optional
+     * \return string
+     */
     public string CreateUrl(FindCloudletReply findCloudletReply, AppPort appPort, string protocol, int desiredPort = 0, string path = "")
     {
       AppPort foundPort = ValidateAppPort(findCloudletReply, appPort);
@@ -133,13 +189,27 @@ namespace DistributedMatchEngine
       return url;
     }
 
-    // Returns the host of the app backend based on FindCloudletReply and AppPort
+    /*!
+     * Returns the host of the developers app backend based on the findCloudletReply and appPort provided.
+     * This function is called by L4 GetConnection functions, but can be called by developers if they are using their own communication client (use GetPort as well)
+     * \ingroup functions_getconnectionutils
+     * \param findCloudletReply (FindCloudletReply)
+     * \param appPort (AppPort)
+     * \return string
+     */
     public string GetHost(FindCloudletReply findCloudletReply, AppPort appPort)
     {
       return appPort.fqdn_prefix + findCloudletReply.fqdn; // prepend fqdn prefix given in AppPort to fqdn
     }
 
-    // Returns the desired port for app backend service from AppPort
+    /*!
+     * Returns the port of the developers app backend service based on the appPort provided.
+     * An optional desiredPort parameter is provided if the developer wants a specific port within their appPort port range (if none provided, the function will default to the public_port field in the AppPort).
+     * This function is called by L4 GetConnection functions, but can be called by developers if they are using their own communication client (use GetHost as well).
+     * \ingroup functions_getconnectionutils
+     * \param appPort (AppPort)
+     * \param desiredPort (int): Optional
+     */
     public int GetPort(AppPort appPort, int desiredPort = 0)
     {
       int aPortNum = ValidateDesiredPort(appPort, desiredPort);
@@ -323,6 +393,15 @@ namespace DistributedMatchEngine
       return localEndPoint;
     }
 
+    /*!
+     * Returns a Dictionary mapping a port that the developer specified when creating their app through MobiledgeX console to an AppPort object.
+     * This AppPort object will contain relevant information necessary to connect to the desired port.
+     * This object will be used in GetConnection functions.
+     * \ingroup functions_getconnectionutils
+     * \param reply (FindCloudletReply)
+     * \param proto (LProto): Protocol of application ports desired
+     * \return Dictionary<int, AppPort>
+     */
     public Dictionary<int, AppPort> GetAppPortsByProtocol(FindCloudletReply reply, LProto proto)
     {
       Dictionary<int, AppPort> appPortsByProtocol = new Dictionary<int, AppPort>();
@@ -337,6 +416,14 @@ namespace DistributedMatchEngine
       return appPortsByProtocol;
     }
 
+    /*!
+     * Returns a Dictionary mapping a TCP port that the developer specified when creating their app through MobiledgeX console to an AppPort object.
+     * This AppPort object will contain relevant information necessary to connect to the desired port.
+     * This object will be used in GetConnection functions.
+     * \ingroup functions_getconnectionutils
+     * \param reply (FindCloudletReply)
+     * \return Dictionary<int, AppPort>
+     */
     public Dictionary<int, AppPort> GetTCPAppPorts(FindCloudletReply reply)
     {
       Dictionary<int, AppPort> tcpAppPorts = new Dictionary<int, AppPort>();
@@ -351,6 +438,14 @@ namespace DistributedMatchEngine
       return tcpAppPorts;
     }
 
+    /*!
+     * Returns a Dictionary mapping a UDP port that the developer specified when creating their app through MobiledgeX console to an AppPort object.
+     * This AppPort object will contain relevant information necessary to connect to the desired port.
+     * This object will be used in GetConnection functions.
+     * \ingroup functions_getconnectionutils
+     * \param reply (FindCloudletReply)
+     * \return Dictionary<int, AppPort>
+     */
     public Dictionary<int, AppPort> GetUDPAppPorts(FindCloudletReply reply)
     {
       Dictionary<int, AppPort> udpAppPorts = new Dictionary<int, AppPort>();
@@ -365,6 +460,14 @@ namespace DistributedMatchEngine
       return udpAppPorts;
     }
 
+    /*!
+     * Returns a Dictionary mapping a HTTP port that the developer specified when creating their app through MobiledgeX console to an AppPort object.
+     * This AppPort object will contain relevant information necessary to connect to the desired port.
+     * This object will be used in GetConnection functions.
+     * \ingroup functions_getconnectionutils
+     * \param reply (FindCloudletReply)
+     * \return Dictionary<int, AppPort>
+     */
     public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
     {
       Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();

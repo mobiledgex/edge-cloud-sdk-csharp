@@ -7,24 +7,48 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSample", "RestSample\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngineTests", "EngineTests\EngineTests.csproj", "{1865CADD-B9AF-43BD-991C-9B68D1677809}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doxygen", "Doxygen\Doxygen.csproj", "{E679E897-9FAC-4761-8795-2F9630E78BA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Debug|anycpu = Debug|anycpu
+		Release|anycpu = Release|anycpu
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6708E105-1190-4AE9-8D33-502317893033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6708E105-1190-4AE9-8D33-502317893033}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6708E105-1190-4AE9-8D33-502317893033}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6708E105-1190-4AE9-8D33-502317893033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6708E105-1190-4AE9-8D33-502317893033}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{6708E105-1190-4AE9-8D33-502317893033}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{6708E105-1190-4AE9-8D33-502317893033}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{6708E105-1190-4AE9-8D33-502317893033}.Release|anycpu.Build.0 = Release|Any CPU
 		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{B9CA0E3F-F423-4FEE-B909-96D9ECA1F0AE}.Release|anycpu.Build.0 = Release|Any CPU
 		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{1865CADD-B9AF-43BD-991C-9B68D1677809}.Release|anycpu.Build.0 = Release|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{E679E897-9FAC-4761-8795-2F9630E78BA9}.Release|anycpu.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		description = MatchingEngineSDK Library based on REST backend

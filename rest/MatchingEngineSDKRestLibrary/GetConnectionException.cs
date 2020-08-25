@@ -18,6 +18,10 @@
 using System;
 namespace DistributedMatchEngine
 {
+  /*!
+   * GetConnectionException
+   * \ingroup exceptions_getconnection
+   */
   public class GetConnectionException : Exception
   {
     public GetConnectionException()

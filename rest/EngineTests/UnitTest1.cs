@@ -108,7 +108,7 @@ namespace Tests
       return ms;
     }
 
-    /**
+    /*
      * Basic equivalence tests for the QosPositionKpiStream internal JSON block parser.
      */
     [Test]
@@ -139,7 +139,7 @@ namespace Tests
       Console.WriteLine("Test1 finished.");
     }
 
-    /**
+    /*
      * Basic equivalence tests for the QosPositionKpiStream internal JSON block parser.
      * An escape char.
      */
@@ -157,7 +157,7 @@ namespace Tests
       Console.WriteLine("TestQosPositionStreamEscape finished.");
     }
 
-    /**
+    /*
      * Basic equivalence tests for the QosPositionKpiStream internal JSON block parser.
      */
     [Test]
@@ -255,7 +255,6 @@ namespace Tests
           "Content-Type: application/json\r\n" + "\r\n" + test;
       byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
-      // TCP Connection Test
       string receiveMessage = "";
       try
       {
@@ -380,6 +379,7 @@ namespace Tests
       string url = "ws://" + aWebSocketServerFqdn + ":" + 3000;
       UriBuilder uriBuilder = new UriBuilder(url);
       Uri uri = uriBuilder.Uri;
+
       try
       {
         socket = await me.GetWebsocketConnection(uri, 5000);
@@ -440,6 +440,7 @@ namespace Tests
       // socket = me.GetTCPConnection(findCloudletReply, appPort, desiredPort, timeout)
       //      desiredPort can be set to -1 if user wants to default to public_port
 
+      //! [getconnectionworkflow]
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply reply = null;
 
@@ -489,6 +490,7 @@ namespace Tests
       {
         Assert.Fail("workflow test exception " + e.Message);
       }
+      //! [getconnectionworkflow]
     }
 
     [Test]

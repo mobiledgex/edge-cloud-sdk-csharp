@@ -31,8 +31,17 @@ using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
 
+/*!
+ * DistributedMatchEngine Namespace
+ * \ingroup namespaces
+ */
 namespace DistributedMatchEngine
 {
+
+  /*!
+   * Occurs when MobiledgeX does not have user's MCC and MNC mapped to a DME
+   * \ingroup exceptions_dme
+   */
   public class DmeDnsException : Exception
   {
     public DmeDnsException(string message)
@@ -40,6 +49,11 @@ namespace DistributedMatchEngine
     {
     }
   }
+
+  /*!
+   * MatchingEngine APIs are implemented via HTTP REST calls. This occurs if MatchingEngine API post request fails.
+   * \ingroup exceptions_dme
+   */
   public class HttpException : Exception
   {
     public HttpStatusCode HttpStatusCode { get; set; }
@@ -59,6 +73,10 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * TokenException
+   * \ingroup exceptions_dme
+   */
   public class TokenException : Exception
   {
     public TokenException(string message)
@@ -72,6 +90,10 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * RegisterClient failure
+   * \ingroup exceptions_dme
+   */
   public class RegisterClientException : Exception
   {
     public RegisterClientException(string message)
@@ -85,8 +107,12 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * RegisterClient generates a session cookie on success. If a developer calls another MatchingEngine API before a successful RegisterClient, this exception will probably occur.
+   * \ingroup exceptions_dme
+   */
   public class SessionCookieException : Exception
-  { 
+  {
     public SessionCookieException(string message)
         : base(message)
     {
@@ -98,6 +124,10 @@ namespace DistributedMatchEngine
     }
   }
 
+  /*!
+   * FindCloudlet failure
+   * \ingroup exceptions_dme
+   */
   public class FindCloudletException : Exception
   {
     public FindCloudletException(string message)
@@ -140,15 +170,23 @@ namespace DistributedMatchEngine
     OTHER
   }
 
+  /*!
+   * Two modes to call FindCloudlet. First is Proximity (default) which finds the nearest cloudlet based on gps location with application instance
+   * Second is Performance. This mode will test all cloudlets with application instance deployed to find cloudlet with lowest latency. This mode takes longer to finish because of latency test.
+   */
   public enum FindCloudletMode
   {
     PROXIMITY,
     PERFORMANCE
   }
 
-
+  /*!
+   * Main MobiledgeX SDK class. This class provides functions to find nearest cloudlet with the
+   * developer's application instance deployed and to connect to that application instance.
+   */
   public partial class MatchingEngine
-  {
+  { 
+
     public const string TAG = "MatchingEngine";
     private static HttpClient httpClient;
     public const UInt32 defaultDmeRestPort = 38001;
@@ -184,6 +222,14 @@ namespace DistributedMatchEngine
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
 
+    /*!
+     * Constructor for MatchingEngine class.
+     * \param carrierInfo (CarrierInfo): 
+     * \param netInterface (NetInterface): 
+     * \param uniqueID (UniqueID):
+     * \section meconstructorexample Example
+     * \snippet RestSample.cs meconstructorexample
+     */
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
     {
       httpClient = new HttpClient();
@@ -219,7 +265,10 @@ namespace DistributedMatchEngine
       SetMelMessaging(null);
     }
 
-    // An device specific interface.
+    /*!
+     * A device specific interface.
+     * @private
+     */
     public void SetMelMessaging(MelMessagingInterface melInterface)
     {
       if (melInterface != null)
@@ -232,7 +281,12 @@ namespace DistributedMatchEngine
       }
     }
 
-    // Set the REST timeout for DME APIs.
+    /*!
+     * Set the REST timeout for DME APIs.
+     * \param timeout_in_milliseconds (int)
+     * \return Timespan
+     * \ingroup functions_dmeutils
+     */
     public TimeSpan SetTimeout(int timeout_in_milliseconds)
     {
       if (timeout_in_milliseconds > 1)
@@ -242,21 +296,40 @@ namespace DistributedMatchEngine
       return httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
     }
 
+    /*!
+     * GetUniqueIDType
+     * \ingroup functions_dmeutils
+     */
     public string GetUniqueIDType()
     {
       return uniqueID.GetUniqueIDType();
     }
 
+    /*!
+     * GetUniqueID
+     * \ingroup functions_dmeutils
+     */
     public string GetUniqueID()
     {
       return uniqueID.GetUniqueID();
     }
 
+    /*!
+     * GetCellID
+     * \ingroup functions_dmeutils
+     */
     public ulong GetCellID()
     {
       return carrierInfo.GetCellID();
     }
 
+    /*!
+     * Returns the carrier's mcc+mnc which is mapped to a carrier in the backend (ie. 26201 -> GDDT).
+     * MCC stands for Mobile Country Code and MNC stands for Mobile Network Code.
+     * If useWifiOnly or cellular is off + wifi is up, this will return """".
+     * Empty string carrierName is the alias for any, which will search all carriers for application instances.
+     * \ingroup functions_dmeutils
+     */
     public string GetCarrierName()
     {
       if (useOnlyWifi)
@@ -280,6 +353,13 @@ namespace DistributedMatchEngine
       }
     }
 
+    /*!
+     * GenerateDmeHostAddress
+     * This will generate the dme host name based on GetMccMnc() -> "mcc-mnc.dme.mobiledgex.net".
+     * If GetMccMnc fails or returns null, this will return a fallback dme host: "wifi.dme.mobiledgex.net"(this is the EU + GDDT DME).
+     * This function is used by any DME APIs calls where no host and port overloads are provided. 
+     * \ingroup functions_dmeutils
+     */
     public string GenerateDmeHostAddress()
     {
       if (carrierInfo == null)
@@ -471,7 +551,22 @@ namespace DistributedMatchEngine
 
       return token;
     }
-
+    
+    /*!
+     * Creates the RegisterClientRequest object that will be used in the RegisterClient function.The RegisterClientRequest object wraps the parameters that have been provided to this function. 
+     * \ingroup functions_dmeapis
+     * \param orgName (string): Organization name
+     * \param appName (string): Application name
+     * \param appVersion (string): Application version
+     * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param uniqueIDType (string): Optional
+     * \param uniqueID (string): Optional
+     * \param tags (Tag[]): Optional
+     * \return RegisterClientRequest
+     * \section createregisterexample Example
+     * \snippet RestSample.cs createregisterexample
+     */
     public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
     {
@@ -505,6 +600,18 @@ namespace DistributedMatchEngine
       return replyStatus;
     }
 
+    /*!
+     * First DME API called. This will register the client with the MobiledgeX backend and
+     * check to make sure that the app that the user is running exists. (ie. This confirms
+     * that CreateApp in Console/Mcctl has been run successfully). RegisterClientReply
+     * contains a session cookie that will be used (automatically) in later API calls.
+     * It also contains a uri that will be used to get the verifyLocToken used in VerifyLocation.
+     * \ingroup functions_dmeapis
+     * \param request (RegisterClientRequest)
+     * \return Task<RegisterClientReply>
+     * \section registerexample Example
+     * \snippet RestSample.cs registerexample
+     */
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
       return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
@@ -533,6 +640,16 @@ namespace DistributedMatchEngine
       return request;
     }
 
+    /*!
+     * RegisterClient overload with hardcoded DME host and port. Only use for testing.
+     * \ingroup functions_dmeapis
+     * \param host (string): DME host
+     * \param port(uint): DME port (REST: 38001, GRPC: 50051)
+     * \param request (RegisterClientRequest)
+     * \return Task<RegisterClientReply>
+     * \section registeroverloadexample Example
+     * \snippet RestSample.cs registeroverloadexample
+     */
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
     {
       RegisterClientRequest oldRequest = request;
@@ -582,6 +699,18 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /*!
+     * Creates the FindCloudletRequest object that will be used in the FindCloudlet function.
+     * The FindCloudletRequest object wraps the parameters that have been provided to this function.
+     * \ingroup functions_dmeapis
+     * \param loc (Loc): User location
+     * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param tags (Tag[]): Optional
+     * \return FindCloudletRequest
+     * \section createfindcloudletexample Example
+     * \snippet RestSample.cs createfindcloudletexample
+     */
     public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -659,6 +788,19 @@ namespace DistributedMatchEngine
       return appports;
     }
 
+    /*!
+     * FindCloudlet returns information needed for the client app to connect to an application backend deployed through MobiledgeX.
+     * If there is an application backend instance found, FindCloudetReply will contain the fqdn of the application backend and an array of AppPorts (with information specific to each application backend endpoint)
+     * \ingroup functions_dmeapis
+     * \param request (FindCloudletRequest)
+     * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
+     * \return Task<FindCloudletReply>
+     * \section findcloudletexample Example
+     * \subsection findcloudletproximityexample Proximity Example
+     * \snippet RestSample.cs findcloudletexample
+     * \subsection findcloudletperformanceexample Performance Example
+     * \snippet RestSample.cs findcloudletperformanceexample
+     */
     public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await FindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort, request, mode);
@@ -862,7 +1004,17 @@ namespace DistributedMatchEngine
       return sites.ToArray();
     }
 
-    // FindCloudlet
+    /*!
+     * FindCloudlet overload with hardcoded DME host and port. Only use for testing.
+     * \ingroup functions_dmeapis
+     * \param host (string): DME host
+     * \param port(uint): DME port (REST: 38001, GRPC: 50051)
+     * \param request (FindCloudletRequest)
+     * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
+     * \return Task<FindCloudletReply>
+     * \section findcloudletoverloadexample Example
+     * \snippet RestSample.cs findcloudletoverloadexample
+     */
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       string ip = null;
@@ -969,7 +1121,22 @@ namespace DistributedMatchEngine
       return CreateFindCloudletReplyFromBestSite(fcReply, sites[0]);
     }
 
-    // Wrapper function for RegisterClient and FindCloudlet. This API cannot be used for Non-Platform APPs.
+    /*!
+     * Wrapper function for RegisterClient and FindCloudlet. Same functionality as calling them separately. This API cannot be used for Non-Platform APPs.
+     * \ingroup functions_dmeapis
+     * \param orgName (string): Organization name
+     * \param appName (string): Application name
+     * \param appVersion (string): Application version
+     * \param loc (Loc): User location
+     * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
+     * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param uniqueIDType (string): Optional
+     * \param uniqueID (string): Optional
+     * \param tags (Tag[]): Optional
+     * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
+     * \return Task<FindCloudletReply>
+     */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
@@ -979,7 +1146,24 @@ namespace DistributedMatchEngine
         carrierName, authToken, cellID, uniqueIDType, uniqueID, tags, mode);
     }
 
-    // Override with specified dme host and port. This API cannot be used for Non-Platform APPs.
+    /*!
+     * RegisterAndFindCloudlet overload with hardcoded DME host and port. Only use for testing. This API cannot be used for Non-Platform APPs.
+     * \ingroup functions_dmeapis
+     * \param host (string): DME host
+     * \param port(uint): DME port (REST: 38001, GRPC: 50051)
+     * \param orgName (string): Organization name
+     * \param appName (string): Application name
+     * \param appVersion (string): Application version
+     * \param loc (Loc): User location
+     * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
+     * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param uniqueIDType (string): Optional
+     * \param uniqueID (string): Optional
+     * \param tags (Tag[]): Optional
+     * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
+     * \return Task<FindCloudletReply>
+     */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
        string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
@@ -1010,6 +1194,17 @@ namespace DistributedMatchEngine
       return findCloudletReply;
     }
 
+    /*!
+     * Creates the VerifyLocationRequest object that will be used in VerifyLocation
+     * \ingroup functions_dmeapis
+     * \param loc (Loc): User location
+     * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param tags (Tag[]): Optional
+     * \return VerifyLocationRequest
+     * \section createverifylocationexample Example
+     * \snippet RestSample.cs createverifylocationexample
+     */
     public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -1065,11 +1260,31 @@ namespace DistributedMatchEngine
       return status;
     }
 
+    /*!
+     * Makes sure that the user's location is not spoofed based on cellID and gps location.
+     * Returns the Cell Tower status (CONNECTED_TO_SPECIFIED_TOWER if successful) and Gps Location status (LOC_VERIFIED if successful).
+     * Also provides the distance between where the user claims to be and where carrier believes user to be (via gps and cell id) in km.
+     * \ingroup functions_dmeapis
+     * \param request (VerifyLocationRequest)
+     * \return Task<VerifyLocationReply>
+     * \section verifylocationexample Example
+     * \snippet RestSample.cs verifylocationexample
+     */
     public async Task<VerifyLocationReply> VerifyLocation(VerifyLocationRequest request)
     {
       return await VerifyLocation(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
+    /*!
+     * VerifyLocation overload with hardcoded DME host and port. Only use for testing.
+     * \ingroup functions_dmeapis
+     * \param host (string): DME host
+     * \param port(uint): DME port (REST: 38001, GRPC: 50051)
+     * \param request (VerifyLocationRequest)
+     * \return Task<VerifyLocationReply>
+     * \section verifylocationoverloadexample Example
+     * \snippet RestSample.cs verifylocationoverloadexample
+     */
     public async Task<VerifyLocationReply> VerifyLocation(string host, uint port, VerifyLocationRequest request)
     {
       string token = RetrieveToken(tokenServerURI);
@@ -1101,6 +1316,17 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /*!
+     * Creates the AppInstListRequest object that will be used in GetAppInstList
+     * \ingroup functions_dmeapis
+     * \param loc (Loc): User location
+     * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param tags (Tag[]): Optional
+     * \return AppInstListRequest
+     * \section createappinstexample Example
+     * \snippet RestSample.cs createappinstexample
+     */
     public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
     {
       if (sessionCookie == null)
@@ -1144,11 +1370,31 @@ namespace DistributedMatchEngine
       return status;
     }
 
+    /*!
+     * Returns a list of the developer's backend instances deployed on the specified carrier's network.
+     * If carrier was "", returns all backend instances regardless of carrier network.
+     * This is used internally in FindCloudlet Performance mode to grab the list of cloudlets to test.
+     * \ingroup functions_dmeapis
+     * \param request (AppInstListRequest)
+     * \return Task<AppInstListReply>
+     * \section appinstlistexample Example
+     * \snippet RestSample.cs appinstlistexample
+     */
     public async Task<AppInstListReply> GetAppInstList(AppInstListRequest request)
     {
       return await GetAppInstList(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
+    /*!
+     * GetAppInstList overload with hardcoded DME host and port. Only use for testing.
+     * \ingroup functions_dmeapis
+     * \param host (string): DME host
+     * \param port(uint): DME port (REST: 38001, GRPC: 50051)
+     * \param request (AppInstListRequest)
+     * \return Task<AppInstListReply>
+     * \section appinstlistoverloadexample Example
+     * \snippet RestSample.cs appinstlistoverloadexample
+     */
     public async Task<AppInstListReply> GetAppInstList(string host, uint port, AppInstListRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppInstListRequest));
@@ -1174,6 +1420,18 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /*!
+     * Creates the QosPositionRequest object that will be used in CreateQosPositionRequest
+     * \ingroup functions_dmeapis
+     * \param QosPositions (List<QosPosition): List of gps positions
+     * \param lteCategory (Int32): Client's device LTE category number
+     * \param bandSelection (BandSelection): Band list used by client
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param tags (Tag[]): Optional
+     * \return QosPositionRequest
+     * \section createqospositionexample Example
+     * \snippet RestSample.cs createqospositionexample
+     */
     public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
       UInt32 cellID = 0, Tag[] tags = null)
     {
@@ -1194,11 +1452,29 @@ namespace DistributedMatchEngine
       };
     }
 
+    /*!
+     * Returns quality of service metrics for each location provided in qos position request
+     * \ingroup functions_dmeapis
+     * \param request (QosPositionRequest)
+     * \return Task<QosPositionKpiStream>
+     * \section getqospositionexample Example
+     * \snippet RestSample.cs getqospositionexample
+     */
     public async Task<QosPositionKpiStream> GetQosPositionKpi(QosPositionRequest request)
     {
       return await GetQosPositionKpi(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
+    /*!
+     * GetQosPositionKpi overload with hardcoded DME host and port. Only use for testing.
+     * \ingroup functions_dmeapis
+     * \param host (string): DME host
+     * \param port(uint): DME port (REST: 38001, GRPC: 50051)
+     * \param request (QosPositionRequest)
+     * \return Task<QosPositionKpiStream>
+     * \section getqospositionoverloadexample Example
+     * \snippet RestSample.cs getqospositionoverloadexample
+     */
     public async Task<QosPositionKpiStream> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
     {
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionRequest));

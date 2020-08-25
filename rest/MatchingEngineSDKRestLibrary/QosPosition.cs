@@ -20,19 +20,31 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  /*!
+   * QosPosition
+   * Object that contains gps location and id for that gps location
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class QosPosition
   {
+    //! As set by the client, must be unique within QosRequest
     [DataMember]
     public string positionid; // *NOT* UInt64 for the purposes of REST.
+    //! location
     [DataMember]
     public Loc gps_location;
   }
 
+  /*!
+   * BandSelection
+   * Supported band values
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class BandSelection
   {
-    // Radio Access Technologies
+    //! Radio Access Technologies
     [DataMember]
     public string[] rat_2g;
     [DataMember]
@@ -43,40 +55,53 @@ namespace DistributedMatchEngine
     public string[] rat_5g;
   }
 
+  /*!
+   * QosPositionRequest
+   * Request object sent via GetQosPositionKpi from client side to DME
+   * Request requires session_cookie from RegisterClientReply and an array of QosPositions
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class QosPositionRequest
   {
-    // API version
+    //! API version
     [DataMember]
     public UInt32 ver;
-    // Session Cookie from RegisterClientRequest
+    //! Session Cookie from RegisterClientRequest
     [DataMember]
     public string session_cookie;
-    // list of positions
+    //! List of positions
     [DataMember]
     public QosPosition[] positions;
-    // client's device LTE category number, optional
+    //! Optional. client's device LTE category number
     [DataMember(EmitDefaultValue = false)]
     public Int32 lte_category;
-    // Band list used by the client, optional
+    //! Optional. Band list used by the client
     [DataMember(EmitDefaultValue = false)]
     public BandSelection band_selection;
+    //! Optional. Cell id where the client is
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
+    //! Vendor specific data
     [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
+  /*!
+   * QosPositionResult
+   * Qos results for specific location
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class QosPositionResult
   {
-    // as set by the client, must be unique within one QosPositionKpiRequest
+    //! As set by the client, must be unique within one QosPositionKpiRequest
     [DataMember]
     public Int64 positionid;
-    // the location which was requested
+    //! The location which was requested
     [DataMember]
     public Loc gps_location;
-    // throughput 
+    //! Throughput 
     [DataMember]
     public float dluserthroughput_min;
     [DataMember]
@@ -97,13 +122,19 @@ namespace DistributedMatchEngine
     public float latency_max;
   }
 
+  /*!
+   * QosPositionKpiReply
+   * Reply object received via GetQosPositionKpi
+   * If an application instance exists, this will return RS_SUCCESS.
+   * Will provide quality of service information for gps locations specified
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class QosPositionKpiReply
   {
     [DataMember]
     public UInt32 ver;
-    // Status of the reply
-
+    //! Status of the reply
     public ReplyStatus status = ReplyStatus.RS_UNDEFINED;
 
     [DataMember(Name = "status")]
@@ -126,13 +157,18 @@ namespace DistributedMatchEngine
       }
     }
 
-    // kpi details
+    //! kpi details
     [DataMember]
     public QosPositionResult[] position_results;
+    //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
     public Tag[] tags;
   }
 
+  /*!
+   * QosPositionKpiStreamReply
+   * \ingroup classes_datastructs
+   */
   [DataContract]
   public class QosPositionKpiStreamReply
   {

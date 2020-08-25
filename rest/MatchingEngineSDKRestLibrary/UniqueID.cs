@@ -19,12 +19,21 @@
 
 namespace DistributedMatchEngine
 {
+  /*!
+   * UniqeID interface for the platform
+   * Function implemented per platform
+   * \ingroup classes_integration
+   */
   public interface UniqueID
   {
     string GetUniqueIDType();
     string GetUniqueID();
   }
 
+  /*!
+   * Empty implementation of CarrierInfo interface
+   * \ingroup classes_integration
+   */
   public class EmptyUniqueID : UniqueID
   {
     public string GetUniqueIDType()
