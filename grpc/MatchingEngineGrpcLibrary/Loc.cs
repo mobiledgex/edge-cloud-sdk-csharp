@@ -47,7 +47,11 @@ namespace DistributedMatchEngine {
   /// grpc-gateway converts google.protobuf.Timestamp into an RFC3339-type string
   /// which is a waste of a conversion, so we define our own
   /// </summary>
-  public sealed partial class Timestamp : pb::IMessage<Timestamp> {
+  public sealed partial class Timestamp : pb::IMessage<Timestamp>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<Timestamp> _parser = new pb::MessageParser<Timestamp>(() => new Timestamp());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -140,6 +144,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (Seconds != 0L) {
         output.WriteRawTag(8);
         output.WriteInt64(Seconds);
@@ -151,7 +158,25 @@ namespace DistributedMatchEngine {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Seconds != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(Seconds);
+      }
+      if (Nanos != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Nanos);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -184,6 +209,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -200,7 +228,30 @@ namespace DistributedMatchEngine {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Seconds = input.ReadInt64();
+            break;
+          }
+          case 16: {
+            Nanos = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 
@@ -208,7 +259,11 @@ namespace DistributedMatchEngine {
   ///
   /// GPS Location
   /// </summary>
-  public sealed partial class Loc : pb::IMessage<Loc> {
+  public sealed partial class Loc : pb::IMessage<Loc>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<Loc> _parser = new pb::MessageParser<Loc>(() => new Loc());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -410,6 +465,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (Latitude != 0D) {
         output.WriteRawTag(9);
         output.WriteDouble(Latitude);
@@ -445,7 +503,49 @@ namespace DistributedMatchEngine {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Latitude != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Latitude);
+      }
+      if (Longitude != 0D) {
+        output.WriteRawTag(17);
+        output.WriteDouble(Longitude);
+      }
+      if (HorizontalAccuracy != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(HorizontalAccuracy);
+      }
+      if (VerticalAccuracy != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(VerticalAccuracy);
+      }
+      if (Altitude != 0D) {
+        output.WriteRawTag(41);
+        output.WriteDouble(Altitude);
+      }
+      if (Course != 0D) {
+        output.WriteRawTag(49);
+        output.WriteDouble(Course);
+      }
+      if (Speed != 0D) {
+        output.WriteRawTag(57);
+        output.WriteDouble(Speed);
+      }
+      if (timestamp_ != null) {
+        output.WriteRawTag(66);
+        output.WriteMessage(Timestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -517,6 +617,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -560,7 +663,57 @@ namespace DistributedMatchEngine {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 9: {
+            Latitude = input.ReadDouble();
+            break;
+          }
+          case 17: {
+            Longitude = input.ReadDouble();
+            break;
+          }
+          case 25: {
+            HorizontalAccuracy = input.ReadDouble();
+            break;
+          }
+          case 33: {
+            VerticalAccuracy = input.ReadDouble();
+            break;
+          }
+          case 41: {
+            Altitude = input.ReadDouble();
+            break;
+          }
+          case 49: {
+            Course = input.ReadDouble();
+            break;
+          }
+          case 57: {
+            Speed = input.ReadDouble();
+            break;
+          }
+          case 66: {
+            if (timestamp_ == null) {
+              Timestamp = new global::DistributedMatchEngine.Timestamp();
+            }
+            input.ReadMessage(Timestamp);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 

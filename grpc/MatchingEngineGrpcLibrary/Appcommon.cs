@@ -67,7 +67,11 @@ namespace DistributedMatchEngine {
   ///
   /// AppPort describes an L4 or L7 public access port/path mapping. This is used to track external to internal mappings for access via a shared load balancer or reverse proxy.
   /// </summary>
-  public sealed partial class AppPort : pb::IMessage<AppPort> {
+  public sealed partial class AppPort : pb::IMessage<AppPort>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<AppPort> _parser = new pb::MessageParser<AppPort>(() => new AppPort());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -252,6 +256,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (Proto != global::DistributedMatchEngine.LProto.Unknown) {
         output.WriteRawTag(8);
         output.WriteEnum((int) Proto);
@@ -283,7 +290,45 @@ namespace DistributedMatchEngine {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Proto);
+      }
+      if (InternalPort != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(InternalPort);
+      }
+      if (PublicPort != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(PublicPort);
+      }
+      if (FqdnPrefix.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(FqdnPrefix);
+      }
+      if (EndPort != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(EndPort);
+      }
+      if (Tls != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(Tls);
+      }
+      if (Nginx != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(Nginx);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -346,6 +391,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -382,7 +430,50 @@ namespace DistributedMatchEngine {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Proto = (global::DistributedMatchEngine.LProto) input.ReadEnum();
+            break;
+          }
+          case 16: {
+            InternalPort = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            PublicPort = input.ReadInt32();
+            break;
+          }
+          case 42: {
+            FqdnPrefix = input.ReadString();
+            break;
+          }
+          case 48: {
+            EndPort = input.ReadInt32();
+            break;
+          }
+          case 56: {
+            Tls = input.ReadBool();
+            break;
+          }
+          case 64: {
+            Nginx = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 

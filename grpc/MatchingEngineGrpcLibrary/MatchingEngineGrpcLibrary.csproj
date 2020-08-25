@@ -13,11 +13,11 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Api.Gax" Version="3.0.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.11.4" />
     <PackageReference Include="Grpc.Tools" Version="2.27.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Grpc" Version="2.27.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
   </ItemGroup>
 </Project>

@@ -54,7 +54,11 @@ namespace Google.Api {
   /// [HttpRule][google.api.HttpRule], each specifying the mapping of an RPC method
   /// to one or more HTTP REST API methods.
   /// </summary>
-  public sealed partial class Http : pb::IMessage<Http> {
+  public sealed partial class Http : pb::IMessage<Http>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<Http> _parser = new pb::MessageParser<Http>(() => new Http());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -159,6 +163,9 @@ namespace Google.Api {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       rules_.WriteTo(output, _repeated_rules_codec);
       if (FullyDecodeReservedExpansion != false) {
         output.WriteRawTag(16);
@@ -167,7 +174,22 @@ namespace Google.Api {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      rules_.WriteTo(ref output, _repeated_rules_codec);
+      if (FullyDecodeReservedExpansion != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(FullyDecodeReservedExpansion);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -196,6 +218,9 @@ namespace Google.Api {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -212,7 +237,30 @@ namespace Google.Api {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            rules_.AddEntriesFrom(ref input, _repeated_rules_codec);
+            break;
+          }
+          case 16: {
+            FullyDecodeReservedExpansion = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 
@@ -428,7 +476,11 @@ namespace Google.Api {
   /// NOTE: the field paths in variables and in the `body` must not refer to
   /// repeated fields or map fields.
   /// </summary>
-  public sealed partial class HttpRule : pb::IMessage<HttpRule> {
+  public sealed partial class HttpRule : pb::IMessage<HttpRule>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<HttpRule> _parser = new pb::MessageParser<HttpRule>(() => new HttpRule());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -714,6 +766,9 @@ namespace Google.Api {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (Selector.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(Selector);
@@ -754,7 +809,54 @@ namespace Google.Api {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Selector.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Selector);
+      }
+      if (patternCase_ == PatternOneofCase.Get) {
+        output.WriteRawTag(18);
+        output.WriteString(Get);
+      }
+      if (patternCase_ == PatternOneofCase.Put) {
+        output.WriteRawTag(26);
+        output.WriteString(Put);
+      }
+      if (patternCase_ == PatternOneofCase.Post) {
+        output.WriteRawTag(34);
+        output.WriteString(Post);
+      }
+      if (patternCase_ == PatternOneofCase.Delete) {
+        output.WriteRawTag(42);
+        output.WriteString(Delete);
+      }
+      if (patternCase_ == PatternOneofCase.Patch) {
+        output.WriteRawTag(50);
+        output.WriteString(Patch);
+      }
+      if (Body.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Body);
+      }
+      if (patternCase_ == PatternOneofCase.Custom) {
+        output.WriteRawTag(66);
+        output.WriteMessage(Custom);
+      }
+      additionalBindings_.WriteTo(ref output, _repeated_additionalBindings_codec);
+      if (ResponseBody.Length != 0) {
+        output.WriteRawTag(98);
+        output.WriteString(ResponseBody);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -837,6 +939,9 @@ namespace Google.Api {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -890,14 +995,78 @@ namespace Google.Api {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Selector = input.ReadString();
+            break;
+          }
+          case 18: {
+            Get = input.ReadString();
+            break;
+          }
+          case 26: {
+            Put = input.ReadString();
+            break;
+          }
+          case 34: {
+            Post = input.ReadString();
+            break;
+          }
+          case 42: {
+            Delete = input.ReadString();
+            break;
+          }
+          case 50: {
+            Patch = input.ReadString();
+            break;
+          }
+          case 58: {
+            Body = input.ReadString();
+            break;
+          }
+          case 66: {
+            global::Google.Api.CustomHttpPattern subBuilder = new global::Google.Api.CustomHttpPattern();
+            if (patternCase_ == PatternOneofCase.Custom) {
+              subBuilder.MergeFrom(Custom);
+            }
+            input.ReadMessage(subBuilder);
+            Custom = subBuilder;
+            break;
+          }
+          case 90: {
+            additionalBindings_.AddEntriesFrom(ref input, _repeated_additionalBindings_codec);
+            break;
+          }
+          case 98: {
+            ResponseBody = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 
   /// <summary>
   /// A custom pattern is used for defining custom HTTP verb.
   /// </summary>
-  public sealed partial class CustomHttpPattern : pb::IMessage<CustomHttpPattern> {
+  public sealed partial class CustomHttpPattern : pb::IMessage<CustomHttpPattern>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<CustomHttpPattern> _parser = new pb::MessageParser<CustomHttpPattern>(() => new CustomHttpPattern());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -996,6 +1165,9 @@ namespace Google.Api {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (Kind.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(Kind);
@@ -1007,7 +1179,25 @@ namespace Google.Api {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Kind.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Kind);
+      }
+      if (Path.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Path);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -1040,6 +1230,9 @@ namespace Google.Api {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -1056,7 +1249,30 @@ namespace Google.Api {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Kind = input.ReadString();
+            break;
+          }
+          case 18: {
+            Path = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 

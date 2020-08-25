@@ -9,4 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MatchingEngineGrpcLibrary\MatchingEngineGrpcLibrary.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
+  </ItemGroup>
 </Project>

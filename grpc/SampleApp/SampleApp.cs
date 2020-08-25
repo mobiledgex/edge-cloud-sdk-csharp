@@ -29,13 +29,13 @@ namespace MexGrpcSampleConsoleApp
 {
   class Program
   {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
       Console.WriteLine("Hello MobiledgeX GRPC Library Sample App!");
 
 
       var mexGrpcLibApp = new MexGrpcLibApp();
-      mexGrpcLibApp.RunSampleFlow();
+      await mexGrpcLibApp.RunSampleFlowAsync();
     }
   }
 
@@ -57,30 +57,66 @@ namespace MexGrpcSampleConsoleApp
     Loc location;
     string sessionCookie;
 
-    string dmeHost = "0.0.0.0"; // demo DME server hostname or ip.
+    string dmeHost = "127.0.0.1"; // demo DME server hostname or ip.
     int dmePort = 50051; // DME port.
-    string carrierName = "GDDT";
-    string orgName = "MobiledgeX";
-    string appName = "MobiledgeX SDK Demo";
-    string appVers = "2.0";
+    string carrierName = "";
+    string orgName = "mobiledgex";
+    string appName = "arshooter";
+    string appVers = "1";
 
     MatchEngineApi.MatchEngineApiClient client;
 
-    public void RunSampleFlow()
+    public async Task RunSampleFlowAsync()
     {
-      location = getLocation();
-      string uri = dmeHost + ":" + dmePort;
+      try
+      {
+        location = getLocation();
+        string uri = dmeHost + ":" + dmePort;
+        Console.WriteLine("url is " + uri);
 
-      // Channel:
-      ChannelCredentials channelCredentials = new SslCredentials();
-      Channel channel = new Channel(uri, channelCredentials);
+        // Channel:
+        // ChannelCredentials channelCredentials = new SslCredentials();
+        ChannelCredentials channelCredentials = ChannelCredentials.Insecure;
+        Channel channel = new Channel(uri, channelCredentials);
 
-      client = new DistributedMatchEngine.MatchEngineApi.MatchEngineApiClient(channel);
+        client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      var clientEdgeEvent = CreateClientEdgeEvent();
-      client.SendEdgeEvent();
+        var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, appVers, "");
+        if (client == null)
+        {
+          Console.WriteLine("client is null");
+        }
+        else
+        {
+          Console.WriteLine("client: " + client.ToString());
+        }
+        var regReply = client.RegisterClient(registerClientRequest);
+        Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
+        Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
+        sessionCookie = regReply.SessionCookie;
 
-      var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, "2.0", "");
+        var clientEdgeEvent = CreateClientEdgeEvent(location);
+        var edgeEvent = client.SendEdgeEvent();
+        await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent);
+        // await edgeEvent.RequestStream.CompleteAsync();
+
+        var readTask = Task.Run(async () =>
+        {
+          while (await edgeEvent.ResponseStream.MoveNext())
+          {
+            Console.WriteLine("EdgeServerEvent: Latency: " + edgeEvent.ResponseStream.Current);
+          }
+        });
+
+        await readTask;
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine("Exception is " + e.Message);
+      }
+
+
+      /*var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, "2.0", "");
       var regReply = client.RegisterClient(registerClientRequest);
 
       Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
@@ -127,7 +163,7 @@ namespace MexGrpcSampleConsoleApp
                   ", end_port: " + p.EndPort);
       }
       // Straight reflection print:
-      Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
+      Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);*/
     }
 
 
@@ -170,11 +206,15 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent()
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation)
     {
+      Timestamp timestamp = new Timestamp();
       var clientEvent = new ClientEdgeEvent
       {
-        SessionCookie = "blah"
+        SessionCookie = sessionCookie,
+        Timestamp = timestamp,
+        Event = Event.Newlocation,
+        GpsLocation = gpsLocation
       };
       return clientEvent;
     }
