@@ -9457,6 +9457,9 @@ namespace DistributedMatchEngine {
     private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    /// <summary>
+    /// _(optional)_ Vendor specific data
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
       get { return tags_; }
@@ -9807,6 +9810,9 @@ namespace DistributedMatchEngine {
     private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
         = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    /// <summary>
+    /// _(optional)_ Vendor specific data
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
       get { return tags_; }
