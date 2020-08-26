@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 
 // MobiledgeX Matching Engine API.
 using DistributedMatchEngine;
+using System.Threading;
 
 namespace MexGrpcSampleConsoleApp
 {
@@ -95,10 +96,9 @@ namespace MexGrpcSampleConsoleApp
         Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
         sessionCookie = regReply.SessionCookie;
 
-        var clientEdgeEvent = CreateClientEdgeEvent(location);
+        var clientEdgeEvent1 = CreateClientEdgeEvent(location);
         var edgeEvent = client.SendEdgeEvent();
-        await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent);
-        // await edgeEvent.RequestStream.CompleteAsync();
+        await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent1);
 
         var readTask = Task.Run(async () =>
         {
@@ -108,7 +108,20 @@ namespace MexGrpcSampleConsoleApp
           }
         });
 
-        await readTask;
+        Thread.Sleep(6000);
+
+        location.Latitude = 69.69;
+        location.Longitude = 69.69;
+        var clientEdgeEvent2 = CreateClientEdgeEvent(location);
+        await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
+
+        Thread.Sleep(15000);
+
+        var clientEdgeEvent3 = CreateClientEdgeEvent(location, true);
+        await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent3);
+
+        Console.WriteLine("closing write stream");
+        await edgeEvent.RequestStream.CompleteAsync();
       }
       catch (Exception e)
       {
@@ -206,7 +219,7 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool terminate = false)
     {
       Timestamp timestamp = new Timestamp();
       var clientEvent = new ClientEdgeEvent
@@ -214,7 +227,8 @@ namespace MexGrpcSampleConsoleApp
         SessionCookie = sessionCookie,
         Timestamp = timestamp,
         Event = Event.Newlocation,
-        GpsLocation = gpsLocation
+        GpsLocation = gpsLocation,
+        Terminate = terminate
       };
       return clientEvent;
     }
