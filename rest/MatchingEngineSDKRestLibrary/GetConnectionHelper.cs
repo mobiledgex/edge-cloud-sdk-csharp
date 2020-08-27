@@ -144,7 +144,7 @@ namespace DistributedMatchEngine
 
             // Check if the sender (eg. the specific sslStream) allows self signed server certs
             if (allowSelfSignedCerts) {
-              if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
+              if (sslPolicyErrors.HasFlag(SslPolicyErrors.RemoteCertificateChainErrors) && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
                 Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
                 return true;
               }
