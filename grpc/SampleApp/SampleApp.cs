@@ -104,11 +104,11 @@ namespace MexGrpcSampleConsoleApp
         {
           while (await edgeEvent.ResponseStream.MoveNext())
           {
-            Console.WriteLine("EdgeServerEvent: Latency: " + edgeEvent.ResponseStream.Current);
+            Console.WriteLine("EdgeServerEvent: Latency: " + edgeEvent.ResponseStream.Current.Latency + ", Msg: " + edgeEvent.ResponseStream.Current.Msg);
           }
         });
 
-        Thread.Sleep(6000);
+        Thread.Sleep(10000);
 
         location.Latitude = 69.69;
         location.Longitude = 69.69;
