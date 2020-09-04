@@ -28,13 +28,16 @@ namespace DistributedMatchEngine {
             "AQoHQXBwUG9ydBIvCgVwcm90bxgBIAEoDjIgLmRpc3RyaWJ1dGVkX21hdGNo",
             "X2VuZ2luZS5MUHJvdG8SFQoNaW50ZXJuYWxfcG9ydBgCIAEoBRITCgtwdWJs",
             "aWNfcG9ydBgDIAEoBRITCgtmcWRuX3ByZWZpeBgFIAEoCRIQCghlbmRfcG9y",
-            "dBgGIAEoBRILCgN0bHMYByABKAgSDQoFbmdpbngYCCABKAgqPwoGTFByb3Rv",
-            "EhMKD0xfUFJPVE9fVU5LTk9XThAAEg8KC0xfUFJPVE9fVENQEAESDwoLTF9Q",
-            "Uk9UT19VRFAQAmIGcHJvdG8z"));
+            "dBgGIAEoBRILCgN0bHMYByABKAgSDQoFbmdpbngYCCABKAgiVgoHTGF0ZW5j",
+            "eRILCgNhdmcYASABKAESCwoDbWluGAIgASgBEgsKA21heBgDIAEoARIPCgdz",
+            "dGRfZGV2GAQgASgBEhMKC251bV9zYW1wbGVzGAUgASgEKj8KBkxQcm90bxIT",
+            "Cg9MX1BST1RPX1VOS05PV04QABIPCgtMX1BST1RPX1RDUBABEg8KC0xfUFJP",
+            "VE9fVURQEAJiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Latency), global::DistributedMatchEngine.Latency.Parser, new[]{ "Avg", "Min", "Max", "StdDev", "NumSamples" }, null, null, null, null)
           }));
     }
     #endregion
@@ -468,6 +471,325 @@ namespace DistributedMatchEngine {
           }
           case 64: {
             Nginx = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// Latency
+  /// </summary>
+  public sealed partial class Latency : pb::IMessage<Latency>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<Latency> _parser = new pb::MessageParser<Latency>(() => new Latency());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Latency> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppcommonReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Latency() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Latency(Latency other) : this() {
+      avg_ = other.avg_;
+      min_ = other.min_;
+      max_ = other.max_;
+      stdDev_ = other.stdDev_;
+      numSamples_ = other.numSamples_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Latency Clone() {
+      return new Latency(this);
+    }
+
+    /// <summary>Field number for the "avg" field.</summary>
+    public const int AvgFieldNumber = 1;
+    private double avg_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Avg {
+      get { return avg_; }
+      set {
+        avg_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "min" field.</summary>
+    public const int MinFieldNumber = 2;
+    private double min_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Min {
+      get { return min_; }
+      set {
+        min_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "max" field.</summary>
+    public const int MaxFieldNumber = 3;
+    private double max_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Max {
+      get { return max_; }
+      set {
+        max_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "std_dev" field.</summary>
+    public const int StdDevFieldNumber = 4;
+    private double stdDev_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double StdDev {
+      get { return stdDev_; }
+      set {
+        stdDev_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "num_samples" field.</summary>
+    public const int NumSamplesFieldNumber = 5;
+    private ulong numSamples_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ulong NumSamples {
+      get { return numSamples_; }
+      set {
+        numSamples_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Latency);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Latency other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Avg, other.Avg)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Min, other.Min)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Max, other.Max)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(StdDev, other.StdDev)) return false;
+      if (NumSamples != other.NumSamples) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Avg != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Avg);
+      if (Min != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Min);
+      if (Max != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Max);
+      if (StdDev != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(StdDev);
+      if (NumSamples != 0UL) hash ^= NumSamples.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Avg != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Avg);
+      }
+      if (Min != 0D) {
+        output.WriteRawTag(17);
+        output.WriteDouble(Min);
+      }
+      if (Max != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(Max);
+      }
+      if (StdDev != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(StdDev);
+      }
+      if (NumSamples != 0UL) {
+        output.WriteRawTag(40);
+        output.WriteUInt64(NumSamples);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Avg != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Avg);
+      }
+      if (Min != 0D) {
+        output.WriteRawTag(17);
+        output.WriteDouble(Min);
+      }
+      if (Max != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(Max);
+      }
+      if (StdDev != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(StdDev);
+      }
+      if (NumSamples != 0UL) {
+        output.WriteRawTag(40);
+        output.WriteUInt64(NumSamples);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Avg != 0D) {
+        size += 1 + 8;
+      }
+      if (Min != 0D) {
+        size += 1 + 8;
+      }
+      if (Max != 0D) {
+        size += 1 + 8;
+      }
+      if (StdDev != 0D) {
+        size += 1 + 8;
+      }
+      if (NumSamples != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(NumSamples);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Latency other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Avg != 0D) {
+        Avg = other.Avg;
+      }
+      if (other.Min != 0D) {
+        Min = other.Min;
+      }
+      if (other.Max != 0D) {
+        Max = other.Max;
+      }
+      if (other.StdDev != 0D) {
+        StdDev = other.StdDev;
+      }
+      if (other.NumSamples != 0UL) {
+        NumSamples = other.NumSamples;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 9: {
+            Avg = input.ReadDouble();
+            break;
+          }
+          case 17: {
+            Min = input.ReadDouble();
+            break;
+          }
+          case 25: {
+            Max = input.ReadDouble();
+            break;
+          }
+          case 33: {
+            StdDev = input.ReadDouble();
+            break;
+          }
+          case 40: {
+            NumSamples = input.ReadUInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 9: {
+            Avg = input.ReadDouble();
+            break;
+          }
+          case 17: {
+            Min = input.ReadDouble();
+            break;
+          }
+          case 25: {
+            Max = input.ReadDouble();
+            break;
+          }
+          case 33: {
+            StdDev = input.ReadDouble();
+            break;
+          }
+          case 40: {
+            NumSamples = input.ReadUInt64();
             break;
           }
         }

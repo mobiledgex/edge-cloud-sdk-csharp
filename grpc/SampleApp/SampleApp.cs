@@ -57,6 +57,7 @@ namespace MexGrpcSampleConsoleApp
   {
     Loc location;
     string sessionCookie;
+    string eeSessionCookie;
 
     string dmeHost = "127.0.0.1"; // demo DME server hostname or ip.
     int dmePort = 50051; // DME port.
@@ -83,18 +84,16 @@ namespace MexGrpcSampleConsoleApp
         client = new MatchEngineApi.MatchEngineApiClient(channel);
 
         var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, appVers, "");
-        if (client == null)
-        {
-          Console.WriteLine("client is null");
-        }
-        else
-        {
-          Console.WriteLine("client: " + client.ToString());
-        }
         var regReply = client.RegisterClient(registerClientRequest);
         Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
         Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
         sessionCookie = regReply.SessionCookie;
+
+        var findCloudletRequest = CreateFindCloudletRequest(getCarrierName(), location);
+        var findCloudletReply = client.FindCloudlet(findCloudletRequest);
+        Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.Status);
+        Console.WriteLine("FindCloudlet edge events session cookie: " + findCloudletReply.EdgeEventsCookie);
+        eeSessionCookie = findCloudletReply.EdgeEventsCookie;
 
         var clientEdgeEvent1 = CreateClientEdgeEvent(location);
         var edgeEvent = client.SendEdgeEvent();
@@ -104,7 +103,7 @@ namespace MexGrpcSampleConsoleApp
         {
           while (await edgeEvent.ResponseStream.MoveNext())
           {
-            Console.WriteLine("EdgeServerEvent: Latency: " + edgeEvent.ResponseStream.Current.Latency + ", Msg: " + edgeEvent.ResponseStream.Current.Msg);
+            Console.WriteLine("EdgeServerEvent Latency: Avg: " + edgeEvent.ResponseStream.Current.Latency.Avg + ", Min: " + edgeEvent.ResponseStream.Current.Latency.Min + ", Max: " + edgeEvent.ResponseStream.Current.Latency.Max + ", StdDev: " + edgeEvent.ResponseStream.Current.Latency.StdDev);
           }
         });
 
@@ -225,6 +224,7 @@ namespace MexGrpcSampleConsoleApp
       var clientEvent = new ClientEdgeEvent
       {
         SessionCookie = sessionCookie,
+        EeCookie = eeSessionCookie,
         Timestamp = timestamp,
         Event = Event.Newlocation,
         GpsLocation = gpsLocation,
