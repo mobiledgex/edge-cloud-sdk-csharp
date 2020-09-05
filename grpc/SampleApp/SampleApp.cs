@@ -226,7 +226,6 @@ namespace MexGrpcSampleConsoleApp
         SessionCookie = sessionCookie,
         EeCookie = eeSessionCookie,
         Timestamp = timestamp,
-        Event = Event.Newlocation,
         GpsLocation = gpsLocation,
         Terminate = terminate
       };
