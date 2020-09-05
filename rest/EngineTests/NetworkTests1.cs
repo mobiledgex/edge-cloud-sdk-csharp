@@ -1,6 +1,7 @@
 ﻿using System;
 using DistributedMatchEngine;
 using NUnit.Framework;
+using System.Text.RegularExpressions;
 
 namespace EngineTests
 {
@@ -56,8 +57,8 @@ namespace EngineTests
     {
       public AndroidNetworkInterfaceNameBad()
       {
-        CELLULAR = new string[] { "radio1", "rmnet_data1" };
-        WIFI = new string[] { "wlan1" };
+        CELLULAR = new Regex(@"(^radio1$)|(^rmnet_data1$)");
+        WIFI = new Regex(@"^wlan1$");
       }
     }
 
@@ -66,8 +67,8 @@ namespace EngineTests
     {
       public WindowsNetworkInterfaceName()
       {
-        CELLULAR = new string[] { "Etnernet"};
-        WIFI = new string[] { "Etnernet" };
+        CELLULAR = new Regex(@"^Etnernet$");
+        WIFI = new Regex(@"^Etnernet$");
       }
     }
 
