@@ -103,13 +103,35 @@ namespace MexGrpcSampleConsoleApp
         {
           while (await edgeEvent.ResponseStream.MoveNext())
           {
-            Console.WriteLine("EdgeServerEvent Latency: Avg: " + edgeEvent.ResponseStream.Current.Latency.Avg + ", Min: " + edgeEvent.ResponseStream.Current.Latency.Min + ", Max: " + edgeEvent.ResponseStream.Current.Latency.Max + ", StdDev: " + edgeEvent.ResponseStream.Current.Latency.StdDev);
+            if (edgeEvent.ResponseStream.Current.Ping)
+            {
+              var pongClientEdgeEvent = CreateClientEdgeEvent(location, true, edgeEvent.ResponseStream.Current.Timestamp);
+              await edgeEvent.RequestStream.WriteAsync(pongClientEdgeEvent);
+              Console.WriteLine("Latency request. Sent pong response. \n");
+            }
+            else if (edgeEvent.ResponseStream.Current.LatencyRequested)
+            {
+              Console.WriteLine("EdgeServerEvent: \n" +
+              "        Timestamp: " + "Seconds: " + edgeEvent.ResponseStream.Current.Timestamp.Seconds + ", Nanos: " +  edgeEvent.ResponseStream.Current.Timestamp.Nanos + "\n" +
+              "        Latency: " + "Avg: " + edgeEvent.ResponseStream.Current.Latency.Avg + ", Min: " + edgeEvent.ResponseStream.Current.Latency.Min + ", Max: " + edgeEvent.ResponseStream.Current.Latency.Max + ", StdDev: " + edgeEvent.ResponseStream.Current.Latency.StdDev + "\n");
+              // "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
+              // "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
+              // "        AppInstHealth " + edgeEvent.ResponseStream.Current.AppinstHealthState + "\n");
+            }
+            else
+            {
+              Console.WriteLine("EdgeServerEvent: \n" +
+              "        Timestamp: " + "Seconds: " + edgeEvent.ResponseStream.Current.Timestamp.Seconds + ", Nanos: " +  edgeEvent.ResponseStream.Current.Timestamp.Nanos + "\n" +
+              "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
+              "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
+              "        AppInstHealth " + edgeEvent.ResponseStream.Current.AppinstHealthState + "\n");
+            }
           }
         });
 
-        Thread.Sleep(10000);
+        Thread.Sleep(1000000);
 
-        location.Latitude = 69.69;
+        /*location.Latitude = 69.69;
         location.Longitude = 69.69;
         var clientEdgeEvent2 = CreateClientEdgeEvent(location);
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
@@ -120,7 +142,7 @@ namespace MexGrpcSampleConsoleApp
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent3);
 
         Console.WriteLine("closing write stream");
-        await edgeEvent.RequestStream.CompleteAsync();
+        await edgeEvent.RequestStream.CompleteAsync();*/
       }
       catch (Exception e)
       {
@@ -218,14 +240,15 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool terminate = false)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool pong = false, Timestamp serverTimestamp = null, bool terminate = false)
     {
-      Timestamp timestamp = new Timestamp();
+      Timestamp timestamp = new Timestamp() { Seconds = DateTime.Now.Second };
       var clientEvent = new ClientEdgeEvent
       {
         SessionCookie = sessionCookie,
         EeCookie = eeSessionCookie,
-        Timestamp = timestamp,
+        Timestamp = serverTimestamp,
+        Pong = pong,
         GpsLocation = gpsLocation,
         Terminate = terminate
       };
