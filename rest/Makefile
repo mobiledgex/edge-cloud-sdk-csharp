@@ -46,7 +46,7 @@ ifeq (, $(shell which doxygen))
         $(error "Doxygen not installed. Go to https://www.doxygen.nl/download.html to download or run 'brew install doxygen' to install with Homebrew")
 endif
 	@echo Generating Doxygen documentation...
-	$(shell doxygen $(DOXYGENROOT)/Doxyfile &> $(DOXYGENLOG))
+	$(shell doxygen $(DOXYGENROOT)/Doxyfile > $(DOXYGENLOG) 2>&1)
 	$(shell zip -vr html.zip html >> $(DOXYGENLOG))
 	$(shell rm -rf $(DOXYGENROOT)/html >> $(DOXYGENLOG))
 	$(shell rm -f $(DOXYGENROOT)/html.zip >> $(DOXYGENLOG))
