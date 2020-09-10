@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 // MobiledgeX Matching Engine API.
 using DistributedMatchEngine;
 using System.Threading;
+using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace MexGrpcSampleConsoleApp
 {
@@ -103,7 +105,68 @@ namespace MexGrpcSampleConsoleApp
         {
           while (await edgeEvent.ResponseStream.MoveNext())
           {
-            if (edgeEvent.ResponseStream.Current.Ping)
+            if (edgeEvent.ResponseStream.Current.HpingRequested)
+            {
+              Console.WriteLine("Hping requested. Measuring latency \n");
+
+              IPAddress remoteIP = Dns.GetHostAddresses("localhost")[0];
+              IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, dmePort);
+
+              // calculate min, max, and avg
+              float min = 0;
+              float max = 0;
+              float sum = 0;
+              int numTests = 5;
+              var times = new List<float>();
+              for (int i = 0; i < numTests; i++)
+              { 
+                var sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                sock.Blocking = true;
+
+                var stopwatch = new Stopwatch();
+
+                // Measure the Connect call only
+                stopwatch.Start();
+                sock.Connect(remoteEndPoint);
+                stopwatch.Stop();
+
+                float t =(float)stopwatch.Elapsed.TotalMilliseconds;
+                if (t < min || min == 0)
+                {
+                  min = t;
+                }
+                if (t > max || max == 0)
+                {
+                  max = t;
+                }
+                sum += t;
+                times.Add(t);
+
+                sock.Close();
+              }
+              float avg = sum / numTests;
+
+              // calculate std dev
+              float squaredDiffs = 0;
+              foreach (float time in times)
+              {
+                float diff = time - avg;
+                squaredDiffs += diff * diff;
+              }
+              float stdDev = (float)Math.Sqrt(squaredDiffs / numTests);
+              Latency latency = new Latency() {
+                Min = min,
+                Max = max,
+                Avg = avg,
+                StdDev = stdDev
+              };
+              var hpingClientEdgeEvent = CreateClientEdgeEvent(location, latency: latency);
+              await edgeEvent.RequestStream.WriteAsync(hpingClientEdgeEvent);
+              Console.WriteLine("Sent hping results: \n" +
+              "        Latency: " + "Avg: " + avg + ", Min: " + min + ", Max: " + max + ", StdDev: " + stdDev + "\n");
+
+            }
+            else if (edgeEvent.ResponseStream.Current.Ping)
             {
               var pongClientEdgeEvent = CreateClientEdgeEvent(location, true, edgeEvent.ResponseStream.Current.Timestamp);
               await edgeEvent.RequestStream.WriteAsync(pongClientEdgeEvent);
@@ -240,9 +303,16 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool pong = false, Timestamp serverTimestamp = null, bool terminate = false)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool pong = false, Timestamp serverTimestamp = null, Latency latency = null, bool terminate = false)
     {
       Timestamp timestamp = new Timestamp() { Seconds = DateTime.Now.Second };
+
+      var hping = false;
+      if (latency != null)
+      {
+        hping = true;
+      }
+
       var clientEvent = new ClientEdgeEvent
       {
         SessionCookie = sessionCookie,
@@ -250,7 +320,9 @@ namespace MexGrpcSampleConsoleApp
         Timestamp = serverTimestamp,
         Pong = pong,
         GpsLocation = gpsLocation,
-        Terminate = terminate
+        Terminate = terminate,
+        Hping = hping,
+        Latency = latency
       };
       return clientEvent;
     }
