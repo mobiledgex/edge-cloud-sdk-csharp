@@ -867,16 +867,6 @@ namespace DistributedMatchEngine
       };
 
       fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.FIND_FOUND : FindCloudletReply.FindStatus.FIND_NOTFOUND;
-      fcReply.ports[0] = new AppPort
-      {
-        proto = LProto.L_PROTO_TCP,
-        internal_port = 0,
-        public_port = 0,
-        path_prefix = "",
-        fqdn_prefix = "",
-        end_port = 0,
-        tls = true // FIXME: Unknown channel state!
-      };
 
       return fcReply;
     }
