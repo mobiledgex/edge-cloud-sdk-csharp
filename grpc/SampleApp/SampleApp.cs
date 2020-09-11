@@ -118,7 +118,8 @@ namespace MexGrpcSampleConsoleApp
               float sum = 0;
               int numTests = 5;
               var times = new List<float>();
-              for (int i = 0; i < numTests; i++)
+              // first tcp ping loads network (don't count towards latencies)
+              for (int i = 0; i <= numTests; i++)
               { 
                 var sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sock.Blocking = true;
@@ -131,16 +132,19 @@ namespace MexGrpcSampleConsoleApp
                 stopwatch.Stop();
 
                 float t =(float)stopwatch.Elapsed.TotalMilliseconds;
-                if (t < min || min == 0)
-                {
-                  min = t;
+
+                if (i > 0) {
+                  if (t < min || min == 0)
+                  {
+                    min = t;
+                  }
+                  if (t > max || max == 0)
+                  {
+                    max = t;
+                  }
+                  sum += t;
+                  times.Add(t);
                 }
-                if (t > max || max == 0)
-                {
-                  max = t;
-                }
-                sum += t;
-                times.Add(t);
 
                 sock.Close();
               }
