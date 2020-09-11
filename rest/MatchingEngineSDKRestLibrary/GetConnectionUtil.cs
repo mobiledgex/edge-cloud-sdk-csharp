@@ -49,8 +49,8 @@ namespace DistributedMatchEngine
   {
     public IOSNetworkInterfaceName()
     {
-      CELLULAR = new Regex(@"^pdp_ip0$");
-      WIFI = new Regex(@"^en0$");
+      CELLULAR = new Regex(@"^pdp_ip\d+$");
+      WIFI = new Regex(@"^en\d+$");
     }
   }
 
@@ -65,7 +65,7 @@ namespace DistributedMatchEngine
     {
       // Profile cellular names are rather dynamic. Callbacks don't work fast enough.
       CELLULAR = new Regex(@"(^radio\d+$)|(^rmnet_data\d+$)");
-      WIFI = new Regex(@"^wlan0$");
+      WIFI = new Regex(@"^wlan\d+$");
     }
   }
 
@@ -93,8 +93,8 @@ namespace DistributedMatchEngine
   {
     public LinuxNetworkInterfaceName()
     {
-      CELLULAR = new Regex("(^eth0$)|(^wlan0$)");
-      WIFI = new Regex("(^eth0$)|(^wlan0$)");
+      CELLULAR = new Regex(@"(^eth\d+$)|(^wlan\d+$)");
+      WIFI = new Regex(@"(^eth\d+$)|(^wlan\d+$)");
     }
   }
 
@@ -107,8 +107,8 @@ namespace DistributedMatchEngine
   {
     public Windows10NetworkInterfaceName()
     {
-      CELLULAR = new Regex("(^Ethernet adapter Ethernet$)|(^Wireless LAN adapter Wi-Fi$)|(^Ethernet$)|(^WiFi$)");
-      WIFI = new Regex("(^Ethernet adapter Ethernet$)|(^Wireless LAN adapter Wi-Fi$)|(^Ethernet$)|(^WiFi$)");
+      CELLULAR = new Regex(@"(^Ethernet\s?\d*$)|(^Wi-?Fi\s?\d*$)");
+      WIFI = new Regex(@"(^Ethernet\s?\d*$)|(^Wi-?Fi\s?\d*$)");
     }
   }
 

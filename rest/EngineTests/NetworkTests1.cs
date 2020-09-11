@@ -62,16 +62,6 @@ namespace EngineTests
       }
     }
 
-    // Sample size of One (1) Windows test env.
-    public class WindowsNetworkInterfaceName : NetworkInterfaceName
-    {
-      public WindowsNetworkInterfaceName()
-      {
-        CELLULAR = new Regex(@"^Etnernet$");
-        WIFI = new Regex(@"^Etnernet$");
-      }
-    }
-
     [Test]
     public void TestInterfacesNotExist()
     {
@@ -102,13 +92,19 @@ namespace EngineTests
     public void TestWindowsInterfacesExist()
     {
       // Using the Windows Interface, where this test might run...
-      string nameWifi = me.GetAvailableWiFiName(new WindowsNetworkInterfaceName());
+      string nameWifi = me.GetAvailableWiFiName(new Windows10NetworkInterfaceName());
       Assert.NotNull(nameWifi);
-      Assert.AreEqual(nameWifi, "Etnernet");
+      Assert.AreEqual(nameWifi, "Ethernet");
 
-      string nameCell = me.GetAvailableCellularName(new WindowsNetworkInterfaceName());
+      string nameCell = me.GetAvailableCellularName(new Windows10NetworkInterfaceName());
       Assert.NotNull(nameCell);
       Assert.AreEqual(nameCell, "Ethernet");
+
+
+      var windowsInterfaceNames = new Windows10NetworkInterfaceName();
+      Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("Wi-Fi"));
+      Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi"));
+      Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi 4"));
     }
   }
 
