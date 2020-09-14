@@ -126,11 +126,13 @@ namespace DistributedMatchEngine
 
           if (addressfamily == AddressFamily.InterNetworkV6)
           {
+            Log.S("IPV6 IP Address found: " + ipAddressV6);
             return ipAddressV6;
           }
 
           if (addressfamily == AddressFamily.InterNetwork)
           {
+            Log.S("IPV4 IP Address found: " + ipAddressV4);
             return ipAddressV4;
           }
         }
@@ -144,12 +146,9 @@ namespace DistributedMatchEngine
       NetworkInterface[] netInterfaces = GetInterfaces();
       foreach (NetworkInterface iface in netInterfaces)
       {
-        foreach (string cellularName in networkInterfaceName.CELLULAR)
+        if (networkInterfaceName.CELLULAR.IsMatch(iface.Name))
         {
-          if (iface.Name.Equals(cellularName))
-          {
-            return iface.OperationalStatus == OperationalStatus.Up;
-          }
+          return iface.OperationalStatus == OperationalStatus.Up;
         }
       }
       return false;
@@ -161,12 +160,9 @@ namespace DistributedMatchEngine
       NetworkInterface[] netInterfaces = GetInterfaces();
       foreach (NetworkInterface iface in netInterfaces)
       {
-        foreach (string wifiName in networkInterfaceName.WIFI)
+        if (networkInterfaceName.WIFI.IsMatch(iface.Name))
         {
-          if (iface.Name.Equals(wifiName))
-          {
-            return iface.OperationalStatus == OperationalStatus.Up;
-          }
+          return iface.OperationalStatus == OperationalStatus.Up;
         }
       }
       return false;
