@@ -23,6 +23,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Authentication;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 
 namespace DistributedMatchEngine
 { 
@@ -34,8 +35,8 @@ namespace DistributedMatchEngine
    */
   public class NetworkInterfaceName
   {
-    public string[] CELLULAR = null;
-    public string[] WIFI = null;
+    public Regex CELLULAR = null;
+    public Regex WIFI = null;
   }
 
   // Some known network interface profiles:
@@ -48,8 +49,8 @@ namespace DistributedMatchEngine
   {
     public IOSNetworkInterfaceName()
     {
-      CELLULAR = new string[] { "pdp_ip0" };
-      WIFI = new string[] { "en0" };
+      CELLULAR = new Regex(@"^pdp_ip\d+$");
+      WIFI = new Regex(@"^en\d+$");
     }
   }
 
@@ -63,8 +64,8 @@ namespace DistributedMatchEngine
     public AndroidNetworkInterfaceName()
     {
       // Profile cellular names are rather dynamic. Callbacks don't work fast enough.
-      CELLULAR = new string[] { "radio0", "radio1", "radio2", "radio3", "rmnet_data0", "rmnet_data1", "rmnet_data2", "rmnet_data3"};
-      WIFI = new string[] { "wlan0" };
+      CELLULAR = new Regex(@"(^radio\d+$)|(^rmnet_data\d+$)");
+      WIFI = new Regex(@"^wlan\d+$");
     }
   }
 
@@ -78,8 +79,8 @@ namespace DistributedMatchEngine
     public MacNetworkInterfaceName()
     {
       //! en0 and en1 should be Wifi and Ethernet or vice versa
-      CELLULAR = new string[] { "en0", "en1" };
-      WIFI = new string[] { "en0", "en1" };
+      CELLULAR = new Regex(@"^en\d+$");
+      WIFI = new Regex(@"^en\d+$");
     }
   }
 
@@ -92,8 +93,8 @@ namespace DistributedMatchEngine
   {
     public LinuxNetworkInterfaceName()
     {
-      CELLULAR = new string[] { "eth0", "wlan0" };
-      WIFI = new string[] { "eth0", "wlan0" };
+      CELLULAR = new Regex(@"(^eth\d+$)|(^wlan\d+$)");
+      WIFI = new Regex(@"(^eth\d+$)|(^wlan\d+$)");
     }
   }
 
@@ -106,8 +107,8 @@ namespace DistributedMatchEngine
   {
     public Windows10NetworkInterfaceName()
     {
-      CELLULAR = new string[] { "Ethernet adapter Ethernet",  "Wireless LAN adapter Wi-Fi", "Ethernet", "WiFi" };
-      WIFI = new string[] { "Ethernet adapter Ethernet",  "Wireless LAN adapter Wi-Fi", "Ethernet", "WiFi" };
+      CELLULAR = new Regex(@"(^Ethernet\s?\d*$)|(^Wi-?Fi\s?\d*$)");
+      WIFI = new Regex(@"(^Ethernet\s?\d*$)|(^Wi-?Fi\s?\d*$)");
     }
   }
 
@@ -310,44 +311,35 @@ namespace DistributedMatchEngine
       return (port >= appPort.public_port && port <= mappedEndPort);
     }
 
-    private static string GetAvailableInterface(NetInterface netInterface, string[] interfaceNames)
+    private static string GetAvailableInterface(NetInterface netInterface, Regex interfaceNamesRegex)
     {
       string foundName = "";
       NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
 
       foreach (NetworkInterface iface in netInterfaces)
       {
-        foreach (string iName in interfaceNames)
+        string iName = iface.Name;
+        if (interfaceNamesRegex.IsMatch(iName))
         {
-          if (iface.Name.Equals(iName))
+          // Check IP assignment if not in a known state:
+          bool foundByIp = false;
+          // First one with both IPv4 and IPv6 is a heuristic without NetTest. OperationStatus seems inaccurate or "unknown".
+          if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null &&
+              netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
           {
-            // Unreliable:
-            if (iface.OperationalStatus == OperationalStatus.Up)
-            {
-              foundName = iName;
-              return foundName;
-            };
-
-            // Check IP assignment if not in a known state:
-            bool foundByIp = false;
-            // First one with both IPv4 and IPv6 is a heuristic without NetTest. OperationStatus seems inaccurate or "unknown".
-            if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null &&
-                netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
-            {
-              foundByIp = true;
-            }
-            else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
-            {
-              // No-op. Every interface has IpV6.
-            }
-            else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null)
-            {
-              foundByIp = true;
-            }
-            if (foundByIp)
-            {
-              return iName;
-            }
+            foundByIp = true;
+          }
+          else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
+          {
+            // No-op. Every interface has IpV6.
+          }
+          else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null)
+          {
+            foundByIp = true;
+          }
+          if (foundByIp)
+          {
+            return iName;
           }
         }
       }
