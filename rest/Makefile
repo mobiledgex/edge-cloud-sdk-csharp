@@ -20,7 +20,7 @@ BINOUT := $(APPLIBBASE)/lib
 SOLUTIONLOG := /tmp/$(VSPROJECTROOT)_out.log
 PUBLISHLOG := /tmp/nuget_out.log
 
-REST_SDK_VERSION=2.1.7
+REST_SDK_VERSION=2.1.8
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/api/nuget/nuget-releases/
 
 DOXYGENROOT := Doxygen
