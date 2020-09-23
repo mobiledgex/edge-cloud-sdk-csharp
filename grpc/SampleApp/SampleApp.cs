@@ -105,100 +105,84 @@ namespace MexGrpcSampleConsoleApp
         {
           while (await edgeEvent.ResponseStream.MoveNext())
           {
-            if (edgeEvent.ResponseStream.Current.HpingRequested)
+            switch (edgeEvent.ResponseStream.Current.Event)
             {
-              Console.WriteLine("Hping requested. Measuring latency \n");
+              case EventType.EventLatency:
+                Console.WriteLine("Latency requested. Measuring latency \n");
 
-              IPAddress remoteIP = Dns.GetHostAddresses("localhost")[0];
-              IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, dmePort);
+                IPAddress remoteIP = Dns.GetHostAddresses("127.0.0.1")[0];
+                IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, dmePort);
+                // calculate min, max, and avg
+                float min = 0;
+                float max = 0;
+                float sum = 0;
+                int numTests = 5;
+                var times = new List<float>();
+                // first tcp ping loads network (don't count towards latencies)
+                for (int i = 0; i <= numTests; i++)
+                {
+                  var sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                  sock.Blocking = true;
 
-              // calculate min, max, and avg
-              float min = 0;
-              float max = 0;
-              float sum = 0;
-              int numTests = 5;
-              var times = new List<float>();
-              // first tcp ping loads network (don't count towards latencies)
-              for (int i = 0; i <= numTests; i++)
-              { 
-                var sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                sock.Blocking = true;
+                  var stopwatch = new Stopwatch();
 
-                var stopwatch = new Stopwatch();
+                  // Measure the Connect call only
+                  stopwatch.Start();
+                  sock.Connect(remoteEndPoint);
+                  stopwatch.Stop();
 
-                // Measure the Connect call only
-                stopwatch.Start();
-                sock.Connect(remoteEndPoint);
-                stopwatch.Stop();
+                  float t =(float)stopwatch.Elapsed.TotalMilliseconds;
 
-                float t =(float)stopwatch.Elapsed.TotalMilliseconds;
-
-                if (i > 0) {
-                  if (t < min || min == 0)
-                  {
-                    min = t;
+                  if (i > 0) {
+                    if (t < min || min == 0)
+                    {
+                      min = t;
+                    }
+                    if (t > max || max == 0)
+                    {
+                      max = t;
+                    }
+                    sum += t;
+                    times.Add(t);
                   }
-                  if (t > max || max == 0)
-                  {
-                    max = t;
-                  }
-                  sum += t;
-                  times.Add(t);
+
+                  sock.Close();
                 }
+                float avg = sum / numTests;
 
-                sock.Close();
-              }
-              float avg = sum / numTests;
-
-              // calculate std dev
-              float squaredDiffs = 0;
-              foreach (float time in times)
-              {
-                float diff = time - avg;
-                squaredDiffs += diff * diff;
-              }
-              float stdDev = (float)Math.Sqrt(squaredDiffs / numTests);
-              Latency latency = new Latency() {
-                Min = min,
-                Max = max,
-                Avg = avg,
-                StdDev = stdDev
-              };
-              var hpingClientEdgeEvent = CreateClientEdgeEvent(location, latency: latency);
-              await edgeEvent.RequestStream.WriteAsync(hpingClientEdgeEvent);
-              Console.WriteLine("Sent hping results: \n" +
-              "        Latency: " + "Avg: " + avg + ", Min: " + min + ", Max: " + max + ", StdDev: " + stdDev + "\n");
-
-            }
-            else if (edgeEvent.ResponseStream.Current.Ping)
-            {
-              var pongClientEdgeEvent = CreateClientEdgeEvent(location, pong: true, serverTimestamp: edgeEvent.ResponseStream.Current.Timestamp, iter: edgeEvent.ResponseStream.Current.Iteration);
-              await edgeEvent.RequestStream.WriteAsync(pongClientEdgeEvent);
-              // Console.WriteLine("Latency request. Sent pong response. \n");
-            }
-            else if (edgeEvent.ResponseStream.Current.LatencyRequested)
-            {
-              Console.WriteLine("EdgeServerEvent: \n" +
-              "        Timestamp: " + "Seconds: " + edgeEvent.ResponseStream.Current.Timestamp.Seconds + ", Nanos: " +  edgeEvent.ResponseStream.Current.Timestamp.Nanos + "\n" +
-              "        Latency: " + "Avg: " + edgeEvent.ResponseStream.Current.Latency.Avg + ", Min: " + edgeEvent.ResponseStream.Current.Latency.Min + ", Max: " + edgeEvent.ResponseStream.Current.Latency.Max + ", StdDev: " + edgeEvent.ResponseStream.Current.Latency.StdDev + "\n");
-              // "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
-              // "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
-              // "        AppInstHealth " + edgeEvent.ResponseStream.Current.AppinstHealthState + "\n");
-            }
-            else
-            {
-              Console.WriteLine("EdgeServerEvent: \n" +
-              "        Timestamp: " + "Seconds: " + edgeEvent.ResponseStream.Current.Timestamp.Seconds + ", Nanos: " +  edgeEvent.ResponseStream.Current.Timestamp.Nanos + "\n" +
-              "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
-              "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
-              "        AppInstHealth " + edgeEvent.ResponseStream.Current.AppinstHealthState + "\n");
+                // calculate std dev
+                float squaredDiffs = 0;
+                foreach (float time in times)
+                {
+                  float diff = time - avg;
+                  squaredDiffs += diff * diff;
+                }
+                float stdDev = (float)Math.Sqrt(squaredDiffs / numTests);
+                Latency latency = new Latency() {
+                  Min = min,
+                  Max = max,
+                  Avg = avg,
+                  StdDev = stdDev
+                };
+                var latencyEdgeEvent = CreateClientEdgeEvent(location, eventType: EventType.EventLatency, latency: latency);
+                await edgeEvent.RequestStream.WriteAsync(latencyEdgeEvent);
+                Console.WriteLine("Sent latency results: \n" +
+                "        Latency: " + "Avg: " + avg + ", Min: " + min + ", Max: " + max + ", StdDev: " + stdDev + "\n");
+                continue;
+              default:
+                Console.WriteLine("EdgeServerEvent: \n" +
+                "        Timestamp: " + "Seconds: " + edgeEvent.ResponseStream.Current.Timestamp.Seconds + ", Nanos: " +  edgeEvent.ResponseStream.Current.Timestamp.Nanos + "\n" +
+                "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
+                "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
+                "        AppInstHealth " + edgeEvent.ResponseStream.Current.AppinstHealthState + "\n");
+                continue;
             }
           }
         });
         
-        Thread.Sleep(1000000);
+        // Thread.Sleep(1000000);
 
-        for (int i = 0; i < 1000000000000000; i++) {
+        for (int i = 0; i < 10; i++) {
           location.Latitude = 69.69;
           location.Longitude = 69.69;
           var clientEdgeEvent2 = CreateClientEdgeEvent(location);
@@ -207,11 +191,11 @@ namespace MexGrpcSampleConsoleApp
           Thread.Sleep(1000);
         }
 
-        /*var clientEdgeEvent3 = CreateClientEdgeEvent(location, true);
+        var clientEdgeEvent3 = CreateClientEdgeEvent(location, eventType: EventType.EventTerminateConnection);
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent3);
 
         Console.WriteLine("closing write stream");
-        await edgeEvent.RequestStream.CompleteAsync();*/
+        await edgeEvent.RequestStream.CompleteAsync();
       }
       catch (Exception e)
       {
@@ -309,27 +293,18 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool pong = false, Timestamp serverTimestamp = null, int iter = -1, Latency latency = null, bool terminate = false)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, EventType eventType = EventType.EventLocationUpdate, Latency latency = null)
     {
       Timestamp timestamp = new Timestamp() { Seconds = DateTime.Now.Second };
-
-      var hping = false;
-      if (latency != null)
-      {
-        hping = true;
-      }
 
       var clientEvent = new ClientEdgeEvent
       {
         SessionCookie = sessionCookie,
-        EeCookie = eeSessionCookie,
-        Timestamp = serverTimestamp,
-        Pong = pong,
+        EdgeEventsCookie = eeSessionCookie,
+        Timestamp = timestamp,
+        Event = eventType,
         GpsLocation = gpsLocation,
-        Terminate = terminate,
-        Hping = hping,
         Latency = latency,
-        Iteration = iter,
       };
       return clientEvent;
     }
