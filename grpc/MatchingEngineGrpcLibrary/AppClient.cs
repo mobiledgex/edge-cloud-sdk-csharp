@@ -154,77 +154,78 @@ namespace DistributedMatchEngine {
             "NQoGc3RhdHVzGAIgASgOMiUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlJl",
             "cGx5U3RhdHVzEkgKEHBvc2l0aW9uX3Jlc3VsdHMYAyADKAsyLi5kaXN0cmli",
             "dXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRpb25LcGlSZXN1bHQSKwoEdGFn",
-            "cxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciugIKD0Ns",
+            "cxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWci2gIKD0Ns",
             "aWVudEVkZ2VFdmVudBIWCg5zZXNzaW9uX2Nvb2tpZRgBIAEoCRIRCgllZV9j",
             "b29raWUYAiABKAkSNgoJdGltZXN0YW1wGAMgASgLMiMuZGlzdHJpYnV0ZWRf",
             "bWF0Y2hfZW5naW5lLlRpbWVzdGFtcBIMCgRwb25nGAQgASgIEjMKDGdwc19s",
             "b2NhdGlvbhgFIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MS",
             "EQoJdGVybWluYXRlGAYgASgIEg0KBWhwaW5nGAcgASgIEjIKB2xhdGVuY3kY",
-            "CCABKAsyIS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTGF0ZW5jeRIrCgR0",
-            "YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyLTCAoP",
-            "U2VydmVyRWRnZUV2ZW50EjYKCXRpbWVzdGFtcBgBIAEoCzIjLmRpc3RyaWJ1",
-            "dGVkX21hdGNoX2VuZ2luZS5UaW1lc3RhbXASDAoEcGluZxgCIAEoCBJPCg5j",
-            "bG91ZGxldF9zdGF0ZRgDIAEoDjI3LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5TZXJ2ZXJFZGdlRXZlbnQuQ2xvdWRsZXRTdGF0ZRJmChpjbG91ZGxldF9t",
-            "YWludGVuYW5jZV9zdGF0ZRgEIAEoDjJCLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
-            "Z2luZS5TZXJ2ZXJFZGdlRXZlbnQuQ2xvdWRsZXRNYWludGVuYW5jZVN0YXRl",
-            "EloKFGFwcGluc3RfaGVhbHRoX3N0YXRlGAUgASgOMjwuZGlzdHJpYnV0ZWRf",
-            "bWF0Y2hfZW5naW5lLlNlcnZlckVkZ2VFdmVudC5BcHBJbnN0SGVhbHRoU3Rh",
-            "dGUSGQoRbGF0ZW5jeV9yZXF1ZXN0ZWQYBiABKAgSMgoHbGF0ZW5jeRgHIAEo",
-            "CzIhLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5MYXRlbmN5EhcKD2hwaW5n",
-            "X3JlcXVlc3RlZBgIIAEoCBIrCgR0YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRf",
-            "bWF0Y2hfZW5naW5lLlRhZyLFAQoNQ2xvdWRsZXRTdGF0ZRIaChZDTE9VRExF",
-            "VF9TVEFURV9VTktOT1dOEAASGAoUQ0xPVURMRVRfU1RBVEVfUkVBRFkQARIU",
-            "ChBDTE9VRExFVF9PRkZMSU5FEAISHgoaQ0xPVURMRVRfU1RBVEVfTk9UX1BS",
-            "RVNFTlQQAxIUChBDTE9VRExFVF9VUEdSQURFEAQSGQoVQ0xPVURMRVRfU1RB",
-            "VEVfRVJST1JTEAUSFwoTQ0xPVURMRVRfU1RBVEVfSU5JVBAGIpkCChhDbG91",
-            "ZGxldE1haW50ZW5hbmNlU3RhdGUSHQoZTUFJTlRFTkFOQ0VfU1RBVEVfVU5L",
-            "Tk9XThAAEhwKGE1BSU5URU5BTkNFX1NUQVRFX05PUk1BTBABEicKI01BSU5U",
-            "RU5BTkNFX1NUQVRFX1VOREVSX01BSU5URU5BTkNFEAISKAokTUFJTlRFTkFO",
-            "Q0VfU1RBVEVfTUFJTlRFTkFOQ0VfRkFJTEVEEAMSIgoeTUFJTlRFTkFOQ0Vf",
-            "U1RBVEVfRkFJTElOR19PVkVSEAQSJAogTUFJTlRFTkFOQ0VfU1RBVEVfRkFJ",
-            "TE9WRVJfRVJST1IQBRIjCh9NQUlOVEVOQU5DRV9TVEFURV9GQUlMT1ZFUl9E",
-            "T05FEAYibAoSQXBwSW5zdEhlYWx0aFN0YXRlEhgKFEhFQUxUSF9DSEVDS19V",
-            "TktOT1dOEAASEwoPSEVBTFRIX0NIRUNLX09LEAESFQoRSEVBTFRIX0NIRUNL",
-            "X0ZBSUwQAhIQCgxBUFBJTlNUX0RPV04QAyo9CgdJRFR5cGVzEhAKDElEX1VO",
-            "REVGSU5FRBAAEggKBElNRUkQARIKCgZNU0lTRE4QAhIKCgZJUEFERFIQAyo8",
-            "CgtSZXBseVN0YXR1cxIQCgxSU19VTkRFRklORUQQABIOCgpSU19TVUNDRVNT",
-            "EAESCwoHUlNfRkFJTBACMqMMCg5NYXRjaEVuZ2luZUFwaRKPAQoOUmVnaXN0",
-            "ZXJDbGllbnQSLy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUmVnaXN0ZXJD",
-            "bGllbnRSZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlJlZ2lz",
-            "dGVyQ2xpZW50UmVwbHkiHYLT5JMCFyISL3YxL3JlZ2lzdGVyY2xpZW50OgEq",
-            "EocBCgxGaW5kQ2xvdWRsZXQSLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
-            "RmluZENsb3VkbGV0UmVxdWVzdBorLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5GaW5kQ2xvdWRsZXRSZXBseSIbgtPkkwIVIhAvdjEvZmluZGNsb3VkbGV0",
-            "OgEqEp8BChRQbGF0Zm9ybUZpbmRDbG91ZGxldBI1LmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5QbGF0Zm9ybUZpbmRDbG91ZGxldFJlcXVlc3QaKy5kaXN0",
-            "cmlidXRlZF9tYXRjaF9lbmdpbmUuRmluZENsb3VkbGV0UmVwbHkiI4LT5JMC",
-            "HSIYL3YxL3BsYXRmb3JtZmluZGNsb3VkbGV0OgEqEo8BCg5WZXJpZnlMb2Nh",
-            "dGlvbhIvLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5WZXJpZnlMb2NhdGlv",
-            "blJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVyaWZ5TG9j",
-            "YXRpb25SZXBseSIdgtPkkwIXIhIvdjEvdmVyaWZ5bG9jYXRpb246ASoSgwEK",
-            "C0dldExvY2F0aW9uEiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkdldExv",
-            "Y2F0aW9uUmVxdWVzdBoqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5HZXRM",
-            "b2NhdGlvblJlcGx5IhqC0+STAhQiDy92MS9nZXRsb2NhdGlvbjoBKhKRAQoO",
-            "QWRkVXNlclRvR3JvdXASMC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRHlu",
-            "YW1pY0xvY0dyb3VwUmVxdWVzdBouLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5EeW5hbWljTG9jR3JvdXBSZXBseSIdgtPkkwIXIhIvdjEvYWRkdXNlcnRv",
-            "Z3JvdXA6ASoSiQEKDkdldEFwcEluc3RMaXN0EiwuZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLkFwcEluc3RMaXN0UmVxdWVzdBoqLmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcGx5Ih2C0+STAhciEi92MS9nZXRh",
-            "cHBpbnN0bGlzdDoBKhJ9CgtHZXRGcWRuTGlzdBIpLmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5GcWRuTGlzdFJlcXVlc3QaJy5kaXN0cmlidXRlZF9tYXRj",
-            "aF9lbmdpbmUuRnFkbkxpc3RSZXBseSIagtPkkwIUIg8vdjEvZ2V0ZnFkbmxp",
-            "c3Q6ASoSmQEKEkdldEFwcE9mZmljaWFsRnFkbhIwLmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5SZXF1ZXN0Gi4uZGlzdHJpYnV0",
-            "ZWRfbWF0Y2hfZW5naW5lLkFwcE9mZmljaWFsRnFkblJlcGx5IiGC0+STAhsi",
-            "Fi92MS9nZXRhcHBvZmZpY2lhbGZxZG46ASoSlAEKEUdldFFvc1Bvc2l0aW9u",
-            "S3BpEiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uUmVx",
-            "dWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQb3NpdGlvbktw",
-            "aVJlcGx5IiCC0+STAhoiFS92MS9nZXRxb3Nwb3NpdGlvbmtwaToBKjABEmkK",
-            "DVNlbmRFZGdlRXZlbnQSKS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQ2xp",
-            "ZW50RWRnZUV2ZW50GikuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNlcnZl",
-            "ckVkZ2VFdmVudCgBMAFiBnByb3RvMw=="));
+            "CCABKAsyIS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTGF0ZW5jeRILCgNy",
+            "dHQYCSABKAESEQoJaXRlcmF0aW9uGAogASgFEisKBHRhZ3MYYyADKAsyHS5k",
+            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVGFnIuYICg9TZXJ2ZXJFZGdlRXZl",
+            "bnQSNgoJdGltZXN0YW1wGAEgASgLMiMuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
+            "aW5lLlRpbWVzdGFtcBIMCgRwaW5nGAIgASgIEk8KDmNsb3VkbGV0X3N0YXRl",
+            "GAMgASgOMjcuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNlcnZlckVkZ2VF",
+            "dmVudC5DbG91ZGxldFN0YXRlEmYKGmNsb3VkbGV0X21haW50ZW5hbmNlX3N0",
+            "YXRlGAQgASgOMkIuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNlcnZlckVk",
+            "Z2VFdmVudC5DbG91ZGxldE1haW50ZW5hbmNlU3RhdGUSWgoUYXBwaW5zdF9o",
+            "ZWFsdGhfc3RhdGUYBSABKA4yPC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
+            "U2VydmVyRWRnZUV2ZW50LkFwcEluc3RIZWFsdGhTdGF0ZRIZChFsYXRlbmN5",
+            "X3JlcXVlc3RlZBgGIAEoCBIyCgdsYXRlbmN5GAcgASgLMiEuZGlzdHJpYnV0",
+            "ZWRfbWF0Y2hfZW5naW5lLkxhdGVuY3kSFwoPaHBpbmdfcmVxdWVzdGVkGAgg",
+            "ASgIEhEKCWl0ZXJhdGlvbhgJIAEoBRIrCgR0YWdzGGMgAygLMh0uZGlzdHJp",
+            "YnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyLFAQoNQ2xvdWRsZXRTdGF0ZRIaChZD",
+            "TE9VRExFVF9TVEFURV9VTktOT1dOEAASGAoUQ0xPVURMRVRfU1RBVEVfUkVB",
+            "RFkQARIUChBDTE9VRExFVF9PRkZMSU5FEAISHgoaQ0xPVURMRVRfU1RBVEVf",
+            "Tk9UX1BSRVNFTlQQAxIUChBDTE9VRExFVF9VUEdSQURFEAQSGQoVQ0xPVURM",
+            "RVRfU1RBVEVfRVJST1JTEAUSFwoTQ0xPVURMRVRfU1RBVEVfSU5JVBAGIpkC",
+            "ChhDbG91ZGxldE1haW50ZW5hbmNlU3RhdGUSHQoZTUFJTlRFTkFOQ0VfU1RB",
+            "VEVfVU5LTk9XThAAEhwKGE1BSU5URU5BTkNFX1NUQVRFX05PUk1BTBABEicK",
+            "I01BSU5URU5BTkNFX1NUQVRFX1VOREVSX01BSU5URU5BTkNFEAISKAokTUFJ",
+            "TlRFTkFOQ0VfU1RBVEVfTUFJTlRFTkFOQ0VfRkFJTEVEEAMSIgoeTUFJTlRF",
+            "TkFOQ0VfU1RBVEVfRkFJTElOR19PVkVSEAQSJAogTUFJTlRFTkFOQ0VfU1RB",
+            "VEVfRkFJTE9WRVJfRVJST1IQBRIjCh9NQUlOVEVOQU5DRV9TVEFURV9GQUlM",
+            "T1ZFUl9ET05FEAYibAoSQXBwSW5zdEhlYWx0aFN0YXRlEhgKFEhFQUxUSF9D",
+            "SEVDS19VTktOT1dOEAASEwoPSEVBTFRIX0NIRUNLX09LEAESFQoRSEVBTFRI",
+            "X0NIRUNLX0ZBSUwQAhIQCgxBUFBJTlNUX0RPV04QAyo9CgdJRFR5cGVzEhAK",
+            "DElEX1VOREVGSU5FRBAAEggKBElNRUkQARIKCgZNU0lTRE4QAhIKCgZJUEFE",
+            "RFIQAyo8CgtSZXBseVN0YXR1cxIQCgxSU19VTkRFRklORUQQABIOCgpSU19T",
+            "VUNDRVNTEAESCwoHUlNfRkFJTBACMqMMCg5NYXRjaEVuZ2luZUFwaRKPAQoO",
+            "UmVnaXN0ZXJDbGllbnQSLy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUmVn",
+            "aXN0ZXJDbGllbnRSZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LlJlZ2lzdGVyQ2xpZW50UmVwbHkiHYLT5JMCFyISL3YxL3JlZ2lzdGVyY2xp",
+            "ZW50OgEqEocBCgxGaW5kQ2xvdWRsZXQSLS5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuRmluZENsb3VkbGV0UmVxdWVzdBorLmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5GaW5kQ2xvdWRsZXRSZXBseSIbgtPkkwIVIhAvdjEvZmluZGNs",
+            "b3VkbGV0OgEqEp8BChRQbGF0Zm9ybUZpbmRDbG91ZGxldBI1LmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5QbGF0Zm9ybUZpbmRDbG91ZGxldFJlcXVlc3Qa",
+            "Ky5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRmluZENsb3VkbGV0UmVwbHki",
+            "I4LT5JMCHSIYL3YxL3BsYXRmb3JtZmluZGNsb3VkbGV0OgEqEo8BCg5WZXJp",
+            "ZnlMb2NhdGlvbhIvLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5WZXJpZnlM",
+            "b2NhdGlvblJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVy",
+            "aWZ5TG9jYXRpb25SZXBseSIdgtPkkwIXIhIvdjEvdmVyaWZ5bG9jYXRpb246",
+            "ASoSgwEKC0dldExvY2F0aW9uEiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LkdldExvY2F0aW9uUmVxdWVzdBoqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5HZXRMb2NhdGlvblJlcGx5IhqC0+STAhQiDy92MS9nZXRsb2NhdGlvbjoB",
+            "KhKRAQoOQWRkVXNlclRvR3JvdXASMC5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
+            "bmUuRHluYW1pY0xvY0dyb3VwUmVxdWVzdBouLmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5EeW5hbWljTG9jR3JvdXBSZXBseSIdgtPkkwIXIhIvdjEvYWRk",
+            "dXNlcnRvZ3JvdXA6ASoSiQEKDkdldEFwcEluc3RMaXN0EiwuZGlzdHJpYnV0",
+            "ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RMaXN0UmVxdWVzdBoqLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcGx5Ih2C0+STAhciEi92",
+            "MS9nZXRhcHBpbnN0bGlzdDoBKhJ9CgtHZXRGcWRuTGlzdBIpLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5GcWRuTGlzdFJlcXVlc3QaJy5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuRnFkbkxpc3RSZXBseSIagtPkkwIUIg8vdjEvZ2V0",
+            "ZnFkbmxpc3Q6ASoSmQEKEkdldEFwcE9mZmljaWFsRnFkbhIwLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5SZXF1ZXN0Gi4uZGlz",
+            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcE9mZmljaWFsRnFkblJlcGx5IiGC",
+            "0+STAhsiFi92MS9nZXRhcHBvZmZpY2lhbGZxZG46ASoSlAEKEUdldFFvc1Bv",
+            "c2l0aW9uS3BpEiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0",
+            "aW9uUmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQb3Np",
+            "dGlvbktwaVJlcGx5IiCC0+STAhoiFS92MS9nZXRxb3Nwb3NpdGlvbmtwaToB",
+            "KjABEmkKDVNlbmRFZGdlRXZlbnQSKS5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
+            "bmUuQ2xpZW50RWRnZUV2ZW50GikuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LlNlcnZlckVkZ2VFdmVudCgBMAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::DistributedMatchEngine.LocReflection.Descriptor, global::DistributedMatchEngine.AppcommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.IDTypes), typeof(global::DistributedMatchEngine.ReplyStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -254,8 +255,8 @@ namespace DistributedMatchEngine {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionRequest), global::DistributedMatchEngine.QosPositionRequest.Parser, new[]{ "Ver", "SessionCookie", "Positions", "LteCategory", "BandSelection", "CellId", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiResult), global::DistributedMatchEngine.QosPositionKpiResult.Parser, new[]{ "Positionid", "GpsLocation", "DluserthroughputMin", "DluserthroughputAvg", "DluserthroughputMax", "UluserthroughputMin", "UluserthroughputAvg", "UluserthroughputMax", "LatencyMin", "LatencyAvg", "LatencyMax" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiReply), global::DistributedMatchEngine.QosPositionKpiReply.Parser, new[]{ "Ver", "Status", "PositionResults", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EeCookie", "Timestamp", "Pong", "GpsLocation", "Terminate", "Hping", "Latency", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ServerEdgeEvent), global::DistributedMatchEngine.ServerEdgeEvent.Parser, new[]{ "Timestamp", "Ping", "CloudletState", "CloudletMaintenanceState", "AppinstHealthState", "LatencyRequested", "Latency", "HpingRequested", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState), typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState), typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState) }, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EeCookie", "Timestamp", "Pong", "GpsLocation", "Terminate", "Hping", "Latency", "Rtt", "Iteration", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ServerEdgeEvent), global::DistributedMatchEngine.ServerEdgeEvent.Parser, new[]{ "Timestamp", "Ping", "CloudletState", "CloudletMaintenanceState", "AppinstHealthState", "LatencyRequested", "Latency", "HpingRequested", "Iteration", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState), typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState), typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState) }, null, null)
           }));
     }
     #endregion
@@ -9438,6 +9439,8 @@ namespace DistributedMatchEngine {
       terminate_ = other.terminate_;
       hping_ = other.hping_;
       latency_ = other.latency_ != null ? other.latency_.Clone() : null;
+      rtt_ = other.rtt_;
+      iteration_ = other.iteration_;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -9535,6 +9538,28 @@ namespace DistributedMatchEngine {
       }
     }
 
+    /// <summary>Field number for the "rtt" field.</summary>
+    public const int RttFieldNumber = 9;
+    private double rtt_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Rtt {
+      get { return rtt_; }
+      set {
+        rtt_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "iteration" field.</summary>
+    public const int IterationFieldNumber = 10;
+    private int iteration_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Iteration {
+      get { return iteration_; }
+      set {
+        iteration_ = value;
+      }
+    }
+
     /// <summary>Field number for the "tags" field.</summary>
     public const int TagsFieldNumber = 99;
     private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
@@ -9569,6 +9594,8 @@ namespace DistributedMatchEngine {
       if (Terminate != other.Terminate) return false;
       if (Hping != other.Hping) return false;
       if (!object.Equals(Latency, other.Latency)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Rtt, other.Rtt)) return false;
+      if (Iteration != other.Iteration) return false;
       if(!tags_.Equals(other.tags_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -9584,6 +9611,8 @@ namespace DistributedMatchEngine {
       if (Terminate != false) hash ^= Terminate.GetHashCode();
       if (Hping != false) hash ^= Hping.GetHashCode();
       if (latency_ != null) hash ^= Latency.GetHashCode();
+      if (Rtt != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Rtt);
+      if (Iteration != 0) hash ^= Iteration.GetHashCode();
       hash ^= tags_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -9633,6 +9662,14 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(66);
         output.WriteMessage(Latency);
       }
+      if (Rtt != 0D) {
+        output.WriteRawTag(73);
+        output.WriteDouble(Rtt);
+      }
+      if (Iteration != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(Iteration);
+      }
       tags_.WriteTo(output, _repeated_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -9675,6 +9712,14 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(66);
         output.WriteMessage(Latency);
       }
+      if (Rtt != 0D) {
+        output.WriteRawTag(73);
+        output.WriteDouble(Rtt);
+      }
+      if (Iteration != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(Iteration);
+      }
       tags_.WriteTo(ref output, _repeated_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -9708,6 +9753,12 @@ namespace DistributedMatchEngine {
       }
       if (latency_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Latency);
+      }
+      if (Rtt != 0D) {
+        size += 1 + 8;
+      }
+      if (Iteration != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Iteration);
       }
       size += tags_.CalculateSize(_repeated_tags_codec);
       if (_unknownFields != null) {
@@ -9753,6 +9804,12 @@ namespace DistributedMatchEngine {
           Latency = new global::DistributedMatchEngine.Latency();
         }
         Latency.MergeFrom(other.Latency);
+      }
+      if (other.Rtt != 0D) {
+        Rtt = other.Rtt;
+      }
+      if (other.Iteration != 0) {
+        Iteration = other.Iteration;
       }
       tags_.Add(other.tags_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -9808,6 +9865,14 @@ namespace DistributedMatchEngine {
               Latency = new global::DistributedMatchEngine.Latency();
             }
             input.ReadMessage(Latency);
+            break;
+          }
+          case 73: {
+            Rtt = input.ReadDouble();
+            break;
+          }
+          case 80: {
+            Iteration = input.ReadInt32();
             break;
           }
           case 794: {
@@ -9869,6 +9934,14 @@ namespace DistributedMatchEngine {
             input.ReadMessage(Latency);
             break;
           }
+          case 73: {
+            Rtt = input.ReadDouble();
+            break;
+          }
+          case 80: {
+            Iteration = input.ReadInt32();
+            break;
+          }
           case 794: {
             tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
             break;
@@ -9920,6 +9993,7 @@ namespace DistributedMatchEngine {
       latencyRequested_ = other.latencyRequested_;
       latency_ = other.latency_ != null ? other.latency_.Clone() : null;
       hpingRequested_ = other.hpingRequested_;
+      iteration_ = other.iteration_;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -10017,6 +10091,17 @@ namespace DistributedMatchEngine {
       }
     }
 
+    /// <summary>Field number for the "iteration" field.</summary>
+    public const int IterationFieldNumber = 9;
+    private int iteration_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Iteration {
+      get { return iteration_; }
+      set {
+        iteration_ = value;
+      }
+    }
+
     /// <summary>Field number for the "tags" field.</summary>
     public const int TagsFieldNumber = 99;
     private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
@@ -10051,6 +10136,7 @@ namespace DistributedMatchEngine {
       if (LatencyRequested != other.LatencyRequested) return false;
       if (!object.Equals(Latency, other.Latency)) return false;
       if (HpingRequested != other.HpingRequested) return false;
+      if (Iteration != other.Iteration) return false;
       if(!tags_.Equals(other.tags_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -10066,6 +10152,7 @@ namespace DistributedMatchEngine {
       if (LatencyRequested != false) hash ^= LatencyRequested.GetHashCode();
       if (latency_ != null) hash ^= Latency.GetHashCode();
       if (HpingRequested != false) hash ^= HpingRequested.GetHashCode();
+      if (Iteration != 0) hash ^= Iteration.GetHashCode();
       hash ^= tags_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -10115,6 +10202,10 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(64);
         output.WriteBool(HpingRequested);
       }
+      if (Iteration != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(Iteration);
+      }
       tags_.WriteTo(output, _repeated_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -10157,6 +10248,10 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(64);
         output.WriteBool(HpingRequested);
       }
+      if (Iteration != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(Iteration);
+      }
       tags_.WriteTo(ref output, _repeated_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -10190,6 +10285,9 @@ namespace DistributedMatchEngine {
       }
       if (HpingRequested != false) {
         size += 1 + 1;
+      }
+      if (Iteration != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Iteration);
       }
       size += tags_.CalculateSize(_repeated_tags_codec);
       if (_unknownFields != null) {
@@ -10232,6 +10330,9 @@ namespace DistributedMatchEngine {
       }
       if (other.HpingRequested != false) {
         HpingRequested = other.HpingRequested;
+      }
+      if (other.Iteration != 0) {
+        Iteration = other.Iteration;
       }
       tags_.Add(other.tags_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -10284,6 +10385,10 @@ namespace DistributedMatchEngine {
           }
           case 64: {
             HpingRequested = input.ReadBool();
+            break;
+          }
+          case 72: {
+            Iteration = input.ReadInt32();
             break;
           }
           case 794: {
@@ -10340,6 +10445,10 @@ namespace DistributedMatchEngine {
           }
           case 64: {
             HpingRequested = input.ReadBool();
+            break;
+          }
+          case 72: {
+            Iteration = input.ReadInt32();
             break;
           }
           case 794: {

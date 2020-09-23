@@ -172,9 +172,9 @@ namespace MexGrpcSampleConsoleApp
             }
             else if (edgeEvent.ResponseStream.Current.Ping)
             {
-              var pongClientEdgeEvent = CreateClientEdgeEvent(location, true, edgeEvent.ResponseStream.Current.Timestamp);
+              var pongClientEdgeEvent = CreateClientEdgeEvent(location, pong: true, serverTimestamp: edgeEvent.ResponseStream.Current.Timestamp, iter: edgeEvent.ResponseStream.Current.Iteration);
               await edgeEvent.RequestStream.WriteAsync(pongClientEdgeEvent);
-              Console.WriteLine("Latency request. Sent pong response. \n");
+              // Console.WriteLine("Latency request. Sent pong response. \n");
             }
             else if (edgeEvent.ResponseStream.Current.LatencyRequested)
             {
@@ -195,17 +195,19 @@ namespace MexGrpcSampleConsoleApp
             }
           }
         });
-
+        
         Thread.Sleep(1000000);
 
-        /*location.Latitude = 69.69;
-        location.Longitude = 69.69;
-        var clientEdgeEvent2 = CreateClientEdgeEvent(location);
-        await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
+        for (int i = 0; i < 1000000000000000; i++) {
+          location.Latitude = 69.69;
+          location.Longitude = 69.69;
+          var clientEdgeEvent2 = CreateClientEdgeEvent(location);
+          await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
+          Console.WriteLine("Sent client edge event");
+          Thread.Sleep(1000);
+        }
 
-        Thread.Sleep(15000);
-
-        var clientEdgeEvent3 = CreateClientEdgeEvent(location, true);
+        /*var clientEdgeEvent3 = CreateClientEdgeEvent(location, true);
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent3);
 
         Console.WriteLine("closing write stream");
@@ -307,7 +309,7 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool pong = false, Timestamp serverTimestamp = null, Latency latency = null, bool terminate = false)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, bool pong = false, Timestamp serverTimestamp = null, int iter = -1, Latency latency = null, bool terminate = false)
     {
       Timestamp timestamp = new Timestamp() { Seconds = DateTime.Now.Second };
 
@@ -326,7 +328,8 @@ namespace MexGrpcSampleConsoleApp
         GpsLocation = gpsLocation,
         Terminate = terminate,
         Hping = hping,
-        Latency = latency
+        Latency = latency,
+        Iteration = iter,
       };
       return clientEvent;
     }
