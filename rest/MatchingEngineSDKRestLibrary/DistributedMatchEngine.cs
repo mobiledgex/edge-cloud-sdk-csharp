@@ -553,6 +553,7 @@ namespace DistributedMatchEngine
     }
     
     /*!
+     * \anchor RegisterClient
      * Creates the RegisterClientRequest object that will be used in the RegisterClient function.The RegisterClientRequest object wraps the parameters that have been provided to this function. 
      * \ingroup functions_dmeapis
      * \param orgName (string): Organization name
@@ -700,6 +701,7 @@ namespace DistributedMatchEngine
     }
 
     /*!
+     * \anchor FindCloudlet
      * Creates the FindCloudletRequest object that will be used in the FindCloudlet function.
      * The FindCloudletRequest object wraps the parameters that have been provided to this function.
      * \ingroup functions_dmeapis
