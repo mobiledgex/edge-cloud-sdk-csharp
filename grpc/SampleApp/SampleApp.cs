@@ -85,17 +85,23 @@ namespace MexGrpcSampleConsoleApp
 
         client = new MatchEngineApi.MatchEngineApiClient(channel);
 
+        for (int i = 0; i < 5; i++) {
         var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, appVers, "");
         var regReply = client.RegisterClient(registerClientRequest);
         Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
         Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
         sessionCookie = regReply.SessionCookie;
+          Thread.Sleep(2000);
+        }
 
+        for (int i = 0; i < 5; i++) {
         var findCloudletRequest = CreateFindCloudletRequest(getCarrierName(), location);
         var findCloudletReply = client.FindCloudlet(findCloudletRequest);
         Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.Status);
         Console.WriteLine("FindCloudlet edge events session cookie: " + findCloudletReply.EdgeEventsCookie);
         eeSessionCookie = findCloudletReply.EdgeEventsCookie;
+                    Thread.Sleep(1000);
+        }
 
         var clientEdgeEvent1 = CreateClientEdgeEvent(location);
         var edgeEvent = client.SendEdgeEvent();
@@ -107,7 +113,7 @@ namespace MexGrpcSampleConsoleApp
           {
             switch (edgeEvent.ResponseStream.Current.Event)
             {
-              case EventType.EventLatency:
+              case EventType.EventLatencyRequest:
                 Console.WriteLine("Latency requested. Measuring latency \n");
 
                 IPAddress remoteIP = Dns.GetHostAddresses("127.0.0.1")[0];
@@ -164,14 +170,18 @@ namespace MexGrpcSampleConsoleApp
                   Avg = avg,
                   StdDev = stdDev
                 };
-                var latencyEdgeEvent = CreateClientEdgeEvent(location, eventType: EventType.EventLatency, latency: latency);
+                var latencyEdgeEvent = CreateClientEdgeEvent(location, eventType: EventType.EventLatency, samples: times);
                 await edgeEvent.RequestStream.WriteAsync(latencyEdgeEvent);
                 Console.WriteLine("Sent latency results: \n" +
                 "        Latency: " + "Avg: " + avg + ", Min: " + min + ", Max: " + max + ", StdDev: " + stdDev + "\n");
                 continue;
+              case EventType.EventLatency:
+                var l = edgeEvent.ResponseStream.Current.Latency;
+                Console.WriteLine("Latency results: \n" +
+                "        Latency: " + "Avg: " + l.Avg + ", Min: " + l.Min + ", Max: " + l.Max + ", StdDev: " +l.StdDev + "\n");
+                continue;
               default:
                 Console.WriteLine("EdgeServerEvent: \n" +
-                "        Timestamp: " + "Seconds: " + edgeEvent.ResponseStream.Current.Timestamp.Seconds + ", Nanos: " +  edgeEvent.ResponseStream.Current.Timestamp.Nanos + "\n" +
                 "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
                 "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
                 "        AppInstHealth " + edgeEvent.ResponseStream.Current.AppinstHealthState + "\n");
@@ -180,7 +190,7 @@ namespace MexGrpcSampleConsoleApp
           }
         });
         
-        // Thread.Sleep(1000000);
+        Thread.Sleep(1000000);
 
         for (int i = 0; i < 10; i++) {
           location.Latitude = 69.69;
@@ -293,19 +303,23 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, EventType eventType = EventType.EventLocationUpdate, Latency latency = null)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, EventType eventType = EventType.EventLocationUpdate, List<float> samples = null)
     {
-      Timestamp timestamp = new Timestamp() { Seconds = DateTime.Now.Second };
-
       var clientEvent = new ClientEdgeEvent
       {
         SessionCookie = sessionCookie,
         EdgeEventsCookie = eeSessionCookie,
-        Timestamp = timestamp,
-        Event = eventType,
+        Event = eventType, 
         GpsLocation = gpsLocation,
-        Latency = latency,
       };
+
+      if (samples != null)
+      { 
+        foreach (float sample in samples)
+        {
+          clientEvent.Samples.Add(sample);
+        }
+      }
       return clientEvent;
     }
 
