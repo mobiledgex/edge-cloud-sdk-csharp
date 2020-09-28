@@ -85,27 +85,23 @@ namespace MexGrpcSampleConsoleApp
 
         client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-        for (int i = 0; i < 5; i++) {
         var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, appVers, "");
         var regReply = client.RegisterClient(registerClientRequest);
         Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
         Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
-        sessionCookie = regReply.SessionCookie;
-          Thread.Sleep(2000);
-        }
+        sessionCookie = regReply.SessionCookie;        
 
-        for (int i = 0; i < 5; i++) {
         var findCloudletRequest = CreateFindCloudletRequest(getCarrierName(), location);
         var findCloudletReply = client.FindCloudlet(findCloudletRequest);
         Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.Status);
         Console.WriteLine("FindCloudlet edge events session cookie: " + findCloudletReply.EdgeEventsCookie);
         eeSessionCookie = findCloudletReply.EdgeEventsCookie;
-                    Thread.Sleep(1000);
-        }
 
         var clientEdgeEvent1 = CreateClientEdgeEvent(location);
         var edgeEvent = client.SendEdgeEvent();
+        Console.WriteLine("Initiating a persistent connection with DME");
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent1);
+        Console.WriteLine("Listening for events");
 
         var readTask = Task.Run(async () =>
         {
@@ -114,7 +110,7 @@ namespace MexGrpcSampleConsoleApp
             switch (edgeEvent.ResponseStream.Current.Event)
             {
               case EventType.EventLatencyRequest:
-                Console.WriteLine("Latency requested. Measuring latency \n");
+                // Console.WriteLine("Latency requested. Measuring latency \n");
 
                 IPAddress remoteIP = Dns.GetHostAddresses("127.0.0.1")[0];
                 IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, dmePort);
@@ -172,8 +168,8 @@ namespace MexGrpcSampleConsoleApp
                 };
                 var latencyEdgeEvent = CreateClientEdgeEvent(location, eventType: EventType.EventLatency, samples: times);
                 await edgeEvent.RequestStream.WriteAsync(latencyEdgeEvent);
-                Console.WriteLine("Sent latency results: \n" +
-                "        Latency: " + "Avg: " + avg + ", Min: " + min + ", Max: " + max + ", StdDev: " + stdDev + "\n");
+                // Console.WriteLine("Sent latency results: \n" +
+                // "        Latency: " + "Avg: " + avg + ", Min: " + min + ", Max: " + max + ", StdDev: " + stdDev + "\n");
                 continue;
               case EventType.EventLatency:
                 var l = edgeEvent.ResponseStream.Current.Latency;
@@ -182,17 +178,17 @@ namespace MexGrpcSampleConsoleApp
                 continue;
               default:
                 Console.WriteLine("EdgeServerEvent: \n" +
-                "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
-                "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
+                // "        CloudletState: " + edgeEvent.ResponseStream.Current.CloudletState + "\n" +
+                // "        CloudletMaintenanceState " + edgeEvent.ResponseStream.Current.CloudletMaintenanceState + "\n" +
                 "        AppInstHealth " + edgeEvent.ResponseStream.Current.AppinstHealthState + "\n");
                 continue;
             }
           }
         });
         
-        Thread.Sleep(1000000);
+        // Thread.Sleep(1000000);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
           location.Latitude = 69.69;
           location.Longitude = 69.69;
           var clientEdgeEvent2 = CreateClientEdgeEvent(location);
