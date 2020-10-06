@@ -85,20 +85,29 @@ namespace MexGrpcSampleConsoleApp
 
         client = new MatchEngineApi.MatchEngineApiClient(channel);
 
+        for (int i = 0; i < 5; i++)
+        { 
         var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, appVers, "");
         var regReply = client.RegisterClient(registerClientRequest);
         Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
         Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
-        sessionCookie = regReply.SessionCookie;        
+        sessionCookie = regReply.SessionCookie;
+          Thread.Sleep(1000);
+        }
 
+        for (int i = 0; i < 5; i++)
+        { 
         var findCloudletRequest = CreateFindCloudletRequest(getCarrierName(), location);
         var findCloudletReply = client.FindCloudlet(findCloudletRequest);
         Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.Status);
         Console.WriteLine("FindCloudlet edge events session cookie: " + findCloudletReply.EdgeEventsCookie);
+        Console.WriteLine("FindCloudlet dme fqdn: " + findCloudletReply.DmeFqdn);
         eeSessionCookie = findCloudletReply.EdgeEventsCookie;
+          Thread.Sleep(1000);
+        }
 
-        var clientEdgeEvent1 = CreateClientEdgeEvent(location);
-        var edgeEvent = client.SendEdgeEvent();
+        var clientEdgeEvent1 = CreateClientEdgeEvent(location, ClientEdgeEvent.Types.ClientEventType.EventInitConnection);
+        var edgeEvent = client.StreamEdgeEvent();
         Console.WriteLine("Initiating a persistent connection with DME");
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent1);
         Console.WriteLine("Listening for events");
@@ -109,7 +118,10 @@ namespace MexGrpcSampleConsoleApp
           {
             switch (edgeEvent.ResponseStream.Current.Event)
             {
-              case EventType.EventLatencyRequest:
+              case ServerEdgeEvent.Types.ServerEventType.EventInitConnection:
+                Console.WriteLine("Successfully initiated persistent edge event connection");
+                continue;
+              case ServerEdgeEvent.Types.ServerEventType.EventLatencyRequest:
                 // Console.WriteLine("Latency requested. Measuring latency \n");
 
                 IPAddress remoteIP = Dns.GetHostAddresses("127.0.0.1")[0];
@@ -166,12 +178,12 @@ namespace MexGrpcSampleConsoleApp
                   Avg = avg,
                   StdDev = stdDev
                 };
-                var latencyEdgeEvent = CreateClientEdgeEvent(location, eventType: EventType.EventLatency, samples: times);
+                var latencyEdgeEvent = CreateClientEdgeEvent(location, eventType: ClientEdgeEvent.Types.ClientEventType.EventLatencySamples, samples: times);
                 await edgeEvent.RequestStream.WriteAsync(latencyEdgeEvent);
                 // Console.WriteLine("Sent latency results: \n" +
                 // "        Latency: " + "Avg: " + avg + ", Min: " + min + ", Max: " + max + ", StdDev: " + stdDev + "\n");
                 continue;
-              case EventType.EventLatency:
+              case ServerEdgeEvent.Types.ServerEventType.EventLatencyProcessed:
                 var l = edgeEvent.ResponseStream.Current.Latency;
                 Console.WriteLine("Latency results: \n" +
                 "        Latency: " + "Avg: " + l.Avg + ", Min: " + l.Min + ", Max: " + l.Max + ", StdDev: " +l.StdDev + "\n");
@@ -188,7 +200,7 @@ namespace MexGrpcSampleConsoleApp
         
         // Thread.Sleep(1000000);
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 1000; i++) {
           location.Latitude = 69.69;
           location.Longitude = 69.69;
           var clientEdgeEvent2 = CreateClientEdgeEvent(location);
@@ -197,7 +209,7 @@ namespace MexGrpcSampleConsoleApp
           Thread.Sleep(1000);
         }
 
-        var clientEdgeEvent3 = CreateClientEdgeEvent(location, eventType: EventType.EventTerminateConnection);
+        var clientEdgeEvent3 = CreateClientEdgeEvent(location, eventType: ClientEdgeEvent.Types.ClientEventType.EventTerminateConnection);
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent3);
 
         Console.WriteLine("closing write stream");
@@ -299,7 +311,7 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, EventType eventType = EventType.EventLocationUpdate, List<float> samples = null)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, ClientEdgeEvent.Types.ClientEventType eventType = ClientEdgeEvent.Types.ClientEventType.EventLocationUpdate, List<float> samples = null)
     {
       var clientEvent = new ClientEdgeEvent
       {

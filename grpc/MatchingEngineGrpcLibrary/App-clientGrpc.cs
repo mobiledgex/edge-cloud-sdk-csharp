@@ -107,10 +107,10 @@ namespace DistributedMatchEngine {
         __Marshaller_distributed_match_engine_QosPositionRequest,
         __Marshaller_distributed_match_engine_QosPositionKpiReply);
 
-    static readonly grpc::Method<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> __Method_SendEdgeEvent = new grpc::Method<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent>(
+    static readonly grpc::Method<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> __Method_StreamEdgeEvent = new grpc::Method<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent>(
         grpc::MethodType.DuplexStreaming,
         __ServiceName,
-        "SendEdgeEvent",
+        "StreamEdgeEvent",
         __Marshaller_distributed_match_engine_ClientEdgeEvent,
         __Marshaller_distributed_match_engine_ServerEdgeEvent);
 
@@ -217,7 +217,7 @@ namespace DistributedMatchEngine {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task SendEdgeEvent(grpc::IAsyncStreamReader<global::DistributedMatchEngine.ClientEdgeEvent> requestStream, grpc::IServerStreamWriter<global::DistributedMatchEngine.ServerEdgeEvent> responseStream, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task StreamEdgeEvent(grpc::IAsyncStreamReader<global::DistributedMatchEngine.ClientEdgeEvent> requestStream, grpc::IServerStreamWriter<global::DistributedMatchEngine.ServerEdgeEvent> responseStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -587,13 +587,13 @@ namespace DistributedMatchEngine {
       {
         return CallInvoker.AsyncServerStreamingCall(__Method_GetQosPositionKpi, null, options, request);
       }
-      public virtual grpc::AsyncDuplexStreamingCall<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> SendEdgeEvent(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncDuplexStreamingCall<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> StreamEdgeEvent(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return SendEdgeEvent(new grpc::CallOptions(headers, deadline, cancellationToken));
+        return StreamEdgeEvent(new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncDuplexStreamingCall<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> SendEdgeEvent(grpc::CallOptions options)
+      public virtual grpc::AsyncDuplexStreamingCall<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent> StreamEdgeEvent(grpc::CallOptions options)
       {
-        return CallInvoker.AsyncDuplexStreamingCall(__Method_SendEdgeEvent, null, options);
+        return CallInvoker.AsyncDuplexStreamingCall(__Method_StreamEdgeEvent, null, options);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override MatchEngineApiClient NewInstance(ClientBaseConfiguration configuration)
@@ -617,7 +617,7 @@ namespace DistributedMatchEngine {
           .AddMethod(__Method_GetFqdnList, serviceImpl.GetFqdnList)
           .AddMethod(__Method_GetAppOfficialFqdn, serviceImpl.GetAppOfficialFqdn)
           .AddMethod(__Method_GetQosPositionKpi, serviceImpl.GetQosPositionKpi)
-          .AddMethod(__Method_SendEdgeEvent, serviceImpl.SendEdgeEvent).Build();
+          .AddMethod(__Method_StreamEdgeEvent, serviceImpl.StreamEdgeEvent).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -636,7 +636,7 @@ namespace DistributedMatchEngine {
       serviceBinder.AddMethod(__Method_GetFqdnList, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.FqdnListRequest, global::DistributedMatchEngine.FqdnListReply>(serviceImpl.GetFqdnList));
       serviceBinder.AddMethod(__Method_GetAppOfficialFqdn, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::DistributedMatchEngine.AppOfficialFqdnRequest, global::DistributedMatchEngine.AppOfficialFqdnReply>(serviceImpl.GetAppOfficialFqdn));
       serviceBinder.AddMethod(__Method_GetQosPositionKpi, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::DistributedMatchEngine.QosPositionRequest, global::DistributedMatchEngine.QosPositionKpiReply>(serviceImpl.GetQosPositionKpi));
-      serviceBinder.AddMethod(__Method_SendEdgeEvent, serviceImpl == null ? null : new grpc::DuplexStreamingServerMethod<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent>(serviceImpl.SendEdgeEvent));
+      serviceBinder.AddMethod(__Method_StreamEdgeEvent, serviceImpl == null ? null : new grpc::DuplexStreamingServerMethod<global::DistributedMatchEngine.ClientEdgeEvent, global::DistributedMatchEngine.ServerEdgeEvent>(serviceImpl.StreamEdgeEvent));
     }
 
   }
