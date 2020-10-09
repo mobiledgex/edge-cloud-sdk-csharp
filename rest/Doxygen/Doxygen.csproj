@@ -32,5 +32,8 @@
     <Folder Include="src\" />
     <Folder Include="config\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\Dummy.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

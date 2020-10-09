@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -58,7 +59,7 @@ namespace DistributedMatchEngine
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 
   [DataContract]
@@ -98,6 +99,6 @@ namespace DistributedMatchEngine
     [DataMember]
     public string group_cookie;
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 }

@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -54,7 +55,7 @@ namespace DistributedMatchEngine
     public string unique_id;
     //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 
   /*!
@@ -120,6 +121,6 @@ namespace DistributedMatchEngine
     public string unique_id;
     //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 }

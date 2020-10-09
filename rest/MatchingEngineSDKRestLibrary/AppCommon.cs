@@ -21,21 +21,6 @@ using System.Runtime.Serialization;
 namespace DistributedMatchEngine
 {
   /*!
-   * Vendor specific data
-   * \ingroup classes_datastructs
-   */
-  [DataContract]
-  public class Tag
-  {
-    //! type of data
-    [DataMember]
-    public string type;
-    //! data value
-    [DataMember]
-    public string data;
-  }
-
-  /*!
    * MobiledgeX GPS Location class
    * \ingroup classes_datastructs
    */
