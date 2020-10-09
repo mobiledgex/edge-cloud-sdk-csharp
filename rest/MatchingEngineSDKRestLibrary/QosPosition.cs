@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -84,7 +85,7 @@ namespace DistributedMatchEngine
     public UInt32 cell_id;
     //! Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 
   /*!
@@ -162,7 +163,7 @@ namespace DistributedMatchEngine
     public QosPositionResult[] position_results;
     //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 
   /*!

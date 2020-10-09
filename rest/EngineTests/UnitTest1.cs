@@ -33,6 +33,7 @@ using System.Security.Authentication;
 using System.Net.WebSockets;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
+using System.Collections.Concurrent;
 
 namespace Tests
 {
@@ -46,6 +47,11 @@ namespace Tests
     const string appVers = "20191204";
     const string connectionTestFqdn = "mextest-app-cluster.frankfurt-main.tdg.mobiledgex.net";
     const string aWebSocketServerFqdn = "pingpong-cluster.frankfurt-main.tdg.mobiledgex.net"; // or, localhost.
+                                                                                              // Allow deserialization of dictionaries from JSON Arrays.
+    private DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
+    {
+      UseSimpleDictionaryFormat = true
+    };
 
     static MatchingEngine me;
 
@@ -788,6 +794,44 @@ namespace Tests
         {
           Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
         }
+      }
+    }
+
+    [Test]
+    public async Task TestDictionary()
+    {
+      RegisterClientReply reply = new RegisterClientReply
+      {
+        tags = new ConcurrentDictionary<string, string>(1, 3)
+      };
+
+      reply.tags["one"] = "two";
+      reply.tags["two"] = "three";
+      reply.tags["three"] = "four";
+
+
+      // Serialize and deserilize to test Dictionary serliazation from wire level JSON arrays.
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, reply);
+      string jsonStr = Util.StreamToString(ms);
+
+      Console.WriteLine("Serialized: " + jsonStr);
+
+
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
+      byte[] byteArray = Encoding.ASCII.GetBytes(jsonStr);
+      ms = new MemoryStream(byteArray);
+      RegisterClientReply replyParsed = (RegisterClientReply)deserializer.ReadObject(ms);
+
+      Console.WriteLine("How many deserialized: ");
+
+      Assert.True(!replyParsed.tags.IsEmpty, "Should not be empty!");
+      Assert.True(replyParsed.tags.Count == 3, "Should have 3 entries!");
+
+      foreach (KeyValuePair<string, string> entry in replyParsed.tags)
+      {
+        Console.WriteLine("[" + entry.Key + ", " + entry.Value + "]");
       }
     }
   }

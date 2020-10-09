@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -148,6 +149,7 @@ namespace DistributedMatchEngine
       {
         if (networkInterfaceName.CELLULAR.IsMatch(iface.Name))
         {
+          // Check if iFace has an entry in the routing table:
           return iface.OperationalStatus == OperationalStatus.Up;
         }
       }
@@ -162,7 +164,27 @@ namespace DistributedMatchEngine
       {
         if (networkInterfaceName.WIFI.IsMatch(iface.Name))
         {
-          return iface.OperationalStatus == OperationalStatus.Up;
+
+          using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+          {
+            // Does not actually connect if UDP (connectionless).
+            try
+            {
+              socket.Connect("wifi.dme.mobiledgex.net", 65530); // May do DNS lookup however.
+              IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+              // This endpoint check merely says there's one in the matched profile set that works,
+              // The defined type matters, not that all of them are in the routing table (need an Azure API to check).
+              if (endPoint != null)
+              {
+                return true;
+              }
+            }
+            catch (SocketException se)
+            {
+              Console.WriteLine("Exception trying to test endpoint: " + se.Message);
+            }
+            
+          }
         }
       }
       return false;
