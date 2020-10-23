@@ -648,6 +648,12 @@ namespace DistributedMatchEngine
       return request;
     }
 
+    private RegisterClientRequest UpdateRequestForDeviceInfo(RegisterClientRequest request)
+    {
+      // DeviceInfo Interface()
+      return request;
+    }
+
     /*!
      * RegisterClient overload with hardcoded DME host and port. Only use for testing.
      * \ingroup functions_dmeapis

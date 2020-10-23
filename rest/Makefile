@@ -58,8 +58,8 @@ publish:
 	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineSDKRestLibrary.$(REST_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
 
 clean:
-ifneq ("$(APPLIBBASE)", "/bin")
-	rm -rf $(APPLIBBASE)/bin
+ifneq ("$(BINOUT)", "/lib")
+	rm -rf $(BINOUT)
 endif
 	rm -rf $(APPLIBBASE)/obj
 
