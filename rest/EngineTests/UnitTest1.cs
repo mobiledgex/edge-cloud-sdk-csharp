@@ -508,7 +508,6 @@ namespace Tests
       appPort.public_port = 3000;
       appPort.end_port = 8010;
       appPort.fqdn_prefix = "";
-      appPort.path_prefix = "";
 
       AppPort appPort2 = new AppPort();
       appPort2.proto = LProto.L_PROTO_TCP;
@@ -516,7 +515,6 @@ namespace Tests
       appPort2.public_port = 3000;
       appPort2.end_port = 0;
       appPort2.fqdn_prefix = "";
-      appPort2.path_prefix = "";
 
       FindCloudletReply fce = new FindCloudletReply();
       fce.fqdn = "mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net";
@@ -668,7 +666,6 @@ namespace Tests
                 ", protocol: " + p.proto +
                 ", public_port: " + p.public_port +
                 ", internal_port: " + p.internal_port +
-                ", path_prefix: " + p.path_prefix +
                 ", end_port: " + p.end_port);
         }
       }

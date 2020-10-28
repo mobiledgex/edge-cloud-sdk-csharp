@@ -948,7 +948,7 @@ namespace DistributedMatchEngine
       int port = appPort.public_port;
       string host = appPort.fqdn_prefix + appinstance.fqdn;
 
-      site.L7Path = host + ":" + port + appPort.path_prefix;
+      site.L7Path = host + ":" + port;
       site.appInst = appinstance;
       site.cloudletLocation = cloudletLocation;
       return site;
@@ -991,20 +991,8 @@ namespace DistributedMatchEngine
 
           switch (appPort.proto)
           {
-
-            case LProto.L_PROTO_HTTP:
-              sites.Add(InitHttpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location));
-              break;
-
             case LProto.L_PROTO_TCP:
-              if (appPort.path_prefix == null || appPort.path_prefix == "")
-              {
-                sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
-              }
-              else
-              {
-                sites.Add(InitHttpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
-              }
+              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
               break;
 
             case LProto.L_PROTO_UDP:
