@@ -661,7 +661,30 @@ namespace DistributedMatchEngine
 
     private RegisterClientRequest UpdateRequestForDeviceInfo(RegisterClientRequest request)
     {
-      // DeviceInfo Interface()
+      Dictionary<string, string> dict = null;
+
+      if (deviceInfo != null) {
+        dict = deviceInfo.GetDeviceInfo();
+      }
+
+      if (dict == null)
+      {
+        return request;
+      }
+
+      int len = dict.Count;
+      if (request.tags == null)
+      {
+        request.tags = new ConcurrentDictionary<string, string>(2, len);
+      }
+      foreach (KeyValuePair<string, string> pair in dict)
+      {
+        if (pair.Key != null)
+        {
+          request.tags.TryAdd(pair.Key, pair.Value);
+        }
+      }
+
       return request;
     }
 
@@ -692,6 +715,7 @@ namespace DistributedMatchEngine
 
       // MEL Enablement:
       request = UpdateRequestForUniqueID(request);
+      request = UpdateRequestForDeviceInfo(request);
 
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
