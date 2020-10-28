@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace DummyCode
 {
-  class Proogram
+  class Program
   {
     static void Main(string[] args)
     {

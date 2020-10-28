@@ -815,7 +815,6 @@ namespace Tests
 
       Console.WriteLine("Serialized: " + jsonStr);
 
-
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
       byte[] byteArray = Encoding.ASCII.GetBytes(jsonStr);
       ms = new MemoryStream(byteArray);
