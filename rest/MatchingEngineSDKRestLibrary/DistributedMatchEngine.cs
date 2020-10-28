@@ -201,6 +201,7 @@ namespace DistributedMatchEngine
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
+    public DeviceInfo deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
 
     // API Paths:
@@ -234,10 +235,11 @@ namespace DistributedMatchEngine
      * \param carrierInfo (CarrierInfo): 
      * \param netInterface (NetInterface): 
      * \param uniqueID (UniqueID):
+     * \param deviceInfo (DeviceInfo):
      * \section meconstructorexample Example
      * \snippet RestSample.cs meconstructorexample
      */
-    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null, DeviceInfo deviceInfo = null)
     {
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
@@ -266,6 +268,15 @@ namespace DistributedMatchEngine
       else
       {
         this.uniqueID = uniqueID;
+      }
+
+      if (deviceInfo == null)
+      {
+        this.deviceInfo = new EmptyDeviceInfo();
+      }
+      else
+      {
+        this.deviceInfo = deviceInfo;
       }
 
       // Default to empty.
