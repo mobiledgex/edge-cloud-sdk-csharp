@@ -20,12 +20,20 @@ using System.Collections.Generic;
 
 namespace DistributedMatchEngine
 {
-  public abstract class DeviceInfo
+  public interface DeviceInfo
+  {
+    Dictionary<string, string> GetDeviceInfo();
+  }
+
+  /*!
+   * Empty implementation of DeviceInfo interface
+   * \ingroup classes_integration
+   */
+  public class EmptyDeviceInfo : DeviceInfo
   {
     public Dictionary<string, string> GetDeviceInfo()
     {
-      Console.Error.WriteLine("GetDeviceInfo() is not implemented!");
-      return null;
+      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceInfo() is not defined!");
     }
   }
 }
