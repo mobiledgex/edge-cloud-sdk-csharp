@@ -47,11 +47,6 @@ namespace Tests
     const string appVers = "20191204";
     const string connectionTestFqdn = "mextest-app-cluster.fairview-main.gddt.mobiledgex.net";
     const string aWebSocketServerFqdn = "pingpong-cluster.fairview-main.gddt.mobiledgex.net"; // or, localhost.
-                                                                                              // Allow deserialization of dictionaries from JSON Arrays.
-    private DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
-    {
-      UseSimpleDictionaryFormat = true
-    };
 
     static MatchingEngine me;
 
@@ -86,6 +81,15 @@ namespace Tests
       }
     }
 
+    class TestDeviceInfo : DeviceInfo
+    {
+
+      Dictionary<string, string> DeviceInfo.GetDeviceInfo()
+      {
+        return new Dictionary<string, string>();
+      }
+    }
+
     public class TestMelMessaging : MelMessagingInterface
     {
       public bool IsMelEnabled() { return false; }
@@ -102,9 +106,10 @@ namespace Tests
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
       UniqueID uniqueIdInterface = new TestUniqueID();
+      DeviceInfo deviceInfo = new TestDeviceInfo();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
       me.SetMelMessaging(new TestMelMessaging());
     }
 
@@ -807,15 +812,16 @@ namespace Tests
       reply.tags["three"] = "four";
 
 
-      // Serialize and deserilize to test Dictionary serliazation from wire level JSON arrays.
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
+      // Serialize and deserilize to test Dictionary serliazation from wire level JSON arrays (outside engine).
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
+
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, reply);
       string jsonStr = Util.StreamToString(ms);
 
       Console.WriteLine("Serialized: " + jsonStr);
 
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
       byte[] byteArray = Encoding.ASCII.GetBytes(jsonStr);
       ms = new MemoryStream(byteArray);
       RegisterClientReply replyParsed = (RegisterClientReply)deserializer.ReadObject(ms);

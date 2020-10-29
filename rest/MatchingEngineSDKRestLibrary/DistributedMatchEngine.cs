@@ -222,12 +222,6 @@ namespace DistributedMatchEngine
     string tokenServerURI;
     string authToken { get; set; }
 
-    // Allow deserialization of dictionaries from JSON Arrays.
-    private DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
-    {
-      UseSimpleDictionaryFormat = true
-    };
-
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
 
     /*!
@@ -717,7 +711,7 @@ namespace DistributedMatchEngine
       request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest), serializerSettings);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
@@ -728,7 +722,7 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);

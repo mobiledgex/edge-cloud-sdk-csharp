@@ -41,6 +41,17 @@ namespace RestSample
     }
   }
 
+  class DummyDeviceInfo : DeviceInfo
+  {
+    Dictionary<string, string> DeviceInfo.GetDeviceInfo()
+    {
+      Dictionary<string, string> dict = new Dictionary<string, string>();
+      dict["one"] = "two";
+      return dict;
+    }
+
+  }
+
   public class TestMelMessaging : MelMessagingInterface
   {
     public bool IsMelEnabled() { return false; }
@@ -124,7 +135,7 @@ namespace RestSample
         Console.WriteLine("MobiledgeX RestSample!");
 
         //! [meconstructorexample]
-        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID());
+        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
         //! [meconstructorexample]
 
         me.SetMelMessaging(new TestMelMessaging());
