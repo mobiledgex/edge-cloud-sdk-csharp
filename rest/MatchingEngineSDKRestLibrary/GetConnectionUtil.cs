@@ -184,7 +184,6 @@ namespace DistributedMatchEngine
               findCloudletReply.fqdn +
               ":" +
               aPortNum +
-              appPort.path_prefix +
               path;
 
       return url;
@@ -253,10 +252,6 @@ namespace DistributedMatchEngine
         return false;
       }
       if (port1.internal_port != port2.internal_port)
-      {
-        return false;
-      }
-      if (port1.path_prefix != port2.path_prefix)
       {
         return false;
       }
@@ -450,28 +445,6 @@ namespace DistributedMatchEngine
         }
       }
       return udpAppPorts;
-    }
-
-    /*!
-     * Returns a Dictionary mapping a HTTP port that the developer specified when creating their app through MobiledgeX console to an AppPort object.
-     * This AppPort object will contain relevant information necessary to connect to the desired port.
-     * This object will be used in GetConnection functions.
-     * \ingroup functions_getconnectionutils
-     * \param reply (FindCloudletReply)
-     * \return Dictionary<int, AppPort>
-     */
-    public Dictionary<int, AppPort> GetHTTPAppPorts(FindCloudletReply reply)
-    {
-      Dictionary<int, AppPort> httpAppPorts = new Dictionary<int, AppPort>();
-      AppPort[] ports = reply.ports;
-      foreach (AppPort port in ports)
-      {
-        if (port.proto == LProto.L_PROTO_HTTP)
-        {
-          httpAppPorts.Add(port.internal_port, port);
-        }
-      }
-      return httpAppPorts;
     }
   }
 }

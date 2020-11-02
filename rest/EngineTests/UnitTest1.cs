@@ -33,6 +33,7 @@ using System.Security.Authentication;
 using System.Net.WebSockets;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
+using System.Collections.Concurrent;
 
 namespace Tests
 {
@@ -80,6 +81,15 @@ namespace Tests
       }
     }
 
+    class TestDeviceInfo : DeviceInfo
+    {
+
+      Dictionary<string, string> DeviceInfo.GetDeviceInfo()
+      {
+        return new Dictionary<string, string>();
+      }
+    }
+
     public class TestMelMessaging : MelMessagingInterface
     {
       public bool IsMelEnabled() { return false; }
@@ -96,9 +106,10 @@ namespace Tests
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
       UniqueID uniqueIdInterface = new TestUniqueID();
+      DeviceInfo deviceInfo = new TestDeviceInfo();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
       me.SetMelMessaging(new TestMelMessaging());
     }
 
@@ -502,7 +513,6 @@ namespace Tests
       appPort.public_port = 3000;
       appPort.end_port = 8010;
       appPort.fqdn_prefix = "";
-      appPort.path_prefix = "";
 
       AppPort appPort2 = new AppPort();
       appPort2.proto = LProto.L_PROTO_TCP;
@@ -510,7 +520,6 @@ namespace Tests
       appPort2.public_port = 3000;
       appPort2.end_port = 0;
       appPort2.fqdn_prefix = "";
-      appPort2.path_prefix = "";
 
       FindCloudletReply fce = new FindCloudletReply();
       fce.fqdn = "mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net";
@@ -662,7 +671,6 @@ namespace Tests
                 ", protocol: " + p.proto +
                 ", public_port: " + p.public_port +
                 ", internal_port: " + p.internal_port +
-                ", path_prefix: " + p.path_prefix +
                 ", end_port: " + p.end_port);
         }
       }
@@ -788,6 +796,42 @@ namespace Tests
         {
           Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
         }
+      }
+    }
+
+    [Test]
+    public async Task TestDictionary()
+    {
+      RegisterClientReply reply = new RegisterClientReply
+      {
+        tags = new ConcurrentDictionary<string, string>(1, 3)
+      };
+
+      reply.tags["one"] = "two";
+      reply.tags["two"] = "three";
+      reply.tags["three"] = "four";
+
+
+      // Serialize and deserilize to test Dictionary serliazation from wire level JSON arrays (outside engine).
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
+
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, reply);
+      string jsonStr = Util.StreamToString(ms);
+
+      Console.WriteLine("Serialized: " + jsonStr);
+
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
+      byte[] byteArray = Encoding.ASCII.GetBytes(jsonStr);
+      ms = new MemoryStream(byteArray);
+      RegisterClientReply replyParsed = (RegisterClientReply)deserializer.ReadObject(ms);
+
+      Assert.True(!replyParsed.tags.IsEmpty, "Dictonary should not be empty!");
+      Assert.True(replyParsed.tags.Count == 3, "Dictionary should have 3 entries!");
+
+      foreach (KeyValuePair<string, string> entry in replyParsed.tags)
+      {
+        Console.WriteLine("[" + entry.Key + ", " + entry.Value + "]");
       }
     }
   }

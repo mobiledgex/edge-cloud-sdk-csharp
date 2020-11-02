@@ -16,34 +16,24 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace DistributedMatchEngine
 {
-  /*!
-   * UniqeID interface for the platform
-   * Function implemented per platform
-   * \ingroup classes_integration
-   */
-  public interface UniqueID
+  public interface DeviceInfo
   {
-    string GetUniqueIDType();
-    string GetUniqueID();
+    Dictionary<string, string> GetDeviceInfo();
   }
 
   /*!
-   * Empty implementation of CarrierInfo interface
+   * Empty implementation of DeviceInfo interface
    * \ingroup classes_integration
    */
-  public class EmptyUniqueID : UniqueID
+  public class EmptyDeviceInfo : DeviceInfo
   {
-    public string GetUniqueIDType()
+    public Dictionary<string, string> GetDeviceInfo()
     {
-      throw new NotImplementedException("Required UniqueID interface function: GetUniqueIDType() is not defined!");
-    }
-
-    public string GetUniqueID()
-    {
-      throw new NotImplementedException("Required UniqueID interface function: GetUniqueID() is not defined");
+      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceInfo() is not defined!");
     }
   }
 }

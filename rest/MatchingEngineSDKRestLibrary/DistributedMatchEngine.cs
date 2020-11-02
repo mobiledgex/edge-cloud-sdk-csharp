@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -29,7 +30,7 @@ using System.Threading.Tasks;
 using DistributedMatchEngine.PerformanceMetrics;
 using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
-using System.Net.NetworkInformation;
+
 
 /*!
  * DistributedMatchEngine Namespace
@@ -200,6 +201,7 @@ namespace DistributedMatchEngine
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
+    public DeviceInfo deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
 
     // API Paths:
@@ -227,10 +229,11 @@ namespace DistributedMatchEngine
      * \param carrierInfo (CarrierInfo): 
      * \param netInterface (NetInterface): 
      * \param uniqueID (UniqueID):
+     * \param deviceInfo (DeviceInfo):
      * \section meconstructorexample Example
      * \snippet RestSample.cs meconstructorexample
      */
-    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null, DeviceInfo deviceInfo = null)
     {
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
@@ -259,6 +262,15 @@ namespace DistributedMatchEngine
       else
       {
         this.uniqueID = uniqueID;
+      }
+
+      if (deviceInfo == null)
+      {
+        this.deviceInfo = new EmptyDeviceInfo();
+      }
+      else
+      {
+        this.deviceInfo = deviceInfo;
       }
 
       // Default to empty.
@@ -569,7 +581,7 @@ namespace DistributedMatchEngine
      * \snippet RestSample.cs createregisterexample
      */
     public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null)
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, ConcurrentDictionary<string, string> tags = null)
     {
       return new RegisterClientRequest
       {
@@ -641,6 +653,35 @@ namespace DistributedMatchEngine
       return request;
     }
 
+    private RegisterClientRequest UpdateRequestForDeviceInfo(RegisterClientRequest request)
+    {
+      Dictionary<string, string> dict = null;
+
+      if (deviceInfo != null) {
+        dict = deviceInfo.GetDeviceInfo();
+      }
+
+      if (dict == null)
+      {
+        return request;
+      }
+
+      int len = dict.Count;
+      if (request.tags == null)
+      {
+        request.tags = new ConcurrentDictionary<string, string>(2, len);
+      }
+      foreach (KeyValuePair<string, string> pair in dict)
+      {
+        if (pair.Key != null)
+        {
+          request.tags.TryAdd(pair.Key, pair.Value);
+        }
+      }
+
+      return request;
+    }
+
     /*!
      * RegisterClient overload with hardcoded DME host and port. Only use for testing.
      * \ingroup functions_dmeapis
@@ -668,6 +709,7 @@ namespace DistributedMatchEngine
 
       // MEL Enablement:
       request = UpdateRequestForUniqueID(request);
+      request = UpdateRequestForDeviceInfo(request);
 
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
       MemoryStream ms = new MemoryStream();
@@ -713,7 +755,7 @@ namespace DistributedMatchEngine
      * \section createfindcloudletexample Example
      * \snippet RestSample.cs createfindcloudletexample
      */
-    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
+    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, ConcurrentDictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -924,7 +966,7 @@ namespace DistributedMatchEngine
       int port = appPort.public_port;
       string host = appPort.fqdn_prefix + appinstance.fqdn;
 
-      site.L7Path = host + ":" + port + appPort.path_prefix;
+      site.L7Path = host + ":" + port;
       site.appInst = appinstance;
       site.cloudletLocation = cloudletLocation;
       return site;
@@ -967,20 +1009,8 @@ namespace DistributedMatchEngine
 
           switch (appPort.proto)
           {
-
-            case LProto.L_PROTO_HTTP:
-              sites.Add(InitHttpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location));
-              break;
-
             case LProto.L_PROTO_TCP:
-              if (appPort.path_prefix == null || appPort.path_prefix == "")
-              {
-                sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
-              }
-              else
-              {
-                sites.Add(InitHttpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
-              }
+              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
               break;
 
             case LProto.L_PROTO_UDP:
@@ -1075,12 +1105,8 @@ namespace DistributedMatchEngine
 
       // Dummy bytes to load cellular network path
       Byte[] bytes = new Byte[2048];
-      Tag tag = new Tag
-      {
-        type = "buffer",
-        data = bytes.ToString()
-      };
-      Tag[] tags = { tag };
+      ConcurrentDictionary<string, string> tags = new ConcurrentDictionary<string, string>();
+      tags["Buffer"] = bytes.ToString();
 
       AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.gps_location, request.carrier_name, tags: tags);
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
@@ -1125,13 +1151,13 @@ namespace DistributedMatchEngine
      * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param uniqueIDType (string): Optional
      * \param uniqueID (string): Optional
-     * \param tags (Tag[]): Optional
+     * \param tags (ConcurrentDictionary<string, string>): Optional
      * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, ConcurrentDictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort,
         orgName, appName, appVersion, loc,
@@ -1158,7 +1184,7 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
        string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Tag[] tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, ConcurrentDictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(
@@ -1197,7 +1223,7 @@ namespace DistributedMatchEngine
      * \section createverifylocationexample Example
      * \snippet RestSample.cs createverifylocationexample
      */
-    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
+    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, ConcurrentDictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1319,7 +1345,7 @@ namespace DistributedMatchEngine
      * \section createappinstexample Example
      * \snippet RestSample.cs createappinstexample
      */
-    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Tag[] tags = null)
+    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, ConcurrentDictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1425,7 +1451,7 @@ namespace DistributedMatchEngine
      * \snippet RestSample.cs createqospositionexample
      */
     public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
-      UInt32 cellID = 0, Tag[] tags = null)
+      UInt32 cellID = 0, ConcurrentDictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1485,7 +1511,7 @@ namespace DistributedMatchEngine
       return qosPositionKpiStream;
     }   
 
-    private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Tag[] tags = null)
+    private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, ConcurrentDictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1547,7 +1573,7 @@ namespace DistributedMatchEngine
     }
 
     private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
-      string userData = null, UInt32 cellID = 0, Tag[] tags = null)
+      string userData = null, UInt32 cellID = 0, ConcurrentDictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
