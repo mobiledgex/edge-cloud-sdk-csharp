@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -48,7 +49,7 @@ namespace DistributedMatchEngine
     public UInt32 cell_id;
     //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   };
 
   /*!
@@ -139,6 +140,6 @@ namespace DistributedMatchEngine
     public double gps_location_accuracy_km;
     //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 }

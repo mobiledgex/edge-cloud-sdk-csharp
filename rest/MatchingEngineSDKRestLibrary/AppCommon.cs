@@ -21,21 +21,6 @@ using System.Runtime.Serialization;
 namespace DistributedMatchEngine
 {
   /*!
-   * Vendor specific data
-   * \ingroup classes_datastructs
-   */
-  [DataContract]
-  public class Tag
-  {
-    //! type of data
-    [DataMember]
-    public string type;
-    //! data value
-    [DataMember]
-    public string data;
-  }
-
-  /*!
    * MobiledgeX GPS Location class
    * \ingroup classes_datastructs
    */
@@ -72,9 +57,7 @@ namespace DistributedMatchEngine
     //! TCP (L4) protocol
     L_PROTO_TCP = 1,
     //! UDP (L4) protocol
-    L_PROTO_UDP = 2,
-    //! HTTP (L7 tcp) protocol
-    L_PROTO_HTTP = 3
+    L_PROTO_UDP = 2
   }
 
   /*!
@@ -115,9 +98,6 @@ namespace DistributedMatchEngine
     //! Public facing port for TCP/UDP (may be mapped on shared LB reverse proxy)
     [DataMember]
     public Int32 public_port;
-    //! Public facing path prefix for HTTP L7 access.
-    [DataMember]
-    public string path_prefix;
     //! FQDN prefix to prepend to base FQDN in FindCloudlet response. May be empty.
     [DataMember]
     public string fqdn_prefix;

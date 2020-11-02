@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -51,7 +52,7 @@ namespace DistributedMatchEngine
     public string client_token;
     //! Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 
   /*!
@@ -109,7 +110,7 @@ namespace DistributedMatchEngine
     public Loc cloudlet_location;
     //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public Tag[] tags;
+    public ConcurrentDictionary<string, string> tags;
   }
 
 }
