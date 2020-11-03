@@ -26,245 +26,259 @@ namespace DistributedMatchEngine {
           string.Concat(
             "ChBhcHAtY2xpZW50LnByb3RvEhhkaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUa",
             "HGdvb2dsZS9hcGkvYW5ub3RhdGlvbnMucHJvdG8aCWxvYy5wcm90bxoPYXBw",
-            "Y29tbW9uLnByb3RvIiEKA1RhZxIMCgR0eXBlGAEgASgJEgwKBGRhdGEYAiAB",
-            "KAki7QEKFVJlZ2lzdGVyQ2xpZW50UmVxdWVzdBILCgN2ZXIYASABKA0SEAoI",
-            "b3JnX25hbWUYAiABKAkSEAoIYXBwX25hbWUYAyABKAkSEAoIYXBwX3ZlcnMY",
-            "BCABKAkSFAoMY2Fycmllcl9uYW1lGAUgASgJEhIKCmF1dGhfdG9rZW4YBiAB",
-            "KAkSDwoHY2VsbF9pZBgHIAEoDRIWCg51bmlxdWVfaWRfdHlwZRgIIAEoCRIR",
-            "Cgl1bmlxdWVfaWQYCSABKAkSKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVk",
-            "X21hdGNoX2VuZ2luZS5UYWci4wEKE1JlZ2lzdGVyQ2xpZW50UmVwbHkSCwoD",
-            "dmVyGAEgASgNEjUKBnN0YXR1cxgCIAEoDjIlLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5SZXBseVN0YXR1cxIWCg5zZXNzaW9uX2Nvb2tpZRgDIAEoCRIY",
-            "ChB0b2tlbl9zZXJ2ZXJfdXJpGAQgASgJEhYKDnVuaXF1ZV9pZF90eXBlGAUg",
-            "ASgJEhEKCXVuaXF1ZV9pZBgGIAEoCRIrCgR0YWdzGGMgAygLMh0uZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyLDAQoTRmluZENsb3VkbGV0UmVxdWVz",
-            "dBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9jb29raWUYAiABKAkSFAoMY2Fy",
-            "cmllcl9uYW1lGAMgASgJEjMKDGdwc19sb2NhdGlvbhgEIAEoCzIdLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSDwoHY2VsbF9pZBgIIAEoDRIrCgR0",
-            "YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyKbAQob",
+            "Y29tbW9uLnByb3RvIrYCChVSZWdpc3RlckNsaWVudFJlcXVlc3QSCwoDdmVy",
+            "GAEgASgNEhAKCG9yZ19uYW1lGAIgASgJEhAKCGFwcF9uYW1lGAMgASgJEhAK",
+            "CGFwcF92ZXJzGAQgASgJEhQKDGNhcnJpZXJfbmFtZRgFIAEoCRISCgphdXRo",
+            "X3Rva2VuGAYgASgJEg8KB2NlbGxfaWQYByABKA0SFgoOdW5pcXVlX2lkX3R5",
+            "cGUYCCABKAkSEQoJdW5pcXVlX2lkGAkgASgJEkcKBHRhZ3MYZCADKAsyOS5k",
+            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUmVnaXN0ZXJDbGllbnRSZXF1ZXN0",
+            "LlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVl",
+            "GAIgASgJOgI4ASKqAgoTUmVnaXN0ZXJDbGllbnRSZXBseRILCgN2ZXIYASAB",
+            "KA0SNQoGc3RhdHVzGAIgASgOMiUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LlJlcGx5U3RhdHVzEhYKDnNlc3Npb25fY29va2llGAMgASgJEhgKEHRva2Vu",
+            "X3NlcnZlcl91cmkYBCABKAkSFgoOdW5pcXVlX2lkX3R5cGUYBSABKAkSEQoJ",
+            "dW5pcXVlX2lkGAYgASgJEkUKBHRhZ3MYZCADKAsyNy5kaXN0cmlidXRlZF9t",
+            "YXRjaF9lbmdpbmUuUmVnaXN0ZXJDbGllbnRSZXBseS5UYWdzRW50cnkaKwoJ",
+            "VGFnc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiigIK",
+            "E0ZpbmRDbG91ZGxldFJlcXVlc3QSCwoDdmVyGAEgASgNEhYKDnNlc3Npb25f",
+            "Y29va2llGAIgASgJEhQKDGNhcnJpZXJfbmFtZRgDIAEoCRIzCgxncHNfbG9j",
+            "YXRpb24YBCABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEg8K",
+            "B2NlbGxfaWQYCCABKA0SRQoEdGFncxhkIAMoCzI3LmRpc3RyaWJ1dGVkX21h",
+            "dGNoX2VuZ2luZS5GaW5kQ2xvdWRsZXRSZXF1ZXN0LlRhZ3NFbnRyeRorCglU",
+            "YWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASLqAQob",
             "UGxhdGZvcm1GaW5kQ2xvdWRsZXRSZXF1ZXN0EgsKA3ZlchgBIAEoDRIWCg5z",
             "ZXNzaW9uX2Nvb2tpZRgCIAEoCRIUCgxjYXJyaWVyX25hbWUYAyABKAkSFAoM",
-            "Y2xpZW50X3Rva2VuGAQgASgJEisKBHRhZ3MYYyADKAsyHS5kaXN0cmlidXRl",
-            "ZF9tYXRjaF9lbmdpbmUuVGFnIoADChFGaW5kQ2xvdWRsZXRSZXBseRILCgN2",
-            "ZXIYASABKA0SRgoGc3RhdHVzGAIgASgOMjYuZGlzdHJpYnV0ZWRfbWF0Y2hf",
-            "ZW5naW5lLkZpbmRDbG91ZGxldFJlcGx5LkZpbmRTdGF0dXMSDAoEZnFkbhgD",
-            "IAEoCRIwCgVwb3J0cxgEIAMoCzIhLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5BcHBQb3J0EjgKEWNsb3VkbGV0X2xvY2F0aW9uGAUgASgLMh0uZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLkxvYxIaChJlZGdlX2V2ZW50c19jb29raWUY",
-            "BiABKAkSEAoIZG1lX2ZxZG4YByABKAkSKwoEdGFncxhjIAMoCzIdLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciQQoKRmluZFN0YXR1cxIQCgxGSU5E",
-            "X1VOS05PV04QABIOCgpGSU5EX0ZPVU5EEAESEQoNRklORF9OT1RGT1VORBAC",
-            "It8BChVWZXJpZnlMb2NhdGlvblJlcXVlc3QSCwoDdmVyGAEgASgNEhYKDnNl",
-            "c3Npb25fY29va2llGAIgASgJEhQKDGNhcnJpZXJfbmFtZRgDIAEoCRIzCgxn",
-            "cHNfbG9jYXRpb24YBCABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
-            "TG9jEhgKEHZlcmlmeV9sb2NfdG9rZW4YBSABKAkSDwoHY2VsbF9pZBgGIAEo",
-            "DRIrCgR0YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlRh",
-            "ZyL0BAoTVmVyaWZ5TG9jYXRpb25SZXBseRILCgN2ZXIYASABKA0STwoMdG93",
-            "ZXJfc3RhdHVzGAIgASgOMjkuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlZl",
-            "cmlmeUxvY2F0aW9uUmVwbHkuVG93ZXJTdGF0dXMSXAoTZ3BzX2xvY2F0aW9u",
-            "X3N0YXR1cxgDIAEoDjI/LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5WZXJp",
-            "ZnlMb2NhdGlvblJlcGx5LkdQU0xvY2F0aW9uU3RhdHVzEiAKGGdwc19sb2Nh",
-            "dGlvbl9hY2N1cmFjeV9rbRgEIAEoARIrCgR0YWdzGGMgAygLMh0uZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLlRhZyJoCgtUb3dlclN0YXR1cxIRCg1UT1dF",
-            "Ul9VTktOT1dOEAASIAocQ09OTkVDVEVEX1RPX1NQRUNJRklFRF9UT1dFUhAB",
-            "EiQKIE5PVF9DT05ORUNURURfVE9fU1BFQ0lGSUVEX1RPV0VSEAIi5wEKEUdQ",
-            "U0xvY2F0aW9uU3RhdHVzEg8KC0xPQ19VTktOT1dOEAASEAoMTE9DX1ZFUklG",
-            "SUVEEAESHQoZTE9DX01JU01BVENIX1NBTUVfQ09VTlRSWRACEh4KGkxPQ19N",
-            "SVNNQVRDSF9PVEhFUl9DT1VOVFJZEAMSHQoZTE9DX1JPQU1JTkdfQ09VTlRS",
-            "WV9NQVRDSBAEEiAKHExPQ19ST0FNSU5HX0NPVU5UUllfTUlTTUFUQ0gQBRIa",
-            "ChZMT0NfRVJST1JfVU5BVVRIT1JJWkVEEAYSEwoPTE9DX0VSUk9SX09USEVS",
-            "EAcijQEKEkdldExvY2F0aW9uUmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vz",
-            "c2lvbl9jb29raWUYAiABKAkSFAoMY2Fycmllcl9uYW1lGAMgASgJEg8KB2Nl",
-            "bGxfaWQYBCABKA0SKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5UYWcirQIKEEdldExvY2F0aW9uUmVwbHkSCwoDdmVyGAEgASgN",
-            "EkQKBnN0YXR1cxgCIAEoDjI0LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5H",
-            "ZXRMb2NhdGlvblJlcGx5LkxvY1N0YXR1cxIUCgxjYXJyaWVyX25hbWUYAyAB",
-            "KAkSDQoFdG93ZXIYBCABKAQSNwoQbmV0d29ya19sb2NhdGlvbhgFIAEoCzId",
-            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSKwoEdGFncxhjIAMoCzId",
-            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciOwoJTG9jU3RhdHVzEg8K",
-            "C0xPQ19VTktOT1dOEAASDQoJTE9DX0ZPVU5EEAESDgoKTE9DX0RFTklFRBAC",
-            "ItEBChJBcHBJbnN0TGlzdFJlcXVlc3QSCwoDdmVyGAEgASgNEhYKDnNlc3Np",
-            "b25fY29va2llGAIgASgJEhQKDGNhcnJpZXJfbmFtZRgDIAEoCRIzCgxncHNf",
-            "bG9jYXRpb24YBCABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9j",
-            "Eg8KB2NlbGxfaWQYBSABKA0SDQoFbGltaXQYBiABKA0SKwoEdGFncxhjIAMo",
-            "CzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWcigwEKC0FwcGluc3Rh",
-            "bmNlEhAKCGFwcF9uYW1lGAEgASgJEhAKCGFwcF92ZXJzGAIgASgJEgwKBGZx",
-            "ZG4YAyABKAkSMAoFcG9ydHMYBCADKAsyIS5kaXN0cmlidXRlZF9tYXRjaF9l",
-            "bmdpbmUuQXBwUG9ydBIQCghvcmdfbmFtZRgFIAEoCSLDAQoQQ2xvdWRsZXRM",
-            "b2NhdGlvbhIUCgxjYXJyaWVyX25hbWUYASABKAkSFQoNY2xvdWRsZXRfbmFt",
-            "ZRgCIAEoCRIzCgxncHNfbG9jYXRpb24YAyABKAsyHS5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuTG9jEhAKCGRpc3RhbmNlGAQgASgBEjsKDGFwcGluc3Rh",
-            "bmNlcxgFIAMoCzIlLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBpbnN0",
-            "YW5jZSKLAgoQQXBwSW5zdExpc3RSZXBseRILCgN2ZXIYASABKA0SQwoGc3Rh",
-            "dHVzGAIgASgOMjMuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RM",
-            "aXN0UmVwbHkuQUlTdGF0dXMSPQoJY2xvdWRsZXRzGAMgAygLMiouZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLkNsb3VkbGV0TG9jYXRpb24SKwoEdGFncxhj",
-            "IAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciOQoIQUlTdGF0",
-            "dXMSEAoMQUlfVU5ERUZJTkVEEAASDgoKQUlfU1VDQ0VTUxABEgsKB0FJX0ZB",
-            "SUwQAiJ0Cg9GcWRuTGlzdFJlcXVlc3QSCwoDdmVyGAEgASgNEhYKDnNlc3Np",
-            "b25fY29va2llGAIgASgJEg8KB2NlbGxfaWQYAyABKA0SKwoEdGFncxhjIAMo",
-            "CzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWcibAoHQXBwRnFkbhIQ",
-            "CghhcHBfbmFtZRgBIAEoCRIQCghhcHBfdmVycxgCIAEoCRIQCghvcmdfbmFt",
-            "ZRgDIAEoCRINCgVmcWRucxgEIAMoCRIcChRhbmRyb2lkX3BhY2thZ2VfbmFt",
-            "ZRgFIAEoCSL8AQoNRnFkbkxpc3RSZXBseRILCgN2ZXIYASABKA0SNAoJYXBw",
-            "X2ZxZG5zGAMgAygLMiEuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEZx",
-            "ZG4SQAoGc3RhdHVzGAQgASgOMjAuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
-            "LkZxZG5MaXN0UmVwbHkuRkxTdGF0dXMSKwoEdGFncxhjIAMoCzIdLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5UYWciOQoIRkxTdGF0dXMSEAoMRkxfVU5E",
-            "RUZJTkVEEAASDgoKRkxfU1VDQ0VTUxABEgsKB0ZMX0ZBSUwQAiKfAQoWQXBw",
-            "T2ZmaWNpYWxGcWRuUmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9j",
-            "b29raWUYAiABKAkSMwoMZ3BzX2xvY2F0aW9uGAMgASgLMh0uZGlzdHJpYnV0",
-            "ZWRfbWF0Y2hfZW5naW5lLkxvYxIrCgR0YWdzGGMgAygLMh0uZGlzdHJpYnV0",
-            "ZWRfbWF0Y2hfZW5naW5lLlRhZyK8AgoUQXBwT2ZmaWNpYWxGcWRuUmVwbHkS",
-            "CwoDdmVyGAEgASgNEhkKEWFwcF9vZmZpY2lhbF9mcWRuGAIgASgJEhQKDGNs",
-            "aWVudF90b2tlbhgDIAEoCRJICgZzdGF0dXMYBCABKA4yOC5kaXN0cmlidXRl",
-            "ZF9tYXRjaF9lbmdpbmUuQXBwT2ZmaWNpYWxGcWRuUmVwbHkuQU9GU3RhdHVz",
-            "EjAKBXBvcnRzGAUgAygLMiEuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFw",
-            "cFBvcnQSKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5UYWciPQoJQU9GU3RhdHVzEhEKDUFPRl9VTkRFRklORUQQABIPCgtBT0Zf",
-            "U1VDQ0VTUxABEgwKCEFPRl9GQUlMEAIirgIKFkR5bmFtaWNMb2NHcm91cFJl",
-            "cXVlc3QSCwoDdmVyGAEgASgNEhYKDnNlc3Npb25fY29va2llGAIgASgJEg0K",
-            "BWxnX2lkGAMgASgEEk8KCWNvbW1fdHlwZRgLIAEoDjI8LmRpc3RyaWJ1dGVk",
-            "X21hdGNoX2VuZ2luZS5EeW5hbWljTG9jR3JvdXBSZXF1ZXN0LkRsZ0NvbW1U",
-            "eXBlEhEKCXVzZXJfZGF0YRgMIAEoCRIPCgdjZWxsX2lkGA0gASgNEisKBHRh",
-            "Z3MYYyADKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVGFnIj4KC0Rs",
-            "Z0NvbW1UeXBlEhEKDURMR19VTkRFRklORUQQABIOCgpETEdfU0VDVVJFEAES",
-            "DAoIRExHX09QRU4QAiKxAQoURHluYW1pY0xvY0dyb3VwUmVwbHkSCwoDdmVy",
-            "GAEgASgNEjUKBnN0YXR1cxgCIAEoDjIlLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
-            "Z2luZS5SZXBseVN0YXR1cxISCgplcnJvcl9jb2RlGAMgASgNEhQKDGdyb3Vw",
-            "X2Nvb2tpZRgFIAEoCRIrCgR0YWdzGGMgAygLMh0uZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLlRhZyJWCgtRb3NQb3NpdGlvbhISCgpwb3NpdGlvbmlkGAEg",
-            "ASgDEjMKDGdwc19sb2NhdGlvbhgCIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5Mb2MiTwoNQmFuZFNlbGVjdGlvbhIOCgZyYXRfMmcYASADKAkS",
-            "DgoGcmF0XzNnGAIgAygJEg4KBnJhdF80ZxgDIAMoCRIOCgZyYXRfNWcYBCAD",
-            "KAkiiAIKElFvc1Bvc2l0aW9uUmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vz",
-            "c2lvbl9jb29raWUYAiABKAkSOAoJcG9zaXRpb25zGAMgAygLMiUuZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uEhQKDGx0ZV9jYXRlZ29y",
-            "eRgEIAEoBRI/Cg5iYW5kX3NlbGVjdGlvbhgFIAEoCzInLmRpc3RyaWJ1dGVk",
-            "X21hdGNoX2VuZ2luZS5CYW5kU2VsZWN0aW9uEg8KB2NlbGxfaWQYBiABKA0S",
-            "KwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5UYWci",
-            "0gIKFFFvc1Bvc2l0aW9uS3BpUmVzdWx0EhIKCnBvc2l0aW9uaWQYASABKAMS",
-            "MwoMZ3BzX2xvY2F0aW9uGAIgASgLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
-            "aW5lLkxvYxIcChRkbHVzZXJ0aHJvdWdocHV0X21pbhgDIAEoAhIcChRkbHVz",
-            "ZXJ0aHJvdWdocHV0X2F2ZxgEIAEoAhIcChRkbHVzZXJ0aHJvdWdocHV0X21h",
-            "eBgFIAEoAhIcChR1bHVzZXJ0aHJvdWdocHV0X21pbhgGIAEoAhIcChR1bHVz",
-            "ZXJ0aHJvdWdocHV0X2F2ZxgHIAEoAhIcChR1bHVzZXJ0aHJvdWdocHV0X21h",
-            "eBgIIAEoAhITCgtsYXRlbmN5X21pbhgJIAEoAhITCgtsYXRlbmN5X2F2ZxgK",
-            "IAEoAhITCgtsYXRlbmN5X21heBgLIAEoAiLQAQoTUW9zUG9zaXRpb25LcGlS",
-            "ZXBseRILCgN2ZXIYASABKA0SNQoGc3RhdHVzGAIgASgOMiUuZGlzdHJpYnV0",
-            "ZWRfbWF0Y2hfZW5naW5lLlJlcGx5U3RhdHVzEkgKEHBvc2l0aW9uX3Jlc3Vs",
-            "dHMYAyADKAsyLi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRp",
-            "b25LcGlSZXN1bHQSKwoEdGFncxhjIAMoCzIdLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5UYWci3QMKD0NsaWVudEVkZ2VFdmVudBIWCg5zZXNzaW9uX2Nv",
-            "b2tpZRgBIAEoCRIaChJlZGdlX2V2ZW50c19jb29raWUYAiABKAkSSAoFZXZl",
-            "bnQYAyABKA4yOS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQ2xpZW50RWRn",
-            "ZUV2ZW50LkNsaWVudEV2ZW50VHlwZRIzCgxncHNfbG9jYXRpb24YBCABKAsy",
-            "HS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEg8KB3NhbXBsZXMYBSAD",
-            "KAESQQoEdGFncxhkIAMoCzIzLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5D",
-            "bGllbnRFZGdlRXZlbnQuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkY",
-            "ASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIpUBCg9DbGllbnRFdmVudFR5cGUS",
-            "EQoNRVZFTlRfVU5LTk9XThAAEhkKFUVWRU5UX0lOSVRfQ09OTkVDVElPThAB",
-            "Eh4KGkVWRU5UX1RFUk1JTkFURV9DT05ORUNUSU9OEAISGQoVRVZFTlRfTEFU",
-            "RU5DWV9TQU1QTEVTEAMSGQoVRVZFTlRfTE9DQVRJT05fVVBEQVRFEAQitAoK",
-            "D1NlcnZlckVkZ2VFdmVudBJICgVldmVudBgBIAEoDjI5LmRpc3RyaWJ1dGVk",
-            "X21hdGNoX2VuZ2luZS5TZXJ2ZXJFZGdlRXZlbnQuU2VydmVyRXZlbnRUeXBl",
-            "Ek8KDmNsb3VkbGV0X3N0YXRlGAIgASgOMjcuZGlzdHJpYnV0ZWRfbWF0Y2hf",
-            "ZW5naW5lLlNlcnZlckVkZ2VFdmVudC5DbG91ZGxldFN0YXRlEmYKGmNsb3Vk",
-            "bGV0X21haW50ZW5hbmNlX3N0YXRlGAMgASgOMkIuZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLlNlcnZlckVkZ2VFdmVudC5DbG91ZGxldE1haW50ZW5hbmNl",
-            "U3RhdGUSWgoUYXBwaW5zdF9oZWFsdGhfc3RhdGUYBCABKA4yPC5kaXN0cmli",
-            "dXRlZF9tYXRjaF9lbmdpbmUuU2VydmVyRWRnZUV2ZW50LkFwcEluc3RIZWFs",
-            "dGhTdGF0ZRIyCgdsYXRlbmN5GAUgASgLMiEuZGlzdHJpYnV0ZWRfbWF0Y2hf",
-            "ZW5naW5lLkxhdGVuY3kSQQoEdGFncxhkIAMoCzIzLmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5TZXJ2ZXJFZGdlRXZlbnQuVGFnc0VudHJ5GisKCVRhZ3NF",
-            "bnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIssBCg9TZXJ2",
-            "ZXJFdmVudFR5cGUSEQoNRVZFTlRfVU5LTk9XThAAEhkKFUVWRU5UX0lOSVRf",
-            "Q09OTkVDVElPThABEhkKFUVWRU5UX0xBVEVOQ1lfUkVRVUVTVBACEhsKF0VW",
-            "RU5UX0xBVEVOQ1lfUFJPQ0VTU0VEEAMSGAoURVZFTlRfQ0xPVURMRVRfU1RB",
-            "VEUQBBIeChpFVkVOVF9DTE9VRExFVF9NQUlOVEVOQU5DRRAFEhgKFEVWRU5U",
-            "X0FQUElOU1RfSEVBTFRIEAYixQEKDUNsb3VkbGV0U3RhdGUSGgoWQ0xPVURM",
-            "RVRfU1RBVEVfVU5LTk9XThAAEhgKFENMT1VETEVUX1NUQVRFX1JFQURZEAES",
-            "FAoQQ0xPVURMRVRfT0ZGTElORRACEh4KGkNMT1VETEVUX1NUQVRFX05PVF9Q",
-            "UkVTRU5UEAMSFAoQQ0xPVURMRVRfVVBHUkFERRAEEhkKFUNMT1VETEVUX1NU",
-            "QVRFX0VSUk9SUxAFEhcKE0NMT1VETEVUX1NUQVRFX0lOSVQQBiKZAgoYQ2xv",
-            "dWRsZXRNYWludGVuYW5jZVN0YXRlEh0KGU1BSU5URU5BTkNFX1NUQVRFX1VO",
-            "S05PV04QABIcChhNQUlOVEVOQU5DRV9TVEFURV9OT1JNQUwQARInCiNNQUlO",
-            "VEVOQU5DRV9TVEFURV9VTkRFUl9NQUlOVEVOQU5DRRACEigKJE1BSU5URU5B",
-            "TkNFX1NUQVRFX01BSU5URU5BTkNFX0ZBSUxFRBADEiIKHk1BSU5URU5BTkNF",
-            "X1NUQVRFX0ZBSUxJTkdfT1ZFUhAEEiQKIE1BSU5URU5BTkNFX1NUQVRFX0ZB",
-            "SUxPVkVSX0VSUk9SEAUSIwofTUFJTlRFTkFOQ0VfU1RBVEVfRkFJTE9WRVJf",
-            "RE9ORRAGImwKEkFwcEluc3RIZWFsdGhTdGF0ZRIYChRIRUFMVEhfQ0hFQ0tf",
-            "VU5LTk9XThAAEhMKD0hFQUxUSF9DSEVDS19PSxABEhUKEUhFQUxUSF9DSEVD",
-            "S19GQUlMEAISEAoMQVBQSU5TVF9ET1dOEAMqPQoHSURUeXBlcxIQCgxJRF9V",
-            "TkRFRklORUQQABIICgRJTUVJEAESCgoGTVNJU0ROEAISCgoGSVBBRERSEAMq",
-            "PAoLUmVwbHlTdGF0dXMSEAoMUlNfVU5ERUZJTkVEEAASDgoKUlNfU1VDQ0VT",
-            "UxABEgsKB1JTX0ZBSUwQAjKlDAoOTWF0Y2hFbmdpbmVBcGkSjwEKDlJlZ2lz",
-            "dGVyQ2xpZW50Ei8uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlJlZ2lzdGVy",
-            "Q2xpZW50UmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5SZWdp",
-            "c3RlckNsaWVudFJlcGx5Ih2C0+STAhciEi92MS9yZWdpc3RlcmNsaWVudDoB",
-            "KhKHAQoMRmluZENsb3VkbGV0Ei0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
-            "LkZpbmRDbG91ZGxldFJlcXVlc3QaKy5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
-            "bmUuRmluZENsb3VkbGV0UmVwbHkiG4LT5JMCFSIQL3YxL2ZpbmRjbG91ZGxl",
-            "dDoBKhKfAQoUUGxhdGZvcm1GaW5kQ2xvdWRsZXQSNS5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuUGxhdGZvcm1GaW5kQ2xvdWRsZXRSZXF1ZXN0GisuZGlz",
-            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJlcGx5IiOC0+ST",
-            "Ah0iGC92MS9wbGF0Zm9ybWZpbmRjbG91ZGxldDoBKhKPAQoOVmVyaWZ5TG9j",
-            "YXRpb24SLy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVyaWZ5TG9jYXRp",
-            "b25SZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlZlcmlmeUxv",
-            "Y2F0aW9uUmVwbHkiHYLT5JMCFyISL3YxL3ZlcmlmeWxvY2F0aW9uOgEqEoMB",
-            "CgtHZXRMb2NhdGlvbhIsLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5HZXRM",
-            "b2NhdGlvblJlcXVlc3QaKi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuR2V0",
-            "TG9jYXRpb25SZXBseSIagtPkkwIUIg8vdjEvZ2V0bG9jYXRpb246ASoSkQEK",
-            "DkFkZFVzZXJUb0dyb3VwEjAuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5",
-            "bmFtaWNMb2NHcm91cFJlcXVlc3QaLi5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
-            "bmUuRHluYW1pY0xvY0dyb3VwUmVwbHkiHYLT5JMCFyISL3YxL2FkZHVzZXJ0",
-            "b2dyb3VwOgEqEokBCg5HZXRBcHBJbnN0TGlzdBIsLmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcXVlc3QaKi5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuQXBwSW5zdExpc3RSZXBseSIdgtPkkwIXIhIvdjEvZ2V0",
-            "YXBwaW5zdGxpc3Q6ASoSfQoLR2V0RnFkbkxpc3QSKS5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuRnFkbkxpc3RSZXF1ZXN0GicuZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLkZxZG5MaXN0UmVwbHkiGoLT5JMCFCIPL3YxL2dldGZxZG5s",
-            "aXN0OgEqEpkBChJHZXRBcHBPZmZpY2lhbEZxZG4SMC5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuQXBwT2ZmaWNpYWxGcWRuUmVxdWVzdBouLmRpc3RyaWJ1",
-            "dGVkX21hdGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5SZXBseSIhgtPkkwIb",
-            "IhYvdjEvZ2V0YXBwb2ZmaWNpYWxmcWRuOgEqEpQBChFHZXRRb3NQb3NpdGlv",
-            "bktwaRIsLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQb3NpdGlvblJl",
-            "cXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRpb25L",
-            "cGlSZXBseSIggtPkkwIaIhUvdjEvZ2V0cW9zcG9zaXRpb25rcGk6ASowARJr",
-            "Cg9TdHJlYW1FZGdlRXZlbnQSKS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
-            "Q2xpZW50RWRnZUV2ZW50GikuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNl",
-            "cnZlckVkZ2VFdmVudCgBMAFiBnByb3RvMw=="));
+            "Y2xpZW50X3Rva2VuGAQgASgJEk0KBHRhZ3MYZCADKAsyPy5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuUGxhdGZvcm1GaW5kQ2xvdWRsZXRSZXF1ZXN0LlRh",
+            "Z3NFbnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIg",
+            "ASgJOgI4ASLFAwoRRmluZENsb3VkbGV0UmVwbHkSCwoDdmVyGAEgASgNEkYK",
+            "BnN0YXR1cxgCIAEoDjI2LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5k",
+            "Q2xvdWRsZXRSZXBseS5GaW5kU3RhdHVzEgwKBGZxZG4YAyABKAkSMAoFcG9y",
+            "dHMYBCADKAsyIS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwUG9ydBI4",
+            "ChFjbG91ZGxldF9sb2NhdGlvbhgFIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5Mb2MSGgoSZWRnZV9ldmVudHNfY29va2llGAYgASgJEhAKCGRt",
+            "ZV9mcWRuGAcgASgJEkMKBHRhZ3MYZCADKAsyNS5kaXN0cmlidXRlZF9tYXRj",
+            "aF9lbmdpbmUuRmluZENsb3VkbGV0UmVwbHkuVGFnc0VudHJ5GisKCVRhZ3NF",
+            "bnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIkEKCkZpbmRT",
+            "dGF0dXMSEAoMRklORF9VTktOT1dOEAASDgoKRklORF9GT1VORBABEhEKDUZJ",
+            "TkRfTk9URk9VTkQQAiKoAgoVVmVyaWZ5TG9jYXRpb25SZXF1ZXN0EgsKA3Zl",
+            "chgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tpZRgCIAEoCRIUCgxjYXJyaWVyX25h",
+            "bWUYAyABKAkSMwoMZ3BzX2xvY2F0aW9uGAQgASgLMh0uZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLkxvYxIYChB2ZXJpZnlfbG9jX3Rva2VuGAUgASgJEg8K",
+            "B2NlbGxfaWQYBiABKA0SRwoEdGFncxhkIAMoCzI5LmRpc3RyaWJ1dGVkX21h",
+            "dGNoX2VuZ2luZS5WZXJpZnlMb2NhdGlvblJlcXVlc3QuVGFnc0VudHJ5GisK",
+            "CVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIrsF",
+            "ChNWZXJpZnlMb2NhdGlvblJlcGx5EgsKA3ZlchgBIAEoDRJPCgx0b3dlcl9z",
+            "dGF0dXMYAiABKA4yOS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVyaWZ5",
+            "TG9jYXRpb25SZXBseS5Ub3dlclN0YXR1cxJcChNncHNfbG9jYXRpb25fc3Rh",
+            "dHVzGAMgASgOMj8uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlZlcmlmeUxv",
+            "Y2F0aW9uUmVwbHkuR1BTTG9jYXRpb25TdGF0dXMSIAoYZ3BzX2xvY2F0aW9u",
+            "X2FjY3VyYWN5X2ttGAQgASgBEkUKBHRhZ3MYZCADKAsyNy5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuVmVyaWZ5TG9jYXRpb25SZXBseS5UYWdzRW50cnka",
+            "KwoJVGFnc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEi",
+            "aAoLVG93ZXJTdGF0dXMSEQoNVE9XRVJfVU5LTk9XThAAEiAKHENPTk5FQ1RF",
+            "RF9UT19TUEVDSUZJRURfVE9XRVIQARIkCiBOT1RfQ09OTkVDVEVEX1RPX1NQ",
+            "RUNJRklFRF9UT1dFUhACIucBChFHUFNMb2NhdGlvblN0YXR1cxIPCgtMT0Nf",
+            "VU5LTk9XThAAEhAKDExPQ19WRVJJRklFRBABEh0KGUxPQ19NSVNNQVRDSF9T",
+            "QU1FX0NPVU5UUlkQAhIeChpMT0NfTUlTTUFUQ0hfT1RIRVJfQ09VTlRSWRAD",
+            "Eh0KGUxPQ19ST0FNSU5HX0NPVU5UUllfTUFUQ0gQBBIgChxMT0NfUk9BTUlO",
+            "R19DT1VOVFJZX01JU01BVENIEAUSGgoWTE9DX0VSUk9SX1VOQVVUSE9SSVpF",
+            "RBAGEhMKD0xPQ19FUlJPUl9PVEhFUhAHItMBChJHZXRMb2NhdGlvblJlcXVl",
+            "c3QSCwoDdmVyGAEgASgNEhYKDnNlc3Npb25fY29va2llGAIgASgJEhQKDGNh",
+            "cnJpZXJfbmFtZRgDIAEoCRIPCgdjZWxsX2lkGAQgASgNEkQKBHRhZ3MYZCAD",
+            "KAsyNi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuR2V0TG9jYXRpb25SZXF1",
+            "ZXN0LlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZh",
+            "bHVlGAIgASgJOgI4ASLxAgoQR2V0TG9jYXRpb25SZXBseRILCgN2ZXIYASAB",
+            "KA0SRAoGc3RhdHVzGAIgASgOMjQuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LkdldExvY2F0aW9uUmVwbHkuTG9jU3RhdHVzEhQKDGNhcnJpZXJfbmFtZRgD",
+            "IAEoCRINCgV0b3dlchgEIAEoBBI3ChBuZXR3b3JrX2xvY2F0aW9uGAUgASgL",
+            "Mh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxvYxJCCgR0YWdzGGQgAygL",
+            "MjQuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkdldExvY2F0aW9uUmVwbHku",
+            "VGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
+            "AiABKAk6AjgBIjsKCUxvY1N0YXR1cxIPCgtMT0NfVU5LTk9XThAAEg0KCUxP",
+            "Q19GT1VORBABEg4KCkxPQ19ERU5JRUQQAiKXAgoSQXBwSW5zdExpc3RSZXF1",
+            "ZXN0EgsKA3ZlchgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tpZRgCIAEoCRIUCgxj",
+            "YXJyaWVyX25hbWUYAyABKAkSMwoMZ3BzX2xvY2F0aW9uGAQgASgLMh0uZGlz",
+            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxvYxIPCgdjZWxsX2lkGAUgASgNEg0K",
+            "BWxpbWl0GAYgASgNEkQKBHRhZ3MYZCADKAsyNi5kaXN0cmlidXRlZF9tYXRj",
+            "aF9lbmdpbmUuQXBwSW5zdExpc3RSZXF1ZXN0LlRhZ3NFbnRyeRorCglUYWdz",
+            "RW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKDAQoLQXBw",
+            "aW5zdGFuY2USEAoIYXBwX25hbWUYASABKAkSEAoIYXBwX3ZlcnMYAiABKAkS",
+            "DAoEZnFkbhgDIAEoCRIwCgVwb3J0cxgEIAMoCzIhLmRpc3RyaWJ1dGVkX21h",
+            "dGNoX2VuZ2luZS5BcHBQb3J0EhAKCG9yZ19uYW1lGAUgASgJIsMBChBDbG91",
+            "ZGxldExvY2F0aW9uEhQKDGNhcnJpZXJfbmFtZRgBIAEoCRIVCg1jbG91ZGxl",
+            "dF9uYW1lGAIgASgJEjMKDGdwc19sb2NhdGlvbhgDIAEoCzIdLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5Mb2MSEAoIZGlzdGFuY2UYBCABKAESOwoMYXBw",
+            "aW5zdGFuY2VzGAUgAygLMiUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFw",
+            "cGluc3RhbmNlIs8CChBBcHBJbnN0TGlzdFJlcGx5EgsKA3ZlchgBIAEoDRJD",
+            "CgZzdGF0dXMYAiABKA4yMy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBw",
+            "SW5zdExpc3RSZXBseS5BSVN0YXR1cxI9CgljbG91ZGxldHMYAyADKAsyKi5k",
+            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQ2xvdWRsZXRMb2NhdGlvbhJCCgR0",
+            "YWdzGGQgAygLMjQuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RM",
+            "aXN0UmVwbHkuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkS",
+            "DQoFdmFsdWUYAiABKAk6AjgBIjkKCEFJU3RhdHVzEhAKDEFJX1VOREVGSU5F",
+            "RBAAEg4KCkFJX1NVQ0NFU1MQARILCgdBSV9GQUlMEAIitwEKD0ZxZG5MaXN0",
+            "UmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9jb29raWUYAiABKAkS",
+            "DwoHY2VsbF9pZBgDIAEoDRJBCgR0YWdzGGQgAygLMjMuZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLkZxZG5MaXN0UmVxdWVzdC5UYWdzRW50cnkaKwoJVGFn",
+            "c0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEibAoHQXBw",
+            "RnFkbhIQCghhcHBfbmFtZRgBIAEoCRIQCghhcHBfdmVycxgCIAEoCRIQCghv",
+            "cmdfbmFtZRgDIAEoCRINCgVmcWRucxgEIAMoCRIcChRhbmRyb2lkX3BhY2th",
+            "Z2VfbmFtZRgFIAEoCSK9AgoNRnFkbkxpc3RSZXBseRILCgN2ZXIYASABKA0S",
+            "NAoJYXBwX2ZxZG5zGAMgAygLMiEuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LkFwcEZxZG4SQAoGc3RhdHVzGAQgASgOMjAuZGlzdHJpYnV0ZWRfbWF0Y2hf",
+            "ZW5naW5lLkZxZG5MaXN0UmVwbHkuRkxTdGF0dXMSPwoEdGFncxhkIAMoCzIx",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GcWRuTGlzdFJlcGx5LlRhZ3NF",
+            "bnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJ",
+            "OgI4ASI5CghGTFN0YXR1cxIQCgxGTF9VTkRFRklORUQQABIOCgpGTF9TVUND",
+            "RVNTEAESCwoHRkxfRkFJTBACIukBChZBcHBPZmZpY2lhbEZxZG5SZXF1ZXN0",
+            "EgsKA3ZlchgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tpZRgCIAEoCRIzCgxncHNf",
+            "bG9jYXRpb24YAyABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9j",
+            "EkgKBHRhZ3MYZCADKAsyOi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBw",
+            "T2ZmaWNpYWxGcWRuUmVxdWVzdC5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsK",
+            "A2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEihAMKFEFwcE9mZmljaWFs",
+            "RnFkblJlcGx5EgsKA3ZlchgBIAEoDRIZChFhcHBfb2ZmaWNpYWxfZnFkbhgC",
+            "IAEoCRIUCgxjbGllbnRfdG9rZW4YAyABKAkSSAoGc3RhdHVzGAQgASgOMjgu",
+            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcE9mZmljaWFsRnFkblJlcGx5",
+            "LkFPRlN0YXR1cxIwCgVwb3J0cxgFIAMoCzIhLmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5BcHBQb3J0EkYKBHRhZ3MYZCADKAsyOC5kaXN0cmlidXRlZF9t",
+            "YXRjaF9lbmdpbmUuQXBwT2ZmaWNpYWxGcWRuUmVwbHkuVGFnc0VudHJ5GisK",
+            "CVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIj0K",
+            "CUFPRlN0YXR1cxIRCg1BT0ZfVU5ERUZJTkVEEAASDwoLQU9GX1NVQ0NFU1MQ",
+            "ARIMCghBT0ZfRkFJTBACIvgCChZEeW5hbWljTG9jR3JvdXBSZXF1ZXN0EgsK",
+            "A3ZlchgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tpZRgCIAEoCRINCgVsZ19pZBgD",
+            "IAEoBBJPCgljb21tX3R5cGUYCyABKA4yPC5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuRHluYW1pY0xvY0dyb3VwUmVxdWVzdC5EbGdDb21tVHlwZRIRCgl1",
+            "c2VyX2RhdGEYDCABKAkSDwoHY2VsbF9pZBgNIAEoDRJICgR0YWdzGGQgAygL",
+            "MjouZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91cFJl",
+            "cXVlc3QuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoF",
+            "dmFsdWUYAiABKAk6AjgBIj4KC0RsZ0NvbW1UeXBlEhEKDURMR19VTkRFRklO",
+            "RUQQABIOCgpETEdfU0VDVVJFEAESDAoIRExHX09QRU4QAiL5AQoURHluYW1p",
+            "Y0xvY0dyb3VwUmVwbHkSCwoDdmVyGAEgASgNEjUKBnN0YXR1cxgCIAEoDjIl",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5SZXBseVN0YXR1cxISCgplcnJv",
+            "cl9jb2RlGAMgASgNEhQKDGdyb3VwX2Nvb2tpZRgFIAEoCRJGCgR0YWdzGGQg",
+            "AygLMjguZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91",
+            "cFJlcGx5LlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0K",
+            "BXZhbHVlGAIgASgJOgI4ASJWCgtRb3NQb3NpdGlvbhISCgpwb3NpdGlvbmlk",
+            "GAEgASgDEjMKDGdwc19sb2NhdGlvbhgCIAEoCzIdLmRpc3RyaWJ1dGVkX21h",
+            "dGNoX2VuZ2luZS5Mb2MiTwoNQmFuZFNlbGVjdGlvbhIOCgZyYXRfMmcYASAD",
+            "KAkSDgoGcmF0XzNnGAIgAygJEg4KBnJhdF80ZxgDIAMoCRIOCgZyYXRfNWcY",
+            "BCADKAkizgIKElFvc1Bvc2l0aW9uUmVxdWVzdBILCgN2ZXIYASABKA0SFgoO",
+            "c2Vzc2lvbl9jb29raWUYAiABKAkSOAoJcG9zaXRpb25zGAMgAygLMiUuZGlz",
+            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uEhQKDGx0ZV9jYXRl",
+            "Z29yeRgEIAEoBRI/Cg5iYW5kX3NlbGVjdGlvbhgFIAEoCzInLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5CYW5kU2VsZWN0aW9uEg8KB2NlbGxfaWQYBiAB",
+            "KA0SRAoEdGFncxhkIAMoCzI2LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5R",
+            "b3NQb3NpdGlvblJlcXVlc3QuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNr",
+            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBItICChRRb3NQb3NpdGlvbktw",
+            "aVJlc3VsdBISCgpwb3NpdGlvbmlkGAEgASgDEjMKDGdwc19sb2NhdGlvbhgC",
+            "IAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSHAoUZGx1c2Vy",
+            "dGhyb3VnaHB1dF9taW4YAyABKAISHAoUZGx1c2VydGhyb3VnaHB1dF9hdmcY",
+            "BCABKAISHAoUZGx1c2VydGhyb3VnaHB1dF9tYXgYBSABKAISHAoUdWx1c2Vy",
+            "dGhyb3VnaHB1dF9taW4YBiABKAISHAoUdWx1c2VydGhyb3VnaHB1dF9hdmcY",
+            "ByABKAISHAoUdWx1c2VydGhyb3VnaHB1dF9tYXgYCCABKAISEwoLbGF0ZW5j",
+            "eV9taW4YCSABKAISEwoLbGF0ZW5jeV9hdmcYCiABKAISEwoLbGF0ZW5jeV9t",
+            "YXgYCyABKAIilwIKE1Fvc1Bvc2l0aW9uS3BpUmVwbHkSCwoDdmVyGAEgASgN",
+            "EjUKBnN0YXR1cxgCIAEoDjIlLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5S",
+            "ZXBseVN0YXR1cxJIChBwb3NpdGlvbl9yZXN1bHRzGAMgAygLMi4uZGlzdHJp",
+            "YnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uS3BpUmVzdWx0EkUKBHRh",
+            "Z3MYZCADKAsyNy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRp",
+            "b25LcGlSZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEo",
+            "CRINCgV2YWx1ZRgCIAEoCToCOAEihAQKD0NsaWVudEVkZ2VFdmVudBIWCg5z",
+            "ZXNzaW9uX2Nvb2tpZRgBIAEoCRIaChJlZGdlX2V2ZW50c19jb29raWUYAiAB",
+            "KAkSTQoKZXZlbnRfdHlwZRgDIAEoDjI5LmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
+            "Z2luZS5DbGllbnRFZGdlRXZlbnQuQ2xpZW50RXZlbnRUeXBlEjMKDGdwc19s",
+            "b2NhdGlvbhgEIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MS",
+            "MQoHc2FtcGxlcxgFIAMoCzIgLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5T",
+            "YW1wbGUSQQoEdGFncxhkIAMoCzIzLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5DbGllbnRFZGdlRXZlbnQuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNr",
+            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIpUBCg9DbGllbnRFdmVudFR5",
+            "cGUSEQoNRVZFTlRfVU5LTk9XThAAEhkKFUVWRU5UX0lOSVRfQ09OTkVDVElP",
+            "ThABEh4KGkVWRU5UX1RFUk1JTkFURV9DT05ORUNUSU9OEAISGQoVRVZFTlRf",
+            "TEFURU5DWV9TQU1QTEVTEAMSGQoVRVZFTlRfTE9DQVRJT05fVVBEQVRFEAQi",
+            "lwUKD1NlcnZlckVkZ2VFdmVudBJNCgpldmVudF90eXBlGAEgASgOMjkuZGlz",
+            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNlcnZlckVkZ2VFdmVudC5TZXJ2ZXJF",
+            "dmVudFR5cGUSPwoOY2xvdWRsZXRfc3RhdGUYAiABKA4yJy5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuQ2xvdWRsZXRTdGF0ZRJFChFtYWludGVuYW5jZV9z",
+            "dGF0ZRgDIAEoDjIqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5NYWludGVu",
+            "YW5jZVN0YXRlEjsKDGhlYWx0aF9jaGVjaxgEIAEoDjIlLmRpc3RyaWJ1dGVk",
+            "X21hdGNoX2VuZ2luZS5IZWFsdGhDaGVjaxIyCgdsYXRlbmN5GAUgASgLMiEu",
+            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxhdGVuY3kSQQoEdGFncxhkIAMo",
+            "CzIzLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5TZXJ2ZXJFZGdlRXZlbnQu",
+            "VGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
+            "AiABKAk6AjgBIssBCg9TZXJ2ZXJFdmVudFR5cGUSEQoNRVZFTlRfVU5LTk9X",
+            "ThAAEhkKFUVWRU5UX0lOSVRfQ09OTkVDVElPThABEhkKFUVWRU5UX0xBVEVO",
+            "Q1lfUkVRVUVTVBACEhsKF0VWRU5UX0xBVEVOQ1lfUFJPQ0VTU0VEEAMSGAoU",
+            "RVZFTlRfQ0xPVURMRVRfU1RBVEUQBBIeChpFVkVOVF9DTE9VRExFVF9NQUlO",
+            "VEVOQU5DRRAFEhgKFEVWRU5UX0FQUElOU1RfSEVBTFRIEAYqPQoHSURUeXBl",
+            "cxIQCgxJRF9VTkRFRklORUQQABIICgRJTUVJEAESCgoGTVNJU0ROEAISCgoG",
+            "SVBBRERSEAMqPAoLUmVwbHlTdGF0dXMSEAoMUlNfVU5ERUZJTkVEEAASDgoK",
+            "UlNfU1VDQ0VTUxABEgsKB1JTX0ZBSUwQAjKlDAoOTWF0Y2hFbmdpbmVBcGkS",
+            "jwEKDlJlZ2lzdGVyQ2xpZW50Ei8uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LlJlZ2lzdGVyQ2xpZW50UmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
+            "Z2luZS5SZWdpc3RlckNsaWVudFJlcGx5Ih2C0+STAhciEi92MS9yZWdpc3Rl",
+            "cmNsaWVudDoBKhKHAQoMRmluZENsb3VkbGV0Ei0uZGlzdHJpYnV0ZWRfbWF0",
+            "Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJlcXVlc3QaKy5kaXN0cmlidXRlZF9t",
+            "YXRjaF9lbmdpbmUuRmluZENsb3VkbGV0UmVwbHkiG4LT5JMCFSIQL3YxL2Zp",
+            "bmRjbG91ZGxldDoBKhKfAQoUUGxhdGZvcm1GaW5kQ2xvdWRsZXQSNS5kaXN0",
+            "cmlidXRlZF9tYXRjaF9lbmdpbmUuUGxhdGZvcm1GaW5kQ2xvdWRsZXRSZXF1",
+            "ZXN0GisuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJl",
+            "cGx5IiOC0+STAh0iGC92MS9wbGF0Zm9ybWZpbmRjbG91ZGxldDoBKhKPAQoO",
+            "VmVyaWZ5TG9jYXRpb24SLy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVy",
+            "aWZ5TG9jYXRpb25SZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LlZlcmlmeUxvY2F0aW9uUmVwbHkiHYLT5JMCFyISL3YxL3ZlcmlmeWxvY2F0",
+            "aW9uOgEqEoMBCgtHZXRMb2NhdGlvbhIsLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
+            "Z2luZS5HZXRMb2NhdGlvblJlcXVlc3QaKi5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuR2V0TG9jYXRpb25SZXBseSIagtPkkwIUIg8vdjEvZ2V0bG9jYXRp",
+            "b246ASoSkQEKDkFkZFVzZXJUb0dyb3VwEjAuZGlzdHJpYnV0ZWRfbWF0Y2hf",
+            "ZW5naW5lLkR5bmFtaWNMb2NHcm91cFJlcXVlc3QaLi5kaXN0cmlidXRlZF9t",
+            "YXRjaF9lbmdpbmUuRHluYW1pY0xvY0dyb3VwUmVwbHkiHYLT5JMCFyISL3Yx",
+            "L2FkZHVzZXJ0b2dyb3VwOgEqEokBCg5HZXRBcHBJbnN0TGlzdBIsLmRpc3Ry",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcXVlc3QaKi5kaXN0",
+            "cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwSW5zdExpc3RSZXBseSIdgtPkkwIX",
+            "IhIvdjEvZ2V0YXBwaW5zdGxpc3Q6ASoSfQoLR2V0RnFkbkxpc3QSKS5kaXN0",
+            "cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFkbkxpc3RSZXF1ZXN0GicuZGlzdHJp",
+            "YnV0ZWRfbWF0Y2hfZW5naW5lLkZxZG5MaXN0UmVwbHkiGoLT5JMCFCIPL3Yx",
+            "L2dldGZxZG5saXN0OgEqEpkBChJHZXRBcHBPZmZpY2lhbEZxZG4SMC5kaXN0",
+            "cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwT2ZmaWNpYWxGcWRuUmVxdWVzdBou",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5SZXBs",
+            "eSIhgtPkkwIbIhYvdjEvZ2V0YXBwb2ZmaWNpYWxmcWRuOgEqEpQBChFHZXRR",
+            "b3NQb3NpdGlvbktwaRIsLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQ",
+            "b3NpdGlvblJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9z",
+            "UG9zaXRpb25LcGlSZXBseSIggtPkkwIaIhUvdjEvZ2V0cW9zcG9zaXRpb25r",
+            "cGk6ASowARJrCg9TdHJlYW1FZGdlRXZlbnQSKS5kaXN0cmlidXRlZF9tYXRj",
+            "aF9lbmdpbmUuQ2xpZW50RWRnZUV2ZW50GikuZGlzdHJpYnV0ZWRfbWF0Y2hf",
+            "ZW5naW5lLlNlcnZlckVkZ2VFdmVudCgBMAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::DistributedMatchEngine.LocReflection.Descriptor, global::DistributedMatchEngine.AppcommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.IDTypes), typeof(global::DistributedMatchEngine.ReplyStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Tag), global::DistributedMatchEngine.Tag.Parser, new[]{ "Type", "Data" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientRequest), global::DistributedMatchEngine.RegisterClientRequest.Parser, new[]{ "Ver", "OrgName", "AppName", "AppVers", "CarrierName", "AuthToken", "CellId", "UniqueIdType", "UniqueId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientReply), global::DistributedMatchEngine.RegisterClientReply.Parser, new[]{ "Ver", "Status", "SessionCookie", "TokenServerUri", "UniqueIdType", "UniqueId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletRequest), global::DistributedMatchEngine.FindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "CellId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.PlatformFindCloudletRequest), global::DistributedMatchEngine.PlatformFindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "ClientToken", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletReply), global::DistributedMatchEngine.FindCloudletReply.Parser, new[]{ "Ver", "Status", "Fqdn", "Ports", "CloudletLocation", "EdgeEventsCookie", "DmeFqdn", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FindCloudletReply.Types.FindStatus) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationRequest), global::DistributedMatchEngine.VerifyLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "VerifyLocToken", "CellId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationReply), global::DistributedMatchEngine.VerifyLocationReply.Parser, new[]{ "Ver", "TowerStatus", "GpsLocationStatus", "GpsLocationAccuracyKm", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.TowerStatus), typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.GPSLocationStatus) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.GetLocationRequest), global::DistributedMatchEngine.GetLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "CellId", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.GetLocationReply), global::DistributedMatchEngine.GetLocationReply.Parser, new[]{ "Ver", "Status", "CarrierName", "Tower", "NetworkLocation", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.GetLocationReply.Types.LocStatus) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppInstListRequest), global::DistributedMatchEngine.AppInstListRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "CellId", "Limit", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientRequest), global::DistributedMatchEngine.RegisterClientRequest.Parser, new[]{ "Ver", "OrgName", "AppName", "AppVers", "CarrierName", "AuthToken", "CellId", "UniqueIdType", "UniqueId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientReply), global::DistributedMatchEngine.RegisterClientReply.Parser, new[]{ "Ver", "Status", "SessionCookie", "TokenServerUri", "UniqueIdType", "UniqueId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletRequest), global::DistributedMatchEngine.FindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "CellId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.PlatformFindCloudletRequest), global::DistributedMatchEngine.PlatformFindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "ClientToken", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletReply), global::DistributedMatchEngine.FindCloudletReply.Parser, new[]{ "Ver", "Status", "Fqdn", "Ports", "CloudletLocation", "EdgeEventsCookie", "DmeFqdn", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FindCloudletReply.Types.FindStatus) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationRequest), global::DistributedMatchEngine.VerifyLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "VerifyLocToken", "CellId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationReply), global::DistributedMatchEngine.VerifyLocationReply.Parser, new[]{ "Ver", "TowerStatus", "GpsLocationStatus", "GpsLocationAccuracyKm", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.TowerStatus), typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.GPSLocationStatus) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.GetLocationRequest), global::DistributedMatchEngine.GetLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "CellId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.GetLocationReply), global::DistributedMatchEngine.GetLocationReply.Parser, new[]{ "Ver", "Status", "CarrierName", "Tower", "NetworkLocation", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.GetLocationReply.Types.LocStatus) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppInstListRequest), global::DistributedMatchEngine.AppInstListRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "CellId", "Limit", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Appinstance), global::DistributedMatchEngine.Appinstance.Parser, new[]{ "AppName", "AppVers", "Fqdn", "Ports", "OrgName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.CloudletLocation), global::DistributedMatchEngine.CloudletLocation.Parser, new[]{ "CarrierName", "CloudletName", "GpsLocation", "Distance", "Appinstances" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppInstListReply), global::DistributedMatchEngine.AppInstListReply.Parser, new[]{ "Ver", "Status", "Cloudlets", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.AppInstListReply.Types.AIStatus) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FqdnListRequest), global::DistributedMatchEngine.FqdnListRequest.Parser, new[]{ "Ver", "SessionCookie", "CellId", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppInstListReply), global::DistributedMatchEngine.AppInstListReply.Parser, new[]{ "Ver", "Status", "Cloudlets", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.AppInstListReply.Types.AIStatus) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FqdnListRequest), global::DistributedMatchEngine.FqdnListRequest.Parser, new[]{ "Ver", "SessionCookie", "CellId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppFqdn), global::DistributedMatchEngine.AppFqdn.Parser, new[]{ "AppName", "AppVers", "OrgName", "Fqdns", "AndroidPackageName" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FqdnListReply), global::DistributedMatchEngine.FqdnListReply.Parser, new[]{ "Ver", "AppFqdns", "Status", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FqdnListReply.Types.FLStatus) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppOfficialFqdnRequest), global::DistributedMatchEngine.AppOfficialFqdnRequest.Parser, new[]{ "Ver", "SessionCookie", "GpsLocation", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppOfficialFqdnReply), global::DistributedMatchEngine.AppOfficialFqdnReply.Parser, new[]{ "Ver", "AppOfficialFqdn", "ClientToken", "Status", "Ports", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.AppOfficialFqdnReply.Types.AOFStatus) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupRequest), global::DistributedMatchEngine.DynamicLocGroupRequest.Parser, new[]{ "Ver", "SessionCookie", "LgId", "CommType", "UserData", "CellId", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.DynamicLocGroupRequest.Types.DlgCommType) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupReply), global::DistributedMatchEngine.DynamicLocGroupReply.Parser, new[]{ "Ver", "Status", "ErrorCode", "GroupCookie", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FqdnListReply), global::DistributedMatchEngine.FqdnListReply.Parser, new[]{ "Ver", "AppFqdns", "Status", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FqdnListReply.Types.FLStatus) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppOfficialFqdnRequest), global::DistributedMatchEngine.AppOfficialFqdnRequest.Parser, new[]{ "Ver", "SessionCookie", "GpsLocation", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppOfficialFqdnReply), global::DistributedMatchEngine.AppOfficialFqdnReply.Parser, new[]{ "Ver", "AppOfficialFqdn", "ClientToken", "Status", "Ports", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.AppOfficialFqdnReply.Types.AOFStatus) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupRequest), global::DistributedMatchEngine.DynamicLocGroupRequest.Parser, new[]{ "Ver", "SessionCookie", "LgId", "CommType", "UserData", "CellId", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.DynamicLocGroupRequest.Types.DlgCommType) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DynamicLocGroupReply), global::DistributedMatchEngine.DynamicLocGroupReply.Parser, new[]{ "Ver", "Status", "ErrorCode", "GroupCookie", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPosition), global::DistributedMatchEngine.QosPosition.Parser, new[]{ "Positionid", "GpsLocation" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.BandSelection), global::DistributedMatchEngine.BandSelection.Parser, new[]{ "Rat2G", "Rat3G", "Rat4G", "Rat5G" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionRequest), global::DistributedMatchEngine.QosPositionRequest.Parser, new[]{ "Ver", "SessionCookie", "Positions", "LteCategory", "BandSelection", "CellId", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionRequest), global::DistributedMatchEngine.QosPositionRequest.Parser, new[]{ "Ver", "SessionCookie", "Positions", "LteCategory", "BandSelection", "CellId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiResult), global::DistributedMatchEngine.QosPositionKpiResult.Parser, new[]{ "Positionid", "GpsLocation", "DluserthroughputMin", "DluserthroughputAvg", "DluserthroughputMax", "UluserthroughputMin", "UluserthroughputAvg", "UluserthroughputMax", "LatencyMin", "LatencyAvg", "LatencyMax" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiReply), global::DistributedMatchEngine.QosPositionKpiReply.Parser, new[]{ "Ver", "Status", "PositionResults", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EdgeEventsCookie", "Event", "GpsLocation", "Samples", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ServerEdgeEvent), global::DistributedMatchEngine.ServerEdgeEvent.Parser, new[]{ "Event", "CloudletState", "CloudletMaintenanceState", "AppinstHealthState", "Latency", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType), typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState), typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState), typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState) }, null, new pbr::GeneratedClrTypeInfo[] { null, })
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiReply), global::DistributedMatchEngine.QosPositionKpiReply.Parser, new[]{ "Ver", "Status", "PositionResults", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EdgeEventsCookie", "EventType", "GpsLocation", "Samples", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ServerEdgeEvent), global::DistributedMatchEngine.ServerEdgeEvent.Parser, new[]{ "EventType", "CloudletState", "MaintenanceState", "HealthCheck", "Latency", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) }, null, new pbr::GeneratedClrTypeInfo[] { null, })
           }));
     }
     #endregion
@@ -287,220 +301,6 @@ namespace DistributedMatchEngine {
   #endregion
 
   #region Messages
-  public sealed partial class Tag : pb::IMessage<Tag>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Tag> _parser = new pb::MessageParser<Tag>(() => new Tag());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Tag> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[0]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Tag() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Tag(Tag other) : this() {
-      type_ = other.type_;
-      data_ = other.data_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Tag Clone() {
-      return new Tag(this);
-    }
-
-    /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 1;
-    private string type_ = "";
-    /// <summary>
-    /// type of data
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Type {
-      get { return type_; }
-      set {
-        type_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "data" field.</summary>
-    public const int DataFieldNumber = 2;
-    private string data_ = "";
-    /// <summary>
-    /// data value
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Data {
-      get { return data_; }
-      set {
-        data_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as Tag);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Tag other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Type != other.Type) return false;
-      if (Data != other.Data) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Type.Length != 0) hash ^= Type.GetHashCode();
-      if (Data.Length != 0) hash ^= Data.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Type.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Type);
-      }
-      if (Data.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Data);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Type.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Type);
-      }
-      if (Data.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Data);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      if (Type.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
-      }
-      if (Data.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Data);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Tag other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Type.Length != 0) {
-        Type = other.Type;
-      }
-      if (other.Data.Length != 0) {
-        Data = other.Data;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Type = input.ReadString();
-            break;
-          }
-          case 18: {
-            Data = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Type = input.ReadString();
-            break;
-          }
-          case 18: {
-            Data = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
   public sealed partial class RegisterClientRequest : pb::IMessage<RegisterClientRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -513,7 +313,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[1]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -704,10 +504,10 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     ///
     /// Tags
@@ -715,7 +515,7 @@ namespace DistributedMatchEngine {
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -741,7 +541,7 @@ namespace DistributedMatchEngine {
       if (CellId != other.CellId) return false;
       if (UniqueIdType != other.UniqueIdType) return false;
       if (UniqueId != other.UniqueId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -757,7 +557,7 @@ namespace DistributedMatchEngine {
       if (CellId != 0) hash ^= CellId.GetHashCode();
       if (UniqueIdType.Length != 0) hash ^= UniqueIdType.GetHashCode();
       if (UniqueId.Length != 0) hash ^= UniqueId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -810,7 +610,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(74);
         output.WriteString(UniqueId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -856,7 +656,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(74);
         output.WriteString(UniqueId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -893,7 +693,7 @@ namespace DistributedMatchEngine {
       if (UniqueId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(UniqueId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -983,8 +783,8 @@ namespace DistributedMatchEngine {
             UniqueId = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -1037,8 +837,8 @@ namespace DistributedMatchEngine {
             UniqueId = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -1060,7 +860,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[2]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1200,17 +1000,17 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// Vendor specific data
     ///
     /// _(optional)_ Array of Tags.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -1233,7 +1033,7 @@ namespace DistributedMatchEngine {
       if (TokenServerUri != other.TokenServerUri) return false;
       if (UniqueIdType != other.UniqueIdType) return false;
       if (UniqueId != other.UniqueId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1246,7 +1046,7 @@ namespace DistributedMatchEngine {
       if (TokenServerUri.Length != 0) hash ^= TokenServerUri.GetHashCode();
       if (UniqueIdType.Length != 0) hash ^= UniqueIdType.GetHashCode();
       if (UniqueId.Length != 0) hash ^= UniqueId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1287,7 +1087,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(50);
         output.WriteString(UniqueId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1321,7 +1121,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(50);
         output.WriteString(UniqueId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1349,7 +1149,7 @@ namespace DistributedMatchEngine {
       if (UniqueId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(UniqueId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1418,8 +1218,8 @@ namespace DistributedMatchEngine {
             UniqueId = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -1460,8 +1260,8 @@ namespace DistributedMatchEngine {
             UniqueId = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -1483,7 +1283,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[3]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1601,10 +1401,10 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     ///
     /// Tags
@@ -1612,7 +1412,7 @@ namespace DistributedMatchEngine {
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -1634,7 +1434,7 @@ namespace DistributedMatchEngine {
       if (CarrierName != other.CarrierName) return false;
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
       if (CellId != other.CellId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1646,7 +1446,7 @@ namespace DistributedMatchEngine {
       if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1683,7 +1483,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(64);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1713,7 +1513,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(64);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1738,7 +1538,7 @@ namespace DistributedMatchEngine {
       if (CellId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CellId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1806,8 +1606,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -1847,8 +1647,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -1870,7 +1670,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[4]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1970,10 +1770,10 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     ///
     /// Tags
@@ -1981,7 +1781,7 @@ namespace DistributedMatchEngine {
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -2002,7 +1802,7 @@ namespace DistributedMatchEngine {
       if (SessionCookie != other.SessionCookie) return false;
       if (CarrierName != other.CarrierName) return false;
       if (ClientToken != other.ClientToken) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2013,7 +1813,7 @@ namespace DistributedMatchEngine {
       if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
       if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
       if (ClientToken.Length != 0) hash ^= ClientToken.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2046,7 +1846,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(34);
         output.WriteString(ClientToken);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2072,7 +1872,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(34);
         output.WriteString(ClientToken);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2094,7 +1894,7 @@ namespace DistributedMatchEngine {
       if (ClientToken.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientToken);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2149,8 +1949,8 @@ namespace DistributedMatchEngine {
             ClientToken = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -2183,8 +1983,8 @@ namespace DistributedMatchEngine {
             ClientToken = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -2206,7 +2006,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[5]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2340,15 +2140,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -2372,7 +2172,7 @@ namespace DistributedMatchEngine {
       if (!object.Equals(CloudletLocation, other.CloudletLocation)) return false;
       if (EdgeEventsCookie != other.EdgeEventsCookie) return false;
       if (DmeFqdn != other.DmeFqdn) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2386,7 +2186,7 @@ namespace DistributedMatchEngine {
       if (cloudletLocation_ != null) hash ^= CloudletLocation.GetHashCode();
       if (EdgeEventsCookie.Length != 0) hash ^= EdgeEventsCookie.GetHashCode();
       if (DmeFqdn.Length != 0) hash ^= DmeFqdn.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2428,7 +2228,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(58);
         output.WriteString(DmeFqdn);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2463,7 +2263,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(58);
         output.WriteString(DmeFqdn);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2492,7 +2292,7 @@ namespace DistributedMatchEngine {
       if (DmeFqdn.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(DmeFqdn);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2572,8 +2372,8 @@ namespace DistributedMatchEngine {
             DmeFqdn = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -2621,8 +2421,8 @@ namespace DistributedMatchEngine {
             DmeFqdn = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -2657,7 +2457,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[6]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2792,10 +2592,10 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     ///
     /// Tags
@@ -2803,7 +2603,7 @@ namespace DistributedMatchEngine {
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -2826,7 +2626,7 @@ namespace DistributedMatchEngine {
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
       if (VerifyLocToken != other.VerifyLocToken) return false;
       if (CellId != other.CellId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2839,7 +2639,7 @@ namespace DistributedMatchEngine {
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
       if (VerifyLocToken.Length != 0) hash ^= VerifyLocToken.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2880,7 +2680,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(48);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2914,7 +2714,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(48);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2942,7 +2742,7 @@ namespace DistributedMatchEngine {
       if (CellId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CellId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3017,8 +2817,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -3062,8 +2862,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -3085,7 +2885,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[7]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3171,15 +2971,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -3200,7 +3000,7 @@ namespace DistributedMatchEngine {
       if (TowerStatus != other.TowerStatus) return false;
       if (GpsLocationStatus != other.GpsLocationStatus) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(GpsLocationAccuracyKm, other.GpsLocationAccuracyKm)) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3211,7 +3011,7 @@ namespace DistributedMatchEngine {
       if (TowerStatus != global::DistributedMatchEngine.VerifyLocationReply.Types.TowerStatus.TowerUnknown) hash ^= TowerStatus.GetHashCode();
       if (GpsLocationStatus != global::DistributedMatchEngine.VerifyLocationReply.Types.GPSLocationStatus.LocUnknown) hash ^= GpsLocationStatus.GetHashCode();
       if (GpsLocationAccuracyKm != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(GpsLocationAccuracyKm);
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3244,7 +3044,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(33);
         output.WriteDouble(GpsLocationAccuracyKm);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3270,7 +3070,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(33);
         output.WriteDouble(GpsLocationAccuracyKm);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3292,7 +3092,7 @@ namespace DistributedMatchEngine {
       if (GpsLocationAccuracyKm != 0D) {
         size += 1 + 8;
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3347,8 +3147,8 @@ namespace DistributedMatchEngine {
             GpsLocationAccuracyKm = input.ReadDouble();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -3381,8 +3181,8 @@ namespace DistributedMatchEngine {
             GpsLocationAccuracyKm = input.ReadDouble();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -3431,7 +3231,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[8]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3521,15 +3321,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -3550,7 +3350,7 @@ namespace DistributedMatchEngine {
       if (SessionCookie != other.SessionCookie) return false;
       if (CarrierName != other.CarrierName) return false;
       if (CellId != other.CellId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3561,7 +3361,7 @@ namespace DistributedMatchEngine {
       if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
       if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3594,7 +3394,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(32);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3620,7 +3420,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(32);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3642,7 +3442,7 @@ namespace DistributedMatchEngine {
       if (CellId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CellId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3697,8 +3497,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -3731,8 +3531,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -3754,7 +3554,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[9]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3856,15 +3656,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -3886,7 +3686,7 @@ namespace DistributedMatchEngine {
       if (CarrierName != other.CarrierName) return false;
       if (Tower != other.Tower) return false;
       if (!object.Equals(NetworkLocation, other.NetworkLocation)) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3898,7 +3698,7 @@ namespace DistributedMatchEngine {
       if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
       if (Tower != 0UL) hash ^= Tower.GetHashCode();
       if (networkLocation_ != null) hash ^= NetworkLocation.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3935,7 +3735,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(42);
         output.WriteMessage(NetworkLocation);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3965,7 +3765,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(42);
         output.WriteMessage(NetworkLocation);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3990,7 +3790,7 @@ namespace DistributedMatchEngine {
       if (networkLocation_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(NetworkLocation);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -4058,8 +3858,8 @@ namespace DistributedMatchEngine {
             input.ReadMessage(NetworkLocation);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -4099,8 +3899,8 @@ namespace DistributedMatchEngine {
             input.ReadMessage(NetworkLocation);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -4141,7 +3941,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[10]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4265,15 +4065,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -4296,7 +4096,7 @@ namespace DistributedMatchEngine {
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
       if (CellId != other.CellId) return false;
       if (Limit != other.Limit) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -4309,7 +4109,7 @@ namespace DistributedMatchEngine {
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
       if (Limit != 0) hash ^= Limit.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -4350,7 +4150,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(48);
         output.WriteUInt32(Limit);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -4384,7 +4184,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(48);
         output.WriteUInt32(Limit);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -4412,7 +4212,7 @@ namespace DistributedMatchEngine {
       if (Limit != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Limit);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -4487,8 +4287,8 @@ namespace DistributedMatchEngine {
             Limit = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -4532,8 +4332,8 @@ namespace DistributedMatchEngine {
             Limit = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -4555,7 +4355,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[11]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4875,7 +4675,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[12]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5204,7 +5004,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[13]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5272,15 +5072,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -5300,7 +5100,7 @@ namespace DistributedMatchEngine {
       if (Ver != other.Ver) return false;
       if (Status != other.Status) return false;
       if(!cloudlets_.Equals(other.cloudlets_)) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -5310,7 +5110,7 @@ namespace DistributedMatchEngine {
       if (Ver != 0) hash ^= Ver.GetHashCode();
       if (Status != global::DistributedMatchEngine.AppInstListReply.Types.AIStatus.AiUndefined) hash ^= Status.GetHashCode();
       hash ^= cloudlets_.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -5336,7 +5136,7 @@ namespace DistributedMatchEngine {
         output.WriteEnum((int) Status);
       }
       cloudlets_.WriteTo(output, _repeated_cloudlets_codec);
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -5355,7 +5155,7 @@ namespace DistributedMatchEngine {
         output.WriteEnum((int) Status);
       }
       cloudlets_.WriteTo(ref output, _repeated_cloudlets_codec);
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -5372,7 +5172,7 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
       size += cloudlets_.CalculateSize(_repeated_cloudlets_codec);
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -5418,8 +5218,8 @@ namespace DistributedMatchEngine {
             cloudlets_.AddEntriesFrom(input, _repeated_cloudlets_codec);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -5448,8 +5248,8 @@ namespace DistributedMatchEngine {
             cloudlets_.AddEntriesFrom(ref input, _repeated_cloudlets_codec);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -5487,7 +5287,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[14]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5562,15 +5362,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -5590,7 +5390,7 @@ namespace DistributedMatchEngine {
       if (Ver != other.Ver) return false;
       if (SessionCookie != other.SessionCookie) return false;
       if (CellId != other.CellId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -5600,7 +5400,7 @@ namespace DistributedMatchEngine {
       if (Ver != 0) hash ^= Ver.GetHashCode();
       if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -5629,7 +5429,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(24);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -5651,7 +5451,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(24);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -5670,7 +5470,7 @@ namespace DistributedMatchEngine {
       if (CellId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CellId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -5718,8 +5518,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -5748,8 +5548,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -5771,7 +5571,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[15]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6091,7 +5891,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[16]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6159,15 +5959,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -6187,7 +5987,7 @@ namespace DistributedMatchEngine {
       if (Ver != other.Ver) return false;
       if(!appFqdns_.Equals(other.appFqdns_)) return false;
       if (Status != other.Status) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -6197,7 +5997,7 @@ namespace DistributedMatchEngine {
       if (Ver != 0) hash ^= Ver.GetHashCode();
       hash ^= appFqdns_.GetHashCode();
       if (Status != global::DistributedMatchEngine.FqdnListReply.Types.FLStatus.FlUndefined) hash ^= Status.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6223,7 +6023,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(32);
         output.WriteEnum((int) Status);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6242,7 +6042,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(32);
         output.WriteEnum((int) Status);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6259,7 +6059,7 @@ namespace DistributedMatchEngine {
       if (Status != global::DistributedMatchEngine.FqdnListReply.Types.FLStatus.FlUndefined) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6305,8 +6105,8 @@ namespace DistributedMatchEngine {
             Status = (global::DistributedMatchEngine.FqdnListReply.Types.FLStatus) input.ReadEnum();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -6335,8 +6135,8 @@ namespace DistributedMatchEngine {
             Status = (global::DistributedMatchEngine.FqdnListReply.Types.FLStatus) input.ReadEnum();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -6374,7 +6174,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[17]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6449,15 +6249,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -6477,7 +6277,7 @@ namespace DistributedMatchEngine {
       if (Ver != other.Ver) return false;
       if (SessionCookie != other.SessionCookie) return false;
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -6487,7 +6287,7 @@ namespace DistributedMatchEngine {
       if (Ver != 0) hash ^= Ver.GetHashCode();
       if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6516,7 +6316,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(26);
         output.WriteMessage(GpsLocation);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6538,7 +6338,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(26);
         output.WriteMessage(GpsLocation);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6557,7 +6357,7 @@ namespace DistributedMatchEngine {
       if (gpsLocation_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(GpsLocation);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6611,8 +6411,8 @@ namespace DistributedMatchEngine {
             input.ReadMessage(GpsLocation);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -6644,8 +6444,8 @@ namespace DistributedMatchEngine {
             input.ReadMessage(GpsLocation);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -6667,7 +6467,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[18]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6771,15 +6571,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -6801,7 +6601,7 @@ namespace DistributedMatchEngine {
       if (ClientToken != other.ClientToken) return false;
       if (Status != other.Status) return false;
       if(!ports_.Equals(other.ports_)) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -6813,7 +6613,7 @@ namespace DistributedMatchEngine {
       if (ClientToken.Length != 0) hash ^= ClientToken.GetHashCode();
       if (Status != global::DistributedMatchEngine.AppOfficialFqdnReply.Types.AOFStatus.AofUndefined) hash ^= Status.GetHashCode();
       hash ^= ports_.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6847,7 +6647,7 @@ namespace DistributedMatchEngine {
         output.WriteEnum((int) Status);
       }
       ports_.WriteTo(output, _repeated_ports_codec);
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6874,7 +6674,7 @@ namespace DistributedMatchEngine {
         output.WriteEnum((int) Status);
       }
       ports_.WriteTo(ref output, _repeated_ports_codec);
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6897,7 +6697,7 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
       size += ports_.CalculateSize(_repeated_ports_codec);
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6957,8 +6757,8 @@ namespace DistributedMatchEngine {
             ports_.AddEntriesFrom(input, _repeated_ports_codec);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -6995,8 +6795,8 @@ namespace DistributedMatchEngine {
             ports_.AddEntriesFrom(ref input, _repeated_ports_codec);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -7031,7 +6831,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[19]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7148,15 +6948,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -7179,7 +6979,7 @@ namespace DistributedMatchEngine {
       if (CommType != other.CommType) return false;
       if (UserData != other.UserData) return false;
       if (CellId != other.CellId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -7192,7 +6992,7 @@ namespace DistributedMatchEngine {
       if (CommType != global::DistributedMatchEngine.DynamicLocGroupRequest.Types.DlgCommType.DlgUndefined) hash ^= CommType.GetHashCode();
       if (UserData.Length != 0) hash ^= UserData.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -7233,7 +7033,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(104);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -7267,7 +7067,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(104);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -7295,7 +7095,7 @@ namespace DistributedMatchEngine {
       if (CellId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CellId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -7364,8 +7164,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -7406,8 +7206,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -7445,7 +7245,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[20]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7535,15 +7335,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -7564,7 +7364,7 @@ namespace DistributedMatchEngine {
       if (Status != other.Status) return false;
       if (ErrorCode != other.ErrorCode) return false;
       if (GroupCookie != other.GroupCookie) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -7575,7 +7375,7 @@ namespace DistributedMatchEngine {
       if (Status != global::DistributedMatchEngine.ReplyStatus.RsUndefined) hash ^= Status.GetHashCode();
       if (ErrorCode != 0) hash ^= ErrorCode.GetHashCode();
       if (GroupCookie.Length != 0) hash ^= GroupCookie.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -7608,7 +7408,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(42);
         output.WriteString(GroupCookie);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -7634,7 +7434,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(42);
         output.WriteString(GroupCookie);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -7656,7 +7456,7 @@ namespace DistributedMatchEngine {
       if (GroupCookie.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(GroupCookie);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -7711,8 +7511,8 @@ namespace DistributedMatchEngine {
             GroupCookie = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -7745,8 +7545,8 @@ namespace DistributedMatchEngine {
             GroupCookie = input.ReadString();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -7768,7 +7568,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[21]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7994,7 +7794,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[22]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8236,7 +8036,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[23]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8355,15 +8155,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -8386,7 +8186,7 @@ namespace DistributedMatchEngine {
       if (LteCategory != other.LteCategory) return false;
       if (!object.Equals(BandSelection, other.BandSelection)) return false;
       if (CellId != other.CellId) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -8399,7 +8199,7 @@ namespace DistributedMatchEngine {
       if (LteCategory != 0) hash ^= LteCategory.GetHashCode();
       if (bandSelection_ != null) hash ^= BandSelection.GetHashCode();
       if (CellId != 0) hash ^= CellId.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -8437,7 +8237,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(48);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -8468,7 +8268,7 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(48);
         output.WriteUInt32(CellId);
       }
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -8494,7 +8294,7 @@ namespace DistributedMatchEngine {
       if (CellId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CellId);
       }
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -8567,8 +8367,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -8612,8 +8412,8 @@ namespace DistributedMatchEngine {
             CellId = input.ReadUInt32();
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -8635,7 +8435,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[24]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9185,7 +8985,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[25]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9259,15 +9059,15 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "tags" field.</summary>
-    public const int TagsFieldNumber = 99;
-    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Tag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(794, global::DistributedMatchEngine.Tag.Parser);
-    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Tag> tags_ = new pbc::RepeatedField<global::DistributedMatchEngine.Tag>();
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
     /// <summary>
     /// _(optional)_ Vendor specific data
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::DistributedMatchEngine.Tag> Tags {
+    public pbc::MapField<string, string> Tags {
       get { return tags_; }
     }
 
@@ -9287,7 +9087,7 @@ namespace DistributedMatchEngine {
       if (Ver != other.Ver) return false;
       if (Status != other.Status) return false;
       if(!positionResults_.Equals(other.positionResults_)) return false;
-      if(!tags_.Equals(other.tags_)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -9297,7 +9097,7 @@ namespace DistributedMatchEngine {
       if (Ver != 0) hash ^= Ver.GetHashCode();
       if (Status != global::DistributedMatchEngine.ReplyStatus.RsUndefined) hash ^= Status.GetHashCode();
       hash ^= positionResults_.GetHashCode();
-      hash ^= tags_.GetHashCode();
+      hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -9323,7 +9123,7 @@ namespace DistributedMatchEngine {
         output.WriteEnum((int) Status);
       }
       positionResults_.WriteTo(output, _repeated_positionResults_codec);
-      tags_.WriteTo(output, _repeated_tags_codec);
+      tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -9342,7 +9142,7 @@ namespace DistributedMatchEngine {
         output.WriteEnum((int) Status);
       }
       positionResults_.WriteTo(ref output, _repeated_positionResults_codec);
-      tags_.WriteTo(ref output, _repeated_tags_codec);
+      tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -9359,7 +9159,7 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
       size += positionResults_.CalculateSize(_repeated_positionResults_codec);
-      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -9405,8 +9205,8 @@ namespace DistributedMatchEngine {
             positionResults_.AddEntriesFrom(input, _repeated_positionResults_codec);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
           }
         }
@@ -9435,8 +9235,8 @@ namespace DistributedMatchEngine {
             positionResults_.AddEntriesFrom(ref input, _repeated_positionResults_codec);
             break;
           }
-          case 794: {
-            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+          case 802: {
+            tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
           }
         }
@@ -9461,7 +9261,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[26]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9480,7 +9280,7 @@ namespace DistributedMatchEngine {
     public ClientEdgeEvent(ClientEdgeEvent other) : this() {
       sessionCookie_ = other.sessionCookie_;
       edgeEventsCookie_ = other.edgeEventsCookie_;
-      event_ = other.event_;
+      eventType_ = other.eventType_;
       gpsLocation_ = other.gpsLocation_ != null ? other.gpsLocation_.Clone() : null;
       samples_ = other.samples_.Clone();
       tags_ = other.tags_.Clone();
@@ -9520,14 +9320,14 @@ namespace DistributedMatchEngine {
       }
     }
 
-    /// <summary>Field number for the "event" field.</summary>
-    public const int EventFieldNumber = 3;
-    private global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType event_ = global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown;
+    /// <summary>Field number for the "event_type" field.</summary>
+    public const int EventTypeFieldNumber = 3;
+    private global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType eventType_ = global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType Event {
-      get { return event_; }
+    public global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType EventType {
+      get { return eventType_; }
       set {
-        event_ = value;
+        eventType_ = value;
       }
     }
 
@@ -9547,14 +9347,14 @@ namespace DistributedMatchEngine {
 
     /// <summary>Field number for the "samples" field.</summary>
     public const int SamplesFieldNumber = 5;
-    private static readonly pb::FieldCodec<double> _repeated_samples_codec
-        = pb::FieldCodec.ForDouble(42);
-    private readonly pbc::RepeatedField<double> samples_ = new pbc::RepeatedField<double>();
+    private static readonly pb::FieldCodec<global::DistributedMatchEngine.Sample> _repeated_samples_codec
+        = pb::FieldCodec.ForMessage(42, global::DistributedMatchEngine.Sample.Parser);
+    private readonly pbc::RepeatedField<global::DistributedMatchEngine.Sample> samples_ = new pbc::RepeatedField<global::DistributedMatchEngine.Sample>();
     /// <summary>
     /// Latency Samples if EventType is EVENT_LATENCY_SAMPLES
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<double> Samples {
+    public pbc::RepeatedField<global::DistributedMatchEngine.Sample> Samples {
       get { return samples_; }
     }
 
@@ -9586,7 +9386,7 @@ namespace DistributedMatchEngine {
       }
       if (SessionCookie != other.SessionCookie) return false;
       if (EdgeEventsCookie != other.EdgeEventsCookie) return false;
-      if (Event != other.Event) return false;
+      if (EventType != other.EventType) return false;
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
       if(!samples_.Equals(other.samples_)) return false;
       if (!Tags.Equals(other.Tags)) return false;
@@ -9598,7 +9398,7 @@ namespace DistributedMatchEngine {
       int hash = 1;
       if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
       if (EdgeEventsCookie.Length != 0) hash ^= EdgeEventsCookie.GetHashCode();
-      if (Event != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) hash ^= Event.GetHashCode();
+      if (EventType != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) hash ^= EventType.GetHashCode();
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
       hash ^= samples_.GetHashCode();
       hash ^= Tags.GetHashCode();
@@ -9626,9 +9426,9 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(18);
         output.WriteString(EdgeEventsCookie);
       }
-      if (Event != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
+      if (EventType != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
         output.WriteRawTag(24);
-        output.WriteEnum((int) Event);
+        output.WriteEnum((int) EventType);
       }
       if (gpsLocation_ != null) {
         output.WriteRawTag(34);
@@ -9653,9 +9453,9 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(18);
         output.WriteString(EdgeEventsCookie);
       }
-      if (Event != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
+      if (EventType != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
         output.WriteRawTag(24);
-        output.WriteEnum((int) Event);
+        output.WriteEnum((int) EventType);
       }
       if (gpsLocation_ != null) {
         output.WriteRawTag(34);
@@ -9678,8 +9478,8 @@ namespace DistributedMatchEngine {
       if (EdgeEventsCookie.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(EdgeEventsCookie);
       }
-      if (Event != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Event);
+      if (EventType != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EventType);
       }
       if (gpsLocation_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(GpsLocation);
@@ -9703,8 +9503,8 @@ namespace DistributedMatchEngine {
       if (other.EdgeEventsCookie.Length != 0) {
         EdgeEventsCookie = other.EdgeEventsCookie;
       }
-      if (other.Event != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
-        Event = other.Event;
+      if (other.EventType != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) {
+        EventType = other.EventType;
       }
       if (other.gpsLocation_ != null) {
         if (gpsLocation_ == null) {
@@ -9737,7 +9537,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 24: {
-            Event = (global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) input.ReadEnum();
+            EventType = (global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) input.ReadEnum();
             break;
           }
           case 34: {
@@ -9747,8 +9547,7 @@ namespace DistributedMatchEngine {
             input.ReadMessage(GpsLocation);
             break;
           }
-          case 42:
-          case 41: {
+          case 42: {
             samples_.AddEntriesFrom(input, _repeated_samples_codec);
             break;
           }
@@ -9779,7 +9578,7 @@ namespace DistributedMatchEngine {
             break;
           }
           case 24: {
-            Event = (global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) input.ReadEnum();
+            EventType = (global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) input.ReadEnum();
             break;
           }
           case 34: {
@@ -9789,8 +9588,7 @@ namespace DistributedMatchEngine {
             input.ReadMessage(GpsLocation);
             break;
           }
-          case 42:
-          case 41: {
+          case 42: {
             samples_.AddEntriesFrom(ref input, _repeated_samples_codec);
             break;
           }
@@ -9835,7 +9633,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[27]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9852,10 +9650,10 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ServerEdgeEvent(ServerEdgeEvent other) : this() {
-      event_ = other.event_;
+      eventType_ = other.eventType_;
       cloudletState_ = other.cloudletState_;
-      cloudletMaintenanceState_ = other.cloudletMaintenanceState_;
-      appinstHealthState_ = other.appinstHealthState_;
+      maintenanceState_ = other.maintenanceState_;
+      healthCheck_ = other.healthCheck_;
       latency_ = other.latency_ != null ? other.latency_.Clone() : null;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -9866,47 +9664,56 @@ namespace DistributedMatchEngine {
       return new ServerEdgeEvent(this);
     }
 
-    /// <summary>Field number for the "event" field.</summary>
-    public const int EventFieldNumber = 1;
-    private global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType event_ = global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown;
+    /// <summary>Field number for the "event_type" field.</summary>
+    public const int EventTypeFieldNumber = 1;
+    private global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType eventType_ = global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType Event {
-      get { return event_; }
+    public global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType EventType {
+      get { return eventType_; }
       set {
-        event_ = value;
+        eventType_ = value;
       }
     }
 
     /// <summary>Field number for the "cloudlet_state" field.</summary>
     public const int CloudletStateFieldNumber = 2;
-    private global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState cloudletState_ = global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState.Unknown;
+    private global::DistributedMatchEngine.CloudletState cloudletState_ = global::DistributedMatchEngine.CloudletState.Unknown;
+    /// <summary>
+    /// Cloudlet state information
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState CloudletState {
+    public global::DistributedMatchEngine.CloudletState CloudletState {
       get { return cloudletState_; }
       set {
         cloudletState_ = value;
       }
     }
 
-    /// <summary>Field number for the "cloudlet_maintenance_state" field.</summary>
-    public const int CloudletMaintenanceStateFieldNumber = 3;
-    private global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState cloudletMaintenanceState_ = global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState.MaintenanceStateUnknown;
+    /// <summary>Field number for the "maintenance_state" field.</summary>
+    public const int MaintenanceStateFieldNumber = 3;
+    private global::DistributedMatchEngine.MaintenanceState maintenanceState_ = global::DistributedMatchEngine.MaintenanceState.NormalOperation;
+    /// <summary>
+    /// Cloudlet maintenance state information
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState CloudletMaintenanceState {
-      get { return cloudletMaintenanceState_; }
+    public global::DistributedMatchEngine.MaintenanceState MaintenanceState {
+      get { return maintenanceState_; }
       set {
-        cloudletMaintenanceState_ = value;
+        maintenanceState_ = value;
       }
     }
 
-    /// <summary>Field number for the "appinst_health_state" field.</summary>
-    public const int AppinstHealthStateFieldNumber = 4;
-    private global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState appinstHealthState_ = global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState.HealthCheckUnknown;
+    /// <summary>Field number for the "health_check" field.</summary>
+    public const int HealthCheckFieldNumber = 4;
+    private global::DistributedMatchEngine.HealthCheck healthCheck_ = global::DistributedMatchEngine.HealthCheck.Unknown;
+    /// <summary>
+    /// AppInst health state information
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState AppinstHealthState {
-      get { return appinstHealthState_; }
+    public global::DistributedMatchEngine.HealthCheck HealthCheck {
+      get { return healthCheck_; }
       set {
-        appinstHealthState_ = value;
+        healthCheck_ = value;
       }
     }
 
@@ -9950,10 +9757,10 @@ namespace DistributedMatchEngine {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Event != other.Event) return false;
+      if (EventType != other.EventType) return false;
       if (CloudletState != other.CloudletState) return false;
-      if (CloudletMaintenanceState != other.CloudletMaintenanceState) return false;
-      if (AppinstHealthState != other.AppinstHealthState) return false;
+      if (MaintenanceState != other.MaintenanceState) return false;
+      if (HealthCheck != other.HealthCheck) return false;
       if (!object.Equals(Latency, other.Latency)) return false;
       if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -9962,10 +9769,10 @@ namespace DistributedMatchEngine {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Event != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) hash ^= Event.GetHashCode();
-      if (CloudletState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState.Unknown) hash ^= CloudletState.GetHashCode();
-      if (CloudletMaintenanceState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState.MaintenanceStateUnknown) hash ^= CloudletMaintenanceState.GetHashCode();
-      if (AppinstHealthState != global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState.HealthCheckUnknown) hash ^= AppinstHealthState.GetHashCode();
+      if (EventType != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) hash ^= EventType.GetHashCode();
+      if (CloudletState != global::DistributedMatchEngine.CloudletState.Unknown) hash ^= CloudletState.GetHashCode();
+      if (MaintenanceState != global::DistributedMatchEngine.MaintenanceState.NormalOperation) hash ^= MaintenanceState.GetHashCode();
+      if (HealthCheck != global::DistributedMatchEngine.HealthCheck.Unknown) hash ^= HealthCheck.GetHashCode();
       if (latency_ != null) hash ^= Latency.GetHashCode();
       hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
@@ -9984,21 +9791,21 @@ namespace DistributedMatchEngine {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Event != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
+      if (EventType != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) Event);
+        output.WriteEnum((int) EventType);
       }
-      if (CloudletState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState.Unknown) {
+      if (CloudletState != global::DistributedMatchEngine.CloudletState.Unknown) {
         output.WriteRawTag(16);
         output.WriteEnum((int) CloudletState);
       }
-      if (CloudletMaintenanceState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState.MaintenanceStateUnknown) {
+      if (MaintenanceState != global::DistributedMatchEngine.MaintenanceState.NormalOperation) {
         output.WriteRawTag(24);
-        output.WriteEnum((int) CloudletMaintenanceState);
+        output.WriteEnum((int) MaintenanceState);
       }
-      if (AppinstHealthState != global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState.HealthCheckUnknown) {
+      if (HealthCheck != global::DistributedMatchEngine.HealthCheck.Unknown) {
         output.WriteRawTag(32);
-        output.WriteEnum((int) AppinstHealthState);
+        output.WriteEnum((int) HealthCheck);
       }
       if (latency_ != null) {
         output.WriteRawTag(42);
@@ -10014,21 +9821,21 @@ namespace DistributedMatchEngine {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Event != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
+      if (EventType != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) Event);
+        output.WriteEnum((int) EventType);
       }
-      if (CloudletState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState.Unknown) {
+      if (CloudletState != global::DistributedMatchEngine.CloudletState.Unknown) {
         output.WriteRawTag(16);
         output.WriteEnum((int) CloudletState);
       }
-      if (CloudletMaintenanceState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState.MaintenanceStateUnknown) {
+      if (MaintenanceState != global::DistributedMatchEngine.MaintenanceState.NormalOperation) {
         output.WriteRawTag(24);
-        output.WriteEnum((int) CloudletMaintenanceState);
+        output.WriteEnum((int) MaintenanceState);
       }
-      if (AppinstHealthState != global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState.HealthCheckUnknown) {
+      if (HealthCheck != global::DistributedMatchEngine.HealthCheck.Unknown) {
         output.WriteRawTag(32);
-        output.WriteEnum((int) AppinstHealthState);
+        output.WriteEnum((int) HealthCheck);
       }
       if (latency_ != null) {
         output.WriteRawTag(42);
@@ -10044,17 +9851,17 @@ namespace DistributedMatchEngine {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Event != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Event);
+      if (EventType != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EventType);
       }
-      if (CloudletState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState.Unknown) {
+      if (CloudletState != global::DistributedMatchEngine.CloudletState.Unknown) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) CloudletState);
       }
-      if (CloudletMaintenanceState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState.MaintenanceStateUnknown) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) CloudletMaintenanceState);
+      if (MaintenanceState != global::DistributedMatchEngine.MaintenanceState.NormalOperation) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MaintenanceState);
       }
-      if (AppinstHealthState != global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState.HealthCheckUnknown) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) AppinstHealthState);
+      if (HealthCheck != global::DistributedMatchEngine.HealthCheck.Unknown) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) HealthCheck);
       }
       if (latency_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Latency);
@@ -10071,17 +9878,17 @@ namespace DistributedMatchEngine {
       if (other == null) {
         return;
       }
-      if (other.Event != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
-        Event = other.Event;
+      if (other.EventType != global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType.EventUnknown) {
+        EventType = other.EventType;
       }
-      if (other.CloudletState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState.Unknown) {
+      if (other.CloudletState != global::DistributedMatchEngine.CloudletState.Unknown) {
         CloudletState = other.CloudletState;
       }
-      if (other.CloudletMaintenanceState != global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState.MaintenanceStateUnknown) {
-        CloudletMaintenanceState = other.CloudletMaintenanceState;
+      if (other.MaintenanceState != global::DistributedMatchEngine.MaintenanceState.NormalOperation) {
+        MaintenanceState = other.MaintenanceState;
       }
-      if (other.AppinstHealthState != global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState.HealthCheckUnknown) {
-        AppinstHealthState = other.AppinstHealthState;
+      if (other.HealthCheck != global::DistributedMatchEngine.HealthCheck.Unknown) {
+        HealthCheck = other.HealthCheck;
       }
       if (other.latency_ != null) {
         if (latency_ == null) {
@@ -10105,19 +9912,19 @@ namespace DistributedMatchEngine {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            Event = (global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) input.ReadEnum();
+            EventType = (global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) input.ReadEnum();
             break;
           }
           case 16: {
-            CloudletState = (global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState) input.ReadEnum();
+            CloudletState = (global::DistributedMatchEngine.CloudletState) input.ReadEnum();
             break;
           }
           case 24: {
-            CloudletMaintenanceState = (global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState) input.ReadEnum();
+            MaintenanceState = (global::DistributedMatchEngine.MaintenanceState) input.ReadEnum();
             break;
           }
           case 32: {
-            AppinstHealthState = (global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState) input.ReadEnum();
+            HealthCheck = (global::DistributedMatchEngine.HealthCheck) input.ReadEnum();
             break;
           }
           case 42: {
@@ -10146,19 +9953,19 @@ namespace DistributedMatchEngine {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            Event = (global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) input.ReadEnum();
+            EventType = (global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) input.ReadEnum();
             break;
           }
           case 16: {
-            CloudletState = (global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletState) input.ReadEnum();
+            CloudletState = (global::DistributedMatchEngine.CloudletState) input.ReadEnum();
             break;
           }
           case 24: {
-            CloudletMaintenanceState = (global::DistributedMatchEngine.ServerEdgeEvent.Types.CloudletMaintenanceState) input.ReadEnum();
+            MaintenanceState = (global::DistributedMatchEngine.MaintenanceState) input.ReadEnum();
             break;
           }
           case 32: {
-            AppinstHealthState = (global::DistributedMatchEngine.ServerEdgeEvent.Types.AppInstHealthState) input.ReadEnum();
+            HealthCheck = (global::DistributedMatchEngine.HealthCheck) input.ReadEnum();
             break;
           }
           case 42: {
@@ -10189,42 +9996,6 @@ namespace DistributedMatchEngine {
         [pbr::OriginalName("EVENT_CLOUDLET_STATE")] EventCloudletState = 4,
         [pbr::OriginalName("EVENT_CLOUDLET_MAINTENANCE")] EventCloudletMaintenance = 5,
         [pbr::OriginalName("EVENT_APPINST_HEALTH")] EventAppinstHealth = 6,
-      }
-
-      /// <summary>
-      /// Cloudlet state information
-      /// </summary>
-      public enum CloudletState {
-        [pbr::OriginalName("CLOUDLET_STATE_UNKNOWN")] Unknown = 0,
-        [pbr::OriginalName("CLOUDLET_STATE_READY")] Ready = 1,
-        [pbr::OriginalName("CLOUDLET_OFFLINE")] CloudletOffline = 2,
-        [pbr::OriginalName("CLOUDLET_STATE_NOT_PRESENT")] NotPresent = 3,
-        [pbr::OriginalName("CLOUDLET_UPGRADE")] CloudletUpgrade = 4,
-        [pbr::OriginalName("CLOUDLET_STATE_ERRORS")] Errors = 5,
-        [pbr::OriginalName("CLOUDLET_STATE_INIT")] Init = 6,
-      }
-
-      /// <summary>
-      /// Cloudlet maintenance state information
-      /// </summary>
-      public enum CloudletMaintenanceState {
-        [pbr::OriginalName("MAINTENANCE_STATE_UNKNOWN")] MaintenanceStateUnknown = 0,
-        [pbr::OriginalName("MAINTENANCE_STATE_NORMAL")] MaintenanceStateNormal = 1,
-        [pbr::OriginalName("MAINTENANCE_STATE_UNDER_MAINTENANCE")] MaintenanceStateUnderMaintenance = 2,
-        [pbr::OriginalName("MAINTENANCE_STATE_MAINTENANCE_FAILED")] MaintenanceStateMaintenanceFailed = 3,
-        [pbr::OriginalName("MAINTENANCE_STATE_FAILING_OVER")] MaintenanceStateFailingOver = 4,
-        [pbr::OriginalName("MAINTENANCE_STATE_FAILOVER_ERROR")] MaintenanceStateFailoverError = 5,
-        [pbr::OriginalName("MAINTENANCE_STATE_FAILOVER_DONE")] MaintenanceStateFailoverDone = 6,
-      }
-
-      /// <summary>
-      /// AppInst health state information
-      /// </summary>
-      public enum AppInstHealthState {
-        [pbr::OriginalName("HEALTH_CHECK_UNKNOWN")] HealthCheckUnknown = 0,
-        [pbr::OriginalName("HEALTH_CHECK_OK")] HealthCheckOk = 1,
-        [pbr::OriginalName("HEALTH_CHECK_FAIL")] HealthCheckFail = 2,
-        [pbr::OriginalName("APPINST_DOWN")] AppinstDown = 3,
       }
 
     }

@@ -24,25 +24,50 @@ namespace DistributedMatchEngine {
     static AppcommonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZSKp",
-            "AQoHQXBwUG9ydBIvCgVwcm90bxgBIAEoDjIgLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5MUHJvdG8SFQoNaW50ZXJuYWxfcG9ydBgCIAEoBRITCgtwdWJs",
-            "aWNfcG9ydBgDIAEoBRITCgtmcWRuX3ByZWZpeBgFIAEoCRIQCghlbmRfcG9y",
-            "dBgGIAEoBRILCgN0bHMYByABKAgSDQoFbmdpbngYCCABKAgiVgoHTGF0ZW5j",
-            "eRILCgNhdmcYASABKAESCwoDbWluGAIgASgBEgsKA21heBgDIAEoARIPCgdz",
-            "dGRfZGV2GAQgASgBEhMKC251bV9zYW1wbGVzGAUgASgEKj8KBkxQcm90bxIT",
-            "Cg9MX1BST1RPX1VOS05PV04QABIPCgtMX1BST1RPX1RDUBABEg8KC0xfUFJP",
-            "VE9fVURQEAJiBnByb3RvMw=="));
+            "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZRog",
+            "Z29vZ2xlL3Byb3RvYnVmL2Rlc2NyaXB0b3IucHJvdG8iqQEKB0FwcFBvcnQS",
+            "LwoFcHJvdG8YASABKA4yIC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTFBy",
+            "b3RvEhUKDWludGVybmFsX3BvcnQYAiABKAUSEwoLcHVibGljX3BvcnQYAyAB",
+            "KAUSEwoLZnFkbl9wcmVmaXgYBSABKAkSEAoIZW5kX3BvcnQYBiABKAUSCwoD",
+            "dGxzGAcgASgIEg0KBW5naW54GAggASgIKj8KBkxQcm90bxITCg9MX1BST1RP",
+            "X1VOS05PV04QABIPCgtMX1BST1RPX1RDUBABEg8KC0xfUFJPVE9fVURQEAIq",
+            "hQEKC0hlYWx0aENoZWNrEhgKFEhFQUxUSF9DSEVDS19VTktOT1dOEAASJAog",
+            "SEVBTFRIX0NIRUNLX0ZBSUxfUk9PVExCX09GRkxJTkUQARIhCh1IRUFMVEhf",
+            "Q0hFQ0tfRkFJTF9TRVJWRVJfRkFJTBACEhMKD0hFQUxUSF9DSEVDS19PSxAD",
+            "Ku8BCg1DbG91ZGxldFN0YXRlEhoKFkNMT1VETEVUX1NUQVRFX1VOS05PV04Q",
+            "ABIZChVDTE9VRExFVF9TVEFURV9FUlJPUlMQARIYChRDTE9VRExFVF9TVEFU",
+            "RV9SRUFEWRACEhoKFkNMT1VETEVUX1NUQVRFX09GRkxJTkUQAxIeChpDTE9V",
+            "RExFVF9TVEFURV9OT1RfUFJFU0VOVBAEEhcKE0NMT1VETEVUX1NUQVRFX0lO",
+            "SVQQBRIaChZDTE9VRExFVF9TVEFURV9VUEdSQURFEAYSHAoYQ0xPVURMRVRf",
+            "U1RBVEVfTkVFRF9TWU5DEAcqwAIKEE1haW50ZW5hbmNlU3RhdGUSFAoQTk9S",
+            "TUFMX09QRVJBVElPThAAEhUKEU1BSU5URU5BTkNFX1NUQVJUEAESHAoSRkFJ",
+            "TE9WRVJfUkVRVUVTVEVEEAIaBJD2GAESFwoNRkFJTE9WRVJfRE9ORRADGgSQ",
+            "9hgBEhgKDkZBSUxPVkVSX0VSUk9SEAQaBJD2GAESIQodTUFJTlRFTkFOQ0Vf",
+            "U1RBUlRfTk9fRkFJTE9WRVIQBRIXCg1DUk1fUkVRVUVTVEVEEAYaBJD2GAES",
+            "HwoVQ1JNX1VOREVSX01BSU5URU5BTkNFEAcaBJD2GAESEwoJQ1JNX0VSUk9S",
+            "EAgaBJD2GAESHwoVTk9STUFMX09QRVJBVElPTl9JTklUEAkaBJD2GAESGwoR",
+            "VU5ERVJfTUFJTlRFTkFOQ0UQHxoEkPYYATo5CgxlbnVtX2JhY2tlbmQSIS5n",
+            "b29nbGUucHJvdG9idWYuRW51bVZhbHVlT3B0aW9ucxjijgMgASgIYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Latency), global::DistributedMatchEngine.Latency.Parser, new[]{ "Avg", "Min", "Max", "StdDev", "NumSamples" }, null, null, null, null)
+          new pbr::FileDescriptor[] { global::Google.Protobuf.Reflection.DescriptorReflection.Descriptor, },
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), typeof(global::DistributedMatchEngine.HealthCheck), typeof(global::DistributedMatchEngine.CloudletState), typeof(global::DistributedMatchEngine.MaintenanceState), }, new pb::Extension[] { AppcommonExtensions.EnumBackend }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null)
           }));
     }
     #endregion
 
   }
+  /// <summary>Holder for extension identifiers generated from the top level of appcommon.proto</summary>
+  public static partial class AppcommonExtensions {
+    /// <summary>
+    /// Backend defines a field that is filled in by the back-end,
+    /// not by the user.
+    /// </summary>
+    public static readonly pb::Extension<global::Google.Protobuf.Reflection.EnumValueOptions, bool> EnumBackend =
+      new pb::Extension<global::Google.Protobuf.Reflection.EnumValueOptions, bool>(51042, pb::FieldCodec.ForBool(408336, false));
+  }
+
   #region Enums
   /// <summary>
   /// LProto indicates which protocol to use for accessing an application on a particular port. This is required by Kubernetes for port mapping.
@@ -60,6 +85,123 @@ namespace DistributedMatchEngine {
     /// UDP (L4) protocol
     /// </summary>
     [pbr::OriginalName("L_PROTO_UDP")] Udp = 2,
+  }
+
+  /// <summary>
+  /// Health check status
+  ///
+  /// Health check status gets set by external, or rootLB health check
+  /// </summary>
+  public enum HealthCheck {
+    /// <summary>
+    /// Health Check is unknown
+    /// </summary>
+    [pbr::OriginalName("HEALTH_CHECK_UNKNOWN")] Unknown = 0,
+    /// <summary>
+    /// Health Check failure due to RootLB being offline
+    /// </summary>
+    [pbr::OriginalName("HEALTH_CHECK_FAIL_ROOTLB_OFFLINE")] FailRootlbOffline = 1,
+    /// <summary>
+    /// Health Check failure due to Backend server being unavailable
+    /// </summary>
+    [pbr::OriginalName("HEALTH_CHECK_FAIL_SERVER_FAIL")] FailServerFail = 2,
+    /// <summary>
+    /// Health Check is ok
+    /// </summary>
+    [pbr::OriginalName("HEALTH_CHECK_OK")] Ok = 3,
+  }
+
+  /// <summary>
+  /// CloudletState is the state of the Cloudlet.
+  /// </summary>
+  public enum CloudletState {
+    /// <summary>
+    /// Unknown
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_UNKNOWN")] Unknown = 0,
+    /// <summary>
+    /// Create/Delete/Update encountered errors (see Errors field of CloudletInfo)
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_ERRORS")] Errors = 1,
+    /// <summary>
+    /// Cloudlet is created and ready
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_READY")] Ready = 2,
+    /// <summary>
+    /// Cloudlet is offline (unreachable)
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_OFFLINE")] Offline = 3,
+    /// <summary>
+    /// Cloudlet is not present
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_NOT_PRESENT")] NotPresent = 4,
+    /// <summary>
+    /// Cloudlet is initializing
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_INIT")] Init = 5,
+    /// <summary>
+    /// Cloudlet is upgrading
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_UPGRADE")] Upgrade = 6,
+    /// <summary>
+    /// Cloudlet needs data to synchronize
+    /// </summary>
+    [pbr::OriginalName("CLOUDLET_STATE_NEED_SYNC")] NeedSync = 7,
+  }
+
+  /// <summary>
+  /// Cloudlet Maintenance States
+  ///
+  /// Maintenance allows for planned downtimes of Cloudlets.
+  /// These states involve message exchanges between the Controller,
+  /// the AutoProv service, and the CRM. Certain states are only set
+  /// by certain actors.
+  /// </summary>
+  public enum MaintenanceState {
+    /// <summary>
+    /// Normal operational state
+    /// </summary>
+    [pbr::OriginalName("NORMAL_OPERATION")] NormalOperation = 0,
+    /// <summary>
+    /// Request start of maintenance
+    /// </summary>
+    [pbr::OriginalName("MAINTENANCE_START")] MaintenanceStart = 1,
+    /// <summary>
+    /// Trigger failover for any HA AppInsts
+    /// </summary>
+    [pbr::OriginalName("FAILOVER_REQUESTED")] FailoverRequested = 2,
+    /// <summary>
+    /// Failover done
+    /// </summary>
+    [pbr::OriginalName("FAILOVER_DONE")] FailoverDone = 3,
+    /// <summary>
+    /// Some errors encountered during maintenance failover
+    /// </summary>
+    [pbr::OriginalName("FAILOVER_ERROR")] FailoverError = 4,
+    /// <summary>
+    /// Request start of maintenance without AutoProv failover
+    /// </summary>
+    [pbr::OriginalName("MAINTENANCE_START_NO_FAILOVER")] MaintenanceStartNoFailover = 5,
+    /// <summary>
+    /// Request CRM to transition to maintenance
+    /// </summary>
+    [pbr::OriginalName("CRM_REQUESTED")] CrmRequested = 6,
+    /// <summary>
+    /// CRM request done and under maintenance
+    /// </summary>
+    [pbr::OriginalName("CRM_UNDER_MAINTENANCE")] CrmUnderMaintenance = 7,
+    /// <summary>
+    /// CRM failed to go into maintenance
+    /// </summary>
+    [pbr::OriginalName("CRM_ERROR")] CrmError = 8,
+    /// <summary>
+    /// Request CRM to transition to normal operation
+    /// </summary>
+    [pbr::OriginalName("NORMAL_OPERATION_INIT")] NormalOperationInit = 9,
+    /// <summary>
+    /// Under maintenance
+    /// </summary>
+    [pbr::OriginalName("UNDER_MAINTENANCE")] UnderMaintenance = 31,
   }
 
   #endregion
@@ -471,325 +613,6 @@ namespace DistributedMatchEngine {
           }
           case 64: {
             Nginx = input.ReadBool();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  /// <summary>
-  /// Latency
-  /// </summary>
-  public sealed partial class Latency : pb::IMessage<Latency>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Latency> _parser = new pb::MessageParser<Latency>(() => new Latency());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Latency> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppcommonReflection.Descriptor.MessageTypes[1]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Latency() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Latency(Latency other) : this() {
-      avg_ = other.avg_;
-      min_ = other.min_;
-      max_ = other.max_;
-      stdDev_ = other.stdDev_;
-      numSamples_ = other.numSamples_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Latency Clone() {
-      return new Latency(this);
-    }
-
-    /// <summary>Field number for the "avg" field.</summary>
-    public const int AvgFieldNumber = 1;
-    private double avg_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public double Avg {
-      get { return avg_; }
-      set {
-        avg_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "min" field.</summary>
-    public const int MinFieldNumber = 2;
-    private double min_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public double Min {
-      get { return min_; }
-      set {
-        min_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "max" field.</summary>
-    public const int MaxFieldNumber = 3;
-    private double max_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public double Max {
-      get { return max_; }
-      set {
-        max_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "std_dev" field.</summary>
-    public const int StdDevFieldNumber = 4;
-    private double stdDev_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public double StdDev {
-      get { return stdDev_; }
-      set {
-        stdDev_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "num_samples" field.</summary>
-    public const int NumSamplesFieldNumber = 5;
-    private ulong numSamples_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ulong NumSamples {
-      get { return numSamples_; }
-      set {
-        numSamples_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as Latency);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Latency other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Avg, other.Avg)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Min, other.Min)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Max, other.Max)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(StdDev, other.StdDev)) return false;
-      if (NumSamples != other.NumSamples) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Avg != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Avg);
-      if (Min != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Min);
-      if (Max != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Max);
-      if (StdDev != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(StdDev);
-      if (NumSamples != 0UL) hash ^= NumSamples.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Avg != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(Avg);
-      }
-      if (Min != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Min);
-      }
-      if (Max != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Max);
-      }
-      if (StdDev != 0D) {
-        output.WriteRawTag(33);
-        output.WriteDouble(StdDev);
-      }
-      if (NumSamples != 0UL) {
-        output.WriteRawTag(40);
-        output.WriteUInt64(NumSamples);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Avg != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(Avg);
-      }
-      if (Min != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Min);
-      }
-      if (Max != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Max);
-      }
-      if (StdDev != 0D) {
-        output.WriteRawTag(33);
-        output.WriteDouble(StdDev);
-      }
-      if (NumSamples != 0UL) {
-        output.WriteRawTag(40);
-        output.WriteUInt64(NumSamples);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      if (Avg != 0D) {
-        size += 1 + 8;
-      }
-      if (Min != 0D) {
-        size += 1 + 8;
-      }
-      if (Max != 0D) {
-        size += 1 + 8;
-      }
-      if (StdDev != 0D) {
-        size += 1 + 8;
-      }
-      if (NumSamples != 0UL) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(NumSamples);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Latency other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Avg != 0D) {
-        Avg = other.Avg;
-      }
-      if (other.Min != 0D) {
-        Min = other.Min;
-      }
-      if (other.Max != 0D) {
-        Max = other.Max;
-      }
-      if (other.StdDev != 0D) {
-        StdDev = other.StdDev;
-      }
-      if (other.NumSamples != 0UL) {
-        NumSamples = other.NumSamples;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 9: {
-            Avg = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            Min = input.ReadDouble();
-            break;
-          }
-          case 25: {
-            Max = input.ReadDouble();
-            break;
-          }
-          case 33: {
-            StdDev = input.ReadDouble();
-            break;
-          }
-          case 40: {
-            NumSamples = input.ReadUInt64();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 9: {
-            Avg = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            Min = input.ReadDouble();
-            break;
-          }
-          case 25: {
-            Max = input.ReadDouble();
-            break;
-          }
-          case 33: {
-            StdDev = input.ReadDouble();
-            break;
-          }
-          case 40: {
-            NumSamples = input.ReadUInt64();
             break;
           }
         }

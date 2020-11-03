@@ -52,14 +52,21 @@ namespace RestSample
 
   class Program
   {
-    static string carrierName = "GDDT";
+    /*static string carrierName = "GDDT";
     static string orgName = "MobiledgeX";
     static string appName = "MobiledgeX SDK Demo";
-    static string appVers = "2.0";
+    static string appVers = "2.0";*/
+
+    static string carrierName = "";
+    static string orgName = "mobiledgex";
+    static string appName = "arshooter";
+    static string appVers = "1";
+
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
+    //static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
+    static string fallbackDmeHost = "127.0.0.1";
 
     static Timestamp createTimestamp(int futureSeconds)
     {
@@ -138,7 +145,7 @@ namespace RestSample
         {
           try
           {
-            registerClientReply = await me.RegisterClient(registerClientRequest);
+            registerClientReply = await me.RegisterClient(fallbackDmeHost, MatchingEngine.defaultDmeRestPort,registerClientRequest);
             Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
           }
           catch (DmeDnsException)
@@ -174,7 +181,7 @@ namespace RestSample
           FindCloudletReply findCloudletReply = null;
           try
           {
-            findCloudletReply = await me.FindCloudlet(findCloudletRequest);
+            findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort,findCloudletRequest);
           }
           catch (DmeDnsException)
           {
@@ -224,7 +231,7 @@ namespace RestSample
           FindCloudletReply findCloudletReplyPerformance = null;
           try
           {
-            findCloudletReplyPerformance = await me.FindCloudlet(findCloudletRequest, FindCloudletMode.PERFORMANCE);
+            findCloudletReplyPerformance = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort,findCloudletRequest, FindCloudletMode.PERFORMANCE);
           }
           catch (DmeDnsException)
           {
@@ -275,7 +282,7 @@ namespace RestSample
           VerifyLocationReply verifyLocationReply = null;
           try
           {
-            verifyLocationReply = await me.VerifyLocation(verifyLocationRequest);
+            verifyLocationReply = await me.VerifyLocation(fallbackDmeHost, MatchingEngine.defaultDmeRestPort,verifyLocationRequest);
           }
           catch (DmeDnsException)
           {
@@ -306,7 +313,7 @@ namespace RestSample
           AppInstListReply appInstListReply;
           try
           {
-            appInstListReply = await me.GetAppInstList(appInstListRequest);
+            appInstListReply = await me.GetAppInstList(fallbackDmeHost, MatchingEngine.defaultDmeRestPort,appInstListRequest);
           }
           catch (DmeDnsException)
           {
@@ -380,7 +387,7 @@ namespace RestSample
           QosPositionKpiStream qosReplyStream = null;
           try
           {
-            qosReplyStream = await me.GetQosPositionKpi(qosPositionRequest);
+            qosReplyStream = await me.GetQosPositionKpi(fallbackDmeHost, MatchingEngine.defaultDmeRestPort,qosPositionRequest);
           }
           catch (DmeDnsException)
           {
