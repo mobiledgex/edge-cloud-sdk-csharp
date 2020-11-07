@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -136,5 +137,52 @@ namespace DistributedMatchEngine
   {
     public string seconds;
     public Int32 nanos;
+  }
+
+  /* For serialization without generics on IOS */
+  // Vendor specific data
+  [DataContract]
+  public class Tag
+  {
+    [DataMember]
+    public string Key;
+    [DataMember]
+    public string Value;
+
+    // Get and set won't be called by the serializer (who does reflection), so this is manual.
+    static public Tag[] DictionaryToArrayTag(Dictionary<string, string> tags)
+    {
+      if (tags == null || tags.Count == 0)
+      {
+        return null;
+      }
+      int i = 0;
+      Tag[] array_tags = new Tag[tags.Count];
+      foreach (KeyValuePair<string, string> entry in tags)
+      {
+        array_tags[i] = new Tag
+        {
+          Key = entry.Key,
+          Value = entry.Value
+        };
+        i++;
+      }
+      return array_tags;
+    }
+
+    static public Dictionary<string, string> ArrayToDictionaryTag(Tag[] array_tags)
+    {
+      Dictionary<string, string> tags = new Dictionary<string, string>();
+      if (array_tags == null || array_tags.Length == 0)
+      {
+        return null;
+      }
+      foreach (Tag entry in array_tags)
+      {
+        tags[entry.Key] = entry.Value;
+      }
+
+      return tags;
+    }
   }
 }
