@@ -804,7 +804,7 @@ namespace Tests
     {
       RegisterClientReply reply = new RegisterClientReply
       {
-        tags = new ConcurrentDictionary<string, string>(1, 3)
+        tags = new Dictionary<string, string>()
       };
 
       reply.tags["one"] = "two";
@@ -826,7 +826,6 @@ namespace Tests
       ms = new MemoryStream(byteArray);
       RegisterClientReply replyParsed = (RegisterClientReply)deserializer.ReadObject(ms);
 
-      Assert.True(!replyParsed.tags.IsEmpty, "Dictonary should not be empty!");
       Assert.True(replyParsed.tags.Count == 3, "Dictionary should have 3 entries!");
 
       foreach (KeyValuePair<string, string> entry in replyParsed.tags)

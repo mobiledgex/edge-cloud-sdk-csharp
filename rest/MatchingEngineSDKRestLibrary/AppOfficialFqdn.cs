@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -31,7 +31,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public Loc gps_location;
     [DataMember]
-    public ConcurrentDictionary<string, string> tags;
+    public Dictionary<string, string> tags;
   }
 
   [DataContract]
@@ -79,6 +79,6 @@ namespace DistributedMatchEngine
     public AppPort[] ports;
 
     [DataMember]
-    public ConcurrentDictionary<string, string> tags;
+    public Dictionary<string, string> tags;
   }
 }

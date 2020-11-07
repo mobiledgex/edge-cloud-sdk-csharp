@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -104,7 +104,7 @@ namespace DistributedMatchEngine
     public UInt32 limit;
     //! Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+    public Dictionary<string, string> tags;
   }
 
   /*!
@@ -155,6 +155,6 @@ namespace DistributedMatchEngine
     public CloudletLocation[] cloudlets;
     //! Optional. Vendor specific data
     [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+    public Dictionary<string, string> tags;
   }
 }
