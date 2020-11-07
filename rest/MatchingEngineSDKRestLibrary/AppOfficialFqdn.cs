@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -30,8 +30,11 @@ namespace DistributedMatchEngine
     public string session_cookie;
     [DataMember]
     public Loc gps_location;
-    [DataMember]
-    public ConcurrentDictionary<string, string> tags;
+
+    //! Optional. Vendor specific data
+    public Dictionary<string, string> tags;
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Tag[] array_tags;
   }
 
   [DataContract]
@@ -78,7 +81,9 @@ namespace DistributedMatchEngine
     [DataMember]
     public AppPort[] ports;
 
-    [DataMember]
-    public ConcurrentDictionary<string, string> tags;
+    //! Optional. Vendor specific data
+    public Dictionary<string, string> tags;
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Tag[] array_tags;
   }
 }

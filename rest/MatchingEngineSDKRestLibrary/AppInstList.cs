@@ -16,7 +16,7 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -102,9 +102,11 @@ namespace DistributedMatchEngine
     //! Optional. Limit the number of results, defaults to 3
     [DataMember(EmitDefaultValue = false)]
     public UInt32 limit;
-    //! Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+
+    //! Optional. Vendor specific data
+    public Dictionary<string, string> tags;
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Tag[] array_tags;
   }
 
   /*!
@@ -153,8 +155,10 @@ namespace DistributedMatchEngine
 
     [DataMember]
     public CloudletLocation[] cloudlets;
+
     //! Optional. Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+    public Dictionary<string, string> tags;
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Tag[] array_tags;
   }
 }

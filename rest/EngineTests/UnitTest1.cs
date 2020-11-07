@@ -804,35 +804,25 @@ namespace Tests
     {
       RegisterClientReply reply = new RegisterClientReply
       {
-        tags = new ConcurrentDictionary<string, string>(1, 3)
+        tags = new Dictionary<string, string>()
       };
 
       reply.tags["one"] = "two";
       reply.tags["two"] = "three";
       reply.tags["three"] = "four";
 
+      // This only tests the dictionary. The reason is, array_tags is the actual field for the wire,
+      // and it's marked internal.
+      Tag [] array_tags = Tag.DictionaryToArrayTag(reply.tags);
 
-      // Serialize and deserilize to test Dictionary serliazation from wire level JSON arrays (outside engine).
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
+      Assert.NotNull(array_tags, "array_tags should have entries!");
 
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, reply);
-      string jsonStr = Util.StreamToString(ms);
+      Assert.True(array_tags.Length == reply.tags.Count, "Dictionary should have 3 entries!");
 
-      Console.WriteLine("Serialized: " + jsonStr);
+      Dictionary<string, string> dict = Tag.ArrayToDictionaryTag(array_tags);
+      Assert.NotNull(dict, "Dict should not be null!");
+      Assert.IsTrue(dict.Count == reply.tags.Count, "Dictionary must have " + reply.tags.Count);
 
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
-      byte[] byteArray = Encoding.ASCII.GetBytes(jsonStr);
-      ms = new MemoryStream(byteArray);
-      RegisterClientReply replyParsed = (RegisterClientReply)deserializer.ReadObject(ms);
-
-      Assert.True(!replyParsed.tags.IsEmpty, "Dictonary should not be empty!");
-      Assert.True(replyParsed.tags.Count == 3, "Dictionary should have 3 entries!");
-
-      foreach (KeyValuePair<string, string> entry in replyParsed.tags)
-      {
-        Console.WriteLine("[" + entry.Key + ", " + entry.Value + "]");
-      }
     }
   }
 }
