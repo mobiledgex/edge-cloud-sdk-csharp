@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -54,8 +55,40 @@ namespace DistributedMatchEngine
     //! Optional. Unique identification of the client device or user. May be overridden by the server, If left blank, a new Unique ID will be assigned in the RegisterClient Reply.
     public string unique_id;
     //! Optional. Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
+    //[DataMember(EmitDefaultValue = false)]
     public Dictionary<string, string> tags;
+
+    [DataMember(Name = "tags")]
+    private List<Dictionary<string, string>> list_tags
+    {
+      get
+      {
+        List<Dictionary<string, string>> tagList = new List<Dictionary<string, string>>();
+        if (tags == null || tags.Count == 0)
+        {
+          return null;
+        }
+        foreach (KeyValuePair<string, string> entry in tags)
+        {
+          Dictionary<string, string> tagDict = new Dictionary<string, string>();
+          tagDict[entry.Key] = entry.Value;
+          tagList.Add(tagDict);
+        }
+        return tagList;
+      }
+      set
+      {
+        foreach (Dictionary<string, string> dicts in value)
+        {
+          // This is actually one entry only:
+          foreach (KeyValuePair<string, string> entry in dicts)
+          {
+            tags[entry.Key] = entry.Value;
+            break;
+          }
+        }
+      }
+    }
   }
 
   /*!
@@ -120,7 +153,38 @@ namespace DistributedMatchEngine
     [DataMember(EmitDefaultValue = false)]
     public string unique_id;
     //! Optional. Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
+    //[DataMember(EmitDefaultValue = false)]
     public Dictionary<string, string> tags;
+
+    [DataMember(Name = "tags")]
+    private List<Dictionary<string, string>> list_tags {
+    get
+      {
+        List<Dictionary<string, string>> tagList = new List<Dictionary<string, string>>();
+        if (tags == null || tags.Count == 0)
+        {
+          return null;
+        }
+        foreach (KeyValuePair<string, string> entry in tags)
+        {
+          Dictionary<string, string> tagDict = new Dictionary<string, string>();
+          tagDict[entry.Key] = entry.Value;
+          tagList.Add(tagDict);
+        }
+        return tagList;
+      }
+      set
+      {
+        foreach (Dictionary<string, string> dicts in value)
+        {
+          // This is actually one entry only:
+          foreach (KeyValuePair<string, string> entry in dicts)
+          {
+            tags[entry.Key] = entry.Value;
+            break;
+          }
+        }
+      }
+    }
   }
 }

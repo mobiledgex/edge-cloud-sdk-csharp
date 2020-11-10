@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using DistributedMatchEngine.PerformanceMetrics;
 using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
+using System.Runtime.Serialization;
 
 
 /*!
@@ -222,6 +223,11 @@ namespace DistributedMatchEngine
     string authToken { get; set; }
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
+
+    private DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
+    {
+      UseSimpleDictionaryFormat = true // For Dictionaries.
+    };
 
     /*!
      * Constructor for MatchingEngine class.
@@ -711,7 +717,7 @@ namespace DistributedMatchEngine
       request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
