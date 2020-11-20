@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -139,47 +140,39 @@ namespace DistributedMatchEngine
     public Int32 nanos;
   }
 
-  /* For serialization without generics on IOS */
+  /* For serialization without generics on IL2CPP and/or IOS */
   // Vendor specific data
-  [DataContract]
   public class Tag
   {
-    [DataMember]
-    public string Key;
-    [DataMember]
-    public string Value;
-
     // Get and set won't be called by the serializer (who does reflection), so this is manual.
-    static public Tag[] DictionaryToArrayTag(Dictionary<string, string> tags)
+    static public Hashtable DictionaryToHashtable(Dictionary<string, string> tags)
     {
+      Log.D("DictionaryToHashtable: " + tags);
       if (tags == null || tags.Count == 0)
       {
+        Console.WriteLine("XXX DictionaryToHashtable: Nothing: " + tags);
         return null;
       }
-      int i = 0;
-      Tag[] array_tags = new Tag[tags.Count];
+      Hashtable htags = new Hashtable();
       foreach (KeyValuePair<string, string> entry in tags)
       {
-        array_tags[i] = new Tag
-        {
-          Key = entry.Key,
-          Value = entry.Value
-        };
-        i++;
+        htags.Add(entry.Key, entry.Value);
+        Log.D("Key: " + entry.Key + ", Value: " + htags[entry.Key]);
       }
-      return array_tags;
+      return htags;
     }
 
-    static public Dictionary<string, string> ArrayToDictionaryTag(Tag[] array_tags)
+    static public Dictionary<string, string> HashtableToDictionary(Hashtable htags)
     {
       Dictionary<string, string> tags = new Dictionary<string, string>();
-      if (array_tags == null || array_tags.Length == 0)
+      if (htags == null || htags.Count == 0)
       {
         return null;
       }
-      foreach (Tag entry in array_tags)
+      foreach (var key in htags.Keys)
       {
-        tags[entry.Key] = entry.Value;
+        tags[key.ToString()] = htags[key].ToString();
+        Log.D("Key: " + key + ", Value: " + tags[key.ToString()]);
       }
 
       return tags;

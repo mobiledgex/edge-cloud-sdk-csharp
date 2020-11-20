@@ -32,7 +32,10 @@ namespace DistributedMatchEngine
   {
     StreamReader sr = null;
     Stream jsonObjectStream;
-    DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(QosPositionKpiStreamReply));
+    DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(QosPositionKpiStreamReply), new DataContractJsonSerializerSettings
+    {
+      UseSimpleDictionaryFormat = true
+    });
 
     const int msTimeoutDefault = 15000;
 

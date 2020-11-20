@@ -34,6 +34,9 @@ using System.Net.WebSockets;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 using System.Collections.Concurrent;
+using System.Json;
+using System.Collections;
+using System.Runtime.Serialization;
 
 namespace Tests
 {
@@ -800,29 +803,29 @@ namespace Tests
     }
 
     [Test]
-    public async Task TestDictionary()
+    public void TestDictionary()
     {
-      RegisterClientReply reply = new RegisterClientReply
+      var tags = new Dictionary<string, string>();
+
+      tags["one"] = "ONE";
+      tags["two"] = "TWO";
+      tags["three"] = "THREE";
+
+      Hashtable hashtable = Tag.DictionaryToHashtable(tags);
+      Assert.True(hashtable.Count == tags.Count, "Tables should have same count");
+
+      foreach (var entry in tags)
       {
-        tags = new Dictionary<string, string>()
-      };
+        Assert.True(entry.Value.ToString().Equals(hashtable[entry.Key]));
+      }
 
-      reply.tags["one"] = "two";
-      reply.tags["two"] = "three";
-      reply.tags["three"] = "four";
+      var dict2 = Tag.HashtableToDictionary(hashtable);
+      foreach (var entry in dict2)
+      {
+        Assert.True(entry.Value.ToString().Equals(tags[entry.Key]));
+      }
 
-      // This only tests the dictionary. The reason is, array_tags is the actual field for the wire,
-      // and it's marked internal.
-      Tag [] array_tags = Tag.DictionaryToArrayTag(reply.tags);
-
-      Assert.NotNull(array_tags, "array_tags should have entries!");
-
-      Assert.True(array_tags.Length == reply.tags.Count, "Dictionary should have 3 entries!");
-
-      Dictionary<string, string> dict = Tag.ArrayToDictionaryTag(array_tags);
-      Assert.NotNull(dict, "Dict should not be null!");
-      Assert.IsTrue(dict.Count == reply.tags.Count, "Dictionary must have " + reply.tags.Count);
-
+      Assert.True(tags.Count == dict2.Count, "Should be equal after double conversion");
     }
   }
 }

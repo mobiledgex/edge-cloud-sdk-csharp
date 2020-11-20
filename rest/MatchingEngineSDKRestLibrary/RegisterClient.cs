@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
@@ -54,11 +55,12 @@ namespace DistributedMatchEngine
     [DataMember(EmitDefaultValue = false)]
     //! Optional. Unique identification of the client device or user. May be overridden by the server, If left blank, a new Unique ID will be assigned in the RegisterClient Reply.
     public string unique_id;
+
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
 
     [DataMember(Name = "tags", EmitDefaultValue = false)]
-    internal Tag[] array_tags;
+    internal Hashtable htags;
   }
 
   /*!
@@ -125,7 +127,8 @@ namespace DistributedMatchEngine
 
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
+
     [DataMember(Name = "tags", EmitDefaultValue = false)]
-    internal Tag[] array_tags;
+    internal Hashtable htags;
   }
 }
