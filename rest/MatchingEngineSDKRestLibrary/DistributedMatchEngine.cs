@@ -726,13 +726,13 @@ namespace DistributedMatchEngine
         DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest), serializerSettings);
         ms = new MemoryStream();
         serializer.WriteObject(ms, request);
-        //string jsonStr = Util.StreamToString(ms);
         jsonStr = Util.StreamToString(ms);
-      } catch (Exception e)
+      }
+      catch (Exception e)
       {
-        // This critical enough to always print and re-throw, due to potential serialization issues.
+        // This is critical enough to always print and re-throw, due to potential serialization issues.
         Log.E("Exception Message: " + e.Message);
-        Log.E("XXXXY: Exception Stack: " + e.StackTrace);
+        Log.E("Exception Stack: " + e.StackTrace);
         throw e;
       }
 

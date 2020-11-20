@@ -26,7 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2" />
-    <PackageReference Include="System.Json" Version="4.6.0" />
+    <PackageReference Include="System.Json" Version="4.7.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PerformanceMetrics\" />
