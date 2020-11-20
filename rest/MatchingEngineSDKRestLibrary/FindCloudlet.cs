@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -54,7 +55,7 @@ namespace DistributedMatchEngine
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
     [DataMember(Name = "tags", EmitDefaultValue = false)]
-    internal Tag[] array_tags;
+    internal Hashtable htags;
   }
 
   /*!
@@ -114,7 +115,7 @@ namespace DistributedMatchEngine
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
     [DataMember(Name = "tags", EmitDefaultValue = false)]
-    internal Tag[] array_tags;
+    internal Hashtable htags;
   }
 
 }

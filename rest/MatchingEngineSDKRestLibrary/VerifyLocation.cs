@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -52,7 +53,7 @@ namespace DistributedMatchEngine
     public Dictionary<string, string> tags;
 
     [DataMember(Name = "tags", EmitDefaultValue = false)]
-    internal Tag[] array_tags;
+    internal Hashtable htags;
   };
 
   /*!
@@ -145,6 +146,6 @@ namespace DistributedMatchEngine
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
     [DataMember(Name = "tags", EmitDefaultValue = false)]
-    internal Tag[] array_tags;
+    internal Hashtable htags;
   }
 }

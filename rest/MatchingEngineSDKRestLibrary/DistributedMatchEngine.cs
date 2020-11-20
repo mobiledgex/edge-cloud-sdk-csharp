@@ -204,6 +204,11 @@ namespace DistributedMatchEngine
     public DeviceInfo deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
 
+    DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
+    {
+      UseSimpleDictionaryFormat = true
+    };
+
     // API Paths:
     private string registerAPI = "/v1/registerclient";
     private string verifylocationAPI = "/v1/verifylocation";
@@ -217,6 +222,8 @@ namespace DistributedMatchEngine
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
 
     public bool useOnlyWifi { get; set; } = false;
+    // Use SSL for DME.
+    public bool useSSL { get; set; } = true;
 
     public string sessionCookie { get; set; }
     string tokenServerURI;
@@ -423,7 +430,8 @@ namespace DistributedMatchEngine
 
     private string CreateUri(string host, uint port)
     {
-      return "https://" + host + ":" + port;
+      string proto = useSSL ? "https://" : "http://";
+      return proto + host + ":" + port;
     }
 
     private async Task<Stream> PostRequest(string uri, string jsonStr)
@@ -669,7 +677,7 @@ namespace DistributedMatchEngine
 
       foreach (KeyValuePair<string, string> pair in dict)
       {
-        if (pair.Key != null)
+        if (pair.Key != null && pair.Value != null)
         {
           request.tags.Add(pair.Key, pair.Value);
         }
@@ -706,12 +714,27 @@ namespace DistributedMatchEngine
       // MEL Enablement:
       request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
-      request.array_tags = Tag.DictionaryToArrayTag(request.tags);
+      if (request.tags != null)
+      {
+        request.htags = Tag.DictionaryToHashtable(request.tags);
+      }
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest));
+      string jsonStr = "";
       MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
+      try
+      {
+        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest), serializerSettings);
+        ms = new MemoryStream();
+        serializer.WriteObject(ms, request);
+        //string jsonStr = Util.StreamToString(ms);
+        jsonStr = Util.StreamToString(ms);
+      } catch (Exception e)
+      {
+        // This critical enough to always print and re-throw, due to potential serialization issues.
+        Log.E("Exception Message: " + e.Message);
+        Log.E("XXXXY: Exception Stack: " + e.StackTrace);
+        throw e;
+      }
 
       Stream responseStream = await PostRequest(CreateUri(host, port) + registerAPI, jsonStr);
       if (responseStream == null || !responseStream.CanRead)
@@ -719,14 +742,16 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
       string responseStr = Util.StreamToString(responseStream);
+      Log.D("Response: " + responseStr);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
       RegisterClientReply reply = (RegisterClientReply)deserializer.ReadObject(ms);
+
       if (reply.tags == null)
       {
-        reply.tags = Tag.ArrayToDictionaryTag(reply.array_tags);
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       this.sessionCookie = reply.session_cookie;
@@ -858,10 +883,10 @@ namespace DistributedMatchEngine
         ver = 1,
         session_cookie = request.session_cookie,
         gps_location = request.gps_location,
-        array_tags = Tag.DictionaryToArrayTag(request.tags)
+        htags = Tag.DictionaryToHashtable(request.tags)
       };
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnRequest));
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, appOfficialFqdnRequest);
       string jsonStr = Util.StreamToString(ms);
@@ -875,11 +900,11 @@ namespace DistributedMatchEngine
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnReply));
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnReply), serializerSettings);
       AppOfficialFqdnReply reply = (AppOfficialFqdnReply)deserializer.ReadObject(ms);
       if (reply.tags == null)
       {
-        reply.tags = Tag.ArrayToDictionaryTag(reply.array_tags);
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       // Reparse if default value.
@@ -922,9 +947,9 @@ namespace DistributedMatchEngine
 
     private async Task<FindCloudletReply> FindCloudletProximityMode(string host, uint port, FindCloudletRequest request)
     {
-      request.array_tags = Tag.DictionaryToArrayTag(request.tags);
+      request.htags = Tag.DictionaryToHashtable(request.tags);
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest));
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
@@ -938,11 +963,11 @@ namespace DistributedMatchEngine
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply));
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply), serializerSettings);
       FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(ms);
       if (reply.tags == null)
       {
-        reply.tags = Tag.ArrayToDictionaryTag(reply.array_tags);
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       // Reparse if default value.
@@ -1123,7 +1148,7 @@ namespace DistributedMatchEngine
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
       if (aiReply.tags == null)
       {
-        aiReply.tags = Tag.ArrayToDictionaryTag(aiReply.array_tags);
+        aiReply.tags = Tag.HashtableToDictionary(aiReply.htags);
       }
       if (aiReply.status != AppInstListReply.AIStatus.AI_SUCCESS)
       {
@@ -1214,7 +1239,7 @@ namespace DistributedMatchEngine
       RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
       if (registerClientReply.tags == null)
       {
-        registerClientReply.tags = Tag.ArrayToDictionaryTag(registerClientReply.array_tags);
+        registerClientReply.tags = Tag.HashtableToDictionary(registerClientReply.htags);
       }
       if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
       {
@@ -1229,7 +1254,7 @@ namespace DistributedMatchEngine
       FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode);
       if (findCloudletReply.tags == null)
       {
-        findCloudletReply.tags = Tag.ArrayToDictionaryTag(findCloudletReply.array_tags);
+        findCloudletReply.tags = Tag.HashtableToDictionary(findCloudletReply.htags);
       }
 
       return findCloudletReply;
@@ -1330,9 +1355,9 @@ namespace DistributedMatchEngine
     {
       string token = RetrieveToken(tokenServerURI);
       request.verify_loc_token = token;
-      request.array_tags = Tag.DictionaryToArrayTag(request.tags);
+      request.htags = Tag.DictionaryToHashtable(request.tags);
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(VerifyLocationRequest));
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(VerifyLocationRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
@@ -1346,11 +1371,11 @@ namespace DistributedMatchEngine
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(VerifyLocationReply));
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(VerifyLocationReply), serializerSettings);
       VerifyLocationReply reply = (VerifyLocationReply)deserializer.ReadObject(ms);
       if (reply.tags == null)
       {
-        reply.tags = Tag.ArrayToDictionaryTag(reply.array_tags);
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       // Reparse if default value is set.
@@ -1443,8 +1468,8 @@ namespace DistributedMatchEngine
      */
     public async Task<AppInstListReply> GetAppInstList(string host, uint port, AppInstListRequest request)
     {
-      request.array_tags = Tag.DictionaryToArrayTag(request.tags);
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppInstListRequest));
+      request.htags = Tag.DictionaryToHashtable(request.tags);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppInstListRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
@@ -1458,11 +1483,11 @@ namespace DistributedMatchEngine
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppInstListReply));
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppInstListReply), serializerSettings);
       AppInstListReply reply = (AppInstListReply)deserializer.ReadObject(ms);
       if (reply.tags == null)
       {
-        reply.tags = Tag.ArrayToDictionaryTag(reply.array_tags);
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       // reparse if undefined.
@@ -1528,8 +1553,8 @@ namespace DistributedMatchEngine
      */
     public async Task<QosPositionKpiStream> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
     {
-      request.array_tags = Tag.DictionaryToArrayTag(request.tags);
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionRequest));
+      request.htags = Tag.DictionaryToHashtable(request.tags);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
@@ -1584,7 +1609,7 @@ namespace DistributedMatchEngine
 
     private async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
     {
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FqdnListRequest));
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FqdnListRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
@@ -1598,11 +1623,11 @@ namespace DistributedMatchEngine
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FqdnListReply));
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FqdnListReply), serializerSettings);
       FqdnListReply reply = (FqdnListReply)deserializer.ReadObject(ms);
       if (reply.tags == null)
       {
-        reply.tags = Tag.ArrayToDictionaryTag(reply.array_tags);
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       reply.status = reply.status == FqdnListReply.FLStatus.FL_UNDEFINED ? ParseFLStatus(responseStr) : reply.status;
@@ -1637,8 +1662,8 @@ namespace DistributedMatchEngine
 
     private async Task<DynamicLocGroupReply> AddUserToGroup(string host, uint port, DynamicLocGroupRequest request)
     {
-      request.array_tags = Tag.DictionaryToArrayTag(request.tags);
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DynamicLocGroupRequest));
+      request.htags = Tag.DictionaryToHashtable(request.tags);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DynamicLocGroupRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
@@ -1652,11 +1677,11 @@ namespace DistributedMatchEngine
       string responseStr = Util.StreamToString(responseStream);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(DynamicLocGroupReply));
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(DynamicLocGroupReply), serializerSettings);
       DynamicLocGroupReply reply = (DynamicLocGroupReply)deserializer.ReadObject(ms);
       if (reply.tags == null)
       {
-        reply.tags = Tag.ArrayToDictionaryTag(reply.array_tags);
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
