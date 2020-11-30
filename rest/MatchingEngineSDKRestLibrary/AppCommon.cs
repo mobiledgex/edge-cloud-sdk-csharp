@@ -16,6 +16,8 @@
  */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -136,5 +138,44 @@ namespace DistributedMatchEngine
   {
     public string seconds;
     public Int32 nanos;
+  }
+
+  /* For serialization without generics on IL2CPP and/or IOS */
+  // Vendor specific data
+  public class Tag
+  {
+    // Get and set won't be called by the serializer (who does reflection), so this is manual.
+    static public Hashtable DictionaryToHashtable(Dictionary<string, string> tags)
+    {
+      Log.D("DictionaryToHashtable: " + tags);
+      if (tags == null || tags.Count == 0)
+      {
+        Console.WriteLine("XXX DictionaryToHashtable: Nothing: " + tags);
+        return null;
+      }
+      Hashtable htags = new Hashtable();
+      foreach (KeyValuePair<string, string> entry in tags)
+      {
+        htags.Add(entry.Key, entry.Value);
+        Log.D("Key: " + entry.Key + ", Value: " + htags[entry.Key]);
+      }
+      return htags;
+    }
+
+    static public Dictionary<string, string> HashtableToDictionary(Hashtable htags)
+    {
+      Dictionary<string, string> tags = new Dictionary<string, string>();
+      if (htags == null || htags.Count == 0)
+      {
+        return null;
+      }
+      foreach (var key in htags.Keys)
+      {
+        tags[key.ToString()] = htags[key].ToString();
+        Log.D("Key: " + key + ", Value: " + tags[key.ToString()]);
+      }
+
+      return tags;
+    }
   }
 }

@@ -46,7 +46,8 @@ namespace RestSample
     Dictionary<string, string> DeviceInfo.GetDeviceInfo()
     {
       Dictionary<string, string> dict = new Dictionary<string, string>();
-      dict["one"] = "two";
+      dict["one"] = "ONE";
+      dict["two"] = "TWO";
       return dict;
     }
 
@@ -63,7 +64,7 @@ namespace RestSample
 
   class Program
   {
-    static string carrierName = "TDG";
+    static string carrierName = "";
     static string orgName = "MobiledgeX";
     static string appName = "MobiledgeX SDK Demo";
     static string appVers = "2.0";
@@ -140,6 +141,7 @@ namespace RestSample
 
         me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
+        // Set SSL.
 
         // Start location task. This is for test use only. The source of the
         // location in an Unity application should be from an application context

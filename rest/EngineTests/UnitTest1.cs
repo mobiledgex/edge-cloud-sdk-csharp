@@ -34,6 +34,9 @@ using System.Net.WebSockets;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 using System.Collections.Concurrent;
+using System.Json;
+using System.Collections;
+using System.Runtime.Serialization;
 
 namespace Tests
 {
@@ -800,39 +803,29 @@ namespace Tests
     }
 
     [Test]
-    public async Task TestDictionary()
+    public void TestDictionary()
     {
-      RegisterClientReply reply = new RegisterClientReply
+      var tags = new Dictionary<string, string>();
+
+      tags["one"] = "ONE";
+      tags["two"] = "TWO";
+      tags["three"] = "THREE";
+
+      Hashtable hashtable = Tag.DictionaryToHashtable(tags);
+      Assert.True(hashtable.Count == tags.Count, "Tables should have same count");
+
+      foreach (var entry in tags)
       {
-        tags = new ConcurrentDictionary<string, string>(1, 3)
-      };
-
-      reply.tags["one"] = "two";
-      reply.tags["two"] = "three";
-      reply.tags["three"] = "four";
-
-
-      // Serialize and deserilize to test Dictionary serliazation from wire level JSON arrays (outside engine).
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
-
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, reply);
-      string jsonStr = Util.StreamToString(ms);
-
-      Console.WriteLine("Serialized: " + jsonStr);
-
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply));
-      byte[] byteArray = Encoding.ASCII.GetBytes(jsonStr);
-      ms = new MemoryStream(byteArray);
-      RegisterClientReply replyParsed = (RegisterClientReply)deserializer.ReadObject(ms);
-
-      Assert.True(!replyParsed.tags.IsEmpty, "Dictonary should not be empty!");
-      Assert.True(replyParsed.tags.Count == 3, "Dictionary should have 3 entries!");
-
-      foreach (KeyValuePair<string, string> entry in replyParsed.tags)
-      {
-        Console.WriteLine("[" + entry.Key + ", " + entry.Value + "]");
+        Assert.True(entry.Value.ToString().Equals(hashtable[entry.Key]));
       }
+
+      var dict2 = Tag.HashtableToDictionary(hashtable);
+      foreach (var entry in dict2)
+      {
+        Assert.True(entry.Value.ToString().Equals(tags[entry.Key]));
+      }
+
+      Assert.True(tags.Count == dict2.Count, "Should be equal after double conversion");
     }
   }
 }
