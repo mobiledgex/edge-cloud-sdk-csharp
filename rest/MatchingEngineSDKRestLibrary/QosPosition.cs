@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
@@ -16,7 +16,8 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -83,9 +84,11 @@ namespace DistributedMatchEngine
     //! Optional. Cell id where the client is
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
-    //! Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+    //! Optional. Vendor specific data
+    public Dictionary<string, string> tags;
+
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Hashtable htags;
   }
 
   /*!
@@ -162,8 +165,11 @@ namespace DistributedMatchEngine
     [DataMember]
     public QosPositionResult[] position_results;
     //! Optional. Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+    //! Optional. Vendor specific data
+    public Dictionary<string, string> tags;
+
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Hashtable htags;
   }
 
   /*!

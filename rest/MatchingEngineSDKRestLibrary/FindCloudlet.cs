@@ -16,7 +16,8 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
@@ -50,9 +51,11 @@ namespace DistributedMatchEngine
     public UInt32 cell_id;
     [DataMember]
     public string client_token;
-    //! Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+
+    //! Optional. Vendor specific data
+    public Dictionary<string, string> tags;
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Hashtable htags;
   }
 
   /*!
@@ -108,9 +111,11 @@ namespace DistributedMatchEngine
     //! Location of the cloudlet
     [DataMember]
     public Loc cloudlet_location;
+
     //! Optional. Vendor specific data
-    [DataMember(EmitDefaultValue = false)]
-    public ConcurrentDictionary<string, string> tags;
+    public Dictionary<string, string> tags;
+    [DataMember(Name = "tags", EmitDefaultValue = false)]
+    internal Hashtable htags;
   }
 
 }
