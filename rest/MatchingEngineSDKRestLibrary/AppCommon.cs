@@ -147,17 +147,21 @@ namespace DistributedMatchEngine
     // Get and set won't be called by the serializer (who does reflection), so this is manual.
     static public Hashtable DictionaryToHashtable(Dictionary<string, string> tags)
     {
-      Log.D("DictionaryToHashtable: " + tags);
+      Log.D("XXX DictionaryToHashtable: " + tags);
       if (tags == null || tags.Count == 0)
       {
-        Console.WriteLine("XXX DictionaryToHashtable: Nothing: " + tags);
+        Log.E("XXX DictionaryToHashtable: No Tags! " + tags);
         return null;
       }
       Hashtable htags = new Hashtable();
       foreach (KeyValuePair<string, string> entry in tags)
       {
+        if (entry.Value == null)
+        {
+          continue;
+        }
         htags.Add(entry.Key, entry.Value);
-        Log.D("Key: " + entry.Key + ", Value: " + htags[entry.Key]);
+        Log.D("XXX Key: " + entry.Key + ", Value: " + htags[entry.Key]);
       }
       return htags;
     }
@@ -171,6 +175,10 @@ namespace DistributedMatchEngine
       }
       foreach (var key in htags.Keys)
       {
+        if (tags[key.ToString()] == null)
+        {
+          continue;
+        }
         tags[key.ToString()] = htags[key].ToString();
         Log.D("Key: " + key + ", Value: " + tags[key.ToString()]);
       }
