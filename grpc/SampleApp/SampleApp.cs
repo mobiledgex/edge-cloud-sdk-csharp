@@ -68,6 +68,35 @@ namespace MexGrpcSampleConsoleApp
     string appName = "arshooter";
     string appVers = "1";
 
+    Loc sanfran = new Loc
+    {
+      Latitude = 37.7749,
+      Longitude = -122.4194,
+    };
+    Loc paloalto = new Loc
+    {
+      Latitude = 37.4419,
+      Longitude = -122.1430,
+    };
+    Loc anchorage = new Loc
+    {
+      Latitude = 61.2181,
+      Longitude = -149.9003,
+    };
+    Loc austin = new Loc
+    {
+      Latitude = 40.7128,
+      Longitude = -74.0060,
+    };
+
+    Loc[] locs;
+
+    string[] carriers = new string[]{ "310170", "26201", "311480"}; // ATT, GDDT, Zerilu
+
+    string[] dataNetTypes = new string[]{ "Wifi", "LTE", "3G", "5G"};
+
+    int iteration = 0;
+
     MatchEngineApi.MatchEngineApiClient client;
 
     public async Task RunSampleFlowAsync()
@@ -75,6 +104,7 @@ namespace MexGrpcSampleConsoleApp
       try
       {
         location = getLocation();
+        locs = new Loc[]{ sanfran, paloalto, anchorage, austin };
         string uri = dmeHost + ":" + dmePort;
         Console.WriteLine("url is " + uri);
 
@@ -103,6 +133,7 @@ namespace MexGrpcSampleConsoleApp
         Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.Status);
         Console.WriteLine("FindCloudlet edge events session cookie: " + findCloudletReply.EdgeEventsCookie);
         Console.WriteLine("FindCloudlet dme fqdn: " + findCloudletReply.DmeFqdn);
+        Console.WriteLine("FindCloudlet fqdn: " + findCloudletReply.Fqdn);
         eeSessionCookie = findCloudletReply.EdgeEventsCookie;
           Thread.Sleep(1000);
         }
@@ -183,7 +214,6 @@ namespace MexGrpcSampleConsoleApp
                     var sample = new Sample
                     {
                       Value = t,
-                      Loc = location,
                       Timestamp = new Timestamp{
                         Seconds = seconds,
                         Nanos = (int)nanos,
@@ -220,6 +250,12 @@ namespace MexGrpcSampleConsoleApp
                 Console.WriteLine("Latency results: \n" +
                 "        Latency: " + "Avg: " + l.Avg + ", Min: " + l.Min + ", Max: " + l.Max + ", StdDev: " +l.StdDev + "\n");
                 continue;
+              case ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate:
+                var newFindCloudletReply = edgeEvent.ResponseStream.Current.NewCloudlet;
+                Console.WriteLine("FindCloudlet Reply Status: " + newFindCloudletReply.Status);
+                Console.WriteLine("FindCloudlet dme fqdn: " + newFindCloudletReply.DmeFqdn);
+                Console.WriteLine("FindCloudlet fqdn: " + newFindCloudletReply.Fqdn);
+                continue;
               default:
                 Console.WriteLine("EdgeServerEvent: \n" +
                 "        AppInstHealth " + edgeEvent.ResponseStream.Current.HealthCheck + "\n");
@@ -227,14 +263,14 @@ namespace MexGrpcSampleConsoleApp
             }
           }
         });
+
         
         for (int i = 0; i < 1000; i++) {
-          location.Latitude = 69.69;
-          location.Longitude = 69.69;
+          location = locs[i % 3];
           var clientEdgeEvent2 = CreateClientEdgeEvent(location);
           await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
           Console.WriteLine("Sent client edge event");
-          Thread.Sleep(1000);
+          Thread.Sleep(10000);
         }
 
         var clientEdgeEvent3 = CreateClientEdgeEvent(location, eventType: ClientEdgeEvent.Types.ClientEventType.EventTerminateConnection);
@@ -346,7 +382,9 @@ namespace MexGrpcSampleConsoleApp
         SessionCookie = sessionCookie,
         EdgeEventsCookie = eeSessionCookie,
         EventType = eventType, 
-        GpsLocation = gpsLocation,
+        GpsLocation = locs[iteration % (locs.Length)],
+        CarrierName = "",
+        DataNetworkType = dataNetTypes[iteration % (dataNetTypes.Length)],
       };
 
       if (samples != null)
@@ -356,6 +394,7 @@ namespace MexGrpcSampleConsoleApp
           clientEvent.Samples.Add(sample);
         }
       }
+      iteration++;
       return clientEvent;
     }
 
@@ -466,8 +505,8 @@ namespace MexGrpcSampleConsoleApp
     {
       return new DistributedMatchEngine.Loc
       {
-        Longitude = -122.149349,
-        Latitude = 37.459609
+        Latitude = 30.2672,
+        Longitude = 97
       };
     }
 

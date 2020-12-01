@@ -184,71 +184,74 @@ namespace DistributedMatchEngine {
             "YnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uS3BpUmVzdWx0EkUKBHRh",
             "Z3MYZCADKAsyNy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRp",
             "b25LcGlSZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEo",
-            "CRINCgV2YWx1ZRgCIAEoCToCOAEihAQKD0NsaWVudEVkZ2VFdmVudBIWCg5z",
+            "CRINCgV2YWx1ZRgCIAEoCToCOAEitQQKD0NsaWVudEVkZ2VFdmVudBIWCg5z",
             "ZXNzaW9uX2Nvb2tpZRgBIAEoCRIaChJlZGdlX2V2ZW50c19jb29raWUYAiAB",
             "KAkSTQoKZXZlbnRfdHlwZRgDIAEoDjI5LmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
             "Z2luZS5DbGllbnRFZGdlRXZlbnQuQ2xpZW50RXZlbnRUeXBlEjMKDGdwc19s",
             "b2NhdGlvbhgEIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MS",
             "MQoHc2FtcGxlcxgFIAMoCzIgLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5T",
-            "YW1wbGUSQQoEdGFncxhkIAMoCzIzLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5DbGllbnRFZGdlRXZlbnQuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNr",
-            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIpUBCg9DbGllbnRFdmVudFR5",
-            "cGUSEQoNRVZFTlRfVU5LTk9XThAAEhkKFUVWRU5UX0lOSVRfQ09OTkVDVElP",
-            "ThABEh4KGkVWRU5UX1RFUk1JTkFURV9DT05ORUNUSU9OEAISGQoVRVZFTlRf",
-            "TEFURU5DWV9TQU1QTEVTEAMSGQoVRVZFTlRfTE9DQVRJT05fVVBEQVRFEAQi",
-            "lwUKD1NlcnZlckVkZ2VFdmVudBJNCgpldmVudF90eXBlGAEgASgOMjkuZGlz",
-            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNlcnZlckVkZ2VFdmVudC5TZXJ2ZXJF",
-            "dmVudFR5cGUSPwoOY2xvdWRsZXRfc3RhdGUYAiABKA4yJy5kaXN0cmlidXRl",
-            "ZF9tYXRjaF9lbmdpbmUuQ2xvdWRsZXRTdGF0ZRJFChFtYWludGVuYW5jZV9z",
-            "dGF0ZRgDIAEoDjIqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5NYWludGVu",
-            "YW5jZVN0YXRlEjsKDGhlYWx0aF9jaGVjaxgEIAEoDjIlLmRpc3RyaWJ1dGVk",
-            "X21hdGNoX2VuZ2luZS5IZWFsdGhDaGVjaxIyCgdsYXRlbmN5GAUgASgLMiEu",
-            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxhdGVuY3kSQQoEdGFncxhkIAMo",
-            "CzIzLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5TZXJ2ZXJFZGdlRXZlbnQu",
-            "VGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
-            "AiABKAk6AjgBIssBCg9TZXJ2ZXJFdmVudFR5cGUSEQoNRVZFTlRfVU5LTk9X",
-            "ThAAEhkKFUVWRU5UX0lOSVRfQ09OTkVDVElPThABEhkKFUVWRU5UX0xBVEVO",
-            "Q1lfUkVRVUVTVBACEhsKF0VWRU5UX0xBVEVOQ1lfUFJPQ0VTU0VEEAMSGAoU",
-            "RVZFTlRfQ0xPVURMRVRfU1RBVEUQBBIeChpFVkVOVF9DTE9VRExFVF9NQUlO",
-            "VEVOQU5DRRAFEhgKFEVWRU5UX0FQUElOU1RfSEVBTFRIEAYqPQoHSURUeXBl",
-            "cxIQCgxJRF9VTkRFRklORUQQABIICgRJTUVJEAESCgoGTVNJU0ROEAISCgoG",
-            "SVBBRERSEAMqPAoLUmVwbHlTdGF0dXMSEAoMUlNfVU5ERUZJTkVEEAASDgoK",
-            "UlNfU1VDQ0VTUxABEgsKB1JTX0ZBSUwQAjKlDAoOTWF0Y2hFbmdpbmVBcGkS",
-            "jwEKDlJlZ2lzdGVyQ2xpZW50Ei8uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
-            "LlJlZ2lzdGVyQ2xpZW50UmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
-            "Z2luZS5SZWdpc3RlckNsaWVudFJlcGx5Ih2C0+STAhciEi92MS9yZWdpc3Rl",
-            "cmNsaWVudDoBKhKHAQoMRmluZENsb3VkbGV0Ei0uZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJlcXVlc3QaKy5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuRmluZENsb3VkbGV0UmVwbHkiG4LT5JMCFSIQL3YxL2Zp",
-            "bmRjbG91ZGxldDoBKhKfAQoUUGxhdGZvcm1GaW5kQ2xvdWRsZXQSNS5kaXN0",
-            "cmlidXRlZF9tYXRjaF9lbmdpbmUuUGxhdGZvcm1GaW5kQ2xvdWRsZXRSZXF1",
-            "ZXN0GisuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJl",
-            "cGx5IiOC0+STAh0iGC92MS9wbGF0Zm9ybWZpbmRjbG91ZGxldDoBKhKPAQoO",
-            "VmVyaWZ5TG9jYXRpb24SLy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVy",
-            "aWZ5TG9jYXRpb25SZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
-            "LlZlcmlmeUxvY2F0aW9uUmVwbHkiHYLT5JMCFyISL3YxL3ZlcmlmeWxvY2F0",
-            "aW9uOgEqEoMBCgtHZXRMb2NhdGlvbhIsLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
-            "Z2luZS5HZXRMb2NhdGlvblJlcXVlc3QaKi5kaXN0cmlidXRlZF9tYXRjaF9l",
-            "bmdpbmUuR2V0TG9jYXRpb25SZXBseSIagtPkkwIUIg8vdjEvZ2V0bG9jYXRp",
-            "b246ASoSkQEKDkFkZFVzZXJUb0dyb3VwEjAuZGlzdHJpYnV0ZWRfbWF0Y2hf",
-            "ZW5naW5lLkR5bmFtaWNMb2NHcm91cFJlcXVlc3QaLi5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuRHluYW1pY0xvY0dyb3VwUmVwbHkiHYLT5JMCFyISL3Yx",
-            "L2FkZHVzZXJ0b2dyb3VwOgEqEokBCg5HZXRBcHBJbnN0TGlzdBIsLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcXVlc3QaKi5kaXN0",
-            "cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwSW5zdExpc3RSZXBseSIdgtPkkwIX",
-            "IhIvdjEvZ2V0YXBwaW5zdGxpc3Q6ASoSfQoLR2V0RnFkbkxpc3QSKS5kaXN0",
-            "cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFkbkxpc3RSZXF1ZXN0GicuZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLkZxZG5MaXN0UmVwbHkiGoLT5JMCFCIPL3Yx",
-            "L2dldGZxZG5saXN0OgEqEpkBChJHZXRBcHBPZmZpY2lhbEZxZG4SMC5kaXN0",
-            "cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwT2ZmaWNpYWxGcWRuUmVxdWVzdBou",
-            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5SZXBs",
-            "eSIhgtPkkwIbIhYvdjEvZ2V0YXBwb2ZmaWNpYWxmcWRuOgEqEpQBChFHZXRR",
-            "b3NQb3NpdGlvbktwaRIsLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQ",
-            "b3NpdGlvblJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9z",
-            "UG9zaXRpb25LcGlSZXBseSIggtPkkwIaIhUvdjEvZ2V0cW9zcG9zaXRpb25r",
-            "cGk6ASowARJrCg9TdHJlYW1FZGdlRXZlbnQSKS5kaXN0cmlidXRlZF9tYXRj",
-            "aF9lbmdpbmUuQ2xpZW50RWRnZUV2ZW50GikuZGlzdHJpYnV0ZWRfbWF0Y2hf",
-            "ZW5naW5lLlNlcnZlckVkZ2VFdmVudCgBMAFiBnByb3RvMw=="));
+            "YW1wbGUSFAoMY2Fycmllcl9uYW1lGAYgASgJEhkKEWRhdGFfbmV0d29ya190",
+            "eXBlGAcgASgJEkEKBHRhZ3MYZCADKAsyMy5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuQ2xpZW50RWRnZUV2ZW50LlRhZ3NFbnRyeRorCglUYWdzRW50cnkS",
+            "CwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKVAQoPQ2xpZW50RXZl",
+            "bnRUeXBlEhEKDUVWRU5UX1VOS05PV04QABIZChVFVkVOVF9JTklUX0NPTk5F",
+            "Q1RJT04QARIeChpFVkVOVF9URVJNSU5BVEVfQ09OTkVDVElPThACEhkKFUVW",
+            "RU5UX0xBVEVOQ1lfU0FNUExFUxADEhkKFUVWRU5UX0xPQ0FUSU9OX1VQREFU",
+            "RRAEIvUFCg9TZXJ2ZXJFZGdlRXZlbnQSTQoKZXZlbnRfdHlwZRgBIAEoDjI5",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5TZXJ2ZXJFZGdlRXZlbnQuU2Vy",
+            "dmVyRXZlbnRUeXBlEj8KDmNsb3VkbGV0X3N0YXRlGAIgASgOMicuZGlzdHJp",
+            "YnV0ZWRfbWF0Y2hfZW5naW5lLkNsb3VkbGV0U3RhdGUSRQoRbWFpbnRlbmFu",
+            "Y2Vfc3RhdGUYAyABKA4yKi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTWFp",
+            "bnRlbmFuY2VTdGF0ZRI7CgxoZWFsdGhfY2hlY2sYBCABKA4yJS5kaXN0cmli",
+            "dXRlZF9tYXRjaF9lbmdpbmUuSGVhbHRoQ2hlY2sSMgoHbGF0ZW5jeRgFIAEo",
+            "CzIhLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5MYXRlbmN5EkEKDG5ld19j",
+            "bG91ZGxldBgGIAEoCzIrLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5k",
+            "Q2xvdWRsZXRSZXBseRJBCgR0YWdzGGQgAygLMjMuZGlzdHJpYnV0ZWRfbWF0",
+            "Y2hfZW5naW5lLlNlcnZlckVkZ2VFdmVudC5UYWdzRW50cnkaKwoJVGFnc0Vu",
+            "dHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEi5gEKD1NlcnZl",
+            "ckV2ZW50VHlwZRIRCg1FVkVOVF9VTktOT1dOEAASGQoVRVZFTlRfSU5JVF9D",
+            "T05ORUNUSU9OEAESGQoVRVZFTlRfTEFURU5DWV9SRVFVRVNUEAISGwoXRVZF",
+            "TlRfTEFURU5DWV9QUk9DRVNTRUQQAxIYChRFVkVOVF9DTE9VRExFVF9TVEFU",
+            "RRAEEh4KGkVWRU5UX0NMT1VETEVUX01BSU5URU5BTkNFEAUSGAoURVZFTlRf",
+            "QVBQSU5TVF9IRUFMVEgQBhIZChVFVkVOVF9DTE9VRExFVF9VUERBVEUQByo9",
+            "CgdJRFR5cGVzEhAKDElEX1VOREVGSU5FRBAAEggKBElNRUkQARIKCgZNU0lT",
+            "RE4QAhIKCgZJUEFERFIQAyo8CgtSZXBseVN0YXR1cxIQCgxSU19VTkRFRklO",
+            "RUQQABIOCgpSU19TVUNDRVNTEAESCwoHUlNfRkFJTBACMqUMCg5NYXRjaEVu",
+            "Z2luZUFwaRKPAQoOUmVnaXN0ZXJDbGllbnQSLy5kaXN0cmlidXRlZF9tYXRj",
+            "aF9lbmdpbmUuUmVnaXN0ZXJDbGllbnRSZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLlJlZ2lzdGVyQ2xpZW50UmVwbHkiHYLT5JMCFyISL3Yx",
+            "L3JlZ2lzdGVyY2xpZW50OgEqEocBCgxGaW5kQ2xvdWRsZXQSLS5kaXN0cmli",
+            "dXRlZF9tYXRjaF9lbmdpbmUuRmluZENsb3VkbGV0UmVxdWVzdBorLmRpc3Ry",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xvdWRsZXRSZXBseSIbgtPkkwIV",
+            "IhAvdjEvZmluZGNsb3VkbGV0OgEqEp8BChRQbGF0Zm9ybUZpbmRDbG91ZGxl",
+            "dBI1LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5QbGF0Zm9ybUZpbmRDbG91",
+            "ZGxldFJlcXVlc3QaKy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRmluZENs",
+            "b3VkbGV0UmVwbHkiI4LT5JMCHSIYL3YxL3BsYXRmb3JtZmluZGNsb3VkbGV0",
+            "OgEqEo8BCg5WZXJpZnlMb2NhdGlvbhIvLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
+            "Z2luZS5WZXJpZnlMb2NhdGlvblJlcXVlc3QaLS5kaXN0cmlidXRlZF9tYXRj",
+            "aF9lbmdpbmUuVmVyaWZ5TG9jYXRpb25SZXBseSIdgtPkkwIXIhIvdjEvdmVy",
+            "aWZ5bG9jYXRpb246ASoSgwEKC0dldExvY2F0aW9uEiwuZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLkdldExvY2F0aW9uUmVxdWVzdBoqLmRpc3RyaWJ1dGVk",
+            "X21hdGNoX2VuZ2luZS5HZXRMb2NhdGlvblJlcGx5IhqC0+STAhQiDy92MS9n",
+            "ZXRsb2NhdGlvbjoBKhKRAQoOQWRkVXNlclRvR3JvdXASMC5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuRHluYW1pY0xvY0dyb3VwUmVxdWVzdBouLmRpc3Ry",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5EeW5hbWljTG9jR3JvdXBSZXBseSIdgtPk",
+            "kwIXIhIvdjEvYWRkdXNlcnRvZ3JvdXA6ASoSiQEKDkdldEFwcEluc3RMaXN0",
+            "EiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RMaXN0UmVxdWVz",
+            "dBoqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcGx5",
+            "Ih2C0+STAhciEi92MS9nZXRhcHBpbnN0bGlzdDoBKhJ9CgtHZXRGcWRuTGlz",
+            "dBIpLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GcWRuTGlzdFJlcXVlc3Qa",
+            "Jy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFkbkxpc3RSZXBseSIagtPk",
+            "kwIUIg8vdjEvZ2V0ZnFkbmxpc3Q6ASoSmQEKEkdldEFwcE9mZmljaWFsRnFk",
+            "bhIwLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5S",
+            "ZXF1ZXN0Gi4uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcE9mZmljaWFs",
+            "RnFkblJlcGx5IiGC0+STAhsiFi92MS9nZXRhcHBvZmZpY2lhbGZxZG46ASoS",
+            "lAEKEUdldFFvc1Bvc2l0aW9uS3BpEiwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
+            "aW5lLlFvc1Bvc2l0aW9uUmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
+            "Z2luZS5Rb3NQb3NpdGlvbktwaVJlcGx5IiCC0+STAhoiFS92MS9nZXRxb3Nw",
+            "b3NpdGlvbmtwaToBKjABEmsKD1N0cmVhbUVkZ2VFdmVudBIpLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5DbGllbnRFZGdlRXZlbnQaKS5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuU2VydmVyRWRnZUV2ZW50KAEwAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::DistributedMatchEngine.LocReflection.Descriptor, global::DistributedMatchEngine.AppcommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.IDTypes), typeof(global::DistributedMatchEngine.ReplyStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -277,8 +280,8 @@ namespace DistributedMatchEngine {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionRequest), global::DistributedMatchEngine.QosPositionRequest.Parser, new[]{ "Ver", "SessionCookie", "Positions", "LteCategory", "BandSelection", "CellId", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiResult), global::DistributedMatchEngine.QosPositionKpiResult.Parser, new[]{ "Positionid", "GpsLocation", "DluserthroughputMin", "DluserthroughputAvg", "DluserthroughputMax", "UluserthroughputMin", "UluserthroughputAvg", "UluserthroughputMax", "LatencyMin", "LatencyAvg", "LatencyMax" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiReply), global::DistributedMatchEngine.QosPositionKpiReply.Parser, new[]{ "Ver", "Status", "PositionResults", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EdgeEventsCookie", "EventType", "GpsLocation", "Samples", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ServerEdgeEvent), global::DistributedMatchEngine.ServerEdgeEvent.Parser, new[]{ "EventType", "CloudletState", "MaintenanceState", "HealthCheck", "Latency", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) }, null, new pbr::GeneratedClrTypeInfo[] { null, })
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EdgeEventsCookie", "EventType", "GpsLocation", "Samples", "CarrierName", "DataNetworkType", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ServerEdgeEvent), global::DistributedMatchEngine.ServerEdgeEvent.Parser, new[]{ "EventType", "CloudletState", "MaintenanceState", "HealthCheck", "Latency", "NewCloudlet", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) }, null, new pbr::GeneratedClrTypeInfo[] { null, })
           }));
     }
     #endregion
@@ -9283,6 +9286,8 @@ namespace DistributedMatchEngine {
       eventType_ = other.eventType_;
       gpsLocation_ = other.gpsLocation_ != null ? other.gpsLocation_.Clone() : null;
       samples_ = other.samples_.Clone();
+      carrierName_ = other.carrierName_;
+      dataNetworkType_ = other.dataNetworkType_;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -9335,7 +9340,7 @@ namespace DistributedMatchEngine {
     public const int GpsLocationFieldNumber = 4;
     private global::DistributedMatchEngine.Loc gpsLocation_;
     /// <summary>
-    /// GPS Location info if EventType is EVENT_LOCATION_UPDATE
+    /// GPS Location info if event_type is EVENT_LOCATION_UPDATE
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Loc GpsLocation {
@@ -9351,11 +9356,39 @@ namespace DistributedMatchEngine {
         = pb::FieldCodec.ForMessage(42, global::DistributedMatchEngine.Sample.Parser);
     private readonly pbc::RepeatedField<global::DistributedMatchEngine.Sample> samples_ = new pbc::RepeatedField<global::DistributedMatchEngine.Sample>();
     /// <summary>
-    /// Latency Samples if EventType is EVENT_LATENCY_SAMPLES
+    /// Latency Samples if event_type is EVENT_LATENCY_SAMPLES
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::DistributedMatchEngine.Sample> Samples {
       get { return samples_; }
+    }
+
+    /// <summary>Field number for the "carrier_name" field.</summary>
+    public const int CarrierNameFieldNumber = 6;
+    private string carrierName_ = "";
+    /// <summary>
+    /// Carrier name used to find closer cloudlet if event_type is EVENT_LOCATION_UPDATE
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string CarrierName {
+      get { return carrierName_; }
+      set {
+        carrierName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "data_network_type" field.</summary>
+    public const int DataNetworkTypeFieldNumber = 7;
+    private string dataNetworkType_ = "";
+    /// <summary>
+    /// LTE, 5G, etc.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DataNetworkType {
+      get { return dataNetworkType_; }
+      set {
+        dataNetworkType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
     }
 
     /// <summary>Field number for the "tags" field.</summary>
@@ -9389,6 +9422,8 @@ namespace DistributedMatchEngine {
       if (EventType != other.EventType) return false;
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
       if(!samples_.Equals(other.samples_)) return false;
+      if (CarrierName != other.CarrierName) return false;
+      if (DataNetworkType != other.DataNetworkType) return false;
       if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -9401,6 +9436,8 @@ namespace DistributedMatchEngine {
       if (EventType != global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType.EventUnknown) hash ^= EventType.GetHashCode();
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
       hash ^= samples_.GetHashCode();
+      if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
+      if (DataNetworkType.Length != 0) hash ^= DataNetworkType.GetHashCode();
       hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -9435,6 +9472,14 @@ namespace DistributedMatchEngine {
         output.WriteMessage(GpsLocation);
       }
       samples_.WriteTo(output, _repeated_samples_codec);
+      if (CarrierName.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(CarrierName);
+      }
+      if (DataNetworkType.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(DataNetworkType);
+      }
       tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -9462,6 +9507,14 @@ namespace DistributedMatchEngine {
         output.WriteMessage(GpsLocation);
       }
       samples_.WriteTo(ref output, _repeated_samples_codec);
+      if (CarrierName.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(CarrierName);
+      }
+      if (DataNetworkType.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(DataNetworkType);
+      }
       tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -9485,6 +9538,12 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(GpsLocation);
       }
       size += samples_.CalculateSize(_repeated_samples_codec);
+      if (CarrierName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CarrierName);
+      }
+      if (DataNetworkType.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DataNetworkType);
+      }
       size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -9513,6 +9572,12 @@ namespace DistributedMatchEngine {
         GpsLocation.MergeFrom(other.GpsLocation);
       }
       samples_.Add(other.samples_);
+      if (other.CarrierName.Length != 0) {
+        CarrierName = other.CarrierName;
+      }
+      if (other.DataNetworkType.Length != 0) {
+        DataNetworkType = other.DataNetworkType;
+      }
       tags_.Add(other.tags_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -9549,6 +9614,14 @@ namespace DistributedMatchEngine {
           }
           case 42: {
             samples_.AddEntriesFrom(input, _repeated_samples_codec);
+            break;
+          }
+          case 50: {
+            CarrierName = input.ReadString();
+            break;
+          }
+          case 58: {
+            DataNetworkType = input.ReadString();
             break;
           }
           case 802: {
@@ -9590,6 +9663,14 @@ namespace DistributedMatchEngine {
           }
           case 42: {
             samples_.AddEntriesFrom(ref input, _repeated_samples_codec);
+            break;
+          }
+          case 50: {
+            CarrierName = input.ReadString();
+            break;
+          }
+          case 58: {
+            DataNetworkType = input.ReadString();
             break;
           }
           case 802: {
@@ -9655,6 +9736,7 @@ namespace DistributedMatchEngine {
       maintenanceState_ = other.maintenanceState_;
       healthCheck_ = other.healthCheck_;
       latency_ = other.latency_ != null ? other.latency_.Clone() : null;
+      newCloudlet_ = other.newCloudlet_ != null ? other.newCloudlet_.Clone() : null;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -9721,13 +9803,27 @@ namespace DistributedMatchEngine {
     public const int LatencyFieldNumber = 5;
     private global::DistributedMatchEngine.Latency latency_;
     /// <summary>
-    /// Summarized RTT Latency info from samples provided from client if ServerEventType is EVENT_LATENCY
+    /// Summarized RTT Latency info from samples provided from client if event_type is EVENT_LATENCY
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Latency Latency {
       get { return latency_; }
       set {
         latency_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "new_cloudlet" field.</summary>
+    public const int NewCloudletFieldNumber = 6;
+    private global::DistributedMatchEngine.FindCloudletReply newCloudlet_;
+    /// <summary>
+    /// New and closer cloudlet if event_type is EVENT_CLOUDLET_UPDATE
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.FindCloudletReply NewCloudlet {
+      get { return newCloudlet_; }
+      set {
+        newCloudlet_ = value;
       }
     }
 
@@ -9762,6 +9858,7 @@ namespace DistributedMatchEngine {
       if (MaintenanceState != other.MaintenanceState) return false;
       if (HealthCheck != other.HealthCheck) return false;
       if (!object.Equals(Latency, other.Latency)) return false;
+      if (!object.Equals(NewCloudlet, other.NewCloudlet)) return false;
       if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -9774,6 +9871,7 @@ namespace DistributedMatchEngine {
       if (MaintenanceState != global::DistributedMatchEngine.MaintenanceState.NormalOperation) hash ^= MaintenanceState.GetHashCode();
       if (HealthCheck != global::DistributedMatchEngine.HealthCheck.Unknown) hash ^= HealthCheck.GetHashCode();
       if (latency_ != null) hash ^= Latency.GetHashCode();
+      if (newCloudlet_ != null) hash ^= NewCloudlet.GetHashCode();
       hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -9811,6 +9909,10 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(42);
         output.WriteMessage(Latency);
       }
+      if (newCloudlet_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(NewCloudlet);
+      }
       tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -9841,6 +9943,10 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(42);
         output.WriteMessage(Latency);
       }
+      if (newCloudlet_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(NewCloudlet);
+      }
       tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -9865,6 +9971,9 @@ namespace DistributedMatchEngine {
       }
       if (latency_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Latency);
+      }
+      if (newCloudlet_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(NewCloudlet);
       }
       size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
@@ -9895,6 +10004,12 @@ namespace DistributedMatchEngine {
           Latency = new global::DistributedMatchEngine.Latency();
         }
         Latency.MergeFrom(other.Latency);
+      }
+      if (other.newCloudlet_ != null) {
+        if (newCloudlet_ == null) {
+          NewCloudlet = new global::DistributedMatchEngine.FindCloudletReply();
+        }
+        NewCloudlet.MergeFrom(other.NewCloudlet);
       }
       tags_.Add(other.tags_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -9932,6 +10047,13 @@ namespace DistributedMatchEngine {
               Latency = new global::DistributedMatchEngine.Latency();
             }
             input.ReadMessage(Latency);
+            break;
+          }
+          case 50: {
+            if (newCloudlet_ == null) {
+              NewCloudlet = new global::DistributedMatchEngine.FindCloudletReply();
+            }
+            input.ReadMessage(NewCloudlet);
             break;
           }
           case 802: {
@@ -9975,6 +10097,13 @@ namespace DistributedMatchEngine {
             input.ReadMessage(Latency);
             break;
           }
+          case 50: {
+            if (newCloudlet_ == null) {
+              NewCloudlet = new global::DistributedMatchEngine.FindCloudletReply();
+            }
+            input.ReadMessage(NewCloudlet);
+            break;
+          }
           case 802: {
             tags_.AddEntriesFrom(ref input, _map_tags_codec);
             break;
@@ -9996,6 +10125,7 @@ namespace DistributedMatchEngine {
         [pbr::OriginalName("EVENT_CLOUDLET_STATE")] EventCloudletState = 4,
         [pbr::OriginalName("EVENT_CLOUDLET_MAINTENANCE")] EventCloudletMaintenance = 5,
         [pbr::OriginalName("EVENT_APPINST_HEALTH")] EventAppinstHealth = 6,
+        [pbr::OriginalName("EVENT_CLOUDLET_UPDATE")] EventCloudletUpdate = 7,
       }
 
     }

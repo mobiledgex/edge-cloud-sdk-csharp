@@ -30,23 +30,21 @@ namespace DistributedMatchEngine {
             "em9udGFsX2FjY3VyYWN5GAMgASgBEhkKEXZlcnRpY2FsX2FjY3VyYWN5GAQg",
             "ASgBEhAKCGFsdGl0dWRlGAUgASgBEg4KBmNvdXJzZRgGIAEoARINCgVzcGVl",
             "ZBgHIAEoARI2Cgl0aW1lc3RhbXAYCCABKAsyIy5kaXN0cmlidXRlZF9tYXRj",
-            "aF9lbmdpbmUuVGltZXN0YW1wIpUCCgZTYW1wbGUSDQoFdmFsdWUYASABKAES",
-            "KgoDbG9jGAIgASgLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxvYxIW",
-            "Cg5zZXNzaW9uX2Nvb2tpZRgEIAEoCRIZChFkYXRhX25ldHdvcmtfdHlwZRgF",
-            "IAEoCRI2Cgl0aW1lc3RhbXAYAyABKAsyIy5kaXN0cmlidXRlZF9tYXRjaF9l",
-            "bmdpbmUuVGltZXN0YW1wEjgKBHRhZ3MYZCADKAsyKi5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuU2FtcGxlLlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoD",
-            "a2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKgAQoHTGF0ZW5jeRILCgNh",
-            "dmcYASABKAESCwoDbWluGAIgASgBEgsKA21heBgDIAEoARIPCgdzdGRfZGV2",
-            "GAQgASgBEhAKCHZhcmlhbmNlGAUgASgBEhMKC251bV9zYW1wbGVzGAYgASgE",
-            "EjYKCXRpbWVzdGFtcBgHIAEoCzIjLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5UaW1lc3RhbXBiBnByb3RvMw=="));
+            "aF9lbmdpbmUuVGltZXN0YW1wIrYBCgZTYW1wbGUSDQoFdmFsdWUYASABKAES",
+            "NgoJdGltZXN0YW1wGAIgASgLMiMuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LlRpbWVzdGFtcBI4CgR0YWdzGGQgAygLMiouZGlzdHJpYnV0ZWRfbWF0Y2hf",
+            "ZW5naW5lLlNhbXBsZS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgB",
+            "IAEoCRINCgV2YWx1ZRgCIAEoCToCOAEioAEKB0xhdGVuY3kSCwoDYXZnGAEg",
+            "ASgBEgsKA21pbhgCIAEoARILCgNtYXgYAyABKAESDwoHc3RkX2RldhgEIAEo",
+            "ARIQCgh2YXJpYW5jZRgFIAEoARITCgtudW1fc2FtcGxlcxgGIAEoBBI2Cgl0",
+            "aW1lc3RhbXAYByABKAsyIy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVGlt",
+            "ZXN0YW1wYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Timestamp), global::DistributedMatchEngine.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Loc), global::DistributedMatchEngine.Loc.Parser, new[]{ "Latitude", "Longitude", "HorizontalAccuracy", "VerticalAccuracy", "Altitude", "Course", "Speed", "Timestamp" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Sample), global::DistributedMatchEngine.Sample.Parser, new[]{ "Value", "Loc", "SessionCookie", "DataNetworkType", "Timestamp", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Sample), global::DistributedMatchEngine.Sample.Parser, new[]{ "Value", "Timestamp", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Latency), global::DistributedMatchEngine.Latency.Parser, new[]{ "Avg", "Min", "Max", "StdDev", "Variance", "NumSamples", "Timestamp" }, null, null, null, null)
           }));
     }
@@ -763,9 +761,6 @@ namespace DistributedMatchEngine {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Sample(Sample other) : this() {
       value_ = other.value_;
-      loc_ = other.loc_ != null ? other.loc_.Clone() : null;
-      sessionCookie_ = other.sessionCookie_;
-      dataNetworkType_ = other.dataNetworkType_;
       timestamp_ = other.timestamp_ != null ? other.timestamp_.Clone() : null;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -790,50 +785,8 @@ namespace DistributedMatchEngine {
       }
     }
 
-    /// <summary>Field number for the "loc" field.</summary>
-    public const int LocFieldNumber = 2;
-    private global::DistributedMatchEngine.Loc loc_;
-    /// <summary>
-    /// gps location
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.Loc Loc {
-      get { return loc_; }
-      set {
-        loc_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "session_cookie" field.</summary>
-    public const int SessionCookieFieldNumber = 4;
-    private string sessionCookie_ = "";
-    /// <summary>
-    /// session cookie to differentiate clients
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string SessionCookie {
-      get { return sessionCookie_; }
-      set {
-        sessionCookie_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "data_network_type" field.</summary>
-    public const int DataNetworkTypeFieldNumber = 5;
-    private string dataNetworkType_ = "";
-    /// <summary>
-    /// LTE, 5G, etc.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DataNetworkType {
-      get { return dataNetworkType_; }
-      set {
-        dataNetworkType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "timestamp" field.</summary>
-    public const int TimestampFieldNumber = 3;
+    public const int TimestampFieldNumber = 2;
     private global::DistributedMatchEngine.Timestamp timestamp_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Timestamp Timestamp {
@@ -870,9 +823,6 @@ namespace DistributedMatchEngine {
         return true;
       }
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Value, other.Value)) return false;
-      if (!object.Equals(Loc, other.Loc)) return false;
-      if (SessionCookie != other.SessionCookie) return false;
-      if (DataNetworkType != other.DataNetworkType) return false;
       if (!object.Equals(Timestamp, other.Timestamp)) return false;
       if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -882,9 +832,6 @@ namespace DistributedMatchEngine {
     public override int GetHashCode() {
       int hash = 1;
       if (Value != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Value);
-      if (loc_ != null) hash ^= Loc.GetHashCode();
-      if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
-      if (DataNetworkType.Length != 0) hash ^= DataNetworkType.GetHashCode();
       if (timestamp_ != null) hash ^= Timestamp.GetHashCode();
       hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
@@ -907,21 +854,9 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(9);
         output.WriteDouble(Value);
       }
-      if (loc_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Loc);
-      }
       if (timestamp_ != null) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteMessage(Timestamp);
-      }
-      if (SessionCookie.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(SessionCookie);
-      }
-      if (DataNetworkType.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(DataNetworkType);
       }
       tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
@@ -937,21 +872,9 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(9);
         output.WriteDouble(Value);
       }
-      if (loc_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Loc);
-      }
       if (timestamp_ != null) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteMessage(Timestamp);
-      }
-      if (SessionCookie.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(SessionCookie);
-      }
-      if (DataNetworkType.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(DataNetworkType);
       }
       tags_.WriteTo(ref output, _map_tags_codec);
       if (_unknownFields != null) {
@@ -965,15 +888,6 @@ namespace DistributedMatchEngine {
       int size = 0;
       if (Value != 0D) {
         size += 1 + 8;
-      }
-      if (loc_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Loc);
-      }
-      if (SessionCookie.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(SessionCookie);
-      }
-      if (DataNetworkType.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DataNetworkType);
       }
       if (timestamp_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Timestamp);
@@ -992,18 +906,6 @@ namespace DistributedMatchEngine {
       }
       if (other.Value != 0D) {
         Value = other.Value;
-      }
-      if (other.loc_ != null) {
-        if (loc_ == null) {
-          Loc = new global::DistributedMatchEngine.Loc();
-        }
-        Loc.MergeFrom(other.Loc);
-      }
-      if (other.SessionCookie.Length != 0) {
-        SessionCookie = other.SessionCookie;
-      }
-      if (other.DataNetworkType.Length != 0) {
-        DataNetworkType = other.DataNetworkType;
       }
       if (other.timestamp_ != null) {
         if (timestamp_ == null) {
@@ -1031,25 +933,10 @@ namespace DistributedMatchEngine {
             break;
           }
           case 18: {
-            if (loc_ == null) {
-              Loc = new global::DistributedMatchEngine.Loc();
-            }
-            input.ReadMessage(Loc);
-            break;
-          }
-          case 26: {
             if (timestamp_ == null) {
               Timestamp = new global::DistributedMatchEngine.Timestamp();
             }
             input.ReadMessage(Timestamp);
-            break;
-          }
-          case 34: {
-            SessionCookie = input.ReadString();
-            break;
-          }
-          case 42: {
-            DataNetworkType = input.ReadString();
             break;
           }
           case 802: {
@@ -1075,25 +962,10 @@ namespace DistributedMatchEngine {
             break;
           }
           case 18: {
-            if (loc_ == null) {
-              Loc = new global::DistributedMatchEngine.Loc();
-            }
-            input.ReadMessage(Loc);
-            break;
-          }
-          case 26: {
             if (timestamp_ == null) {
               Timestamp = new global::DistributedMatchEngine.Timestamp();
             }
             input.ReadMessage(Timestamp);
-            break;
-          }
-          case 34: {
-            SessionCookie = input.ReadString();
-            break;
-          }
-          case 42: {
-            DataNetworkType = input.ReadString();
             break;
           }
           case 802: {
