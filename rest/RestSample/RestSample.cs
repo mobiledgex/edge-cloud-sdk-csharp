@@ -185,11 +185,12 @@ namespace RestSample
       // Run 10 latency tests for each site. This will return an ordered array of Sites from fastest to slowest
       var sites = await netTest.RunNetTest(10);
 
-      // If you want to use your own threading model or control when sites are tested, use the following:
+      // If you want to use your own threading model or control when sites are tested, use the following instead of RunNetTest:
       /*
+      int numTests = 10;
       for (int i = 0; i < numTests; i++)
       {
-        await TestSite(site1);
+        await netTest.TestSite(site1);
       }
       Console.WriteLine("Site: " + site1.host + ", Average latency: " + site1.average + ", Std of latency: " + site1.stddev);
       */
