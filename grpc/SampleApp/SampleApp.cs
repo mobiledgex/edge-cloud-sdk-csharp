@@ -85,15 +85,17 @@ namespace MexGrpcSampleConsoleApp
     };
     Loc austin = new Loc
     {
-      Latitude = 40.7128,
-      Longitude = -74.0060,
+      Latitude = 30.2672,
+      Longitude = -97.7431,
     };
 
     Loc[] locs;
 
-    string[] carriers = new string[]{ "310170", "26201", "311480"}; // ATT, GDDT, Zerilu
+    string[] carriers = new string[]{ "310170", "26201", "26207", "45003", "310260", "11111"}; // ATT, GDDT, Sonoral, SKT, TELUS, Unknown
 
     string[] dataNetTypes = new string[]{ "Wifi", "LTE", "3G", "5G"};
+
+    string[] deviceOs = new string[]{ "Android", "iOS"};
 
     int iteration = 0;
 
@@ -132,7 +134,6 @@ namespace MexGrpcSampleConsoleApp
         var findCloudletReply = client.FindCloudlet(findCloudletRequest);
         Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.Status);
         Console.WriteLine("FindCloudlet edge events session cookie: " + findCloudletReply.EdgeEventsCookie);
-        Console.WriteLine("FindCloudlet dme fqdn: " + findCloudletReply.DmeFqdn);
         Console.WriteLine("FindCloudlet fqdn: " + findCloudletReply.Fqdn);
         eeSessionCookie = findCloudletReply.EdgeEventsCookie;
           Thread.Sleep(1000);
@@ -253,7 +254,6 @@ namespace MexGrpcSampleConsoleApp
               case ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate:
                 var newFindCloudletReply = edgeEvent.ResponseStream.Current.NewCloudlet;
                 Console.WriteLine("FindCloudlet Reply Status: " + newFindCloudletReply.Status);
-                Console.WriteLine("FindCloudlet dme fqdn: " + newFindCloudletReply.DmeFqdn);
                 Console.WriteLine("FindCloudlet fqdn: " + newFindCloudletReply.Fqdn);
                 continue;
               default:
@@ -375,6 +375,10 @@ namespace MexGrpcSampleConsoleApp
       return request;
     }
 
+    // gps length: 4
+    // carrier length: 6
+    // datanettype length: 4
+    // deviceos length: 2
     ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, ClientEdgeEvent.Types.ClientEventType eventType = ClientEdgeEvent.Types.ClientEventType.EventLocationUpdate, List<Sample> samples = null)
     {
       var clientEvent = new ClientEdgeEvent
@@ -382,9 +386,10 @@ namespace MexGrpcSampleConsoleApp
         SessionCookie = sessionCookie,
         EdgeEventsCookie = eeSessionCookie,
         EventType = eventType, 
-        GpsLocation = locs[iteration % (locs.Length)],
-        CarrierName = "",
-        DataNetworkType = dataNetTypes[iteration % (dataNetTypes.Length)],
+        GpsLocation = locs[1],
+        CarrierName = carriers[5],
+        DataNetworkType = dataNetTypes[1],
+        DeviceOs = deviceOs[1],
       };
 
       if (samples != null)
