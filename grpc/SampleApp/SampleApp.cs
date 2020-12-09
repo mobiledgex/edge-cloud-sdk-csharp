@@ -370,8 +370,13 @@ namespace MexGrpcSampleConsoleApp
         Ver = 1,
         SessionCookie = sessionCookie,
         CarrierName = carrierName,
-        GpsLocation = gpsLocation
+        GpsLocation = gpsLocation,
       };
+      request.Tags.Add(new Google.Protobuf.Collections.MapField<string, string>
+      {
+          { "deviceos", "testos"},
+          {"devicemodel", "testmodel"}
+      });
       return request;
     }
 
