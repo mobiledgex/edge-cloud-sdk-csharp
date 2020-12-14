@@ -37,6 +37,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
    * Class that allows developers to easily test latency of their various backend servers.
    * This is used in the implementation of FindCloudlet Performance Mode.
    * \ingroup classes_util
+   * \snippet RestSample.cs nettestexample
    */
   public class NetTest : IDisposable
   {

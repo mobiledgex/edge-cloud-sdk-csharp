@@ -24,6 +24,8 @@ using System.IO;
 
 using DistributedMatchEngine;
 using DistributedMatchEngine.Mel;
+using DistributedMatchEngine.PerformanceMetrics;
+using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 
 namespace RestSample
 {
@@ -51,6 +53,24 @@ namespace RestSample
       return dict;
     }
 
+  }
+
+  class DummyCarrierInfo : CarrierInfo
+  {
+    public ulong GetCellID()
+    {
+      return 0;
+    }
+
+    public string GetCurrentCarrierName()
+    {
+      return "26201";
+    }
+
+    public string GetMccMnc()
+    {
+      return "26201";
+    }
   }
 
   public class TestMelMessaging : MelMessagingInterface
@@ -128,6 +148,60 @@ namespace RestSample
       return req;
     }
 
+    //! [nettestexample]
+    static async Task NetTest(MatchingEngine matchingEngine)
+    {
+      // Init NetTest
+      var netTest = new NetTest(matchingEngine);
+
+      // Register and FindCloudlet to find appinst to test
+      var registerClientRequest = matchingEngine.CreateRegisterClientRequest(orgName, appName, appVers);
+      var registerClientReply = await matchingEngine.RegisterClient(registerClientRequest);
+      var loc = await Util.GetLocationFromDevice();
+      var findCloudletRequest = matchingEngine.CreateFindCloudletRequest(loc, carrierName);
+      var findCloudletReply = await matchingEngine.FindCloudlet(findCloudletRequest);
+
+      // Get information about appinst found in FindCloudletReply
+      // Create a Site from from our found appinst
+      // Enqueue site to NetTest
+      Dictionary<int, AppPort> appPorts = matchingEngine.GetTCPAppPorts(findCloudletReply);
+      int port = findCloudletReply.ports[0].public_port; // We happen to know it's the first one.
+      AppPort appPort = appPorts[port];
+      Site site1 = new Site { host = appPort.fqdn_prefix + findCloudletReply.fqdn, port = port, testType = TestType.CONNECT };
+      netTest.sites.Enqueue(site1);
+
+      // Create local test site
+      // Enqueue site to NetTest
+      /*
+      Site site2 = new Site
+      {
+        host = "localhost",
+        port = 59925,
+        testType = TestType.CONNECT
+      };
+      netTest.sites.Enqueue(site2);
+      */
+
+      // Run 10 latency tests for each site. This will return an ordered array of Sites from fastest to slowest
+      var sites = await netTest.RunNetTest(10);
+
+      // If you want to use your own threading model or control when sites are tested, use the following instead of RunNetTest:
+      /*
+      int numTests = 10;
+      for (int i = 0; i < numTests; i++)
+      {
+        await netTest.TestSite(site1);
+      }
+      Console.WriteLine("Site: " + site1.host + ", Average latency: " + site1.average + ", Std of latency: " + site1.stddev);
+      */
+
+      // Print out latency information for each site
+      foreach (Site site in sites)
+      {
+         Console.WriteLine("Site: " + site.host + ", Average latency: " + site.average + ", Std of latency: " + site.stddev);
+      }
+    }
+    //! [nettestexample]
 
     async static Task Main(string[] args)
     {
@@ -136,12 +210,14 @@ namespace RestSample
         Console.WriteLine("MobiledgeX RestSample!");
 
         //! [meconstructorexample]
-        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
+        MatchingEngine me = new MatchingEngine(new DummyCarrierInfo(), new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
         //! [meconstructorexample]
 
         me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
         // Set SSL.
+
+        await NetTest(me);
 
         // Start location task. This is for test use only. The source of the
         // location in an Unity application should be from an application context
