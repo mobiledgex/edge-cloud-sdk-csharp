@@ -29,30 +29,33 @@ namespace DistributedMatchEngine {
             "LwoFcHJvdG8YASABKA4yIC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTFBy",
             "b3RvEhUKDWludGVybmFsX3BvcnQYAiABKAUSEwoLcHVibGljX3BvcnQYAyAB",
             "KAUSEwoLZnFkbl9wcmVmaXgYBSABKAkSEAoIZW5kX3BvcnQYBiABKAUSCwoD",
-            "dGxzGAcgASgIEg0KBW5naW54GAggASgIKj8KBkxQcm90bxITCg9MX1BST1RP",
-            "X1VOS05PV04QABIPCgtMX1BST1RPX1RDUBABEg8KC0xfUFJPVE9fVURQEAIq",
-            "hQEKC0hlYWx0aENoZWNrEhgKFEhFQUxUSF9DSEVDS19VTktOT1dOEAASJAog",
-            "SEVBTFRIX0NIRUNLX0ZBSUxfUk9PVExCX09GRkxJTkUQARIhCh1IRUFMVEhf",
-            "Q0hFQ0tfRkFJTF9TRVJWRVJfRkFJTBACEhMKD0hFQUxUSF9DSEVDS19PSxAD",
-            "Ku8BCg1DbG91ZGxldFN0YXRlEhoKFkNMT1VETEVUX1NUQVRFX1VOS05PV04Q",
-            "ABIZChVDTE9VRExFVF9TVEFURV9FUlJPUlMQARIYChRDTE9VRExFVF9TVEFU",
-            "RV9SRUFEWRACEhoKFkNMT1VETEVUX1NUQVRFX09GRkxJTkUQAxIeChpDTE9V",
-            "RExFVF9TVEFURV9OT1RfUFJFU0VOVBAEEhcKE0NMT1VETEVUX1NUQVRFX0lO",
-            "SVQQBRIaChZDTE9VRExFVF9TVEFURV9VUEdSQURFEAYSHAoYQ0xPVURMRVRf",
-            "U1RBVEVfTkVFRF9TWU5DEAcqwAIKEE1haW50ZW5hbmNlU3RhdGUSFAoQTk9S",
-            "TUFMX09QRVJBVElPThAAEhUKEU1BSU5URU5BTkNFX1NUQVJUEAESHAoSRkFJ",
-            "TE9WRVJfUkVRVUVTVEVEEAIaBJD2GAESFwoNRkFJTE9WRVJfRE9ORRADGgSQ",
-            "9hgBEhgKDkZBSUxPVkVSX0VSUk9SEAQaBJD2GAESIQodTUFJTlRFTkFOQ0Vf",
-            "U1RBUlRfTk9fRkFJTE9WRVIQBRIXCg1DUk1fUkVRVUVTVEVEEAYaBJD2GAES",
-            "HwoVQ1JNX1VOREVSX01BSU5URU5BTkNFEAcaBJD2GAESEwoJQ1JNX0VSUk9S",
-            "EAgaBJD2GAESHwoVTk9STUFMX09QRVJBVElPTl9JTklUEAkaBJD2GAESGwoR",
-            "VU5ERVJfTUFJTlRFTkFOQ0UQHxoEkPYYATo5CgxlbnVtX2JhY2tlbmQSIS5n",
-            "b29nbGUucHJvdG9idWYuRW51bVZhbHVlT3B0aW9ucxjijgMgASgIYgZwcm90",
-            "bzM="));
+            "dGxzGAcgASgIEg0KBW5naW54GAggASgIImkKCkRldmljZUluZm8SGQoRZGF0",
+            "YV9uZXR3b3JrX3R5cGUYASABKAkSEQoJZGV2aWNlX29zGAIgASgJEhQKDGRl",
+            "dmljZV9tb2RlbBgDIAEoCRIXCg9zaWduYWxfc3RyZW5ndGgYBCABKA0qPwoG",
+            "TFByb3RvEhMKD0xfUFJPVE9fVU5LTk9XThAAEg8KC0xfUFJPVE9fVENQEAES",
+            "DwoLTF9QUk9UT19VRFAQAiqFAQoLSGVhbHRoQ2hlY2sSGAoUSEVBTFRIX0NI",
+            "RUNLX1VOS05PV04QABIkCiBIRUFMVEhfQ0hFQ0tfRkFJTF9ST09UTEJfT0ZG",
+            "TElORRABEiEKHUhFQUxUSF9DSEVDS19GQUlMX1NFUlZFUl9GQUlMEAISEwoP",
+            "SEVBTFRIX0NIRUNLX09LEAMq7wEKDUNsb3VkbGV0U3RhdGUSGgoWQ0xPVURM",
+            "RVRfU1RBVEVfVU5LTk9XThAAEhkKFUNMT1VETEVUX1NUQVRFX0VSUk9SUxAB",
+            "EhgKFENMT1VETEVUX1NUQVRFX1JFQURZEAISGgoWQ0xPVURMRVRfU1RBVEVf",
+            "T0ZGTElORRADEh4KGkNMT1VETEVUX1NUQVRFX05PVF9QUkVTRU5UEAQSFwoT",
+            "Q0xPVURMRVRfU1RBVEVfSU5JVBAFEhoKFkNMT1VETEVUX1NUQVRFX1VQR1JB",
+            "REUQBhIcChhDTE9VRExFVF9TVEFURV9ORUVEX1NZTkMQByrAAgoQTWFpbnRl",
+            "bmFuY2VTdGF0ZRIUChBOT1JNQUxfT1BFUkFUSU9OEAASFQoRTUFJTlRFTkFO",
+            "Q0VfU1RBUlQQARIcChJGQUlMT1ZFUl9SRVFVRVNURUQQAhoEkPYYARIXCg1G",
+            "QUlMT1ZFUl9ET05FEAMaBJD2GAESGAoORkFJTE9WRVJfRVJST1IQBBoEkPYY",
+            "ARIhCh1NQUlOVEVOQU5DRV9TVEFSVF9OT19GQUlMT1ZFUhAFEhcKDUNSTV9S",
+            "RVFVRVNURUQQBhoEkPYYARIfChVDUk1fVU5ERVJfTUFJTlRFTkFOQ0UQBxoE",
+            "kPYYARITCglDUk1fRVJST1IQCBoEkPYYARIfChVOT1JNQUxfT1BFUkFUSU9O",
+            "X0lOSVQQCRoEkPYYARIbChFVTkRFUl9NQUlOVEVOQU5DRRAfGgSQ9hgBOjkK",
+            "DGVudW1fYmFja2VuZBIhLmdvb2dsZS5wcm90b2J1Zi5FbnVtVmFsdWVPcHRp",
+            "b25zGOKOAyABKAhiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.Reflection.DescriptorReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), typeof(global::DistributedMatchEngine.HealthCheck), typeof(global::DistributedMatchEngine.CloudletState), typeof(global::DistributedMatchEngine.MaintenanceState), }, new pb::Extension[] { AppcommonExtensions.EnumBackend }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DeviceInfo), global::DistributedMatchEngine.DeviceInfo.Parser, new[]{ "DataNetworkType", "DeviceOs", "DeviceModel", "SignalStrength" }, null, null, null, null)
           }));
     }
     #endregion
@@ -70,7 +73,13 @@ namespace DistributedMatchEngine {
 
   #region Enums
   /// <summary>
+  /// Layer4 Protocol
+  ///
   /// LProto indicates which protocol to use for accessing an application on a particular port. This is required by Kubernetes for port mapping.
+  ///
+  /// 0: `L_PROTO_UNKNOWN`
+  /// 1: `L_PROTO_TCP`
+  /// 2: `L_PROTO_UDP`
   /// </summary>
   public enum LProto {
     /// <summary>
@@ -613,6 +622,302 @@ namespace DistributedMatchEngine {
           }
           case 64: {
             Nginx = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  ///
+  /// DeviceInfo
+  /// </summary>
+  public sealed partial class DeviceInfo : pb::IMessage<DeviceInfo>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DeviceInfo> _parser = new pb::MessageParser<DeviceInfo>(() => new DeviceInfo());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DeviceInfo> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppcommonReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeviceInfo() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeviceInfo(DeviceInfo other) : this() {
+      dataNetworkType_ = other.dataNetworkType_;
+      deviceOs_ = other.deviceOs_;
+      deviceModel_ = other.deviceModel_;
+      signalStrength_ = other.signalStrength_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeviceInfo Clone() {
+      return new DeviceInfo(this);
+    }
+
+    /// <summary>Field number for the "data_network_type" field.</summary>
+    public const int DataNetworkTypeFieldNumber = 1;
+    private string dataNetworkType_ = "";
+    /// <summary>
+    /// LTE, 5G, etc.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DataNetworkType {
+      get { return dataNetworkType_; }
+      set {
+        dataNetworkType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "device_os" field.</summary>
+    public const int DeviceOsFieldNumber = 2;
+    private string deviceOs_ = "";
+    /// <summary>
+    /// Android or iOS
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DeviceOs {
+      get { return deviceOs_; }
+      set {
+        deviceOs_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "device_model" field.</summary>
+    public const int DeviceModelFieldNumber = 3;
+    private string deviceModel_ = "";
+    /// <summary>
+    /// Device model
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DeviceModel {
+      get { return deviceModel_; }
+      set {
+        deviceModel_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "signal_strength" field.</summary>
+    public const int SignalStrengthFieldNumber = 4;
+    private uint signalStrength_;
+    /// <summary>
+    /// Device signal strength (0-5)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint SignalStrength {
+      get { return signalStrength_; }
+      set {
+        signalStrength_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DeviceInfo);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DeviceInfo other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DataNetworkType != other.DataNetworkType) return false;
+      if (DeviceOs != other.DeviceOs) return false;
+      if (DeviceModel != other.DeviceModel) return false;
+      if (SignalStrength != other.SignalStrength) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DataNetworkType.Length != 0) hash ^= DataNetworkType.GetHashCode();
+      if (DeviceOs.Length != 0) hash ^= DeviceOs.GetHashCode();
+      if (DeviceModel.Length != 0) hash ^= DeviceModel.GetHashCode();
+      if (SignalStrength != 0) hash ^= SignalStrength.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DataNetworkType.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DataNetworkType);
+      }
+      if (DeviceOs.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DeviceOs);
+      }
+      if (DeviceModel.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(DeviceModel);
+      }
+      if (SignalStrength != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(SignalStrength);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DataNetworkType.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DataNetworkType);
+      }
+      if (DeviceOs.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DeviceOs);
+      }
+      if (DeviceModel.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(DeviceModel);
+      }
+      if (SignalStrength != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(SignalStrength);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DataNetworkType.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DataNetworkType);
+      }
+      if (DeviceOs.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceOs);
+      }
+      if (DeviceModel.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceModel);
+      }
+      if (SignalStrength != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SignalStrength);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DeviceInfo other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DataNetworkType.Length != 0) {
+        DataNetworkType = other.DataNetworkType;
+      }
+      if (other.DeviceOs.Length != 0) {
+        DeviceOs = other.DeviceOs;
+      }
+      if (other.DeviceModel.Length != 0) {
+        DeviceModel = other.DeviceModel;
+      }
+      if (other.SignalStrength != 0) {
+        SignalStrength = other.SignalStrength;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DataNetworkType = input.ReadString();
+            break;
+          }
+          case 18: {
+            DeviceOs = input.ReadString();
+            break;
+          }
+          case 26: {
+            DeviceModel = input.ReadString();
+            break;
+          }
+          case 32: {
+            SignalStrength = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DataNetworkType = input.ReadString();
+            break;
+          }
+          case 18: {
+            DeviceOs = input.ReadString();
+            break;
+          }
+          case 26: {
+            DeviceModel = input.ReadString();
+            break;
+          }
+          case 32: {
+            SignalStrength = input.ReadUInt32();
             break;
           }
         }

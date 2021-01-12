@@ -34,18 +34,18 @@ namespace DistributedMatchEngine {
             "NgoJdGltZXN0YW1wGAIgASgLMiMuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
             "LlRpbWVzdGFtcBI4CgR0YWdzGGQgAygLMiouZGlzdHJpYnV0ZWRfbWF0Y2hf",
             "ZW5naW5lLlNhbXBsZS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgB",
-            "IAEoCRINCgV2YWx1ZRgCIAEoCToCOAEioAEKB0xhdGVuY3kSCwoDYXZnGAEg",
-            "ASgBEgsKA21pbhgCIAEoARILCgNtYXgYAyABKAESDwoHc3RkX2RldhgEIAEo",
-            "ARIQCgh2YXJpYW5jZRgFIAEoARITCgtudW1fc2FtcGxlcxgGIAEoBBI2Cgl0",
-            "aW1lc3RhbXAYByABKAsyIy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVGlt",
-            "ZXN0YW1wYgZwcm90bzM="));
+            "IAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiowEKClN0YXRpc3RpY3MSCwoDYXZn",
+            "GAEgASgBEgsKA21pbhgCIAEoARILCgNtYXgYAyABKAESDwoHc3RkX2RldhgE",
+            "IAEoARIQCgh2YXJpYW5jZRgFIAEoARITCgtudW1fc2FtcGxlcxgGIAEoBBI2",
+            "Cgl0aW1lc3RhbXAYByABKAsyIy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
+            "VGltZXN0YW1wYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Timestamp), global::DistributedMatchEngine.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Loc), global::DistributedMatchEngine.Loc.Parser, new[]{ "Latitude", "Longitude", "HorizontalAccuracy", "VerticalAccuracy", "Altitude", "Course", "Speed", "Timestamp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Sample), global::DistributedMatchEngine.Sample.Parser, new[]{ "Value", "Timestamp", "Tags" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Latency), global::DistributedMatchEngine.Latency.Parser, new[]{ "Avg", "Min", "Max", "StdDev", "Variance", "NumSamples", "Timestamp" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Statistics), global::DistributedMatchEngine.Statistics.Parser, new[]{ "Avg", "Min", "Max", "StdDev", "Variance", "NumSamples", "Timestamp" }, null, null, null, null)
           }));
     }
     #endregion
@@ -729,7 +729,7 @@ namespace DistributedMatchEngine {
 
   /// <summary>
   ///
-  /// Latency Sample
+  /// Sample
   /// </summary>
   public sealed partial class Sample : pb::IMessage<Sample>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -788,6 +788,9 @@ namespace DistributedMatchEngine {
     /// <summary>Field number for the "timestamp" field.</summary>
     public const int TimestampFieldNumber = 2;
     private global::DistributedMatchEngine.Timestamp timestamp_;
+    /// <summary>
+    /// timestamp
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Timestamp Timestamp {
       get { return timestamp_; }
@@ -980,17 +983,17 @@ namespace DistributedMatchEngine {
   }
 
   /// <summary>
-  /// Latency
+  /// Statistics
   /// </summary>
-  public sealed partial class Latency : pb::IMessage<Latency>
+  public sealed partial class Statistics : pb::IMessage<Statistics>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Latency> _parser = new pb::MessageParser<Latency>(() => new Latency());
+    private static readonly pb::MessageParser<Statistics> _parser = new pb::MessageParser<Statistics>(() => new Statistics());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Latency> Parser { get { return _parser; } }
+    public static pb::MessageParser<Statistics> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -1003,14 +1006,14 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Latency() {
+    public Statistics() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Latency(Latency other) : this() {
+    public Statistics(Statistics other) : this() {
       avg_ = other.avg_;
       min_ = other.min_;
       max_ = other.max_;
@@ -1022,13 +1025,16 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Latency Clone() {
-      return new Latency(this);
+    public Statistics Clone() {
+      return new Statistics(this);
     }
 
     /// <summary>Field number for the "avg" field.</summary>
     public const int AvgFieldNumber = 1;
     private double avg_;
+    /// <summary>
+    /// average
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Avg {
       get { return avg_; }
@@ -1040,6 +1046,9 @@ namespace DistributedMatchEngine {
     /// <summary>Field number for the "min" field.</summary>
     public const int MinFieldNumber = 2;
     private double min_;
+    /// <summary>
+    /// minimum
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Min {
       get { return min_; }
@@ -1051,6 +1060,9 @@ namespace DistributedMatchEngine {
     /// <summary>Field number for the "max" field.</summary>
     public const int MaxFieldNumber = 3;
     private double max_;
+    /// <summary>
+    /// maximum
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Max {
       get { return max_; }
@@ -1063,7 +1075,7 @@ namespace DistributedMatchEngine {
     public const int StdDevFieldNumber = 4;
     private double stdDev_;
     /// <summary>
-    /// Square root of unbiased variance
+    /// square root of unbiased variance
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double StdDev {
@@ -1077,7 +1089,7 @@ namespace DistributedMatchEngine {
     public const int VarianceFieldNumber = 5;
     private double variance_;
     /// <summary>
-    /// Unbiased variance
+    /// unbiased variance
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Variance {
@@ -1090,6 +1102,9 @@ namespace DistributedMatchEngine {
     /// <summary>Field number for the "num_samples" field.</summary>
     public const int NumSamplesFieldNumber = 6;
     private ulong numSamples_;
+    /// <summary>
+    /// number of samples to create stats
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ulong NumSamples {
       get { return numSamples_; }
@@ -1101,6 +1116,9 @@ namespace DistributedMatchEngine {
     /// <summary>Field number for the "timestamp" field.</summary>
     public const int TimestampFieldNumber = 7;
     private global::DistributedMatchEngine.Timestamp timestamp_;
+    /// <summary>
+    /// timestamp
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Timestamp Timestamp {
       get { return timestamp_; }
@@ -1111,11 +1129,11 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as Latency);
+      return Equals(other as Statistics);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Latency other) {
+    public bool Equals(Statistics other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1260,7 +1278,7 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Latency other) {
+    public void MergeFrom(Statistics other) {
       if (other == null) {
         return;
       }

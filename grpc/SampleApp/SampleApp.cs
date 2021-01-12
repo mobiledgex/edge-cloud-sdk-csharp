@@ -237,7 +237,7 @@ namespace MexGrpcSampleConsoleApp
                 }
                 Console.WriteLine("\n");
                 float stdDev = (float)Math.Sqrt(squaredDiffs / numTests);
-                Latency latency = new Latency() {
+                Statistics latency = new Statistics() {
                   Min = min,
                   Max = max,
                   Avg = avg,
@@ -247,7 +247,7 @@ namespace MexGrpcSampleConsoleApp
                 await edgeEvent.RequestStream.WriteAsync(latencyEdgeEvent);
                 continue;
               case ServerEdgeEvent.Types.ServerEventType.EventLatencyProcessed:
-                var l = edgeEvent.ResponseStream.Current.Latency;
+                var l = edgeEvent.ResponseStream.Current.Statistics;
                 Console.WriteLine("Latency results: \n" +
                 "        Latency: " + "Avg: " + l.Avg + ", Min: " + l.Min + ", Max: " + l.Max + ", StdDev: " +l.StdDev + "\n");
                 continue;
@@ -266,10 +266,25 @@ namespace MexGrpcSampleConsoleApp
 
         
         for (int i = 0; i < 1000; i++) {
-          location = locs[i % 3];
-          var clientEdgeEvent2 = CreateClientEdgeEvent(location);
-          await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
-          Console.WriteLine("Sent client edge event");
+          if (i % 2 == 0)
+          {
+            location = locs[i % 3];
+            var clientEdgeEvent2 = CreateClientEdgeEvent(location);
+            await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
+            Console.WriteLine("Sent location edge event");
+          }
+          else
+          {
+            var dummySamples = new List<Sample>();
+            var sample1 = new Sample() { Value = 1.1};
+            var sample2 = new Sample() { Value = 3.2};
+            dummySamples.Add(sample1);
+            dummySamples.Add(sample2);
+            var clientEdgeEvent2 = CreateClientEdgeEvent(locs[i%3], eventType: ClientEdgeEvent.Types.ClientEventType.EventCustomEvent, samples: dummySamples, customEventName: "testBlah");
+            await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
+            Console.WriteLine("Sent custom edge event");
+          }
+          
           Thread.Sleep(10000);
         }
 
@@ -365,18 +380,19 @@ namespace MexGrpcSampleConsoleApp
 
     FindCloudletRequest CreateFindCloudletRequest(string carrierName, Loc gpsLocation)
     {
+      var deviceInfo = new DeviceInfo
+      {
+        DeviceOs = "testos",
+        DeviceModel = "testmodel",
+      };
       var request = new FindCloudletRequest
       {
         Ver = 1,
         SessionCookie = sessionCookie,
         CarrierName = carrierName,
         GpsLocation = gpsLocation,
+        DeviceInfo = deviceInfo,
       };
-      request.Tags.Add(new Google.Protobuf.Collections.MapField<string, string>
-      {
-          { "deviceos", "testos"},
-          {"devicemodel", "testmodel"}
-      });
       return request;
     }
 
@@ -384,18 +400,27 @@ namespace MexGrpcSampleConsoleApp
     // carrier length: 6
     // datanettype length: 4
     // deviceos length: 2
-    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, ClientEdgeEvent.Types.ClientEventType eventType = ClientEdgeEvent.Types.ClientEventType.EventLocationUpdate, List<Sample> samples = null)
+    ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, ClientEdgeEvent.Types.ClientEventType eventType = ClientEdgeEvent.Types.ClientEventType.EventLocationUpdate, List<Sample> samples = null, string customEventName = "")
     {
+      var deviceInfo = new DeviceInfo
+      {
+        DataNetworkType = dataNetTypes[3],
+        DeviceOs = deviceOs[1],
+      };
       var clientEvent = new ClientEdgeEvent
       {
         SessionCookie = sessionCookie,
         EdgeEventsCookie = eeSessionCookie,
         EventType = eventType, 
-        GpsLocation = locs[1],
-        CarrierName = carriers[5],
-        DataNetworkType = dataNetTypes[1],
-        DeviceOs = deviceOs[1],
+        GpsLocation = locs[0],
+        CarrierName = carriers[1],
+        DeviceInfo = deviceInfo,
       };
+
+      if (customEventName != "")
+      {
+        clientEvent.CustomEvent = customEventName;
+      }
 
       if (samples != null)
       { 
