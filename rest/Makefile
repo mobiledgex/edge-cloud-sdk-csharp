@@ -26,6 +26,8 @@ NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/api/nuget/nuget-relea
 DOXYGENROOT := Doxygen
 DOXYGENLOG := /tmp/doxygen_out.log
 
+REPOROOT := ../
+
 all: packageRestore build-all generate-doxygen
 
 packageRestore:
@@ -47,8 +49,8 @@ ifeq (, $(shell which doxygen))
 endif
 	@echo Generating Doxygen documentation...
 	$(shell doxygen $(DOXYGENROOT)/Doxyfile > $(DOXYGENLOG) 2>&1)
-	$(shell rm -rf $(DOXYGENROOT)/html >> $(DOXYGENLOG))
-	$(shell mv html $(DOXYGENROOT) >> $(DOXYGENLOG))
+	$(shell rm -rf $(REPOROOT)/docs/ >> $(DOXYGENLOG))
+	$(shell mv html/ $(REPOROOT)/docs/ >> $(DOXYGENLOG))
 
 publish:
 	@echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
