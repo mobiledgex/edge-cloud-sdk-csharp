@@ -47,11 +47,8 @@ ifeq (, $(shell which doxygen))
 endif
 	@echo Generating Doxygen documentation...
 	$(shell doxygen $(DOXYGENROOT)/Doxyfile > $(DOXYGENLOG) 2>&1)
-	$(shell zip -vr html.zip html >> $(DOXYGENLOG))
 	$(shell rm -rf $(DOXYGENROOT)/html >> $(DOXYGENLOG))
-	$(shell rm -f $(DOXYGENROOT)/html.zip >> $(DOXYGENLOG))
 	$(shell mv html $(DOXYGENROOT) >> $(DOXYGENLOG))
-	$(shell mv html.zip $(DOXYGENROOT) >> $(DOXYGENLOG))
 
 publish:
 	@echo "Publish command will pause for password if you don't set the Artifactory publish key first..."

@@ -1,0 +1,16 @@
+var searchData=
+[
+  ['carrier_5fname_14',['carrier_name',['../class_distributed_match_engine_1_1_cloudlet_location.html#a1f075788fcb04c70535f50e81406d03d',1,'DistributedMatchEngine.CloudletLocation.carrier_name()'],['../class_distributed_match_engine_1_1_app_inst_list_request.html#a054d2e7c6e7605b6e9f2ce6dd9d0f647',1,'DistributedMatchEngine.AppInstListRequest.carrier_name()'],['../class_distributed_match_engine_1_1_find_cloudlet_request.html#ad17b91f91925268a7c22a95a23373f43',1,'DistributedMatchEngine.FindCloudletRequest.carrier_name()'],['../class_distributed_match_engine_1_1_verify_location_request.html#aa9915bcb3ad5f0b0c822a0ce3d728706',1,'DistributedMatchEngine.VerifyLocationRequest.carrier_name()']]],
+  ['carrierinfo_15',['CarrierInfo',['../interface_distributed_match_engine_1_1_carrier_info.html',1,'DistributedMatchEngine']]],
+  ['cell_5fid_16',['cell_id',['../class_distributed_match_engine_1_1_app_inst_list_request.html#a0d1f1c11ccc0f0492ca0abfa64a88568',1,'DistributedMatchEngine.AppInstListRequest.cell_id()'],['../class_distributed_match_engine_1_1_find_cloudlet_request.html#a84819d5c204dc2b7ed59b01b5debf8e0',1,'DistributedMatchEngine.FindCloudletRequest.cell_id()'],['../class_distributed_match_engine_1_1_qos_position_request.html#ab2550890d9cfe29a251f19c41bfb467a',1,'DistributedMatchEngine.QosPositionRequest.cell_id()'],['../class_distributed_match_engine_1_1_register_client_request.html#afe0b5963b75496a3481a4fdf96a99b77',1,'DistributedMatchEngine.RegisterClientRequest.cell_id()'],['../class_distributed_match_engine_1_1_verify_location_request.html#a171e5fc2075e466628e0157182c03bbe',1,'DistributedMatchEngine.VerifyLocationRequest.cell_id()']]],
+  ['classes_17',['Classes',['../group__classes.html',1,'']]],
+  ['cloudlet_5flocation_18',['cloudlet_location',['../class_distributed_match_engine_1_1_find_cloudlet_reply.html#a03b9c5412dfa11be86d92946585a1d50',1,'DistributedMatchEngine::FindCloudletReply']]],
+  ['cloudlet_5fname_19',['cloudlet_name',['../class_distributed_match_engine_1_1_cloudlet_location.html#a47478535ebeb976f5047c6c2363d7c67',1,'DistributedMatchEngine::CloudletLocation']]],
+  ['cloudletlocation_20',['CloudletLocation',['../class_distributed_match_engine_1_1_cloudlet_location.html',1,'DistributedMatchEngine']]],
+  ['createappinstlistrequest_21',['CreateAppInstListRequest',['../group__functions__dmeapis.html#ga6aadad2b1ae1d94dca6c363a31f966d2',1,'DistributedMatchEngine::MatchingEngine']]],
+  ['createfindcloudletrequest_22',['CreateFindCloudletRequest',['../group__functions__dmeapis.html#gae61072f92ed0b4acdcfce85b91bdbe8c',1,'DistributedMatchEngine::MatchingEngine']]],
+  ['createqospositionrequest_23',['CreateQosPositionRequest',['../group__functions__dmeapis.html#ga1383f141a4895a4ff08e8199c1b6d13d',1,'DistributedMatchEngine::MatchingEngine']]],
+  ['createregisterclientrequest_24',['CreateRegisterClientRequest',['../group__functions__dmeapis.html#ga297b9bb13f27bc0a8816d91d3163e5ab',1,'DistributedMatchEngine::MatchingEngine']]],
+  ['createurl_25',['CreateUrl',['../group__functions__getconnectionutils.html#ga7ac7bc02634716174be9dbab28118391',1,'DistributedMatchEngine::MatchingEngine']]],
+  ['createverifylocationrequest_26',['CreateVerifyLocationRequest',['../group__functions__dmeapis.html#ga90cb3eeb18f927dd54e12c004f5a77c5',1,'DistributedMatchEngine::MatchingEngine']]]
+];
