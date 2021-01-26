@@ -111,6 +111,9 @@ namespace DistributedMatchEngine
     //! Location of the cloudlet
     [DataMember]
     public Loc cloudlet_location;
+    //! Session Cookie for specific EdgeEvents for specific AppInst
+    [DataMember]
+    public string edge_events_cookie;
 
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;

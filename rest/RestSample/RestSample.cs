@@ -85,13 +85,13 @@ namespace RestSample
   class Program
   {
     static string carrierName = "";
-    static string orgName = "MobiledgeX";
-    static string appName = "MobiledgeX SDK Demo";
-    static string appVers = "2.0";
+    static string orgName = "DevOrg";
+    static string appName = "DevOrg SDK Demo";
+    static string appVers = "1.0";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
+    static string fallbackDmeHost = "192.168.1.172";
 
     static Timestamp createTimestamp(int futureSeconds)
     {
@@ -215,6 +215,7 @@ namespace RestSample
 
         me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
+        me.useSSL = false;
         // Set SSL.
 
         await NetTest(me);
@@ -235,7 +236,7 @@ namespace RestSample
           try
           {
             //! [registerexample]
-            registerClientReply = await me.RegisterClient(registerClientRequest);
+            registerClientReply = await me.RegisterClient(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
             //! [registerexample]
             Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
           }
@@ -284,7 +285,7 @@ namespace RestSample
           try
           {
             //! [findcloudletexample]
-            findCloudletReply = await me.FindCloudlet(findCloudletRequest);
+            findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
             //! [findcloudletexample]
           }
           catch (DmeDnsException)
