@@ -41,6 +41,8 @@ namespace DistributedMatchEngine
      * \param desiredPort (int): Optional
      * \param timeout (int): Optional
      * \return Task<Socket>
+     * \section gettcpconnexample Example
+     * \snippet UnitTest1.cs gettcpconnexample
      */
     public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
     {
@@ -65,6 +67,8 @@ namespace DistributedMatchEngine
      * \param desiredPort (int): Optional
      * \param timeout (int): Optional
      * \return Task<SslStream>
+     * \section gettcptlsconnexample Example
+     * \snippet UnitTest1.cs gettcptlsconnexample
      */
     public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, bool allowSelfSignedCerts = false)
     {
@@ -112,6 +116,8 @@ namespace DistributedMatchEngine
      * \param desiredPort (int): Optional
      * \param timeout (int): Optional
      * \return Task<HttpClient>
+     * \section gethttpexample Example
+     * \snippet UnitTest1.cs gethttpexample
      */
     public async Task<HttpClient> GetHTTPClient(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {
@@ -172,6 +178,8 @@ namespace DistributedMatchEngine
      * \param desiredPort (int): Optional
      * \param timeout (int): Optional
      * \return Task<ClientWebSocket>
+     * \section getwebsocketexample Example
+     * \snippet UnitTest1.cs getwebsocketexample
      */
     public async Task<ClientWebSocket> GetWebsocketConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, string path = "")
     {

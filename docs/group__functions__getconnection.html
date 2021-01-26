@@ -233,7 +233,27 @@ GetConnection Workflow Example</h1>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Task&lt;HttpClient&gt; </dd></dl>
-
+<h1><a class="anchor" id="gethttpexample"></a>
+Example</h1>
+<div class="fragment"><div class="line">      <span class="keywordflow">try</span></div>
+<div class="line">      {</div>
+<div class="line">        HttpClient httpClient = await me.GetHTTPClient(uri);</div>
+<div class="line">        Assert.ByVal(httpClient, Is.Not.Null);</div>
+<div class="line"> </div>
+<div class="line">        StringContent content = <span class="keyword">new</span> StringContent(message);</div>
+<div class="line">        HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);</div>
+<div class="line"> </div>
+<div class="line">        response.EnsureSuccessStatusCode();</div>
+<div class="line">        <span class="keywordtype">string</span> responseBody = await response.Content.ReadAsStringAsync();</div>
+<div class="line">        Assert.ByVal(responseBody, Is.Not.Null);</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;http response body is &quot;</span> + responseBody);</div>
+<div class="line">        Assert.True(responseBody.Contains(<span class="stringliteral">&quot;HTTP Connection Test&quot;</span>));</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (HttpRequestException e)</div>
+<div class="line">      {</div>
+<div class="line">        Assert.Fail(<span class="stringliteral">&quot;HttpRequestException is &quot;</span> + e.Message);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="gac03219f5677caaa8bc5cf32c12d3f139"></a>
@@ -398,7 +418,34 @@ GetConnection Workflow Example</h1>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Task&lt;Socket&gt; </dd></dl>
-
+<h1><a class="anchor" id="gettcpconnexample"></a>
+Example</h1>
+<div class="fragment"><div class="line">      <span class="keywordtype">string</span> receiveMessage = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line">      <span class="keywordflow">try</span></div>
+<div class="line">      {</div>
+<div class="line">        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5000);</div>
+<div class="line">        Assert.ByVal(tcpConnection, Is.Not.Null);</div>
+<div class="line"> </div>
+<div class="line">        tcpConnection.Send(bytesMessage);</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordtype">byte</span>[] buffer = <span class="keyword">new</span> <span class="keywordtype">byte</span>[message.Length * 2]; <span class="comment">// C# chars are unicode-16 bits</span></div>
+<div class="line">        <span class="keywordtype">int</span> numRead = tcpConnection.Receive(buffer);</div>
+<div class="line">        <span class="keywordtype">byte</span>[] readBuffer = <span class="keyword">new</span> <span class="keywordtype">byte</span>[numRead];</div>
+<div class="line">        Array.Copy(buffer, readBuffer, numRead);</div>
+<div class="line">        receiveMessage = Encoding.ASCII.GetString(readBuffer);</div>
+<div class="line"> </div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;Echoed tcp string: &quot;</span> + receiveMessage);</div>
+<div class="line">        tcpConnection.Close();</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (GetConnectionException e)</div>
+<div class="line">      {</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;TCP GetConnectionException is &quot;</span> + e.Message);</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (Exception e)</div>
+<div class="line">      {</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;TCP socket exception is &quot;</span> + e);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="gaae183d739bf0e5c8a340fe6ae8e79811"></a>
@@ -455,7 +502,48 @@ GetConnection Workflow Example</h1>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Task&lt;SslStream&gt; </dd></dl>
-
+<h1><a class="anchor" id="gettcptlsconnexample"></a>
+Example</h1>
+<div class="fragment"><div class="line">      <span class="keywordflow">try</span></div>
+<div class="line">      {</div>
+<div class="line">        <span class="keywordtype">string</span> rawpost = <span class="stringliteral">&quot;ping&quot;</span>;</div>
+<div class="line">        <span class="keywordtype">byte</span>[] bytes = Encoding.UTF8.GetBytes(rawpost);</div>
+<div class="line"> </div>
+<div class="line">        <a class="code" href="class_distributed_match_engine_1_1_matching_engine.html#ac16acdd9772a7aa9d023b3d3a9e27629">MatchingEngine</a>.ServerRequiresClientCertificateAuthentication(<span class="keyword">true</span>);</div>
+<div class="line">        <a class="code" href="class_distributed_match_engine_1_1_matching_engine.html#ac16acdd9772a7aa9d023b3d3a9e27629">MatchingEngine</a>.AddClientCert(<span class="stringliteral">&quot;path&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">        SslStream stream = await me.GetTCPTLSConnection(<span class="stringliteral">&quot;porttestapp-tcp.automationfrankfurtcloudlet.tdg.mobiledgex.net&quot;</span>, 2015, 5000, <span class="keyword">true</span>);</div>
+<div class="line">        Assert.ByVal(stream, Is.Not.Null);</div>
+<div class="line">        Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);</div>
+<div class="line"> </div>
+<div class="line">        stream.Write(Encoding.UTF8.GetBytes(rawpost));</div>
+<div class="line"> </div>
+<div class="line">        await Task.Delay(500);</div>
+<div class="line">        <span class="keywordtype">byte</span>[] readBuffer = <span class="keyword">new</span> <span class="keywordtype">byte</span>[rawpost.Length];</div>
+<div class="line"> </div>
+<div class="line">        Assert.True(stream.CanRead);</div>
+<div class="line">        stream.Read(readBuffer);</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordtype">string</span> response = Encoding.UTF8.GetString(readBuffer);</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;Response: &quot;</span> + response);</div>
+<div class="line">        Assert.True(response.Contains(<span class="stringliteral">&quot;pong&quot;</span>));</div>
+<div class="line">        stream.Close();</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (AuthenticationException e)</div>
+<div class="line">      {</div>
+<div class="line">        Assert.Fail(<span class="stringliteral">&quot;Authentication Exception is &quot;</span> + e.Message);</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (GetConnectionException e)</div>
+<div class="line">      {</div>
+<div class="line">        Assert.Fail(<span class="stringliteral">&quot;TCPTLS GetConnectionException is &quot;</span> + e.Message);</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (IOException ioe)</div>
+<div class="line">      {</div>
+<div class="line">        Assert.Fail(<span class="stringliteral">&quot;ioe exception is &quot;</span> + ioe.Message);</div>
+<div class="line">        <span class="comment">// FIXME: The test server doesn&#39;t have HTTPs.</span></div>
+<div class="line">        Assert.False(ioe.Message.Contains(<span class="stringliteral">&quot;The handshake failed due to an unexpected packet format.&quot;</span>));</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ga54cc49487109c53f1f3a7318ee9a9a56"></a>
@@ -563,11 +651,64 @@ GetConnection Workflow Example</h1>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Task&lt;ClientWebSocket&gt; </dd></dl>
-
+<h1><a class="anchor" id="getwebsocketexample"></a>
+Example</h1>
+<div class="fragment"><div class="line">      ClientWebSocket socket = <span class="keyword">null</span>;</div>
+<div class="line">      <span class="keywordtype">string</span> url = <span class="stringliteral">&quot;ws://&quot;</span> + aWebSocketServerFqdn + <span class="stringliteral">&quot;:&quot;</span> + 3000;</div>
+<div class="line">      UriBuilder uriBuilder = <span class="keyword">new</span> UriBuilder(url);</div>
+<div class="line">      Uri uri = uriBuilder.Uri;</div>
+<div class="line"> </div>
+<div class="line">      <span class="keywordflow">try</span></div>
+<div class="line">      {</div>
+<div class="line">        socket = await me.GetWebsocketConnection(uri, 5000);</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (Exception e)</div>
+<div class="line">      {</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;Websocket Initial GetConnectionException is &quot;</span> + e.Message);</div>
+<div class="line">        Assert.ByVal(socket, Is.Not.Null);</div>
+<div class="line">        Assert.True(socket.State == WebSocketState.Open);</div>
+<div class="line">      }</div>
+<div class="line"> </div>
+<div class="line">      <span class="keywordflow">try</span></div>
+<div class="line">      {</div>
+<div class="line">        <span class="comment">// Send message</span></div>
+<div class="line">        ArraySegment&lt;Byte&gt; sendBuffer = <span class="keyword">new</span> ArraySegment&lt;byte&gt;(bytesMessage);</div>
+<div class="line">        CancellationTokenSource source = <span class="keyword">new</span> CancellationTokenSource();</div>
+<div class="line">        CancellationToken token = source.Token;</div>
+<div class="line">        await socket.SendAsync(sendBuffer, WebSocketMessageType.Text, <span class="keyword">true</span>, token);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Receive message</span></div>
+<div class="line">        <span class="keywordtype">byte</span>[] bytesReceive = <span class="keyword">new</span> <span class="keywordtype">byte</span>[message.Length * 2];</div>
+<div class="line">        ArraySegment&lt;Byte&gt; receiveBuffer = <span class="keyword">new</span> ArraySegment&lt;byte&gt;(bytesReceive);</div>
+<div class="line">        WebSocketReceiveResult result = await socket.ReceiveAsync(receiveBuffer, token);</div>
+<div class="line">        <span class="keywordtype">string</span> receiveMessage = Encoding.ASCII.GetString(receiveBuffer.Array, receiveBuffer.Offset, result.Count);</div>
+<div class="line"> </div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;Echoed websocket result is &quot;</span> + receiveMessage);</div>
+<div class="line">        Assert.True(socket.State == WebSocketState.Open);</div>
+<div class="line">        await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, <span class="stringliteral">&quot;end of test&quot;</span>, token);</div>
+<div class="line">        await Task.Delay(100);</div>
+<div class="line">        Assert.True(socket.State == WebSocketState.Closed || socket.State == WebSocketState.CloseSent);</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (GetConnectionException e)</div>
+<div class="line">      {</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;Websocket GetConnectionException is &quot;</span> + e.Message);</div>
+<div class="line">        <span class="comment">// Since we don&#39;t necessarily know the message format, this should actually be slammed closed by the running server.</span></div>
+<div class="line">        <span class="comment">//Assert.True(e.Message.Contains(&quot;Cannot get websocket connection&quot;));</span></div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (OperationCanceledException e)</div>
+<div class="line">      {</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;Websocket OperationCanceledException is &quot;</span> + e.Message);</div>
+<div class="line">      }</div>
+<div class="line">      <span class="keywordflow">catch</span> (Exception e)</div>
+<div class="line">      {</div>
+<div class="line">        Console.WriteLine(<span class="stringliteral">&quot;Websocket Exception is &quot;</span> + e.Message);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
+<div class="ttc" id="aclass_distributed_match_engine_1_1_matching_engine_html_ac16acdd9772a7aa9d023b3d3a9e27629"><div class="ttname"><a href="class_distributed_match_engine_1_1_matching_engine.html#ac16acdd9772a7aa9d023b3d3a9e27629">DistributedMatchEngine.MatchingEngine.MatchingEngine</a></div><div class="ttdeci">MatchingEngine(CarrierInfo carrierInfo=null, NetInterface netInterface=null, UniqueID uniqueID=null, DeviceInfo deviceInfo=null)</div><div class="ttdef"><b>Definition:</b> DistributedMatchEngine.cs:243</div></div>
 <!-- HTML footer for doxygen 1.8.18-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
