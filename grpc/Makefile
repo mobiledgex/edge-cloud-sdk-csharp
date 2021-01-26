@@ -1,4 +1,4 @@
-# Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
+# Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.
 # MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GRPCTOOLS_VERSION := 1.21.0
-GRPCTOOLS := Grpc.Tools.$(GRPCTOOLS_VERSION)
-TEMP_DIR := packages/$(GRPCTOOLS)/tmp
-CURL_URL := https://www.nuget.org/api/v2/package/Grpc.Tools/$(GRPCTOOLS_VERSION)
-#PROTOC := packages/$(GRPCTOOLS)/tools/macosx_x64/protoc
-PROTOC := protoc
+GRPC_SDK_VERSION := 2.26.0
+GRPCTOOLS := Grpc.Tools.$(GRPC_SDK_VERSION)
+TEMP_DIR := packages/
+CURL_URL := https://www.nuget.org/api/v2/package/Grpc.Tools/$(GRPC_SDK_VERSION)
 # Run "brew install coreutils" to get "grealpath" for protoc's requirement of absolute paths
 ABSOLUTEPATH := $(shell grealpath ../..)
 DME_PROTO_PATH = $(ABSOLUTEPATH)/edge-proto/dme
 THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/edge-proto/third_party
 
-GRPC_SDK_VERSION := 1.4.10
 APPLIBBASE := MatchingEngineGrpcLibrary
 BINOUT := $(APPLIBBASE)/bin
+# Google APIs are for the server, but are referenced in the shared client/server proto.
 PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis
 
 PROTO_INCLUDE_FLAGS += $(addprefix --proto_path ,$(PROTO_INCLUDE_DIRECTORIES))
@@ -41,17 +39,18 @@ else
 	"Unsupported platform"
 	exit 1
 endif
-
-GETOUTPUT := $(shell mkdir -p $(TEMP_DIR) && cd $(TEMP_DIR) && curl -sL $(CURL_URL) > tmp.zip; unzip tmp.zip && cd .. && cp -r tmp/tools . && rm -rf tmp && cd ../..)
-OUTPUT := $(shell chmod 750 packages/$(GRPCTOOLS)/tools/$(PLATFORM)/protoc)
-OUTPUT := $(shell chmod 750 packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin)
+PROTOC := $(TEMP_DIR)/$(GRPCTOOLS)/tools/macosx_x64/protoc
 
 SOLUTIONLOG := /tmp/$(APPLIBBASE)_out.log
 PUBLISHLOG := /tmp/nuget_out.log
 
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/artifactory/nuget-releases/
 
-all: packageRestore edge-proto-check build-all
+all: get-grpc-tools packageRestore edge-proto-check build-all
+
+# Note that the solution file MAY include GRPC.tools, but we want Makefile control instead to control the proto src directory.
+get-grpc-tools:
+	nuget install Grpc.Tools -Version $(GRPC_SDK_VERSION) -OutputDirectory $(TEMP_DIR)
 
 packageRestore:
 	nuget restore
@@ -62,9 +61,10 @@ build-proto:
 	@echo Absolute Path for Proto files are: $(ABSOLUTEPATH)
 	mkdir -p $(APPLIBBASE)
 	@echo Generating GRPC source code...
-	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPLIBBASE) --grpc_out $(APPLIBBASE) $(DME_PROTO_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
+	@echo The following *should* also skip server REST APIs from shared proto.
+	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPLIBBASE) --grpc_out=no_server:$(APPLIBBASE) $(DME_PROTO_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
 	mkdir -p $(APPLIBBASE)/google/api
-	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPLIBBASE)/google/api --grpc_out $(APPLIBBASE) $(THIRD_PARTY_PROTOS_PATH)/googleapis/google/api/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
+	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(APPLIBBASE)/google/api --grpc_out=no_server:$(APPLIBBASE) $(THIRD_PARTY_PROTOS_PATH)/googleapis/google/api/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
 
 build-debug:
 	@echo Making Debug Library...
@@ -84,6 +84,7 @@ ifneq ("$(APPLIBBASE)", "/bin")
 	rm -rf $(APPLIBBASE)/bin
 endif
 	rm -rf $(APPLIBBASE)/obj
+	rm -rf $(TEMP_DIR)
 
 edge-proto-check:
 ifneq ("$(wildcard $(DME_PROTO_PATH)/app-client.proto)", "")
