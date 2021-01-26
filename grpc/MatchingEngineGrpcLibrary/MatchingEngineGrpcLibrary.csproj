@@ -7,17 +7,19 @@
     <Company>MobiledgeX, Inc.</Company>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <ReleaseVersion>1.5</ReleaseVersion>
     <Copyright>MobiledgeX, Inc.</Copyright>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
   <ItemGroup>
-    <PackageReference Include="Google.Api.Gax" Version="3.0.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.11.4" />
-    <PackageReference Include="Grpc.Tools" Version="2.27.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Grpc" Version="2.27.0" />
+    <Folder Include="api\" />
+    <Folder Include="google\api\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Grpc" Version="2.26.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
   </ItemGroup>
 </Project>
