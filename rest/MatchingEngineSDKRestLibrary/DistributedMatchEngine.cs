@@ -204,7 +204,7 @@ namespace DistributedMatchEngine
     public DeviceInfo deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
 
-    DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
+    internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
       UseSimpleDictionaryFormat = true
     };
@@ -218,6 +218,7 @@ namespace DistributedMatchEngine
     private string getfqdnlistAPI = "/v1/getfqdnlist";
     private string appofficialfqdnAPI = "/v1/getappofficialfqdn";
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
+    internal string streamedgeeventAPI = "/v1/streamedgeevent";
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
 
@@ -228,6 +229,11 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     string authToken { get; set; }
+
+    // Delegate for Events.
+    public delegate void EventBusDelegate(ServerEdgeEvent serverEdgeEvent);
+    public EventBusDelegate EventBusReciever { get; internal set; }
+    public DMEConnection DmeConnection { get; internal set; }
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
 
@@ -282,6 +288,46 @@ namespace DistributedMatchEngine
 
       // Default to empty.
       SetMelMessaging(null);
+
+      // Setup a dummy event delegate for monitoring events:
+      EventBusReciever += (ServerEdgeEvent serverEdgeEvent) =>
+      {
+        Log.D("MatchingEngine EdgeEvent Notice: " + serverEdgeEvent.event_type);
+      };
+    }
+
+    /*!
+     * GetDmeConnection
+     */
+    public DMEConnection GetDMEConnection(string edgeEventCookie, string dmeHost = null, uint dmePort = 0)
+    {
+      if (DmeConnection == null /*|| DmeConnection.IsShutdown()*/)
+      {
+        DmeConnection = new DMEConnection(this, dmeHost, dmePort);
+        //DmeConnection = new DMEConnection(this, "192.168.1.172", 4000);
+      }
+
+      if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
+      {
+        // Will not init!
+        return null;
+      }
+
+      if (!DmeConnection.IsShutdown())
+      {
+        return DmeConnection;
+      }
+
+      if (!DmeConnection.Open(edgeEventCookie))
+      {
+        return DmeConnection = null;
+      }
+      return DmeConnection;
+    }
+
+    DMEConnection GetDMEConnection()
+    {
+      return DmeConnection;
     }
 
     /*!
@@ -428,7 +474,7 @@ namespace DistributedMatchEngine
       throw new DmeDnsException("Generated mcc-mnc." + baseDmeHost + " hostname not found: " + potentialDmeHost);
     }
 
-    private string CreateUri(string host, uint port)
+    internal string CreateUri(string host, uint port)
     {
       string proto = useSSL ? "https://" : "http://";
       return proto + host + ":" + port;
@@ -641,13 +687,13 @@ namespace DistributedMatchEngine
     private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
     {
       string uid = melMessaging.GetUid();
-      string aUniqueIdType = GetUniqueIDType();
+      string aUniqueIdType = GetUniqueIDType(); // Read: device model
       string aUniqueId = GetUniqueID();
       string manufacturer = melMessaging.GetManufacturer();
 
       if (uid != null && uid != "")
       {
-        request.unique_id_type = "Platos:PlatosEnablingLayer";
+        request.unique_id_type = "Platos:" + aUniqueIdType + ":PlatosEnablingLayer";
         request.unique_id = melMessaging.GetUid();
       }
       else if (manufacturer != null &&
@@ -974,7 +1020,7 @@ namespace DistributedMatchEngine
       ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply), serializerSettings);
       FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
+      if (reply.tags != null)
       {
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
@@ -1093,6 +1139,15 @@ namespace DistributedMatchEngine
       if (melMessaging.IsMelEnabled() && ip == null)
       {
         FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
+        if (melModeFindCloudletReply == null)
+        {
+          return null;
+        }
+        if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+        {
+          //DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
+          DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, "192.168.1.172", 4000);
+        }
         string appOfficialFqdn = melModeFindCloudletReply.fqdn;
 
         IPHostEntry ipHostEntry;
@@ -1128,14 +1183,27 @@ namespace DistributedMatchEngine
         Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
       }
 
+      FindCloudletReply fcReply = null;
       if (mode == FindCloudletMode.PROXIMITY)
       {
-        return await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
+        fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
       }
       else
       {
-        return await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
+        fcReply = await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
       }
+
+      if (fcReply == null)
+      {
+        return null;
+      }
+
+      // TODO: Refactor.
+      if (fcReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+      {
+        DmeConnection = GetDMEConnection(fcReply.edge_events_cookie, host, port);
+      }
+      return fcReply;
     }
 
     // FindCloudlet with GetAppInstList and NetTest

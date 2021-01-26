@@ -379,7 +379,8 @@ namespace DistributedMatchEngine.PerformanceMetrics
     {
       if (httpClient != null)
       {
-        httpClient.Dispose();
+        httpClient.CancelPendingRequests();
+        httpClient = null;
       }
     }
   }
