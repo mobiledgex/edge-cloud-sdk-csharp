@@ -269,6 +269,7 @@ namespace Tests
           "Content-Type: application/json\r\n" + "\r\n" + test;
       byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
+      //! [gettcpconnexample]
       string receiveMessage = "";
       try
       {
@@ -294,6 +295,7 @@ namespace Tests
       {
         Console.WriteLine("TCP socket exception is " + e);
       }
+      //! [gettcpconnexample]
       Assert.True(receiveMessage.Contains("tcp test string"));
       Console.WriteLine("TestTCPConnection finished.");
     }
@@ -316,7 +318,7 @@ namespace Tests
       UriBuilder uriBuilder = new UriBuilder("http", uriString, 3001);
       Uri uri = uriBuilder.Uri;
 
-      // HTTP Connection Test
+      //! [gethttpexample]
       try
       {
         HttpClient httpClient = await me.GetHTTPClient(uri);
@@ -335,12 +337,13 @@ namespace Tests
       {
         Assert.Fail("HttpRequestException is " + e.Message);
       }
+      //! [gethttpexample]
     }
 
     [Test]
     public async static Task TestTCPTLSConnection()
     {
-      // TLS on TCP Connection Test
+      //! [gettcptlsconnexample]
       try
       {
         string rawpost = "ping";
@@ -380,6 +383,7 @@ namespace Tests
         // FIXME: The test server doesn't have HTTPs.
         Assert.False(ioe.Message.Contains("The handshake failed due to an unexpected packet format."));
       }
+      //! [gettcptlsconnexample]
     }
 
     [Test]
@@ -388,7 +392,7 @@ namespace Tests
       string message = "Websockets connection test";
       byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
-      // Websocket Connection Test
+      //! [getwebsocketexample]
       ClientWebSocket socket = null;
       string url = "ws://" + aWebSocketServerFqdn + ":" + 3000;
       UriBuilder uriBuilder = new UriBuilder(url);
@@ -439,6 +443,7 @@ namespace Tests
       {
         Console.WriteLine("Websocket Exception is " + e.Message);
       }
+      //! [getwebsocketexample]
     }
 
     // Test Workflow with TCP connection and exception handling
