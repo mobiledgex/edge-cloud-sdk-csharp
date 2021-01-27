@@ -92,6 +92,7 @@ namespace EngineTests
     public void TestWindowsInterfacesExist()
     {
       // Using the Windows Interface, where this test might run...
+      // GetAvailableWiFiName only passes on Windows machine
       string nameWifi = me.GetAvailableWiFiName(new Windows10NetworkInterfaceName());
       Assert.NotNull(nameWifi);
       Assert.AreEqual(nameWifi, "Ethernet");

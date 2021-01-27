@@ -45,11 +45,12 @@ namespace Tests
     // Test to an alternate server:
     const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
 
-    const string orgName = "MobiledgeX";
+    const string orgName = "MobiledgeX-Samples";
     const string appName = "HttpEcho";
-    const string appVers = "20191204";
-    const string connectionTestFqdn = "mextest-app-cluster.frankfurt-main.tdg.mobiledgex.net";
-    const string aWebSocketServerFqdn = "pingpong-cluster.frankfurt-main.tdg.mobiledgex.net"; // or, localhost.
+    const string appVers = "1.0";
+    const string connectionTestFqdn = "autoclusterhttpecho.dusseldorf-main.tdg.mobiledgex.net";
+    const string connectionTlsTestFqdn = "autoclusterhttpechotls.dusseldorf-main.tdg.mobiledgex.net";
+    const string aWebSocketServerFqdn = "vivobrazil-rjo2.telefonica.mobiledgex.net"; // or, localhost.
 
     static MatchingEngine me;
 
@@ -352,7 +353,7 @@ namespace Tests
         MatchingEngine.ServerRequiresClientCertificateAuthentication(true);
         MatchingEngine.AddClientCert("path");
 
-        SslStream stream = await me.GetTCPTLSConnection("porttestapp-tcp.automationfrankfurtcloudlet.tdg.mobiledgex.net", 2015, 5000, true);
+        SslStream stream = await me.GetTCPTLSConnection(connectionTlsTestFqdn, 3001, 5000, true);
         Assert.ByVal(stream, Is.Not.Null);
         Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);
 

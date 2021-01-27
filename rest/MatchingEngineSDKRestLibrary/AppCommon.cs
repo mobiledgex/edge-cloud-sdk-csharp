@@ -175,7 +175,7 @@ namespace DistributedMatchEngine
       }
       foreach (var key in htags.Keys)
       {
-        if (tags[key.ToString()] == null)
+        if (htags[key] == null)
         {
           continue;
         }
