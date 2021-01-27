@@ -61,8 +61,11 @@ namespace DistributedMatchEngine
     // Status of the reply
     public enum FLStatus
     {
+      [EnumMember]
       FL_UNDEFINED = 0,
+      [EnumMember]
       FL_SUCCESS = 1,
+      [EnumMember]
       FL_FAIL = 2
     }
 

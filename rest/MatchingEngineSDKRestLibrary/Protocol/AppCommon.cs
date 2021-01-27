@@ -113,7 +113,7 @@ namespace DistributedMatchEngine
     L_PROTO_TCP = 1,
     //! UDP (L4) protocol
     [EnumMember]
-    L_PROTO_UDP = 2
+    L_PROTO_UDP = 2,
   }
 
   /*!
@@ -275,9 +275,15 @@ namespace DistributedMatchEngine
     [EnumMember]
     RS_UNDEFINED = 0,
     [EnumMember]
+    RsUndefined = 0,
+    [EnumMember]
     RS_SUCCESS = 1,
     [EnumMember]
-    RS_FAIL = 2
+    RsSuccess = 1,
+    [EnumMember]
+    RS_FAIL = 2,
+    [EnumMember]
+    RsFail = 2
   }
 
   /*!
@@ -297,7 +303,7 @@ namespace DistributedMatchEngine
     // Get and set won't be called by the serializer (who does reflection), so this is manual.
     static public Hashtable DictionaryToHashtable(Dictionary<string, string> tags)
     {
-      Log.D("XXX DictionaryToHashtable: " + tags);
+      Log.D("DictionaryToHashtable: " + tags);
       if (tags == null || tags.Count == 0)
       {
         Log.D("DictionaryToHashtable: Nothing: " + tags);
@@ -311,7 +317,7 @@ namespace DistributedMatchEngine
           continue;
         }
         htags.Add(entry.Key, entry.Value);
-        Log.D("XXX Key: " + entry.Key + ", Value: " + htags[entry.Key]);
+        Log.D("Key: " + entry.Key + ", Value: " + htags[entry.Key]);
       }
       return htags;
     }
@@ -319,8 +325,10 @@ namespace DistributedMatchEngine
     static public Dictionary<string, string> HashtableToDictionary(Hashtable htags)
     {
       Dictionary<string, string> tags = new Dictionary<string, string>();
+      Log.D("HashtableToDictionary: " + htags + ", Count: " + htags.Count);
       if (htags == null || htags.Count == 0)
       {
+        Log.D("HashtableToDictionary: Nothing: " + htags);
         return null;
       }
       foreach (var key in htags.Keys)
