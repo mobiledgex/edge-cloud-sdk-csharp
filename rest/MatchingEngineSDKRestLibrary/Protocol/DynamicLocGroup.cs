@@ -24,8 +24,11 @@ namespace DistributedMatchEngine
 {
   public enum DlgCommType
   {
+    [EnumMember]
     DLG_UNDEFINED = 0,
+    [EnumMember]
     DLG_SECURE = 1,
+    [EnumMember]
     DLG_OPEN = 2
   }
 

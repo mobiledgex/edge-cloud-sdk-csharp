@@ -71,8 +71,11 @@ namespace DistributedMatchEngine
     //! Status of a FindCloudletReply
     public enum FindStatus
     {
+      [EnumMember]
       FIND_UNKNOWN = 0,
+      [EnumMember]
       FIND_FOUND = 1,
+      [EnumMember]
       FIND_NOTFOUND = 2
     }
 

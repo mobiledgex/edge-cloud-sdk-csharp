@@ -85,13 +85,13 @@ namespace RestSample
   class Program
   {
     static string carrierName = "";
-    static string orgName = "DevOrg";
-    static string appName = "DevOrg SDK Demo";
-    static string appVers = "1.0";
+    static string orgName = "MobiledgeX-Samples";
+    static string appName = "ComputerVision-GPU";
+    static string appVers = "2.2";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
-    static string fallbackDmeHost = "192.168.1.172";
+    static string fallbackDmeHost = "wifi.dme.mobiledgex.net";
 
     static Timestamp createTimestamp(int futureSeconds)
     {
@@ -215,7 +215,7 @@ namespace RestSample
 
         me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
-        me.useSSL = false;
+        me.useSSL = true;
         // Set SSL.
 
         await NetTest(me);

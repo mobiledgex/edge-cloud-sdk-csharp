@@ -43,9 +43,12 @@ namespace DistributedMatchEngine
   {
     public enum AOFStatus
     {
+      [EnumMember]
       AOF_UNDEFINED = 0,
+      [EnumMember]
       AOF_SUCCESS = 1,
       // The user does not allow his location to be tracked
+      [EnumMember]
       AOF_FAIL = 2
     }
     [DataMember]
