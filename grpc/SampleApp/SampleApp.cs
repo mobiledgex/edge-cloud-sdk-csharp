@@ -521,19 +521,17 @@ namespace MexGrpcSampleConsoleApp
       Console.WriteLine("VerifyLocation Accuracy: " + verifyLocationReply.GpsLocationAccuracyKm);
 
       // Attach an Edge EventBus Receiver (This is not a raw delegate).
-      me.EventBusReciever += (ServerEdgeEvent serverEdgeEvent) =>
+      me.EventBusReciever += async (ServerEdgeEvent serverEdgeEvent) =>
       {
         Console.WriteLine("Got Event: ," + "EventType: " + serverEdgeEvent.EventType + ", Messsage: " + serverEdgeEvent);
-        HandleEdgeEvent(serverEdgeEvent).ConfigureAwait(false); // Let it run, but not block events.
-
+        await HandleEdgeEvent(serverEdgeEvent).ConfigureAwait(false);
 
         // Fling a new location for response:
-        /*
         if (serverEdgeEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection)
         {
           Loc loc = new Loc { Longitude = -73.935242, Latitude = 40.730610 }; // New York City
           await me.DmeConnection.PostLocationUpdate(loc);
-        }*/
+        }
       };
 
       // Blocking GRPC call:
