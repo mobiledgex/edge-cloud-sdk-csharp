@@ -8,7 +8,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>MobiledgeX, Inc.</Copyright>
-    <ReleaseVersion>1.5</ReleaseVersion>
+    <ReleaseVersion>2.5</ReleaseVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
