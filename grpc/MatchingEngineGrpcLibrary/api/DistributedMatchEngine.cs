@@ -701,17 +701,23 @@ namespace DistributedMatchEngine
         OrgName = orgName,
         AppName = appName,
         AppVers = appVersion,
-        //AuthToken = authToken,
-        CellId = cellID,
-        UniqueIdType = uniqueIDType,
-        UniqueId = uniqueID
+        CellId = cellID
       };
 
       if (authToken != null && !authToken.Trim().Equals(""))
       {
         request.AuthToken = authToken;
       }
-      //CopyTagField(request.Tags, tags);
+      if (uniqueID != null && !uniqueID.Trim().Equals(""))
+      {
+        request.UniqueId = uniqueID;
+      }
+      if (uniqueIDType != null && !uniqueIDType.Trim().Equals(""))
+      {
+        request.UniqueIdType = uniqueIDType;
+      }
+
+      CopyTagField(request.Tags, tags);
 
       return request;
     }
