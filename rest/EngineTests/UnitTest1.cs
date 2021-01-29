@@ -347,27 +347,33 @@ namespace Tests
       //! [gettcptlsconnexample]
       try
       {
-        string rawpost = "ping";
-        byte[] bytes = Encoding.UTF8.GetBytes(rawpost);
+        string test = "{\"Data\": \"Ping\"}";
+        string message = "POST / HTTP/1.1\r\n" +
+          "Host: 37.50.200.204:3001\r\n" +
+          "User-Agent: curl/7.54.0\r\n" +
+          "Accept: */*\r\n" +
+          "Content-Length: " +
+          test.Length + "\r\n" +
+          "Content-Type: application/json\r\n" + "\r\n" + test;
+        byte[] bytes = Encoding.UTF8.GetBytes(message);
 
-        MatchingEngine.ServerRequiresClientCertificateAuthentication(true);
-        MatchingEngine.AddClientCert("path");
+        MatchingEngine.ServerRequiresClientCertificateAuthentication(false);
 
         SslStream stream = await me.GetTCPTLSConnection(connectionTlsTestFqdn, 3001, 5000, true);
         Assert.ByVal(stream, Is.Not.Null);
         Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);
 
-        stream.Write(Encoding.UTF8.GetBytes(rawpost));
+        stream.Write(bytes);
 
         await Task.Delay(500);
-        byte[] readBuffer = new byte[rawpost.Length];
+        byte[] readBuffer = new byte[bytes.Length*2];
 
         Assert.True(stream.CanRead);
         stream.Read(readBuffer);
 
         string response = Encoding.UTF8.GetString(readBuffer);
         Console.WriteLine("Response: " + response);
-        Assert.True(response.Contains("pong"));
+        Assert.True(response.Contains("Ping"));
         stream.Close();
       }
       catch (AuthenticationException e)
