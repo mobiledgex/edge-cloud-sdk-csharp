@@ -304,7 +304,6 @@ namespace DistributedMatchEngine
       if (DmeConnection == null /*|| DmeConnection.IsShutdown()*/)
       {
         DmeConnection = new DMEConnection(this, dmeHost, dmePort);
-        //DmeConnection = new DMEConnection(this, "192.168.1.172", 4000);
       }
 
       if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
@@ -1145,8 +1144,7 @@ namespace DistributedMatchEngine
         }
         if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
         {
-          //DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
-          DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, "192.168.1.172", 4000);
+          DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
         }
         string appOfficialFqdn = melModeFindCloudletReply.fqdn;
 

@@ -53,7 +53,7 @@ namespace EngineTests
       UniqueID uniqueIdInterface = new EmptyUniqueID();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface);
     }
 
     public NetworkTests1()

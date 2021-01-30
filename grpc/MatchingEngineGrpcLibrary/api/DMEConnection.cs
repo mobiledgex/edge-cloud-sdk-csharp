@@ -35,31 +35,6 @@ namespace DistributedMatchEngine
     private AsyncDuplexStreamingCall<ClientEdgeEvent, ServerEdgeEvent> DuplexEventStream;
     CancellationTokenSource ConnectionCancelTokenSource;
 
-    private int IntIsOpen = 0;
-    private bool IsOpen
-    {
-      get
-      {
-        return IntIsOpen > 0 ? true : false;
-      }
-      set
-      {
-        Interlocked.Exchange(ref IntIsOpen, value ? 1 : 0);
-      }
-    }
-    private int IntReOpenDmeConnection = 0;
-    private bool ReOpenDmeConnection
-    {
-      get
-      {
-        return IntReOpenDmeConnection > 0 ? true : false;
-      }
-      set
-      {
-        Interlocked.Exchange(ref IntReOpenDmeConnection, value ? 1 : 0);
-      }
-    }
-
     private String HostOverride;
     private uint PortOverride;
 
@@ -71,7 +46,6 @@ namespace DistributedMatchEngine
     internal DMEConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
     {
       this.me = matchingEngine;
-      ConnectionCancelTokenSource = new CancellationTokenSource();
 
       if (host != null && host.Trim().Length != 0)
       {
@@ -80,55 +54,21 @@ namespace DistributedMatchEngine
       }
     }
 
-    // Need format for the http delimited message, which is JSON format.
-    // Chunched encoding is <size>\r\n, followed by the <data>+\r\n, then 0\r\n to end. Read until message end that way, send (buffer of chuncked sizes) to Deserializer.
-    // Same for other direction.
-
-    // HTTP Post would be better than raw writing here...
-    string GetString(ClientEdgeEvent clientEdgeEvent)
-    {
-      string jsonStr;
-      MemoryStream ms = new MemoryStream();
-      try
-      {
-        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ClientEdgeEvent), me.serializerSettings);
-        ms = new MemoryStream();
-        serializer.WriteObject(ms, clientEdgeEvent);
-        jsonStr = Util.StreamToString(ms);
-      }
-      catch (Exception e)
-      {
-        Log.E("Exception Message: " + e.Message);
-        Log.E("Exception Stack: " + e.StackTrace);
-        throw e;
-      }
-      return jsonStr;
-    }
-
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    void Close()
-    {
-      try
-      {
-        ConnectionCancelTokenSource.Cancel();
-      } catch (Exception e)
-      {
-        Log.E("Exception Closing DMEConnection. Message: " + e.Message);
-        Log.E("StackTrace: " + e.StackTrace);
-      }
-      IsOpen = false;
-    }
-
     // TODO: Throw and print some useful informative Exceptions.
     [MethodImpl(MethodImplOptions.Synchronized)]
     internal bool Open(string openEdgeEventsCookie)
     {
-      if (me.sessionCookie == null || openEdgeEventsCookie == null)
+      if (me.sessionCookie == null || me.sessionCookie.Equals(""))
       {
-        Log.D("Missing session or edge events cookie!");
+        Log.E("SessionCookie not present!");
         return false;
       }
-      Log.D("IsOpen: " + IsOpen);
+      if (openEdgeEventsCookie == null || openEdgeEventsCookie.Equals(""))
+      {
+        Log.E("EdgeEventsCookie not present!");
+        return false;
+      }
+
       if (!IsShutdown())
       {
         return true;
@@ -149,16 +89,6 @@ namespace DistributedMatchEngine
       streamClient = new MatchEngineApi.MatchEngineApiClient(channel);
 
       // Open a connection:
-      if (me.sessionCookie == null || me.sessionCookie.Equals(""))
-      {
-        Console.Error.WriteLine("SessionCookie not present!");
-        return false;
-      }
-      if (edgeEventsCoookie == null || edgeEventsCoookie.Equals(""))
-      {
-        Console.Error.WriteLine("EdgeEventsCookie not present!");
-        return false;
-      }
 
       ClientEdgeEvent clientEdgeEvent = new ClientEdgeEvent
       {
@@ -175,17 +105,21 @@ namespace DistributedMatchEngine
       {
         try
         {
-          Console.WriteLine("Write init message to server, with cancelToken: ");
+          Log.S("Write init message to server, with cancelToken: ");
           DuplexEventStream = streamClient.StreamEdgeEvent(
             cancellationToken: ConnectionCancelTokenSource.Token
           );
           await DuplexEventStream.RequestStream.WriteAsync(clientEdgeEvent);
-          Console.WriteLine("Now Listening to Events...");
-          IsOpen = true;
+          Log.D("Now Listening to Events...");
 
           while (await DuplexEventStream.ResponseStream.MoveNext())
           {
             me.InvokeEventBusReciever(DuplexEventStream.ResponseStream.Current);
+            if (DuplexEventStream.ResponseStream.Current.EventType == ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate)
+            {
+              me.DmeConnection.Close();
+              me.DmeConnection.Reconnect();
+            }
           }
           Log.D("DMEConnection loop has exited.");
         }
@@ -201,11 +135,16 @@ namespace DistributedMatchEngine
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
+    void Close()
+    {
+      SendTerminate().ConfigureAwait(false);
+      HostOverride = null; // Will use new DME on next connect.
+      PortOverride = 0;
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
     bool Reconnect()
     {
-      if (IsOpen) {
-        return false;
-      }
       if (!IsShutdown())
       {
         return false;
@@ -218,19 +157,31 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     public bool IsShutdown()
     {
+      if (ConnectionCancelTokenSource == null)
+      {
+        return true;
+      }
       if (ConnectionCancelTokenSource.IsCancellationRequested)
       {
         return true;
       }
-      return !IsOpen;
+      return false;
     }
 
     internal async Task<Boolean> Send(ClientEdgeEvent clientEdgeEvent)
     {
       try
       {
+        if (IsShutdown())
+        {
+          Log.E("Cannot send message over channel that is shutdown!");
+          return false;
+        }
+
         // The connection might still be connecting.
+        Log.D("Posting this message: " + clientEdgeEvent);
         await DuplexEventStream.RequestStream.WriteAsync(clientEdgeEvent).ConfigureAwait(false);
+        Log.D("Posted this message: " + clientEdgeEvent);
         return true;
       }
       catch (IOException ioe)
@@ -240,7 +191,7 @@ namespace DistributedMatchEngine
       return false;
     }
 
-    public async Task<Boolean> SendTerminate()
+    private async Task<Boolean> SendTerminate()
     {
 
       ClientEdgeEvent terminateEvent = new ClientEdgeEvent
@@ -256,13 +207,10 @@ namespace DistributedMatchEngine
 
     public async Task<bool> PostLocationUpdate(Loc location)
     {
+      Log.D("PostLocationUpdate()");
       if (location == null)
       {
-        return false;
-      }
-
-      if (IsShutdown())
-      {
+        Log.E("Cannot post null location!");
         return false;
       }
 
@@ -272,17 +220,13 @@ namespace DistributedMatchEngine
         GpsLocation = location
       };
 
-      return await Send(locationUpdate);
+      return await Send(locationUpdate).ConfigureAwait(false);
     }
 
     public async Task<bool> PostLatencyResult(Site site, Loc location)
     {
+      Log.D("PostLatencyResult()");
       if (location == null)
-      {
-        return false;
-      }
-
-      if (IsShutdown())
       {
         return false;
       }
@@ -303,12 +247,16 @@ namespace DistributedMatchEngine
         latencySamplesEvent.Samples.Add(entry);
       }
 
-      return await Send(latencySamplesEvent);
+      return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
     public void Dispose()
     {
-      ConnectionCancelTokenSource.Cancel();
+      // Attempt to cancel.
+      if (ConnectionCancelTokenSource != null && !ConnectionCancelTokenSource.IsCancellationRequested)
+      {
+        ConnectionCancelTokenSource.Cancel();
+      }
       streamClient = null;
       me = null;
     }

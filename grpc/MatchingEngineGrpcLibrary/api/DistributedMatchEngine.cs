@@ -303,7 +303,7 @@ namespace DistributedMatchEngine
      */
     public DMEConnection GetDMEConnection(string edgeEventCookie, string dmeHost = null, uint dmePort = 0)
     {
-      if (DmeConnection == null /*|| DmeConnection.IsShutdown()*/)
+      if (DmeConnection == null)
       {
         DmeConnection = new DMEConnection(this, dmeHost, dmePort);
       }
@@ -479,61 +479,6 @@ namespace DistributedMatchEngine
     {
       string proto = useSSL ? "https://" : "http://";
       return proto + host + ":" + port;
-    }
-
-    // FIXME: Remove deprecated.
-    private async Task<Stream> PostRequest(string uri, string jsonStr)
-    {
-      // FIXME: Choose network TBD (.Net Core 2.1)
-      
-      Log.S("URI: " + uri);
-      var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-      Log.D("Post Body: " + jsonStr);
-      HttpResponseMessage response = await httpClient.PostAsync(uri, stringContent).ConfigureAwait(false);
-
-      if (response == null)
-      {
-        throw new Exception("Null http response object!");
-      }
-
-      if (response.StatusCode != HttpStatusCode.OK)
-      {
-        /*
-        string responseBodyStr = response.Content.ReadAsStringAsync().Result;
-        JsonObject jsObj = (JsonObject)JsonValue.Parse(responseBodyStr);
-        string extendedErrorStr;
-        int errorCode;
-        if (jsObj.ContainsKey("message") && jsObj.ContainsKey("code"))
-        {
-          extendedErrorStr = jsObj["message"];
-          try
-          {
-            errorCode = jsObj["code"];
-          }
-          catch (FormatException)
-          {
-            errorCode = -1; // Bad code number format
-          }
-          throw new HttpException(extendedErrorStr, response.StatusCode, errorCode);
-        }
-        else
-        {
-          // Unknown error message format, throw exception with inner:
-          try
-          {
-            response.EnsureSuccessStatusCode();
-          }
-          catch (Exception e)
-          {
-            throw new HttpException(e.Message, response.StatusCode, -1, e);
-          }
-        }
-        */
-      }
-
-      // Normal path:
-      Stream replyStream = await response.Content.ReadAsStreamAsync();
-      return replyStream;
     }
 
     private static String ParseToken(String uri)
@@ -859,7 +804,8 @@ namespace DistributedMatchEngine
         throw new SessionCookieException("Unable to find session cookie. Please register client again");
       }
 
-      if (carrierName == null) {
+      if (carrierName == null)
+      {
         carrierName = GetCarrierName();
       }
 
