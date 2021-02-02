@@ -33,7 +33,6 @@ namespace DistributedMatchEngine
 {
   public class DMEConnection : IDisposable
   {
-    private bool IsOpen = false;
     private bool ReOpenDmeConnection = false;
 
     private String HostOverride;
@@ -49,8 +48,6 @@ namespace DistributedMatchEngine
 
     CancellationTokenSource cancelTokenSource;
 
-    Stream DmeConnectionStream = null;
-    Task readStreamTask;
 
     internal DMEConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
     {
@@ -121,95 +118,7 @@ namespace DistributedMatchEngine
         Log.E("Exception Closing DMEConnection. Message: " + e.Message);
         Log.E("StackTrace: " + e.StackTrace);
       }
-      {
-        IsOpen = false;
-      }
     }
-#if false
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    internal bool Open(string openEdgeEventsCookie)
-    {
-      if (me.sessionCookie == null || openEdgeEventsCookie == null)
-      {
-        Log.D("Missing session or edge events cookie!");
-        return false;
-      }
-      Log.D("IsOpen: " + IsOpen);
-      if (!IsShutdown())
-      {
-        return true;
-      }
-
-      string uri;
-      if (HostOverride == null || PortOverride == 0)
-      {
-        uri = me.CreateUri(me.GenerateDmeHostAddress(), MatchingEngine.defaultDmeRestPort);
-      }
-      else
-      {
-        uri = me.CreateUri(HostOverride, PortOverride);
-      }
-      uri += me.streamedgeeventAPI;
-
-
-      // Open a connection:
-      ClientEdgeEvent clientEdgeEvent = new ClientEdgeEvent
-      {
-        event_type = ClientEventType.EVENT_INIT_CONNECTION,
-        session_cookie = me.sessionCookie,
-        edge_events_cookie = openEdgeEventsCookie
-      };
-      // Stream Body listen loop:
-      string jsonStr = GetString(clientEdgeEvent);
-      var request = new HttpRequestMessage(HttpMethod.Post, uri);
-      request.Content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-      request.Headers.TransferEncodingChunked = true;
-
-      edgeEventsCoookie = openEdgeEventsCookie;
-      DmeHttpClient = new HttpClient();
-      DmeHttpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
-      DmeHttpClient.DefaultRequestHeaders.ConnectionClose = false; // Keep alive.
-
-      using (var response =
-        DmeHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).Result)
-      {
-        lock (this)
-        {
-          IsOpen = true;
-        }
-        Log.D("IsOpen: " + IsOpen);
-        int c;
-        using (var bodyStream = response.Content.ReadAsStreamAsync().Result)
-        {
-          // Parse the body:
-          // StreamReader is nonBlocking. We want to block on an bursty infinite stream.Read().
-          c = 0;
-          var sb = new StringBuilder();
-          while (bodyStream.CanRead)
-          {
-            // IF end of strema, it's -1;
-            int b = bodyStream.ReadByte();
-            int len = (int)b;
-            sb.Append(b);
-            if (len == 0)
-            {
-              // Server said no more chunks.
-              break;
-            }
-            Log.D("X: " + c++ + ": " + (char)b);
-            //var buffer = new char[len];
-            //int readChars = reader.ReadBlock(buffer, 0, len);
-            //var currentLine = new String(buffer, 0, readChars);
-            //Log.D("Line: " + currentLine);
-          }
-          string s = sb.ToString();
-          Log.D(s);
-
-        }
-      }
-      return true;
-    }
-#endif
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     internal bool Open(string openEdgeEventsCookie)
@@ -219,7 +128,6 @@ namespace DistributedMatchEngine
         Log.D("Missing session or edge events cookie!");
         return false;
       }
-      Log.D("IsOpen: " + IsOpen);
       if (!IsShutdown())
       {
         return true;
@@ -262,8 +170,6 @@ namespace DistributedMatchEngine
         using (var response =
          await DmeHttpClient.SendAsync(request))
         {
-          IsOpen = true;
-          Log.D("IsOpen: " + IsOpen);
           using (var stream = await response.Content.ReadAsStreamAsync())
           // Parse the body:
           // StreamReader is nonBlocking. We want to block on an bursty infinite stream.Read().
@@ -271,7 +177,7 @@ namespace DistributedMatchEngine
           {
             StringBuilder sb = new StringBuilder();
             
-            // Server MUST support HTTP/1.2 Server-Sent-Events. Otherwise, this will only get
+            // Server MUST support HTTP/1.1 Server-Sent-Events. Otherwise, this will only get
             // one event. GPRC-Gateway just says use GRPC, where it is HTTP/2 already.
             while (!reader.EndOfStream && !cancelTokenSource.IsCancellationRequested) 
             {
@@ -284,7 +190,6 @@ namespace DistributedMatchEngine
 
             }
             Console.WriteLine("XXX: Stream End reached.");
-            IsOpen = false; // Exit loop.
           }
         }
 
@@ -295,9 +200,6 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     bool Reconnect()
     {
-      if (IsOpen) {
-        return false;
-      }
       if (!IsShutdown())
       {
         return false;
@@ -310,16 +212,25 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     public bool IsShutdown()
     {
+      if (cancelTokenSource == null)
+      {
+        return true;
+      }
       if (cancelTokenSource.IsCancellationRequested)
       {
         return true;
       }
-      return !IsOpen;
+      return false;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     internal bool Send(ClientEdgeEvent clientEdgeEvent)
     {
+      if (IsShutdown())
+      {
+        Log.E("DMEConnection cannot send! It is shutdown");
+      }
+
       var jsonStr = GetString(clientEdgeEvent);
       if (jsonStr.Length == 0)
       {
@@ -422,11 +333,6 @@ namespace DistributedMatchEngine
         return false;
       }
 
-      if (IsShutdown())
-      {
-        return false;
-      }
-
       ClientEdgeEvent locationUpdate = new ClientEdgeEvent
       {
         event_type = ClientEventType.EVENT_LOCATION_UPDATE,
@@ -440,11 +346,6 @@ namespace DistributedMatchEngine
     public bool PostLatencyResult(Site site, Loc location)
     {
       if (location == null)
-      {
-        return false;
-      }
-
-      if (IsShutdown())
       {
         return false;
       }
