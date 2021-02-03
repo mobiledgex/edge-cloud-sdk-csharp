@@ -351,6 +351,7 @@ namespace MexGrpcSampleConsoleApp
               case ServerEdgeEvent.Types.ServerEventType.EventLatencyRequest:
                 // Console.WriteLine("Latency requested. Measuring latency \n");
 
+                // FIXME: This needs to be updated once a more official server lands.
                 IPAddress remoteIP = Dns.GetHostAddresses("127.0.0.1")[0];
                 IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, (int)dmePort);
                 // calculate min, max, and avg
