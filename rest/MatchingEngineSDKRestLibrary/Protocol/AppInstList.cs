@@ -123,8 +123,11 @@ namespace DistributedMatchEngine
     //! Status of an AppInstListReply
     public enum AIStatus
     {
+      [EnumMember]
       AI_UNDEFINED = 0,
+      [EnumMember]
       AI_SUCCESS = 1,
+      [EnumMember]
       AI_FAIL = 2
     }
 

@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Json;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
@@ -29,7 +28,11 @@ using System.Threading.Tasks;
 using DistributedMatchEngine.PerformanceMetrics;
 using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
-using System.Runtime.Serialization;
+using Grpc.Core;
+using Google.Protobuf.Collections;
+using static DistributedMatchEngine.FindCloudletReply.Types;
+using static DistributedMatchEngine.AppInstListReply.Types;
+using static DistributedMatchEngine.DynamicLocGroupRequest.Types;
 
 
 /*!
@@ -185,23 +188,23 @@ namespace DistributedMatchEngine
    * Main MobiledgeX SDK class. This class provides functions to find nearest cloudlet with the
    * developer's application instance deployed and to connect to that application instance.
    */
-  public partial class MatchingEngine
+  public partial class MatchingEngine : IDisposable
   { 
 
     public const string TAG = "MatchingEngine";
     private static HttpClient httpClient;
-    public const UInt32 defaultDmeRestPort = 38001;
+    public const uint defaultDmeGrpcPort = 50051;
     public const string carrierNameDefault = "wifi";
     public const string wifiCarrier = "wifi";
     public const string wifiOnlyDmeHost = wifiCarrier + "." + baseDmeHost; // Demo mode only.
     public const string baseDmeHost = "dme.mobiledgex.net";
 
-    UInt32 dmePort { get; set; } = defaultDmeRestPort; // HTTP REST port
+    public uint dmePort { get; set; } = defaultDmeGrpcPort; // GRPC port
 
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
-    public DeviceInfo deviceInfo { get; private set; }
+    public DeviceInfoApp deviceInfo { get; private set; } // FIXME: Field wrap GRPC DeviceInfo. Remove GetDeviceInfo()
     private MelMessagingInterface melMessaging { get; set; }
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
@@ -209,20 +212,8 @@ namespace DistributedMatchEngine
       UseSimpleDictionaryFormat = true
     };
 
-    // API Paths:
-    private string registerAPI = "/v1/registerclient";
-    private string verifylocationAPI = "/v1/verifylocation";
-    private string findcloudletAPI = "/v1/findcloudlet";
-    private string appinstlistAPI = "/v1/getappinstlist";
-    private string dynamiclocgroupAPI = "/v1/dynamiclocgroup";
-    private string getfqdnlistAPI = "/v1/getfqdnlist";
-    private string appofficialfqdnAPI = "/v1/getappofficialfqdn";
-    private string qospositionkpiAPI = "/v1/getqospositionkpi";
-    internal string streamedgeeventAPI = "/v1/streamedgeevent";
-
-    public const int DEFAULT_REST_TIMEOUT_MS = 10000;
-
-    private const bool EXPERIMENTAL_FEATURES = false;
+    public const int DEFAULT_GRPC_TIMEOUT_MS = 10000;
+    public TimeSpan GrpcTimeout = TimeSpan.FromMilliseconds(DEFAULT_GETCONNECTION_TIMEOUT_MS); 
 
     public bool useOnlyWifi { get; set; } = false;
     // Use SSL for DME.
@@ -230,14 +221,23 @@ namespace DistributedMatchEngine
 
     public string sessionCookie { get; set; }
     string tokenServerURI;
+    private bool disposedValue = false;
+
     string authToken { get; set; }
 
-    // Delegate for Events.
+    // For Event Consumers
     public delegate void EventBusDelegate(ServerEdgeEvent serverEdgeEvent);
-    public EventBusDelegate EventBusReciever { get; internal set; }
+    public event EventBusDelegate EventBusReciever;
+    public void InvokeEventBusReciever(ServerEdgeEvent serverEdgeEvent)
+    {
+      Log.D("EventBusReciever Message: " + serverEdgeEvent);
+      EventBusReciever.Invoke(serverEdgeEvent);
+    }
+
     public DMEConnection DmeConnection { get; internal set; }
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
+    public FindCloudletReply LastFindCloudletReply { get; private set; }
 
     /*!
      * Constructor for MatchingEngine class.
@@ -248,10 +248,10 @@ namespace DistributedMatchEngine
      * \section meconstructorexample Example
      * \snippet RestSample.cs meconstructorexample
      */
-    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null, DeviceInfo deviceInfo = null)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null, DeviceInfoApp deviceInfo = null)
     {
       httpClient = new HttpClient();
-      httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
+      httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_GRPC_TIMEOUT_MS);
       if (carrierInfo == null)
       {
         this.carrierInfo = new EmptyCarrierInfo();
@@ -294,7 +294,7 @@ namespace DistributedMatchEngine
       // Setup a dummy event delegate for monitoring events:
       EventBusReciever += (ServerEdgeEvent serverEdgeEvent) =>
       {
-        Log.D("MatchingEngine EdgeEvent Notice: " + serverEdgeEvent.event_type);
+        Log.D("MatchingEngine EdgeEvent Notice: " + serverEdgeEvent.EventType);
       };
     }
 
@@ -303,10 +303,6 @@ namespace DistributedMatchEngine
      */
     public DMEConnection GetDMEConnection(string edgeEventCookie, string dmeHost = null, uint dmePort = 0)
     {
-      if (!EXPERIMENTAL_FEATURES)
-      {
-        return null;
-      }
       if (DmeConnection == null)
       {
         DmeConnection = new DMEConnection(this, dmeHost, dmePort);
@@ -363,7 +359,7 @@ namespace DistributedMatchEngine
       {
         return httpClient.Timeout = TimeSpan.FromMilliseconds(timeout_in_milliseconds);
       }
-      return httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
+      return httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_GRPC_TIMEOUT_MS);
     }
 
     /*!
@@ -485,57 +481,6 @@ namespace DistributedMatchEngine
       return proto + host + ":" + port;
     }
 
-    private async Task<Stream> PostRequest(string uri, string jsonStr)
-    {
-      // FIXME: Choose network TBD (.Net Core 2.1)
-      Log.S("URI: " + uri);
-      var stringContent = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-      Log.D("Post Body: " + jsonStr);
-      HttpResponseMessage response = await httpClient.PostAsync(uri, stringContent).ConfigureAwait(false);
-
-      if (response == null)
-      {
-        throw new Exception("Null http response object!");
-      }
-
-      if (response.StatusCode != HttpStatusCode.OK)
-      {
-        string responseBodyStr = response.Content.ReadAsStringAsync().Result;
-        JsonObject jsObj = (JsonObject)JsonValue.Parse(responseBodyStr);
-        string extendedErrorStr;
-        int errorCode;
-        if (jsObj.ContainsKey("message") && jsObj.ContainsKey("code"))
-        {
-          extendedErrorStr = jsObj["message"];
-          try
-          {
-            errorCode = jsObj["code"];
-          }
-          catch (FormatException)
-          {
-            errorCode = -1; // Bad code number format
-          }
-          throw new HttpException(extendedErrorStr, response.StatusCode, errorCode);
-        }
-        else
-        {
-          // Unknown error message format, throw exception with inner:
-          try
-          {
-            response.EnsureSuccessStatusCode();
-          }
-          catch (Exception e)
-          {
-            throw new HttpException(e.Message, response.StatusCode, -1, e);
-          }
-        }
-      }
-
-      // Normal path:
-      Stream replyStream = await response.Content.ReadAsStreamAsync();
-      return replyStream;
-    }
-
     private static String ParseToken(String uri)
     {
       string[] uriandparams = uri.Split('?');
@@ -622,7 +567,60 @@ namespace DistributedMatchEngine
 
       return token;
     }
-    
+
+    internal void CopyTagField(MapField<string,string> dest, Dictionary<string, string> src)
+    {
+      if (dest == null)
+      {
+        return;
+      }
+
+      if (src == null)
+      {
+        return;
+      }
+
+      foreach(var entry in src)
+      {
+        dest.Add(entry.Key, entry.Value);
+      }
+    }
+
+    internal void CopyTagField(MapField<string, string> dest, MapField<string, string> src)
+    {
+      if (dest == null)
+      {
+        return;
+      }
+
+      if (src == null)
+      {
+        return;
+      }
+
+      foreach (var entry in src)
+      {
+        dest.Add(entry.Key, entry.Value);
+      }
+    }
+
+    internal Channel ChannelPicker(string host, uint port)
+    {
+      Channel channel;
+
+      if (!useSSL)
+      {
+        Log.E("Creating an INSECURE GRPC channel: " + "Host: " + host + ", Port: " + port);
+        channel = new Channel(host, (int)port, ChannelCredentials.Insecure);
+      }
+      else
+      {
+        channel = new Channel(host, (int)port, new SslCredentials());
+      }
+
+      return channel;
+    }
+
     /*!
      * \anchor RegisterClient
      * Creates the RegisterClientRequest object that will be used in the RegisterClient function.The RegisterClientRequest object wraps the parameters that have been provided to this function. 
@@ -639,37 +637,34 @@ namespace DistributedMatchEngine
      * \section createregisterexample Example
      * \snippet RestSample.cs createregisterexample
      */
-    public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null)
+    public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = "",
+      UInt32 cellID = 0, string uniqueIDType = "", string uniqueID = "", Dictionary<string, string> tags = null)
     {
-      return new RegisterClientRequest
+      var request = new RegisterClientRequest
       {
-        ver = 1,
-        org_name = orgName,
-        app_name = appName,
-        app_vers = appVersion,
-        auth_token = authToken,
-        cell_id = cellID,
-        unique_id_type = uniqueIDType,
-        unique_id = uniqueID,
-        tags = tags
+        Ver = 1,
+        OrgName = orgName,
+        AppName = appName,
+        AppVers = appVersion,
+        CellId = cellID
       };
-    }
 
-    private ReplyStatus ParseReplyStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      ReplyStatus replyStatus;
-      try
+      if (authToken != null && !authToken.Trim().Equals(""))
       {
-        replyStatus = (ReplyStatus)Enum.Parse(typeof(ReplyStatus), jsObj[key]);
+        request.AuthToken = authToken;
       }
-      catch
+      if (uniqueID != null && !uniqueID.Trim().Equals(""))
       {
-        replyStatus = ReplyStatus.RS_UNDEFINED;
+        request.UniqueId = uniqueID;
       }
-      return replyStatus;
+      if (uniqueIDType != null && !uniqueIDType.Trim().Equals(""))
+      {
+        request.UniqueIdType = uniqueIDType;
+      }
+
+      CopyTagField(request.Tags, tags);
+
+      return request;
     }
 
     /*!
@@ -686,7 +681,7 @@ namespace DistributedMatchEngine
      */
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
-      return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+      return await RegisterClient(GenerateDmeHostAddress(), dmePort, request);
     }
 
     private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
@@ -698,15 +693,15 @@ namespace DistributedMatchEngine
 
       if (uid != null && uid != "")
       {
-        request.unique_id_type = "Samsung:" + aUniqueIdType + ":SamsungEnablingLayer";
-        request.unique_id = melMessaging.GetUid();
+        request.UniqueIdType = "Samsung:" + aUniqueIdType + ":SamsungEnablingLayer";
+        request.UniqueId = melMessaging.GetUid();
       }
       else if (manufacturer != null &&
         aUniqueIdType != null && aUniqueIdType.Length > 0 &&
         aUniqueId != null && aUniqueId.Length > 0)
       {
-        request.unique_id_type = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
-        request.unique_id = aUniqueId;
+        request.UniqueIdType = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
+        request.UniqueId = aUniqueId;
       }
 
       return request;
@@ -721,19 +716,7 @@ namespace DistributedMatchEngine
         return request;
       }
 
-      if (request.tags == null)
-      {
-        request.tags = new Dictionary<string, string>();
-      }
-
-      foreach (KeyValuePair<string, string> pair in dict)
-      {
-        if (pair.Key != null && pair.Value != null)
-        {
-          Log.D("XXX Tags Dictonary Add Key: " + pair.Key + ", Value: " + pair.Value);
-          request.tags.Add(pair.Key, pair.Value);
-        }
-      }
+      CopyTagField(request.Tags, dict);
 
       return request;
     }
@@ -750,82 +733,55 @@ namespace DistributedMatchEngine
      */
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
     {
+
       RegisterClientRequest oldRequest = request;
       // Whether or not MEL is enabled, if UID is there, include it for App registration.
       request = new RegisterClientRequest()
       {
-        ver = oldRequest.ver,
-        org_name = oldRequest.org_name,
-        app_name = oldRequest.app_name,
-        app_vers = oldRequest.app_vers,
-        auth_token = oldRequest.auth_token,
-        cell_id = oldRequest.cell_id,
-        tags = oldRequest.tags
+        Ver = oldRequest.Ver,
+        OrgName = oldRequest.OrgName,
+        AppName = oldRequest.AppName,
+        AppVers = oldRequest.AppVers,
+        AuthToken = oldRequest.AuthToken,
+        CellId = oldRequest.CellId
       };
+      CopyTagField(oldRequest.Tags, request.Tags);
 
       // MEL Enablement:
       request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
-      if (request.tags != null)
-      {
-        request.htags = Tag.DictionaryToHashtable(request.tags);
-      }
-      // Debug Log Serialization issues:
-      Log.D("XXX  Pre Serialize: Request Reference" + request);
-      Log.D("XXX  Pre Serialize OrgName: " + request.org_name + ", " + "AppName: " + request.app_name + ", AppVer: " + request.app_vers);
-      Log.D("XXX  Pre Serialize AuthToken: " + request.auth_token + ", " + "CellID: " + request.cell_id + ", Ver: " + request.ver);
-      Log.D("XXX  Pre Serialize Tag Reference: " + request.tags);
-      if (request.tags != null) {
-        Log.D("XXX  Pre Serialize Tags Count: " + request.tags.Count);
-      }
 
-      string jsonStr = "";
-      MemoryStream ms = new MemoryStream();
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
+
       try
       {
-        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterClientRequest), serializerSettings);
-        ms = new MemoryStream();
-        serializer.WriteObject(ms, request);
-        jsonStr = Util.StreamToString(ms);
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
+
+        var call = client.RegisterClientAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
+
+        this.sessionCookie = reply.SessionCookie;
+        this.tokenServerURI = reply.TokenServerUri;
+
+        if (reply.Status == ReplyStatus.RsSuccess)
+        {
+          LastRegisterClientRequest = request; // Update last request.
+        }
+
+        return reply;
+
       }
       catch (Exception e)
       {
-        // This is critical enough to always print and re-throw, due to potential serialization issues.
-        Log.E("Exception Message: " + e.Message);
-        Log.E("Exception Stack: " + e.StackTrace);
+        Console.WriteLine("Exception hit on Register: " + e.Message);
         throw e;
       }
-
-      Stream responseStream = await PostRequest(CreateUri(host, port) + registerAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
-
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
-      string responseStr = Util.StreamToString(responseStream);
-      Log.D("Response: " + responseStr);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      RegisterClientReply reply = (RegisterClientReply)deserializer.ReadObject(ms);
-
-      if (reply.tags == null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
-
-      this.sessionCookie = reply.session_cookie;
-      this.tokenServerURI = reply.token_server_uri;
-
-      // Some platforms won't parse emums with same library binary.
-      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
-
-      if (reply.status == ReplyStatus.RS_SUCCESS)
-      {
-        LastRegisterClientRequest = request; // Update last request.
-      }
-
-      return reply;
     }
 
     /*!
@@ -848,74 +804,26 @@ namespace DistributedMatchEngine
         throw new SessionCookieException("Unable to find session cookie. Please register client again");
       }
 
-      if (carrierName == null) {
+      if (carrierName == null)
+      {
         carrierName = GetCarrierName();
       }
 
-      return new FindCloudletRequest
+      var request = new FindCloudletRequest
       {
-        session_cookie = this.sessionCookie,
-        gps_location = loc,
-        carrier_name = carrierName,
-        cell_id = cellID,
-        tags = tags
+        SessionCookie = this.sessionCookie,
+        GpsLocation = loc,
+        CarrierName = carrierName,
+        CellId = cellID,
       };
-    }
-
-    private AppOfficialFqdnReply.AOFStatus ParseAofStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      AppOfficialFqdnReply.AOFStatus status;
-      try
+      if (tags != null)
       {
-        status = (AppOfficialFqdnReply.AOFStatus)Enum.Parse(typeof(AppOfficialFqdnReply.AOFStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED;
-      }
-      return status;
-    }
-
-    private FindCloudletReply.FindStatus ParseFindStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      FindCloudletReply.FindStatus status;
-      try
-      {
-        status = (FindCloudletReply.FindStatus)Enum.Parse(typeof(FindCloudletReply.FindStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = FindCloudletReply.FindStatus.FIND_UNKNOWN;
-      }
-      return status;
-    }
-
-    private AppPort[] ParseAppPortTypes(AppPort[] appports, string responseStr)
-    {
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      JsonArray ports;
-
-      if (jsObj.ContainsKey("ports"))
-      {
-        ports = (JsonArray)jsObj["ports"];
-        for (int i = 0; i < ports.Count; i++)
+        foreach (var entry in tags)
         {
-          try
-          {
-            JsonValue jval = ports[i];
-            appports[i].proto = (LProto)Enum.Parse(typeof(LProto), jval["proto"]);
-          }
-          catch
-          {
-            appports[i].proto = LProto.L_PROTO_UNKNOWN;
-          }
+          request.Tags.Add(entry.Key, entry.Value);
         }
       }
-      return appports;
+      return request;
     }
 
     /*!
@@ -933,110 +841,82 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      return await FindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort, request, mode);
+      return await FindCloudlet(GenerateDmeHostAddress(), dmePort, request, mode);
     }
 
     private async Task<FindCloudletReply> FindCloudletMelMode(string host, uint port, FindCloudletRequest request)
     {
       AppOfficialFqdnRequest appOfficialFqdnRequest = new AppOfficialFqdnRequest
       {
-        ver = 1,
-        session_cookie = request.session_cookie,
-        gps_location = request.gps_location,
-        htags = Tag.DictionaryToHashtable(request.tags)
+        Ver = 1,
+        SessionCookie = request.SessionCookie,
+        GpsLocation = request.GpsLocation
       };
+      CopyTagField(appOfficialFqdnRequest.Tags, request.Tags);
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, appOfficialFqdnRequest);
-      string jsonStr = Util.StreamToString(ms);
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + appofficialfqdnAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
+      var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnReply), serializerSettings);
-      AppOfficialFqdnReply reply = (AppOfficialFqdnReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
-
-      // Reparse if default value.
-      reply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED ? ParseAofStatus(responseStr) : reply.status;
+      var call = client.GetAppOfficialFqdnAsync(
+        appOfficialFqdnRequest,
+        new CallOptions()
+          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+      );
+      var responseTask = call.ResponseAsync.ConfigureAwait(false);
+      var appOfficialFqdnReply = await responseTask;
 
       // Inform Mel Messaging:
       if (melMessaging.IsMelEnabled() && LastRegisterClientRequest != null)
       {
-        melMessaging.SetToken(reply.client_token, LastRegisterClientRequest.app_name);
+        melMessaging.SetToken(appOfficialFqdnReply.ClientToken, LastRegisterClientRequest.AppName);
       }
 
-      AppPort[] ports = null;
-      if (reply.ports != null && reply.ports.Length > 0)
+      if (appOfficialFqdnReply.Ports != null && appOfficialFqdnReply.Ports.Count > 0)
       {
-        ports = reply.ports;
-        foreach (AppPort aPort in ports)
+        foreach (AppPort aPort in appOfficialFqdnReply.Ports)
         {
-          aPort.public_port = aPort.public_port == 0 ? aPort.internal_port : aPort.public_port;
+          aPort.PublicPort = aPort.PublicPort == 0 ? aPort.InternalPort : aPort.PublicPort;
         }
       }
       else
       {
         // attach empty 0 port, indicating app must determine it's own public port.
-        ports = new AppPort[1];
+        appOfficialFqdnReply.Ports.Add(new AppPort[1]);
       }
 
       // Repackage as FindCloudletReply:
       FindCloudletReply fcReply = new FindCloudletReply
       {
-        ver = 1,
-        fqdn = reply.app_official_fqdn,
+        Ver = 1,
+        Fqdn = appOfficialFqdnReply.AppOfficialFqdn,
         // Don't set location.
-        ports = ports
       };
-
-      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.FIND_FOUND : FindCloudletReply.FindStatus.FIND_NOTFOUND;
+      foreach(var aPort in appOfficialFqdnReply.Ports)
+      {
+        fcReply.Ports.Add(aPort);
+      }
 
       return fcReply;
     }
 
     private async Task<FindCloudletReply> FindCloudletProximityMode(string host, uint port, FindCloudletRequest request)
     {
-      request.htags = Tag.DictionaryToHashtable(request.tags);
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FindCloudletRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
+      var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + findcloudletAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
+      var call = client.FindCloudletAsync(
+        request,
+        new CallOptions()
+          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+      );
 
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply), serializerSettings);
-      FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(ms);
-      if (reply.tags != null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
+      var findCloudletReply = await call.ResponseAsync.ConfigureAwait(false);
 
-      // Reparse if default value.
-      reply.status = reply.status == FindCloudletReply.FindStatus.FIND_UNKNOWN ? ParseFindStatus(responseStr) : reply.status;
-
-      // Port has an emum to reparse if set to default as well:
-      ParseAppPortTypes(reply.ports, responseStr);
-
-      return reply;
+      return findCloudletReply;
     }
 
     // Helper function for FindCloudlet
@@ -1044,23 +924,28 @@ namespace DistributedMatchEngine
     {
       Appinstance appinstance = site.appInst;
 
-      return new FindCloudletReply
+      var fcReply = new FindCloudletReply
       {
-        ver = reply.ver,
-        status = reply.status,
-        fqdn = appinstance.fqdn,
-        ports = appinstance.ports,
-        cloudlet_location = site.cloudletLocation,
-        tags = reply.tags
+        Ver = reply.Ver,
+        Status = reply.Status,
+        Fqdn = appinstance.Fqdn,
+        CloudletLocation = site.cloudletLocation
       };
+
+      if (appinstance.Ports != null)
+      {
+        fcReply.Ports.AddRange(appinstance.Ports);
+      }
+      CopyTagField(fcReply.Tags, reply.Tags);
+      return reply;
     }
 
     private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
     {
       NetTest.Site site = new NetTest.Site(numSamples: numSamples);
 
-      int port = appPort.public_port;
-      string host = appPort.fqdn_prefix + appinstance.fqdn;
+      int port = appPort.PublicPort;
+      string host = appPort.FqdnPrefix + appinstance.Fqdn;
 
       site.L7Path = host + ":" + port;
       site.appInst = appinstance;
@@ -1072,8 +957,8 @@ namespace DistributedMatchEngine
     {
       NetTest.Site site = new NetTest.Site(numSamples: numSamples);
 
-      site.host = appPort.fqdn_prefix + appinstance.fqdn;
-      site.port = appPort.public_port;
+      site.host = appPort.FqdnPrefix + appinstance.Fqdn;
+      site.port = appPort.PublicPort;
 
       site.appInst = appinstance;
       site.cloudletLocation = cloudletLocation;
@@ -1084,8 +969,8 @@ namespace DistributedMatchEngine
     {
       NetTest.Site site = new NetTest.Site(testType: NetTest.TestType.PING, numSamples: numSamples);
 
-      site.host = appPort.fqdn_prefix + appinstance.fqdn;
-      site.port = appPort.public_port;
+      site.host = appPort.FqdnPrefix + appinstance.Fqdn;
+      site.port = appPort.PublicPort;
 
       site.appInst = appinstance;
       site.cloudletLocation = cloudletLocation;
@@ -1097,24 +982,24 @@ namespace DistributedMatchEngine
     {
       List<NetTest.Site> sites = new List<NetTest.Site>();
 
-      foreach (CloudletLocation cloudlet in reply.cloudlets)
+      foreach (CloudletLocation cloudlet in reply.Cloudlets)
       {
-        foreach (Appinstance appinstance in cloudlet.appinstances)
+        foreach (Appinstance appinstance in cloudlet.Appinstances)
         {
-          AppPort appPort = appinstance.ports[0];
+          AppPort appPort = appinstance.Ports[0];
 
-          switch (appPort.proto)
+          switch (appPort.Proto)
           {
-            case LProto.L_PROTO_TCP:
-              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
+            case LProto.Tcp:
+              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
               break;
 
-            case LProto.L_PROTO_UDP:
-              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
+            case LProto.Udp:
+              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
               break;
 
             default:
-              Log.E("Unsupported protocol " + appPort.proto + " found when trying to create sites for NetTest");
+              Log.E("Unsupported protocol " + appPort.Proto + " found when trying to create sites for NetTest");
               break;
           }
         }
@@ -1148,11 +1033,11 @@ namespace DistributedMatchEngine
         {
           return null;
         }
-        if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+        if (melModeFindCloudletReply.Status == FindStatus.FindFound)
         {
-          DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
+          DmeConnection = GetDMEConnection(melModeFindCloudletReply.EdgeEventsCookie, host, port);
         }
-        string appOfficialFqdn = melModeFindCloudletReply.fqdn;
+        string appOfficialFqdn = melModeFindCloudletReply.Fqdn;
 
         IPHostEntry ipHostEntry;
         Stopwatch stopwatch = Stopwatch.StartNew();
@@ -1169,6 +1054,7 @@ namespace DistributedMatchEngine
             if (ipHostEntry.AddressList.Length > 0)
             {
               Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
+              LastFindCloudletReply = melModeFindCloudletReply;
               return melModeFindCloudletReply;
             }
           }
@@ -1203,10 +1089,11 @@ namespace DistributedMatchEngine
       }
 
       // TODO: Refactor.
-      if (fcReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+      if (fcReply.Status == FindStatus.FindFound)
       {
-        DmeConnection = GetDMEConnection(fcReply.edge_events_cookie, host, port);
+        DmeConnection = GetDMEConnection(fcReply.EdgeEventsCookie, host, port);
       }
+      LastFindCloudletReply = fcReply;
       return fcReply;
     }
 
@@ -1215,7 +1102,7 @@ namespace DistributedMatchEngine
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
-      if (fcReply.status != FindCloudletReply.FindStatus.FIND_FOUND)
+      if (fcReply.Status != FindStatus.FindFound)
       {
         return fcReply;
       }
@@ -1225,15 +1112,12 @@ namespace DistributedMatchEngine
       Dictionary<string, string> tags = new Dictionary<string, string>();
       tags["Buffer"] = bytes.ToString();
 
-      AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.gps_location, request.carrier_name, tags: tags);
+      AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.GpsLocation, request.CarrierName, tags: tags);
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
-      if (aiReply.tags == null)
+
+      if (aiReply.Status != AIStatus.AiSuccess)
       {
-        aiReply.tags = Tag.HashtableToDictionary(aiReply.htags);
-      }
-      if (aiReply.status != AppInstListReply.AIStatus.AI_SUCCESS)
-      {
-        throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.status);
+        throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.Status);
       }
 
       NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply);
@@ -1280,7 +1164,7 @@ namespace DistributedMatchEngine
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort,
+      return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), dmePort,
         orgName, appName, appVersion, loc,
         carrierName, authToken, cellID, uniqueIDType, uniqueID, tags, mode);
     }
@@ -1304,7 +1188,7 @@ namespace DistributedMatchEngine
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
-       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
+       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = "", 
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
@@ -1317,14 +1201,12 @@ namespace DistributedMatchEngine
         uniqueIDType: uniqueIDType,
         uniqueID: uniqueID,
         tags: tags);
-      RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
-      if (registerClientReply.tags == null)
+      RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest)
+        .ConfigureAwait(false);
+
+      if (registerClientReply.Status != ReplyStatus.RsSuccess)
       {
-        registerClientReply.tags = Tag.HashtableToDictionary(registerClientReply.htags);
-      }
-      if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
-      {
-        throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
+        throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.Status);
       }
       // Find Cloudlet 
       FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(
@@ -1332,11 +1214,9 @@ namespace DistributedMatchEngine
         carrierName: carrierName,
         cellID: cellID,
         tags: tags);
-      FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode);
-      if (findCloudletReply.tags == null)
-      {
-        findCloudletReply.tags = Tag.HashtableToDictionary(findCloudletReply.htags);
-      }
+      FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode)
+        .ConfigureAwait(false);
+
 
       return findCloudletReply;
     }
@@ -1363,48 +1243,18 @@ namespace DistributedMatchEngine
         carrierName = GetCarrierName();
       }
 
-      return new VerifyLocationRequest
+      var request = new VerifyLocationRequest
       {
-        ver = 1,
-        session_cookie = this.sessionCookie,
-        gps_location = loc,
-        carrier_name = carrierName,
-        verify_loc_token = null,
-        cell_id = cellID,
-        tags = tags
+        Ver = 1,
+        SessionCookie = this.sessionCookie,
+        GpsLocation = loc,
+        CarrierName = carrierName,
+        CellId = cellID,
       };
-    }
 
-    private VerifyLocationReply.TowerStatus ParseTowerStatus(string responseStr)
-    {
-      string key = "tower_status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      VerifyLocationReply.TowerStatus status;
-      try
-      {
-        status = (VerifyLocationReply.TowerStatus)Enum.Parse(typeof(VerifyLocationReply.TowerStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = VerifyLocationReply.TowerStatus.TOWER_UNKNOWN;
-      }
-      return status;
-    }
+      CopyTagField(request.Tags, tags);
 
-    private VerifyLocationReply.GPSLocationStatus ParseGpsLocationStatus(string responseStr)
-    {
-      string key = "gps_location_status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      VerifyLocationReply.GPSLocationStatus status;
-      try
-      {
-        status = (VerifyLocationReply.GPSLocationStatus)Enum.Parse(typeof(VerifyLocationReply.GPSLocationStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = VerifyLocationReply.GPSLocationStatus.LOC_UNKNOWN;
-      }
-      return status;
+      return request;
     }
 
     /*!
@@ -1419,7 +1269,7 @@ namespace DistributedMatchEngine
      */
     public async Task<VerifyLocationReply> VerifyLocation(VerifyLocationRequest request)
     {
-      return await VerifyLocation(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+      return await VerifyLocation(GenerateDmeHostAddress(), dmePort, request);
     }
 
     /*!
@@ -1435,36 +1285,20 @@ namespace DistributedMatchEngine
     public async Task<VerifyLocationReply> VerifyLocation(string host, uint port, VerifyLocationRequest request)
     {
       string token = RetrieveToken(tokenServerURI);
-      request.verify_loc_token = token;
-      request.htags = Tag.DictionaryToHashtable(request.tags);
+      request.VerifyLocToken = token;
 
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(VerifyLocationRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + verifylocationAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
+      var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(VerifyLocationReply), serializerSettings);
-      VerifyLocationReply reply = (VerifyLocationReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
-
-      // Reparse if default value is set.
-      reply.tower_status = reply.tower_status == VerifyLocationReply.TowerStatus.TOWER_UNKNOWN ?
-        ParseTowerStatus(responseStr) : reply.tower_status;
-      reply.gps_location_status = reply.gps_location_status == VerifyLocationReply.GPSLocationStatus.LOC_UNKNOWN ?
-        ParseGpsLocationStatus(responseStr) : reply.gps_location_status;
-
+      var call = client.VerifyLocationAsync(
+        request,
+        new CallOptions()
+          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+      );
+      var responseTask = call.ResponseAsync.ConfigureAwait(false);
+      var reply = await responseTask;
       return reply;
     }
 
@@ -1495,31 +1329,17 @@ namespace DistributedMatchEngine
         carrierName = GetCarrierName();
       }
 
-      return new AppInstListRequest
+      var request = new AppInstListRequest
       {
-        ver = 1,
-        session_cookie = this.sessionCookie,
-        gps_location = loc,
-        carrier_name = carrierName,
-        cell_id = cellID,
-        tags = tags
+        Ver = 1,
+        SessionCookie = this.sessionCookie,
+        GpsLocation = loc,
+        CarrierName = carrierName,
+        CellId = cellID
       };
-    }
+      CopyTagField(request.Tags, tags);
 
-    private AppInstListReply.AIStatus ParseAIStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      AppInstListReply.AIStatus status;
-      try
-      {
-        status = (AppInstListReply.AIStatus)Enum.Parse(typeof(AppInstListReply.AIStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = AppInstListReply.AIStatus.AI_UNDEFINED;
-      }
-      return status;
+      return request;
     }
 
     /*!
@@ -1534,7 +1354,7 @@ namespace DistributedMatchEngine
      */
     public async Task<AppInstListReply> GetAppInstList(AppInstListRequest request)
     {
-      return await GetAppInstList(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+      return await GetAppInstList(GenerateDmeHostAddress(), dmePort, request);
     }
 
     /*!
@@ -1549,30 +1369,18 @@ namespace DistributedMatchEngine
      */
     public async Task<AppInstListReply> GetAppInstList(string host, uint port, AppInstListRequest request)
     {
-      request.htags = Tag.DictionaryToHashtable(request.tags);
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppInstListRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + appinstlistAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
+      var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppInstListReply), serializerSettings);
-      AppInstListReply reply = (AppInstListReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
-
-      // reparse if undefined.
-      reply.status = reply.status == AppInstListReply.AIStatus.AI_UNDEFINED ? ParseAIStatus(responseStr) : reply.status;
+      var call = client.GetAppInstListAsync(
+        request,
+        new CallOptions()
+          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+      );
+      var responseTask = call.ResponseAsync.ConfigureAwait(false);
+      var reply = await responseTask;
 
       return reply;
     }
@@ -1597,16 +1405,19 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      return new QosPositionRequest
+      var request = new QosPositionRequest
       {
-        ver = 1,
-        positions = QosPositions.ToArray(),
-        session_cookie = this.sessionCookie,
-        lte_category = lteCategory,
-        band_selection = bandSelection,
-        cell_id = cellID,
-        tags = tags
+        Ver = 1,
+        SessionCookie = this.sessionCookie,
+        LteCategory = lteCategory,
+        BandSelection = bandSelection,
+        CellId = cellID
       };
+
+      request.Positions.AddRange(QosPositions);
+      CopyTagField(request.Tags, tags);
+
+      return request;
     }
 
     /*!
@@ -1616,10 +1427,23 @@ namespace DistributedMatchEngine
      * \return Task<QosPositionKpiStream>
      * \section getqospositionexample Example
      * \snippet RestSample.cs getqospositionexample
+     *
+     * Here's how to use it (and the channel needs to survive to read from the stream)
+     *
+     * var objectStream = qosReply.ResponseStream;
+     * while (await qosReply.MoveNext())
+     * {
+     *   foreach (var result in objectStream.Current.PositionResults)
+     *   {
+     *     Log.D("Latency Result: " + result.ToString());
+     *   }
+     * }
      */
-    public async Task<QosPositionKpiStream> GetQosPositionKpi(QosPositionRequest request)
+    public AsyncServerStreamingCall<QosPositionKpiReply> GetQosPositionKpi(QosPositionRequest request)
     {
-      return await GetQosPositionKpi(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+      var qosReply = GetQosPositionKpi(GenerateDmeHostAddress(), defaultDmeGrpcPort, request);
+
+      return qosReply;
     }
 
     /*!
@@ -1632,23 +1456,20 @@ namespace DistributedMatchEngine
      * \section getqospositionoverloadexample Example
      * \snippet RestSample.cs getqospositionoverloadexample
      */
-    public async Task<QosPositionKpiStream> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
+    public AsyncServerStreamingCall<QosPositionKpiReply> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
     {
-      request.htags = Tag.DictionaryToHashtable(request.tags);
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPositionRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + qospositionkpiAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead || responseStream.Length == 0)
-      {
-        return null;
-      }
+      var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      var qosPositionKpiStream = new QosPositionKpiStream(responseStream);
+      var reply = client.GetQosPositionKpi(
+        request,
+        new CallOptions()
+          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+      );
 
-      return qosPositionKpiStream;
+      return reply;
     }   
 
     private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
@@ -1658,60 +1479,37 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      return new FqdnListRequest
+      var request = new FqdnListRequest
       {
-        ver = 1,
-        session_cookie = this.sessionCookie,
-        cell_id = cellID,
-        tags = tags
+        Ver = 1,
+        SessionCookie = this.sessionCookie,
+        CellId = cellID
       };
-    }
+      CopyTagField(request.Tags, tags);
 
-    private FqdnListReply.FLStatus ParseFLStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      FqdnListReply.FLStatus status;
-      try
-      {
-        status = (FqdnListReply.FLStatus)Enum.Parse(typeof(FqdnListReply.FLStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = FqdnListReply.FLStatus.FL_UNDEFINED;
-      }
-      return status;
+      return request;
+
     }
 
     private async Task<FqdnListReply> GetFqdnList(FqdnListRequest request)
     {
-      return await GetFqdnList(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+      return await GetFqdnList(GenerateDmeHostAddress(), defaultDmeGrpcPort, request);
     }
 
     private async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
     {
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FqdnListRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + getfqdnlistAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
+      var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FqdnListReply), serializerSettings);
-      FqdnListReply reply = (FqdnListReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
-
-      reply.status = reply.status == FqdnListReply.FLStatus.FL_UNDEFINED ? ParseFLStatus(responseStr) : reply.status;
+      var call = client.GetFqdnListAsync(
+        request,
+        new CallOptions()
+          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+      );
+      var responseTask = call.ResponseAsync.ConfigureAwait(false);
+      var reply = await responseTask;
 
       return reply;
     }
@@ -1724,50 +1522,82 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      return new DynamicLocGroupRequest
+      var request = new DynamicLocGroupRequest
       {
-        ver = 1,
-        session_cookie = this.sessionCookie,
-        comm_type = dlgCommType,
-        lg_id = lgId,
-        user_data = userData,
-        cell_id = cellID,
-        tags = tags
+        Ver = 1,
+        SessionCookie = this.sessionCookie,
+        CommType = dlgCommType,
+        LgId = lgId,
+        UserData = userData,
+        CellId = cellID
       };
+
+      CopyTagField(request.Tags, tags);
+      return request;
     }
 
     private async Task<DynamicLocGroupReply> AddUserToGroup(DynamicLocGroupRequest request)
     {
-      return await AddUserToGroup(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+      return await AddUserToGroup(GenerateDmeHostAddress(), defaultDmeGrpcPort, request);
     }
 
     private async Task<DynamicLocGroupReply> AddUserToGroup(string host, uint port, DynamicLocGroupRequest request)
     {
-      request.htags = Tag.DictionaryToHashtable(request.tags);
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DynamicLocGroupRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, request);
-      string jsonStr = Util.StreamToString(ms);
+      // One time use Channel:
+      Channel channel = ChannelPicker(host, port);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + dynamiclocgroupAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        return null;
-      }
+      var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(DynamicLocGroupReply), serializerSettings);
-      DynamicLocGroupReply reply = (DynamicLocGroupReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
-
-      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+      var call = client.AddUserToGroupAsync(
+        request,
+        new CallOptions()
+          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+      );
+      var responseTask = call.ResponseAsync.ConfigureAwait(false);
+      var reply = await responseTask;
 
       return reply;
     }
+
+    // Compiler generated.
+    protected virtual void Dispose(bool disposing)
+    {
+      if (DmeConnection == null || !DmeConnection.IsShutdown())
+      {
+        if (disposing)
+        {
+          // TODO: dispose managed state (managed objects)
+        }
+
+        // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+        // TODO: set large fields to null
+        if (DmeConnection == null || !DmeConnection.IsShutdown())
+        {
+          DmeConnection.Dispose();
+        }
+        authToken = null;
+        sessionCookie = null;
+        LastFindCloudletReply = null;
+        LastRegisterClientRequest = null;
+        // FIXME: EventBusReciever( /* Terminate Event to consumers /* )
+        EventBusReciever = null;
+        disposedValue = true;
+      }
+    }
+
+    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+    // ~MatchingEngine()
+    // {
+    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+      // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+      Dispose(disposing: true);
+      GC.SuppressFinalize(this);
+    }
   };
+
 }

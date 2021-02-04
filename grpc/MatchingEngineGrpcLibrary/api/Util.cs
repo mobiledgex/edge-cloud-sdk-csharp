@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
+ * Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,17 +45,17 @@ namespace DistributedMatchEngine
         long timeLongMs = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
         long seconds = timeLongMs / 1000;
         int nanoSec = (int)(timeLongMs % 1000) * 1000000;
-        var ts = new Timestamp { nanos = nanoSec, seconds = seconds.ToString() };
+        var ts = new Timestamp { Nanos = nanoSec, Seconds = seconds };
         var loc = new Loc()
         {
-          course = 0,
-          altitude = 100,
-          horizontal_accuracy = 5,
-          speed = 2,
-          longitude = -122.149349,
-          latitude = 37.459601,
-          vertical_accuracy = 20,
-          timestamp = ts
+          Course = 0,
+          Altitude = 100,
+          HorizontalAccuracy = 5,
+          Speed = 2,
+          Longitude = -122.149349,
+          Latitude = 37.459601,
+          VerticalAccuracy = 20,
+          Timestamp = ts
         };
         return loc;
       });

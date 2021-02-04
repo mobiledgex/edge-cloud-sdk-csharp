@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using DistributedMatchEngine;
 using NUnit.Framework;
@@ -23,15 +24,6 @@ namespace EngineTests
 {
   public class NetworkTests1
   {
-    // Test to a staging server:
-    const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
-
-    const string orgName = "MobiledgeX";
-    const string appName = "HttpEcho";
-    const string appVers = "20191204";
-    const string connectionTestFqdn = "mextest-app-cluster.frankfurt-main.tdg.mobiledgex.net";
-    const string aWebSocketServerFqdn = "pingpong-cluster.frankfurt-main.tdg.mobiledgex.net"; // or, localhost.
-
     MatchingEngine me = null;
 
     class TestCarrierInfo : CarrierInfo
@@ -61,7 +53,7 @@ namespace EngineTests
       UniqueID uniqueIdInterface = new EmptyUniqueID();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface);
     }
 
     public NetworkTests1()
@@ -108,7 +100,6 @@ namespace EngineTests
     public void TestWindowsInterfacesExist()
     {
       // Using the Windows Interface, where this test might run...
-      // GetAvailableWiFiName only passes on Windows machine
       string nameWifi = me.GetAvailableWiFiName(new Windows10NetworkInterfaceName());
       Assert.NotNull(nameWifi);
       Assert.AreEqual(nameWifi, "Ethernet");
@@ -126,3 +117,4 @@ namespace EngineTests
   }
 
 }
+

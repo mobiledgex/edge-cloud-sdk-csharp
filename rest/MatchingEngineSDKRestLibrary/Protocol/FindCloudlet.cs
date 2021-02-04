@@ -71,8 +71,11 @@ namespace DistributedMatchEngine
     //! Status of a FindCloudletReply
     public enum FindStatus
     {
+      [EnumMember]
       FIND_UNKNOWN = 0,
+      [EnumMember]
       FIND_FOUND = 1,
+      [EnumMember]
       FIND_NOTFOUND = 2
     }
 
@@ -111,6 +114,9 @@ namespace DistributedMatchEngine
     //! Location of the cloudlet
     [DataMember]
     public Loc cloudlet_location;
+    //! Session Cookie for specific EdgeEvents for specific AppInst
+    [DataMember]
+    public string edge_events_cookie;
 
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;

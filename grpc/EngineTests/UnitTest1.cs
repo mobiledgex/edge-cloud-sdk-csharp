@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2021??s MobiledgeX, Inc. All rights and licenses reserved.
+ * Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,10 +33,7 @@ using System.Security.Authentication;
 using System.Net.WebSockets;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
-using System.Collections.Concurrent;
-using System.Json;
-using System.Collections;
-using System.Runtime.Serialization;
+
 
 namespace Tests
 {
@@ -51,6 +48,7 @@ namespace Tests
     const string connectionTestFqdn = "autoclusterhttpecho.dusseldorf-main.tdg.mobiledgex.net";
     const string connectionTlsTestFqdn = "autoclusterhttpechotls.dusseldorf-main.tdg.mobiledgex.net";
     const string aWebSocketServerFqdn = "vivobrazil-rjo2.telefonica.mobiledgex.net"; // or, localhost.
+
 
     static MatchingEngine me;
 
@@ -85,10 +83,10 @@ namespace Tests
       }
     }
 
-    class TestDeviceInfo : DeviceInfo
+    class TestDeviceInfo : DeviceInfoApp
     {
 
-      Dictionary<string, string> DeviceInfo.GetDeviceInfo()
+      Dictionary<string, string> DeviceInfoApp.GetDeviceInfo()
       {
         return new Dictionary<string, string>();
       }
@@ -110,7 +108,7 @@ namespace Tests
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
       UniqueID uniqueIdInterface = new TestUniqueID();
-      DeviceInfo deviceInfo = new TestDeviceInfo();
+      DeviceInfoApp deviceInfo = new TestDeviceInfo();
 
       // pass in unknown interfaces at compile and runtime.
       me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
@@ -123,144 +121,10 @@ namespace Tests
       return ms;
     }
 
-    /*
-     * Basic equivalence tests for the QosPositionKpiStream internal JSON block parser.
-     */
-    [Test]
-    public void Test1()
-    {
-      QosPositionKpiStream streamParser;
-      var js1 = "{ 'foo' = 1 }";
-      streamParser = new QosPositionKpiStream(getMemoryStream(js1));
-
-      string parsed;
-      parsed = streamParser.ParseJsonBlock();
-      Assert.AreEqual(js1, parsed);
-
-      js1 = @"{ [{""foo"": ""2""}, {'bar' = 3}, { 'doot': '$2' }] }";
-      streamParser = new QosPositionKpiStream(getMemoryStream(js1));
-      parsed = streamParser.ParseJsonBlock();
-      Assert.AreEqual(js1, parsed);
-
-      var js2 = @"{ [{""foo"": ""2""}, {'bar' = 3}, { 'doot': '$2' }] }{ [{""foo"": ""2""}, {'bar' = 3}, { 'doot': '$2' }] }";
-      streamParser = new QosPositionKpiStream(getMemoryStream(js2));
-
-      for (int i = 0; i < 2; i++)
-      {
-        parsed = streamParser.ParseJsonBlock();
-        Assert.AreEqual(js1, parsed);
-      }
-      streamParser.Dispose();
-      Console.WriteLine("Test1 finished.");
-    }
-
-    /*
-     * Basic equivalence tests for the QosPositionKpiStream internal JSON block parser.
-     * An escape char.
-     */
-    [Test]
-    public void TestQosPositionStreamEscape()
-    {
-      QosPositionKpiStream streamParser;
-      var js1 = @"{ [{""foo\u005C"": ""2""}, {'bar' = 3}, { 'doot': '$2' }] }";
-
-      string parsed;
-      streamParser = new QosPositionKpiStream(getMemoryStream(js1));
-      parsed = streamParser.ParseJsonBlock();
-      Assert.AreEqual(js1, parsed);
-      streamParser.Dispose();
-      Console.WriteLine("TestQosPositionStreamEscape finished.");
-    }
-
-    /*
-     * Basic equivalence tests for the QosPositionKpiStream internal JSON block parser.
-     */
-    [Test]
-    public void TestQosPositionStream()
-    {
-      QosPositionKpiStream streamParser;
-      string parsed;
-      string js1 = @"{
- ""result"": {
-  ""ver"": 0,
-  ""status"": ""RS_SUCCESS"",
-  ""position_results"": [
-   {
-    ""positionid"": ""1"",
-    ""gps_location"": {
-     ""latitude"": 50.11729018260935,
-     ""longitude"": 8.576783680147576,
-     ""horizontal_accuracy"": 0,
-     ""vertical_accuracy"": 0,
-     ""altitude"": 0,
-     ""course"": 0,
-     ""speed"": 0,
-     ""timestamp"": {
-      ""seconds"": ""63703198734"",
-      ""nanos"": 863000000
-     }
-},
-    ""dluserthroughput_min"": 0,
-    ""dluserthroughput_avg"": 31.561584,
-    ""dluserthroughput_max"": 121.52567,
-    ""uluserthroughput_min"": 0,
-    ""uluserthroughput_avg"": 18.889288,
-    ""uluserthroughput_max"": 51.594624,
-    ""latency_min"": 47.231102,
-    ""latency_avg"": 0,
-    ""latency_max"": 0
-   },
-   {
-    ""positionid"": ""2"",
-    ""gps_location"": {
-     ""latitude"": 50.124580365218705,
-     ""longitude"": 8.571467360295152,
-     ""horizontal_accuracy"": 0,
-     ""vertical_accuracy"": 0,
-     ""altitude"": 0,
-     ""course"": 0,
-     ""speed"": 0,
-     ""timestamp"": {
-      ""seconds"": ""63703198734"",
-      ""nanos"": 863000000
-     }
-    },
-    ""dluserthroughput_min"": 0,
-    ""dluserthroughput_avg"": 41.597435,
-    ""dluserthroughput_max"": 99.60402,
-    ""uluserthroughput_min"": 0,
-    ""uluserthroughput_avg"": 12.110276,
-    ""uluserthroughput_max"": 37.700558,
-    ""latency_min"": 47.231102,
-    ""latency_avg"": 0,
-    ""latency_max"": 0
-   }
-  ]
- }
-}";
-      streamParser = new QosPositionKpiStream(getMemoryStream(js1));
-      parsed = streamParser.ParseJsonBlock();
-
-      // Light existance pass:
-      streamParser = new QosPositionKpiStream(getMemoryStream(js1), 15000);
-      foreach (var reply in streamParser)
-      {
-        Assert.AreEqual(ReplyStatus.RS_SUCCESS, reply.status);
-        Assert.AreEqual(2, reply.position_results.Length);
-        Assert.AreEqual(50.11729018260935, reply.position_results[0].gps_location.latitude);
-        Assert.AreEqual(8.576783680147576, reply.position_results[0].gps_location.longitude);
-        Assert.AreEqual(47.231102f, reply.position_results[0].latency_min); // Not "very" exact.
-      }
-      Assert.AreEqual(js1, parsed);
-      streamParser.Dispose();
-
-      Console.WriteLine("TestQosPositionStream finished.");
-    }
-
     [Test]
     public async static Task TestTCPConnection()
     {
-      string test = "{\"Data\": \"tcp test string\"}";
+      string test = "{\"Data\":\"tcp test string\"}";
       string message = "POST / HTTP/1.1\r\n" +
           "Host: 10.227.69.96:3001\r\n" +
           "User-Agent: curl/7.54.0\r\n" +
@@ -270,22 +134,46 @@ namespace Tests
           "Content-Type: application/json\r\n" + "\r\n" + test;
       byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
-      //! [gettcpconnexample]
       string receiveMessage = "";
       try
       {
+
+        byte[] bytes = Encoding.UTF8.GetBytes(message);
+
+        var loc = await Util.GetLocationFromDevice();
+        FindCloudletReply reply1 = null;
+
+        Console.WriteLine("XXX 0");
+        // Overide, test to another server:
+        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers,
+          loc: loc);
+
+        Console.WriteLine("XXX 1");
+        int knownPort = 3001;
+        var appPorts = me.GetAppPortsByProtocol(reply1, LProto.Tcp);
+        var appPort = appPorts[knownPort]; // Known port of this instance.
+        string host = appPort.FqdnPrefix + reply1.Fqdn;
+        Console.WriteLine("Ports1: " + appPort.InternalPort);
+        string url = me.CreateUrl(reply1, appPort, "https", knownPort);
+        Console.WriteLine("Url to use: " + url);
+        var appTcpPorts = me.GetTCPAppPorts(reply1);
+
         Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5000);
         Assert.ByVal(tcpConnection, Is.Not.Null);
 
         tcpConnection.Send(bytesMessage);
 
-        byte[] buffer = new byte[message.Length * 2]; // C# chars are unicode-16 bits
+        byte[] buffer = new byte[4096]; // Just a big buffer.
         int numRead = tcpConnection.Receive(buffer);
         byte[] readBuffer = new byte[numRead];
         Array.Copy(buffer, readBuffer, numRead);
-        receiveMessage = Encoding.ASCII.GetString(readBuffer);
+        receiveMessage = Encoding.UTF8.GetString(readBuffer);
 
         Console.WriteLine("Echoed tcp string: " + receiveMessage);
+        Assert.True(receiveMessage.Contains(test));
         tcpConnection.Close();
       }
       catch (GetConnectionException e)
@@ -296,8 +184,6 @@ namespace Tests
       {
         Console.WriteLine("TCP socket exception is " + e);
       }
-      //! [gettcpconnexample]
-      Assert.True(receiveMessage.Contains("tcp test string"));
       Console.WriteLine("TestTCPConnection finished.");
     }
 
@@ -319,7 +205,7 @@ namespace Tests
       UriBuilder uriBuilder = new UriBuilder("http", uriString, 3001);
       Uri uri = uriBuilder.Uri;
 
-      //! [gethttpexample]
+      // HTTP Connection Test
       try
       {
         HttpClient httpClient = await me.GetHTTPClient(uri);
@@ -332,50 +218,69 @@ namespace Tests
         string responseBody = await response.Content.ReadAsStringAsync();
         Assert.ByVal(responseBody, Is.Not.Null);
         Console.WriteLine("http response body is " + responseBody);
-        Assert.True(responseBody.Contains("HTTP Connection Test"));
+        Assert.True(responseBody.Contains(dict["data"]));
       }
       catch (HttpRequestException e)
       {
         Assert.Fail("HttpRequestException is " + e.Message);
       }
-      //! [gethttpexample]
     }
 
     [Test]
     public async static Task TestTCPTLSConnection()
     {
-      //! [gettcptlsconnexample]
-      try
-      {
-        string test = "{\"Data\": \"Ping\"}";
-        string message = "POST / HTTP/1.1\r\n" +
-          "Host: 37.50.200.204:3001\r\n" +
+      // The server reformats the JSON, so extra spaces are removed.
+      string test = "{\"Data\":\"tcp test string\"}";
+      string message = "POST / HTTP/1.1\r\n" +
+          "Host: 10.227.69.96:3001\r\n" +
           "User-Agent: curl/7.54.0\r\n" +
           "Accept: */*\r\n" +
           "Content-Length: " +
           test.Length + "\r\n" +
           "Content-Type: application/json\r\n" + "\r\n" + test;
-        byte[] bytes = Encoding.UTF8.GetBytes(message);
+      byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
 
-        MatchingEngine.ServerRequiresClientCertificateAuthentication(false);
 
-        SslStream stream = await me.GetTCPTLSConnection(connectionTlsTestFqdn, 3001, 5000, true);
+      // TLS on TCP Connection Test
+      try
+      {
+        var loc = await Util.GetLocationFromDevice();
+        FindCloudletReply reply1 = null;
+
+        // Overide, test to another server:
+        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+          orgName: orgName,
+          appName: appName+"Tls", // Deploy a Tls version!
+          appVersion: appVers,
+          loc: loc);
+
+        int knownPort = 3001;
+        var appPorts = me.GetAppPortsByProtocol(reply1, LProto.Tcp);
+        var appPort = appPorts[knownPort]; // Known port of this instance.
+        string host = appPort.FqdnPrefix + reply1.Fqdn;
+        Console.WriteLine("Ports1: " + appPort.InternalPort);
+        string url = me.CreateUrl(reply1, appPort, "https", knownPort);
+        Console.WriteLine("Url to use: " + url);
+        var appTcpPorts = me.GetTCPAppPorts(reply1);
+
+        SslStream stream = await me.GetTCPTLSConnection(host, appPort.PublicPort, 5000);
         Assert.ByVal(stream, Is.Not.Null);
         Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);
 
-        stream.Write(bytes);
+        stream.Write(Encoding.UTF8.GetBytes(message));
 
-        await Task.Delay(500);
-        byte[] readBuffer = new byte[bytes.Length*2];
+        await Task.Delay(200);
+        byte[] readBuffer = new byte[4096]; // Just a big buffer.
 
         Assert.True(stream.CanRead);
-        stream.Read(readBuffer);
+        int numRead = stream.Read(readBuffer, 0, readBuffer.Length);
 
-        string response = Encoding.UTF8.GetString(readBuffer);
+        string response = Encoding.UTF8.GetString(readBuffer, 0, numRead);
         Console.WriteLine("Response: " + response);
-        Assert.True(response.Contains("Ping"));
+        Assert.True(response.Contains(test));
         stream.Close();
       }
+
       catch (AuthenticationException e)
       {
         Assert.Fail("Authentication Exception is " + e.Message);
@@ -386,11 +291,22 @@ namespace Tests
       }
       catch (IOException ioe)
       {
-        Assert.Fail("ioe exception is " + ioe.Message);
-        // FIXME: The test server doesn't have HTTPs.
-        Assert.False(ioe.Message.Contains("The handshake failed due to an unexpected packet format."));
+        Assert.Fail("ioe exception is " + ioe.Message + "\n" + ioe.StackTrace);
       }
-      //! [gettcptlsconnexample]
+      catch (DmeDnsException dde)
+      {
+        Console.WriteLine("DmeDnsException is " + dde);
+      }
+      catch (RegisterClientException rce)
+      {
+        Console.WriteLine("RegisterClientException is " + rce);
+        return;
+      }
+      catch (FindCloudletException fce)
+      {
+        Console.WriteLine("FindCloudletException is " + fce);
+        return;
+      }
     }
 
     [Test]
@@ -472,7 +388,7 @@ namespace Tests
 
       try
       {
-        reply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+        reply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
@@ -494,10 +410,12 @@ namespace Tests
       Assert.ByVal(reply, Is.Not.Null);
 
       Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
-      Assert.True(reply.status.Equals(FindCloudletReply.FindStatus.FIND_FOUND));
+      Assert.True(reply.Status.Equals(FindCloudletReply.Types.FindStatus.FindFound));
 
-      int public_port = reply.ports[0].public_port; // We happen to know it's the first one.
-      AppPort appPort = appPortsDict[public_port];
+      // If there's more than one AppPort (or even a range of ports), you really do need to know your own App Port layout.
+      int knownPort = 3001;
+      var appPort = appPortsDict[knownPort];
+      int public_port = appPort.PublicPort;
 
       Assert.ByVal(appPort, Is.Not.Null);
 
@@ -523,33 +441,34 @@ namespace Tests
     public async static Task TestAppPortMappings()
     {
       AppPort appPort = new AppPort();
-      appPort.proto = LProto.L_PROTO_TCP;
-      appPort.internal_port = 8008;
-      appPort.public_port = 3000;
-      appPort.end_port = 8010;
-      appPort.fqdn_prefix = "";
+      appPort.Proto = LProto.Tcp;
+      appPort.InternalPort = 8008;
+      appPort.PublicPort = 3000;
+      appPort.EndPort = 8010;
+      appPort.FqdnPrefix = "";
 
       AppPort appPort2 = new AppPort();
-      appPort2.proto = LProto.L_PROTO_TCP;
-      appPort2.internal_port = 8008;
-      appPort2.public_port = 3000;
-      appPort2.end_port = 0;
-      appPort2.fqdn_prefix = "";
+      appPort2.Proto = LProto.Tcp;
+      appPort2.InternalPort = 8008;
+      appPort2.PublicPort = 3000;
+      appPort2.EndPort = 0;
+      appPort2.FqdnPrefix = "";
 
       FindCloudletReply fce = new FindCloudletReply();
-      fce.fqdn = "mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net";
-      AppPort[] appPorts = { appPort };
-      fce.ports = appPorts;
+      fce.Fqdn = "mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net";
+
+      fce.Ports.Add(appPort);
+      fce.Ports.Add(appPort2);
 
       // Default -> Use Public Port
       int port = me.GetPort(appPort);
       Console.WriteLine("port is " + port);
-      Assert.True(port == appPort.public_port, "Default port did not return public port. Returned " + port);
+      Assert.True(port == appPort.PublicPort, "Default port did not return public port. Returned " + port);
 
       // Desired == Internal -> Use Public Port
       int port2 = me.GetPort(appPort, 8008);
       Console.WriteLine("port2 is " + port2);
-      Assert.True(port2 == appPort.public_port, "Internal port did not return public port. Returned " + port2);
+      Assert.True(port2 == appPort.PublicPort, "Internal port did not return public port. Returned " + port2);
 
       // Desired != Internal && Desired in range -> Use Desired Port
       int port3 = me.GetPort(appPort, 3001);
@@ -648,7 +567,7 @@ namespace Tests
       try
       {
         // Overide, test to another server:
-        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
           orgName: orgName,
           appName: appName,
           appVersion: appVers,
@@ -669,24 +588,24 @@ namespace Tests
         return;
       }
       Assert.ByVal(reply1, Is.Not.Null);
-      Assert.ByVal(reply1.fqdn, Is.Not.Null);
+      Assert.ByVal(reply1.Fqdn, Is.Not.Null);
       if (reply1 != null)
       {
-        Console.WriteLine("FindCloudlet Reply Status: " + reply1.status);
+        Console.WriteLine("FindCloudlet Reply Status: " + reply1.Status);
         Console.WriteLine("FindCloudlet:" +
-                " ver: " + reply1.ver +
-                ", fqdn: " + reply1.fqdn +
+                " ver: " + reply1.Ver +
+                ", fqdn: " + reply1.Fqdn +
                 ", cloudlet_location: " +
-                " long: " + reply1.cloudlet_location.longitude +
-                ", lat: " + reply1.cloudlet_location.latitude);
+                " long: " + reply1.CloudletLocation.Longitude +
+                ", lat: " + reply1.CloudletLocation.Latitude);
         // App Ports:
-        foreach (AppPort p in reply1.ports)
+        foreach (AppPort p in reply1.Ports)
         {
-          Console.WriteLine("Port: fqdn_prefix: " + p.fqdn_prefix +
-                ", protocol: " + p.proto +
-                ", public_port: " + p.public_port +
-                ", internal_port: " + p.internal_port +
-                ", end_port: " + p.end_port);
+          Console.WriteLine("Port: fqdn_prefix: " + p.FqdnPrefix +
+                ", protocol: " + p.Proto +
+                ", public_port: " + p.PublicPort +
+                ", internal_port: " + p.InternalPort +
+                ", end_port: " + p.EndPort);
         }
       }
 
@@ -695,11 +614,12 @@ namespace Tests
       // Site 1
       Dictionary<int, AppPort> appPortsDict1 = me.GetTCPAppPorts(reply1);
       Assert.True(appPortsDict1.Count > 0, "No dictionary results for TCP Port!");
-      Assert.True(reply1.ports.Length > 0, "No Ports!");
+      Assert.True(reply1.Ports.Count > 0, "No Ports!");
 
-      int public_port1 = reply1.ports[0].public_port; // We happen to know it's the first one.
-      AppPort appPort1 = appPortsDict1[public_port1];
-      Site site1 = new Site { host = appPort1.fqdn_prefix + reply1.fqdn, port = public_port1 };
+      var appPort = appPortsDict1[3001]; // Known port;
+
+      int public_port1 = appPort.PublicPort;
+      Site site1 = new Site { host = appPort.FqdnPrefix + reply1.Fqdn, port = public_port1 };
 
       // In case you want a local test server:
       /*
@@ -765,7 +685,7 @@ namespace Tests
           Assert.True(s.average < 2000);
         }
 
-        Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
+        Assert.True(netTest.sites.ToArray()[0].samples[0].Value >= 0);
         netTest.doTest(false);
       }
       catch (Exception e)
@@ -792,6 +712,7 @@ namespace Tests
           appName: appName,
           appVersion: appVers);
 
+        // Micro Test:
         TestMelMessaging mt = new TestMelMessaging();
         Assert.AreEqual("DummyManufacturer", mt.GetManufacturer());
 
@@ -800,9 +721,9 @@ namespace Tests
         // as possible.
         // It's the actual send, not the message creation where it is filled in.
 
-        Console.WriteLine("Testing null");
-        Assert.AreEqual(null, req1.unique_id_type);
-        Assert.AreEqual(null, req1.unique_id);
+        Console.WriteLine("Testing GRPC's NotNull Empty String if unspecified. This is NOT REST behavior.");
+        Assert.AreEqual("", req1.UniqueIdType);
+        Assert.AreEqual("", req1.UniqueId);
       }
       catch (Exception e)
       {
@@ -812,32 +733,6 @@ namespace Tests
           Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
         }
       }
-    }
-
-    [Test]
-    public void TestDictionary()
-    {
-      var tags = new Dictionary<string, string>();
-
-      tags["one"] = "ONE";
-      tags["two"] = "TWO";
-      tags["three"] = "THREE";
-
-      Hashtable hashtable = Tag.DictionaryToHashtable(tags);
-      Assert.True(hashtable.Count == tags.Count, "Tables should have same count");
-
-      foreach (var entry in tags)
-      {
-        Assert.True(entry.Value.ToString().Equals(hashtable[entry.Key]));
-      }
-
-      var dict2 = Tag.HashtableToDictionary(hashtable);
-      foreach (var entry in dict2)
-      {
-        Assert.True(entry.Value.ToString().Equals(tags[entry.Key]));
-      }
-
-      Assert.True(tags.Count == dict2.Count, "Should be equal after double conversion");
     }
   }
 }

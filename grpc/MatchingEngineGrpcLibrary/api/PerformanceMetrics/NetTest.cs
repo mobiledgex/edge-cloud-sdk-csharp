@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
+ * Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +37,6 @@ namespace DistributedMatchEngine.PerformanceMetrics
    * Class that allows developers to easily test latency of their various backend servers.
    * This is used in the implementation of FindCloudlet Performance Mode.
    * \ingroup classes_util
-   * \snippet RestSample.cs nettestexample
    */
   public class NetTest : IDisposable
   {
@@ -50,7 +49,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
     {
       PING = 0,
       CONNECT = 1,
-    };
+    }
 
     /*!
      * Object used by NetTest to test latency of server.
@@ -73,7 +72,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
        * Number of rolling samples. Default is 3
        */
       public int size { get; private set; }
-      public double[] samples;
+      public Sample[] samples;
       public const int DEFAULT_NUM_SAMPLES = 3;
 
       public double average;
@@ -93,12 +92,23 @@ namespace DistributedMatchEngine.PerformanceMetrics
       public Site(TestType testType = TestType.CONNECT, int numSamples = DEFAULT_NUM_SAMPLES)
       {
         this.testType = testType;
-        samples = new double[numSamples];
+        samples = new Sample[numSamples];
       }
 
-      public void addSample(double time)
+      public void addSample(double time, long timestampMilliseconds)
       {
-        samples[idx] = time;
+        var seconds = timestampMilliseconds / 1000;
+        var nanos = (timestampMilliseconds - (seconds * 1000)) * 1000000;
+        var sample = new Sample
+        {
+          Value = time,
+          Timestamp = new Timestamp
+          {
+            Seconds = seconds,
+            Nanos = (int)nanos,
+          },
+        };
+        samples[idx] = sample;
         idx++;
         if (size < samples.Length) size++;
         idx = idx % samples.Length;
@@ -111,12 +121,12 @@ namespace DistributedMatchEngine.PerformanceMetrics
         double d;
         for (int i = 0; i < size; i++)
         {
-          acc += samples[i];
+          acc += samples[i].Value;
         }
         average = acc / size;
         for (int i = 0; i < size; i++)
         {
-          d = samples[i];
+          d = samples[i].Value;
           vsum += (d - average) * (d - average);
         }
         if (size > 1)
@@ -295,6 +305,9 @@ namespace DistributedMatchEngine.PerformanceMetrics
     public async Task TestSite(Site site)
     {
       double elapsed = -1d;
+      // Timestamp for test.
+      var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+
       switch (site.testType)
       {
 
@@ -341,7 +354,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
       site.lastPingMs = elapsed;
       if (elapsed >= 0)
       {
-        site.addSample(elapsed);
+        site.addSample(elapsed, ts);
         site.recalculateStats();
       }
       Log.S("Round trip to host: " + site.host + ", port: " + site.port + ", l7Path: " + site.L7Path + ", elapsed: " + elapsed + ", average: " + site.average + ", stddev: " + site.stddev);
