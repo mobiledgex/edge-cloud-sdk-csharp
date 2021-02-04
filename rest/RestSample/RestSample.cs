@@ -216,6 +216,7 @@ namespace RestSample
         me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
         me.useSSL = true;
+        fallbackDmeHost = me.GenerateDmeHostAddress(); // WiFi if not overridden in test sample.
         // Set SSL.
 
         await NetTest(me);
@@ -236,7 +237,7 @@ namespace RestSample
           try
           {
             //! [registerexample]
-            registerClientReply = await me.RegisterClient(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
+            registerClientReply = await me.RegisterClient(registerClientRequest);
             //! [registerexample]
             Console.WriteLine("RegisterClient Reply Status: " + registerClientReply.status);
           }
@@ -285,7 +286,7 @@ namespace RestSample
           try
           {
             //! [findcloudletexample]
-            findCloudletReply = await me.FindCloudlet(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, findCloudletRequest);
+            findCloudletReply = await me.FindCloudlet(findCloudletRequest);
             //! [findcloudletexample]
           }
           catch (DmeDnsException)

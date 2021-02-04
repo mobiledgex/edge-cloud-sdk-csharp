@@ -33,8 +33,6 @@ namespace DistributedMatchEngine
 {
   public class DMEConnection : IDisposable
   {
-    private bool ReOpenDmeConnection = false;
-
     private String HostOverride;
     private uint PortOverride;
 
@@ -190,6 +188,10 @@ namespace DistributedMatchEngine
 
             }
             Console.WriteLine("XXX: Stream End reached.");
+            if (!cancelTokenSource.IsCancellationRequested)
+            {
+              cancelTokenSource.Cancel();
+            }
           }
         }
 
@@ -388,7 +390,10 @@ namespace DistributedMatchEngine
 
     public void Dispose()
     {
-      cancelTokenSource.Cancel();
+      if (!cancelTokenSource.IsCancellationRequested)
+      {
+        cancelTokenSource.Cancel();
+      }
       DmeHttpClient.CancelPendingRequests();
       DmeHttpClient = null;
       me = null;
