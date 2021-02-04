@@ -222,6 +222,8 @@ namespace DistributedMatchEngine
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
 
+    private const bool EXPERIMENTAL_FEATURES = false;
+
     public bool useOnlyWifi { get; set; } = false;
     // Use SSL for DME.
     public bool useSSL { get; set; } = true;
@@ -301,7 +303,11 @@ namespace DistributedMatchEngine
      */
     public DMEConnection GetDMEConnection(string edgeEventCookie, string dmeHost = null, uint dmePort = 0)
     {
-      if (DmeConnection == null /*|| DmeConnection.IsShutdown()*/)
+      if (!EXPERIMENTAL_FEATURES)
+      {
+        return null;
+      }
+      if (DmeConnection == null)
       {
         DmeConnection = new DMEConnection(this, dmeHost, dmePort);
       }
