@@ -69,21 +69,32 @@ namespace DistributedMatchEngine
     //! Tower Status of a VerifyLocationReply
     public enum TowerStatus
     {
+      [EnumMember]
       TOWER_UNKNOWN = 0,
+      [EnumMember]
       CONNECTED_TO_SPECIFIED_TOWER = 1,
+      [EnumMember]
       NOT_CONNECTED_TO_SPECIFIED_TOWER = 2,
     }
 
     //! GPS Status of VerifyLocationReply
     public enum GPSLocationStatus
     {
+      [EnumMember]
       LOC_UNKNOWN = 0,
+      [EnumMember]
       LOC_VERIFIED = 1,
+      [EnumMember]
       LOC_MISMATCH_SAME_COUNTRY = 2,
+      [EnumMember]
       LOC_MISMATCH_OTHER_COUNTRY = 3,
+      [EnumMember]
       LOC_ROAMING_COUNTRY_MATCH = 4,
+      [EnumMember]
       LOC_ROAMING_COUNTRY_MISMATCH = 5,
+      [EnumMember]
       LOC_ERROR_UNAUTHORIZED = 6,
+      [EnumMember]
       LOC_ERROR_OTHER = 7
     }
 

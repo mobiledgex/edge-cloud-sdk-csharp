@@ -30,12 +30,22 @@ namespace DistributedMatchEngine {
             "em9udGFsX2FjY3VyYWN5GAMgASgBEhkKEXZlcnRpY2FsX2FjY3VyYWN5GAQg",
             "ASgBEhAKCGFsdGl0dWRlGAUgASgBEg4KBmNvdXJzZRgGIAEoARINCgVzcGVl",
             "ZBgHIAEoARI2Cgl0aW1lc3RhbXAYCCABKAsyIy5kaXN0cmlidXRlZF9tYXRj",
-            "aF9lbmdpbmUuVGltZXN0YW1wYgZwcm90bzM="));
+            "aF9lbmdpbmUuVGltZXN0YW1wIrYBCgZTYW1wbGUSDQoFdmFsdWUYASABKAES",
+            "NgoJdGltZXN0YW1wGAIgASgLMiMuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5l",
+            "LlRpbWVzdGFtcBI4CgR0YWdzGGQgAygLMiouZGlzdHJpYnV0ZWRfbWF0Y2hf",
+            "ZW5naW5lLlNhbXBsZS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgB",
+            "IAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiowEKClN0YXRpc3RpY3MSCwoDYXZn",
+            "GAEgASgBEgsKA21pbhgCIAEoARILCgNtYXgYAyABKAESDwoHc3RkX2RldhgE",
+            "IAEoARIQCgh2YXJpYW5jZRgFIAEoARITCgtudW1fc2FtcGxlcxgGIAEoBBI2",
+            "Cgl0aW1lc3RhbXAYByABKAsyIy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
+            "VGltZXN0YW1wYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Timestamp), global::DistributedMatchEngine.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Loc), global::DistributedMatchEngine.Loc.Parser, new[]{ "Latitude", "Longitude", "HorizontalAccuracy", "VerticalAccuracy", "Altitude", "Course", "Speed", "Timestamp" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Timestamp), global::DistributedMatchEngine.Timestamp.Parser, new[]{ "Seconds", "Nanos" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Loc), global::DistributedMatchEngine.Loc.Parser, new[]{ "Latitude", "Longitude", "HorizontalAccuracy", "VerticalAccuracy", "Altitude", "Course", "Speed", "Timestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Sample), global::DistributedMatchEngine.Sample.Parser, new[]{ "Value", "Timestamp", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.Statistics), global::DistributedMatchEngine.Statistics.Parser, new[]{ "Avg", "Min", "Max", "StdDev", "Variance", "NumSamples", "Timestamp" }, null, null, null)
           }));
     }
     #endregion
@@ -552,6 +562,529 @@ namespace DistributedMatchEngine {
             break;
           }
           case 66: {
+            if (timestamp_ == null) {
+              Timestamp = new global::DistributedMatchEngine.Timestamp();
+            }
+            input.ReadMessage(Timestamp);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  ///
+  /// Sample
+  /// </summary>
+  public sealed partial class Sample : pb::IMessage<Sample> {
+    private static readonly pb::MessageParser<Sample> _parser = new pb::MessageParser<Sample>(() => new Sample());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Sample> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.LocReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Sample() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Sample(Sample other) : this() {
+      value_ = other.value_;
+      timestamp_ = other.timestamp_ != null ? other.timestamp_.Clone() : null;
+      tags_ = other.tags_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Sample Clone() {
+      return new Sample(this);
+    }
+
+    /// <summary>Field number for the "value" field.</summary>
+    public const int ValueFieldNumber = 1;
+    private double value_;
+    /// <summary>
+    /// latency value
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Value {
+      get { return value_; }
+      set {
+        value_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "timestamp" field.</summary>
+    public const int TimestampFieldNumber = 2;
+    private global::DistributedMatchEngine.Timestamp timestamp_;
+    /// <summary>
+    /// timestamp
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.Timestamp Timestamp {
+      get { return timestamp_; }
+      set {
+        timestamp_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "tags" field.</summary>
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
+    /// <summary>
+    /// _(optional)_ Vendor specific data
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::MapField<string, string> Tags {
+      get { return tags_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Sample);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Sample other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Value, other.Value)) return false;
+      if (!object.Equals(Timestamp, other.Timestamp)) return false;
+      if (!Tags.Equals(other.Tags)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Value != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Value);
+      if (timestamp_ != null) hash ^= Timestamp.GetHashCode();
+      hash ^= Tags.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Value != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Value);
+      }
+      if (timestamp_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Timestamp);
+      }
+      tags_.WriteTo(output, _map_tags_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Value != 0D) {
+        size += 1 + 8;
+      }
+      if (timestamp_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Timestamp);
+      }
+      size += tags_.CalculateSize(_map_tags_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Sample other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Value != 0D) {
+        Value = other.Value;
+      }
+      if (other.timestamp_ != null) {
+        if (timestamp_ == null) {
+          Timestamp = new global::DistributedMatchEngine.Timestamp();
+        }
+        Timestamp.MergeFrom(other.Timestamp);
+      }
+      tags_.Add(other.tags_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 9: {
+            Value = input.ReadDouble();
+            break;
+          }
+          case 18: {
+            if (timestamp_ == null) {
+              Timestamp = new global::DistributedMatchEngine.Timestamp();
+            }
+            input.ReadMessage(Timestamp);
+            break;
+          }
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// Statistics
+  /// </summary>
+  public sealed partial class Statistics : pb::IMessage<Statistics> {
+    private static readonly pb::MessageParser<Statistics> _parser = new pb::MessageParser<Statistics>(() => new Statistics());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Statistics> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.LocReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Statistics() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Statistics(Statistics other) : this() {
+      avg_ = other.avg_;
+      min_ = other.min_;
+      max_ = other.max_;
+      stdDev_ = other.stdDev_;
+      variance_ = other.variance_;
+      numSamples_ = other.numSamples_;
+      timestamp_ = other.timestamp_ != null ? other.timestamp_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Statistics Clone() {
+      return new Statistics(this);
+    }
+
+    /// <summary>Field number for the "avg" field.</summary>
+    public const int AvgFieldNumber = 1;
+    private double avg_;
+    /// <summary>
+    /// average
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Avg {
+      get { return avg_; }
+      set {
+        avg_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "min" field.</summary>
+    public const int MinFieldNumber = 2;
+    private double min_;
+    /// <summary>
+    /// minimum
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Min {
+      get { return min_; }
+      set {
+        min_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "max" field.</summary>
+    public const int MaxFieldNumber = 3;
+    private double max_;
+    /// <summary>
+    /// maximum
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Max {
+      get { return max_; }
+      set {
+        max_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "std_dev" field.</summary>
+    public const int StdDevFieldNumber = 4;
+    private double stdDev_;
+    /// <summary>
+    /// square root of unbiased variance
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double StdDev {
+      get { return stdDev_; }
+      set {
+        stdDev_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "variance" field.</summary>
+    public const int VarianceFieldNumber = 5;
+    private double variance_;
+    /// <summary>
+    /// unbiased variance
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Variance {
+      get { return variance_; }
+      set {
+        variance_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "num_samples" field.</summary>
+    public const int NumSamplesFieldNumber = 6;
+    private ulong numSamples_;
+    /// <summary>
+    /// number of samples to create stats
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ulong NumSamples {
+      get { return numSamples_; }
+      set {
+        numSamples_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "timestamp" field.</summary>
+    public const int TimestampFieldNumber = 7;
+    private global::DistributedMatchEngine.Timestamp timestamp_;
+    /// <summary>
+    /// timestamp
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.Timestamp Timestamp {
+      get { return timestamp_; }
+      set {
+        timestamp_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Statistics);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Statistics other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Avg, other.Avg)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Min, other.Min)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Max, other.Max)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(StdDev, other.StdDev)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Variance, other.Variance)) return false;
+      if (NumSamples != other.NumSamples) return false;
+      if (!object.Equals(Timestamp, other.Timestamp)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Avg != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Avg);
+      if (Min != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Min);
+      if (Max != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Max);
+      if (StdDev != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(StdDev);
+      if (Variance != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Variance);
+      if (NumSamples != 0UL) hash ^= NumSamples.GetHashCode();
+      if (timestamp_ != null) hash ^= Timestamp.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Avg != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Avg);
+      }
+      if (Min != 0D) {
+        output.WriteRawTag(17);
+        output.WriteDouble(Min);
+      }
+      if (Max != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(Max);
+      }
+      if (StdDev != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(StdDev);
+      }
+      if (Variance != 0D) {
+        output.WriteRawTag(41);
+        output.WriteDouble(Variance);
+      }
+      if (NumSamples != 0UL) {
+        output.WriteRawTag(48);
+        output.WriteUInt64(NumSamples);
+      }
+      if (timestamp_ != null) {
+        output.WriteRawTag(58);
+        output.WriteMessage(Timestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Avg != 0D) {
+        size += 1 + 8;
+      }
+      if (Min != 0D) {
+        size += 1 + 8;
+      }
+      if (Max != 0D) {
+        size += 1 + 8;
+      }
+      if (StdDev != 0D) {
+        size += 1 + 8;
+      }
+      if (Variance != 0D) {
+        size += 1 + 8;
+      }
+      if (NumSamples != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(NumSamples);
+      }
+      if (timestamp_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Timestamp);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Statistics other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Avg != 0D) {
+        Avg = other.Avg;
+      }
+      if (other.Min != 0D) {
+        Min = other.Min;
+      }
+      if (other.Max != 0D) {
+        Max = other.Max;
+      }
+      if (other.StdDev != 0D) {
+        StdDev = other.StdDev;
+      }
+      if (other.Variance != 0D) {
+        Variance = other.Variance;
+      }
+      if (other.NumSamples != 0UL) {
+        NumSamples = other.NumSamples;
+      }
+      if (other.timestamp_ != null) {
+        if (timestamp_ == null) {
+          Timestamp = new global::DistributedMatchEngine.Timestamp();
+        }
+        Timestamp.MergeFrom(other.Timestamp);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 9: {
+            Avg = input.ReadDouble();
+            break;
+          }
+          case 17: {
+            Min = input.ReadDouble();
+            break;
+          }
+          case 25: {
+            Max = input.ReadDouble();
+            break;
+          }
+          case 33: {
+            StdDev = input.ReadDouble();
+            break;
+          }
+          case 41: {
+            Variance = input.ReadDouble();
+            break;
+          }
+          case 48: {
+            NumSamples = input.ReadUInt64();
+            break;
+          }
+          case 58: {
             if (timestamp_ == null) {
               Timestamp = new global::DistributedMatchEngine.Timestamp();
             }

@@ -22,15 +22,46 @@ using System.Runtime.Serialization;
 
 namespace DistributedMatchEngine
 {
+  public enum DlgCommType
+  {
+    [EnumMember]
+    DLG_UNDEFINED = 0,
+    [EnumMember]
+    DLG_SECURE = 1,
+    [EnumMember]
+    DLG_OPEN = 2
+  }
+
   [DataContract]
-  public class AppOfficialFqdnRequest
+  public class DynamicLocGroupRequest
   {
     [DataMember]
     public UInt32 ver;
+    // Session Cookie from RegisterClientRequest
     [DataMember]
     public string session_cookie;
     [DataMember]
-    public Loc gps_location;
+    public UInt64 lg_id;
+
+    public DlgCommType comm_type = DlgCommType.DLG_UNDEFINED;
+
+    [DataMember(Name = "comm_type")]
+    private string comm_type_string
+    {
+      get
+      {
+        return comm_type.ToString();
+      }
+      set
+      {
+        comm_type = Enum.TryParse(value, out DlgCommType commType) ? commType : DlgCommType.DLG_UNDEFINED;
+      }
+    }
+
+    [DataMember(EmitDefaultValue = false)]
+    public string user_data;
+    [DataMember(EmitDefaultValue = false)]
+    public UInt32 cell_id;
 
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
@@ -39,48 +70,41 @@ namespace DistributedMatchEngine
   }
 
   [DataContract]
-  public class AppOfficialFqdnReply
+  public class DynamicLocGroupReply
   {
-    public enum AOFStatus
-    {
-      AOF_UNDEFINED = 0,
-      AOF_SUCCESS = 1,
-      // The user does not allow his location to be tracked
-      AOF_FAIL = 2
-    }
     [DataMember]
     public UInt32 ver;
 
-    [DataMember]
-    public string app_official_fqdn;
-
-    [DataMember]
-    public string client_token;
-
-    public AOFStatus status = AOFStatus.AOF_UNDEFINED;
+    // Status of the reply
+    public ReplyStatus status = ReplyStatus.RS_UNDEFINED;
 
     [DataMember(Name = "status")]
-    private string aof_status_string
+    private string reply_status_string
     {
       get
       {
         return status.ToString();
       }
+
       set
       {
         try
         {
-          status = (AOFStatus)Enum.Parse(typeof(AOFStatus), value);
+          status = (ReplyStatus)Enum.Parse(typeof(ReplyStatus), value);
         }
         catch
         {
-          status = AOFStatus.AOF_UNDEFINED;
+          status = ReplyStatus.RS_UNDEFINED;
         }
       }
     }
 
+    // Error Code based on Failure
     [DataMember]
-    public AppPort[] ports;
+    public UInt32 error_code;
+    // Group Cookie for Secure Group Communication
+    [DataMember]
+    public string group_cookie;
 
     //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
