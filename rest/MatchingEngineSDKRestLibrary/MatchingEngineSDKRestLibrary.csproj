@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ReleaseVersion>2.5.0</ReleaseVersion>
+    <ReleaseVersion>2.5.1</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>2.5.0</PackageVersion>
+    <PackageVersion>2.5.1</PackageVersion>
     <Authors>MobiledgeX, Inc.</Authors>
     <Description>MobiledgeX MatchingEngineSDK Rest Library</Description>
     <Owners>MobiledgeX, Inc.</Owners>

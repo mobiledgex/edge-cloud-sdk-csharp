@@ -201,6 +201,13 @@ namespace DistributedMatchEngine
 
     public uint dmePort { get; set; } = defaultDmeGrpcPort; // GRPC port
 
+    /*!
+     * Enable edge features. If enabled, this may cause permission prompts on
+     * some target devices due to the MatchingEngine probing the current network
+     * state for edge capabilities. Edge features may be degraded if not enabled.
+     */
+    public static bool EnableEnhancedLocationServices { get; set; } = false;
+
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
@@ -1026,13 +1033,9 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      string ip = null;
-      if (netInterface.HasWifi())
-      {
-        string wifi = GetAvailableWiFiName(netInterface.GetNetworkInterfaceName());
-        ip = netInterface.GetIPAddress(wifi);
-      }
-      if (melMessaging.IsMelEnabled() && ip == null)
+      if (melMessaging != null && melMessaging.IsMelEnabled() &&
+          netInterface.GetIPAddress(
+            GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
       {
         FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
         if (melModeFindCloudletReply == null)
