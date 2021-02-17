@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
+ * Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -204,7 +204,14 @@ namespace DistributedMatchEngine
     public DeviceInfo deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
 
-    DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
+    /*!
+     * Enable edge features. If enabled, this may cause permission prompts on
+     * some target devices due to the MatchingEngine probing the current network
+     * state for edge capabilities. Edge features may be degraded if not enabled.
+     */
+    public bool EnableEnhancedLocationServices { get; set; } = false;
+
+    internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
       UseSimpleDictionaryFormat = true
     };
@@ -647,7 +654,7 @@ namespace DistributedMatchEngine
 
       if (uid != null && uid != "")
       {
-        request.unique_id_type = "Platos:PlatosEnablingLayer";
+        request.unique_id_type = "Platos:" + aUniqueIdType + ":PlatosEnablingLayer";
         request.unique_id = melMessaging.GetUid();
       }
       else if (manufacturer != null &&
@@ -974,7 +981,7 @@ namespace DistributedMatchEngine
       ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply), serializerSettings);
       FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
+      if (reply.tags != null)
       {
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
@@ -1084,13 +1091,9 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      string ip = null;
-      if (netInterface.HasWifi())
-      {
-        string wifi = GetAvailableWiFiName(netInterface.GetNetworkInterfaceName());
-        ip = netInterface.GetIPAddress(wifi);
-      }
-      if (melMessaging.IsMelEnabled() && ip == null)
+      if (melMessaging != null && melMessaging.IsMelEnabled() &&
+          netInterface.GetIPAddress(
+            GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
       {
         FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
         string appOfficialFqdn = melModeFindCloudletReply.fqdn;
