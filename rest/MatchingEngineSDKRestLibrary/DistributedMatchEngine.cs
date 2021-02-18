@@ -204,6 +204,13 @@ namespace DistributedMatchEngine
     public DeviceInfo deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
 
+    /*!
+     * Enable edge features. If enabled, this may cause permission prompts on
+     * some target devices due to the MatchingEngine probing the current network
+     * state for edge capabilities. Edge features may be degraded if not enabled.
+     */
+    public static bool EnableEnhancedLocationServices { get; set; } = false;
+
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
       UseSimpleDictionaryFormat = true
