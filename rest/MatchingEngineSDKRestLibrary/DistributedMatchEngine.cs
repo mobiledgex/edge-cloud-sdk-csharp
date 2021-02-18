@@ -209,7 +209,7 @@ namespace DistributedMatchEngine
      * some target devices due to the MatchingEngine probing the current network
      * state for edge capabilities. Edge features may be degraded if not enabled.
      */
-    public bool EnableEnhancedLocationServices { get; set; } = false;
+    public static bool EnableEnhancedLocationServices { get; set; } = false;
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
