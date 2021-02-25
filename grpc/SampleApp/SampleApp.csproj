@@ -7,6 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MatchingEngineGrpcLibrary\MobiledgeX.MatchingEngineGrpc.csproj" />
+    <ProjectReference Include="..\MatchingEngineGrpc\MobiledgeX.MatchingEngineGrpc.csproj" />
   </ItemGroup>
 </Project>

@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <PackageId>MobiledgeX.MatchingEngineGrpcLibrary</PackageId>
-    <Version>2.5</Version>
+    <Version>2.5.0-a</Version>
     <Authors>MobiledgeX, Inc</Authors>
     <Company>MobiledgeX, Inc.</Company>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>MobiledgeX, Inc.</Copyright>
     <ReleaseVersion>2.5.1</ReleaseVersion>
+    <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -17,7 +18,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
   <ItemGroup>
     <Folder Include="api\" />
-    <Folder Include="google\api\" />
+    <Folder Include="Protocol\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grpc" Version="2.26.0" />
