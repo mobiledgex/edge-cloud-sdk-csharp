@@ -582,7 +582,10 @@ namespace DistributedMatchEngine
 
       foreach(var entry in src)
       {
-        dest.Add(entry.Key, entry.Value);
+        if (entry.Value != null)
+        {
+          dest.Add(entry.Key, entry.Value);
+        }
       }
     }
 
@@ -600,7 +603,10 @@ namespace DistributedMatchEngine
 
       foreach (var entry in src)
       {
-        dest.Add(entry.Key, entry.Value);
+        if (entry.Value != null)
+        {
+          dest.Add(entry.Key, entry.Value);
+        }
       }
     }
 
