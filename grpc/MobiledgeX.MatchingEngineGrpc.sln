@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "SampleApp\SampleApp.csproj", "{25F75803-C48D-4D3F-BF7E-7A62E306B65E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchingEngineGrpcLibrary", "MatchingEngineGrpcLibrary\MatchingEngineGrpcLibrary.csproj", "{07D32336-2057-4828-910C-7CDCC06D09C2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngineTests", "EngineTests\EngineTests.csproj", "{9C94254C-56B9-40BD-8797-CDA4EF85EF47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobiledgeX.MatchingEngineGrpc", "MatchingEngineGrpc\MobiledgeX.MatchingEngineGrpc.csproj", "{4FAC6E2C-4C4D-4F4E-9877-5DA5D2F4F0E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,16 +17,16 @@ Global
 		{25F75803-C48D-4D3F-BF7E-7A62E306B65E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25F75803-C48D-4D3F-BF7E-7A62E306B65E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25F75803-C48D-4D3F-BF7E-7A62E306B65E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07D32336-2057-4828-910C-7CDCC06D09C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07D32336-2057-4828-910C-7CDCC06D09C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07D32336-2057-4828-910C-7CDCC06D09C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07D32336-2057-4828-910C-7CDCC06D09C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C94254C-56B9-40BD-8797-CDA4EF85EF47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9C94254C-56B9-40BD-8797-CDA4EF85EF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C94254C-56B9-40BD-8797-CDA4EF85EF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C94254C-56B9-40BD-8797-CDA4EF85EF47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FAC6E2C-4C4D-4F4E-9877-5DA5D2F4F0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FAC6E2C-4C4D-4F4E-9877-5DA5D2F4F0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FAC6E2C-4C4D-4F4E-9877-5DA5D2F4F0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FAC6E2C-4C4D-4F4E-9877-5DA5D2F4F0E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 2.5
+		version = 2.5.1
 	EndGlobalSection
 EndGlobal
