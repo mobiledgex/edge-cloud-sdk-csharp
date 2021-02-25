@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>MobiledgeX.MatchingEngineGrpcLibrary</PackageId>
+    <PackageId>MobiledgeX.MatchingEngineGrpc</PackageId>
     <Version>2.5.0-a</Version>
     <Authors>MobiledgeX, Inc</Authors>
     <Company>MobiledgeX, Inc.</Company>
