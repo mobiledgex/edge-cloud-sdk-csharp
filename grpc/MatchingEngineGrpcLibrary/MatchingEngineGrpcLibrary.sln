@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.808.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchingEngineGrpcLibrary", "MatchingEngineGrpcLibrary.csproj", "{462142C8-B7CB-4FC4-870E-0F06C6120552}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobiledgeX.MatchingEngineGrpc", "MobiledgeX.MatchingEngineGrpc.csproj", "{462142C8-B7CB-4FC4-870E-0F06C6120552}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "..\SampleApp\SampleApp.csproj", "{5F51BC52-9FCF-405A-8949-444FC368CDEC}"
 EndProject
@@ -27,5 +27,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {062357BB-6037-4FE0-9CBD-A5DABCE12C66}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 2.5.1
 	EndGlobalSection
 EndGlobal
