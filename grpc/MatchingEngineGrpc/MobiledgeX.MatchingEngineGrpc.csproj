@@ -1,14 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>MobiledgeX.MatchingEngineGrpcLibrary</PackageId>
-    <Version>2.5</Version>
+    <PackageId>MobiledgeX.MatchingEngineGrpc</PackageId>
+    <Version>2.5.0-a</Version>
     <Authors>MobiledgeX, Inc</Authors>
     <Company>MobiledgeX, Inc.</Company>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>MobiledgeX, Inc.</Copyright>
-    <ReleaseVersion>2.5</ReleaseVersion>
+    <Copyright>Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
+    <ReleaseVersion>2.5.1</ReleaseVersion>
+    <PackOnBuild>true</PackOnBuild>
+    <Owners>MobiledgeX, Inc.</Owners>
+    <Title>MobiledgeX MatchingEngine SDK gRPC Library</Title>
+    <PackageTags>MobiledgeX MatchingEngine</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -17,7 +21,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
   <ItemGroup>
     <Folder Include="api\" />
-    <Folder Include="google\api\" />
+    <Folder Include="Protocol\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grpc" Version="2.26.0" />

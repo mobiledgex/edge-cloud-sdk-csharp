@@ -35,13 +35,14 @@ namespace DistributedMatchEngine
     private AsyncDuplexStreamingCall<ClientEdgeEvent, ServerEdgeEvent> DuplexEventStream;
     CancellationTokenSource ConnectionCancelTokenSource;
 
-    private String HostOverride;
+    private string HostOverride;
     private uint PortOverride;
 
     MatchingEngine me;
     private string edgeEventsCoookie { get; set; }
 
     Task ReadStreamTask;
+    internal bool DoReconnect = true;
 
     internal DMEConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
     {
@@ -97,14 +98,13 @@ namespace DistributedMatchEngine
         EdgeEventsCookie = openEdgeEventsCookie
       };
 
-      // New source:
-      ConnectionCancelTokenSource = new CancellationTokenSource();
-
       // Attach a reader and loop until gone:
       ReadStreamTask = Task.Run(async () =>
       {
         try
         {
+          ConnectionCancelTokenSource = new CancellationTokenSource();
+
           Log.S("Write init message to server, with cancelToken: ");
           DuplexEventStream = streamClient.StreamEdgeEvent(
             cancellationToken: ConnectionCancelTokenSource.Token
@@ -117,20 +117,30 @@ namespace DistributedMatchEngine
             me.InvokeEventBusReciever(DuplexEventStream.ResponseStream.Current);
             if (DuplexEventStream.ResponseStream.Current.EventType == ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate)
             {
-              me.DmeConnection.Close();
-              me.DmeConnection.Reconnect();
+              Close();
             }
           }
+
           Log.D("DMEConnection loop has exited.");
         }
         catch (OperationCanceledException ex) when (ex.CancellationToken == ConnectionCancelTokenSource.Token)
         {
-          ConnectionCancelTokenSource = null;
           DuplexEventStream = null;
           ReadStreamTask = null;
         }
+        finally
+        {
+          ConnectionCancelTokenSource = null;
+          if (DoReconnect)
+          {
+            if (!Reconnect())
+            {
+              Log.E("Failed to restart EdgeEvents Loop in DMEConnection!");
+            }
+          }
+        }
       });
-      
+
       return true;
     }
 
@@ -150,8 +160,7 @@ namespace DistributedMatchEngine
         return false;
       }
 
-      Open(edgeEventsCoookie);
-      return true;
+      return Open(edgeEventsCoookie);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
