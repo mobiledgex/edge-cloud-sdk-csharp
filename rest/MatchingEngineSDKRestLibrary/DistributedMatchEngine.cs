@@ -45,8 +45,8 @@ namespace DistributedMatchEngine
    */
   public class DmeDnsException : Exception
   {
-    public DmeDnsException(string message)
-        : base(message)
+    public DmeDnsException(string message, Exception InnerException = null)
+       : base(message, InnerException)
     {
     }
   }
@@ -424,15 +424,22 @@ namespace DistributedMatchEngine
 
       string potentialDmeHost = mcc + "-" + mnc + "." + baseDmeHost;
 
-      // This host might not actually exist (yet):
-      IPHostEntry ipHostEntry = Dns.GetHostEntry(potentialDmeHost);
-      if (ipHostEntry.AddressList.Length > 0)
+      try
       {
-        return potentialDmeHost;
+        // This host might not actually exist (yet):
+        IPHostEntry ipHostEntry = Dns.GetHostEntry(potentialDmeHost);
+        if (ipHostEntry.AddressList.Length > 0)
+        {
+          return potentialDmeHost;
+        }
+      }
+      catch (Exception e)
+      {
+        throw new DmeDnsException("Cannot generate DME hostname: " + potentialDmeHost + ", Message: " + e.Message, e.InnerException);
       }
 
       // Let the caller handle an unsupported DME configuration.
-      throw new DmeDnsException("Generated mcc-mnc." + baseDmeHost + " hostname not found: " + potentialDmeHost);
+      throw new DmeDnsException("Generated mcc-mnc. BaseDmeHost: " + baseDmeHost + ", hostname not found: " + potentialDmeHost);
     }
 
     private string CreateUri(string host, uint port)
