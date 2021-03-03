@@ -78,6 +78,24 @@ namespace MexGrpcSampleConsoleApp
     }
   }
 
+  class DummyCarrierInfo : CarrierInfo
+  {
+    public ulong GetCellID()
+    {
+      return 0;
+    }
+
+    public string GetCurrentCarrierName()
+    {
+      return "26201";
+    }
+
+    public string GetMccMnc()
+    {
+      return "26201";
+    }
+  }
+
   // This interface is optional but is used in the sample.
   class DummyUniqueID : UniqueID
   {
@@ -113,9 +131,9 @@ namespace MexGrpcSampleConsoleApp
     string dmeHost = "192.168.1.172";
     uint dmePort = 50051; // DME port.
     string carrierName = "";
-    string orgName = "mobiledgex";
-    string appName = "arshooter";
-    string appVers = "1";
+    string orgName = "MobiledgeX-Samples";
+    string appName = "ComputerVision";
+    string appVers = "2.2";
 
     MatchingEngine me;
 
@@ -271,7 +289,7 @@ namespace MexGrpcSampleConsoleApp
       {
         me = new MatchingEngine(
           netInterface: new SimpleNetInterface(new MacNetworkInterfaceName()),
-          carrierInfo: new EmptyCarrierInfo(),
+          carrierInfo: new DummyCarrierInfo(),
           deviceInfo: new DummyDeviceInfo(),
           uniqueID: new DummyUniqueID());
         location = GetLocation();
@@ -496,15 +514,16 @@ namespace MexGrpcSampleConsoleApp
     {
       me = new MatchingEngine(
         netInterface: new SimpleNetInterface(new MacNetworkInterfaceName()),
-        carrierInfo: new EmptyCarrierInfo(),
+        carrierInfo: new DummyCarrierInfo(),
         deviceInfo: new DummyDeviceInfo(),
         uniqueID: new DummyUniqueID());
-      me.useSSL = false; // Local testing only.
+      me.useOnlyWifi = true;
+      me.useSSL = true; // false --> Local testing only.
       location = GetLocation();
       string uri = dmeHost + ":" + dmePort;
 
       var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers);
-      var regReply = await me.RegisterClient(host: dmeHost, port: dmePort, registerClientRequest);
+      var regReply = await me.RegisterClient(registerClientRequest);
 
       Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
 
