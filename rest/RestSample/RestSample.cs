@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2020 MobiledgeX, Inc. All rights and licenses reserved.
+ * Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.
  * MobiledgeX, Inc. 156 2nd Street #408, San Francisco, CA 94105
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -85,9 +85,9 @@ namespace RestSample
   class Program
   {
     static string carrierName = "";
-    static string orgName = "MobiledgeX";
-    static string appName = "MobiledgeX SDK Demo";
-    static string appVers = "2.0";
+    static string orgName = "MobiledgeX-Samples";
+    static string appName = "ComputerVision-GPU";
+    static string appVers = "2.2";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
@@ -215,6 +215,8 @@ namespace RestSample
 
         me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
+        me.useSSL = true;
+        fallbackDmeHost = me.GenerateDmeHostAddress(); // WiFi if not overridden in test sample.
         // Set SSL.
 
         await NetTest(me);
