@@ -45,8 +45,8 @@ namespace DistributedMatchEngine
    */
   public class DmeDnsException : Exception
   {
-    public DmeDnsException(string message)
-        : base(message)
+    public DmeDnsException(string message, Exception InnerException = null)
+       : base(message, InnerException)
     {
     }
   }
@@ -210,13 +210,6 @@ namespace DistributedMatchEngine
     public UniqueID uniqueID { get; set; }
     public DeviceInfo deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
-
-    /*!
-     * Enable edge features. If enabled, this may cause permission prompts on
-     * some target devices due to the MatchingEngine probing the current network
-     * state for edge capabilities. Edge features may be degraded if not enabled.
-     */
-    public static bool EnableEnhancedLocationServices { get; set; } = false;
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
@@ -482,15 +475,22 @@ namespace DistributedMatchEngine
 
       string potentialDmeHost = mcc + "-" + mnc + "." + baseDmeHost;
 
-      // This host might not actually exist (yet):
-      IPHostEntry ipHostEntry = Dns.GetHostEntry(potentialDmeHost);
-      if (ipHostEntry.AddressList.Length > 0)
+      try
       {
-        return potentialDmeHost;
+        // This host might not actually exist (yet):
+        IPHostEntry ipHostEntry = Dns.GetHostEntry(potentialDmeHost);
+        if (ipHostEntry.AddressList.Length > 0)
+        {
+          return potentialDmeHost;
+        }
+      }
+      catch (Exception e)
+      {
+        throw new DmeDnsException("Cannot generate DME hostname: " + potentialDmeHost + ", Message: " + e.Message, e);
       }
 
       // Let the caller handle an unsupported DME configuration.
-      throw new DmeDnsException("Generated mcc-mnc." + baseDmeHost + " hostname not found: " + potentialDmeHost);
+      throw new DmeDnsException("Generated mcc-mnc. BaseDmeHost: " + baseDmeHost + ", hostname not found: " + potentialDmeHost);
     }
 
     internal string CreateUri(string host, uint port)
