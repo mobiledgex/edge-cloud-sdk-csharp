@@ -28,7 +28,7 @@ using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 
 namespace DistributedMatchEngine
 {
-  public class DMEConnection : IDisposable
+  public class EdgeEventsConnection : IDisposable
   {
     // DME region GRPC Streaming Client.
     MatchEngineApi.MatchEngineApiClient streamClient;
@@ -44,7 +44,7 @@ namespace DistributedMatchEngine
     Task ReadStreamTask;
     internal bool DoReconnect = true;
 
-    internal DMEConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
+    internal EdgeEventsConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
     {
       this.me = matchingEngine;
 
@@ -200,7 +200,7 @@ namespace DistributedMatchEngine
       return false;
     }
 
-    private async Task<Boolean> SendTerminate()
+    public async Task<Boolean> SendTerminate()
     {
 
       ClientEdgeEvent terminateEvent = new ClientEdgeEvent
