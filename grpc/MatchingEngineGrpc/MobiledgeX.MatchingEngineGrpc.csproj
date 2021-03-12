@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>MobiledgeX.MatchingEngineGrpc</PackageId>
-    <Version>2.5.0-a</Version>
+    <Version>2.5.0-b</Version>
     <Authors>MobiledgeX, Inc</Authors>
     <Company>MobiledgeX, Inc.</Company>
     <TargetFramework>netstandard2.0</TargetFramework>

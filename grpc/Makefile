@@ -77,7 +77,7 @@ build-release:
 
 publish:
 	echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
-	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpcLibrary.$(GRPC_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
+	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpc.$(GRPC_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
 
 
 clean:
@@ -98,6 +98,6 @@ endif
 test: build-release
 	cd SampleApp && nuget restore
 	@echo "Basic test, using the remote publshed library, provided local client depedency isn't set to use the local built file: "
-	nuget install -Source MobiledgeX Mobiledgex.MatchingEngineGrpcLibrary -Version $(GRPC_SDK_VERSION) -OutputDir packages
+	nuget install -Source MobiledgeX Mobiledgex.MatchingEngineGrpc -Version $(GRPC_SDK_VERSION) -OutputDir packages
 	$(shell MSBuild SampleApp.sln /p:Configuration=Release >> $(SOLUTIONLOG))
 	dotnet SampleApp/bin/Release/netcoreapp2.1/SampleApp.dll
