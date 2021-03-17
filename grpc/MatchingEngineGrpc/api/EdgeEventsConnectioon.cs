@@ -22,6 +22,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using DistributedMatchEngine.PerformanceMetrics;
 using Grpc.Core;
 using static DistributedMatchEngine.ClientEdgeEvent.Types;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
@@ -245,6 +246,66 @@ namespace DistributedMatchEngine
         // No results to post.
         return false;
       }
+
+      ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
+      {
+        EventType = ClientEventType.EventLatencySamples,
+        GpsLocation = location,
+      };
+      foreach (var entry in site.samples)
+      {
+        latencySamplesEvent.Samples.Add(entry);
+      }
+
+      return await Send(latencySamplesEvent).ConfigureAwait(false);
+    }
+
+    public async Task<bool> TestUdpAndPostLatencyResult(string host, Loc location,
+                                                        int numSamples = 5)
+    {
+      Log.D("TestUdpAndPostLatencyResult()");
+      if (location == null)
+      {
+        return false;
+      }
+
+      Site site = new Site(TestType.PING, numSamples: numSamples);
+      site.host = host;
+
+      NetTest netTest = new NetTest(me);
+      netTest.sites.Enqueue(site);
+      netTest.RunNetTest();
+
+      ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
+      {
+        EventType = ClientEventType.EventLatencySamples,
+        GpsLocation = location,
+      };
+      foreach (var entry in site.samples)
+      {
+        latencySamplesEvent.Samples.Add(entry);
+      }
+
+      return await Send(latencySamplesEvent).ConfigureAwait(false);
+    }
+
+    public async Task<bool> TestAndPostLatencyResult(string host, uint port, Loc location,
+                                                        TestType testType = TestType.PING,
+                                                        int numSamples = 5)
+    {
+      Log.D("TestAndPostLatencyResult()");
+      if (location == null)
+      {
+        return false;
+      }
+
+      Site site = new Site(testType, numSamples: numSamples);
+      site.host = host;
+      site.port = (int)port;
+
+      NetTest netTest = new NetTest(me);
+      netTest.sites.Enqueue(site);
+      netTest.RunNetTest();
 
       ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
       {
