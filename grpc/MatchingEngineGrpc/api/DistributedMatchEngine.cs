@@ -189,7 +189,7 @@ namespace DistributedMatchEngine
    * developer's application instance deployed and to connect to that application instance.
    */
   public partial class MatchingEngine : IDisposable
-  { 
+  {
 
     public const string TAG = "MatchingEngine";
     private static HttpClient httpClient;
@@ -220,7 +220,7 @@ namespace DistributedMatchEngine
     };
 
     public const int DEFAULT_GRPC_TIMEOUT_MS = 10000;
-    public TimeSpan GrpcTimeout = TimeSpan.FromMilliseconds(DEFAULT_GETCONNECTION_TIMEOUT_MS); 
+    public TimeSpan GrpcTimeout = TimeSpan.FromMilliseconds(DEFAULT_GETCONNECTION_TIMEOUT_MS);
 
     public bool useOnlyWifi { get; set; } = false;
     // Use SSL for DME.
@@ -241,6 +241,10 @@ namespace DistributedMatchEngine
       EventBusReciever.Invoke(serverEdgeEvent);
     }
 
+    /*!
+     * Set to false if edge events are not needed.
+     */
+    public bool EnableEdgeEvents { get; set; } = true;
     public EdgeEventsConnection EdgeEventsConnection { get; internal set; }
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
@@ -310,6 +314,10 @@ namespace DistributedMatchEngine
      */
     public EdgeEventsConnection GetEdgeEventsConnection(string edgeEventCookie, string dmeHost = null, uint dmePort = 0)
     {
+      if (!EnableEdgeEvents)
+      {
+        return null;
+      }
       if (EdgeEventsConnection == null)
       {
         EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);

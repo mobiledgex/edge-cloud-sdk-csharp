@@ -60,6 +60,11 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     internal bool Open(string openEdgeEventsCookie)
     {
+      if (!me.EnableEdgeEvents)
+      {
+        return false;
+      }
+
       if (me.sessionCookie == null || me.sessionCookie.Equals(""))
       {
         Log.E("SessionCookie not present!");
@@ -134,9 +139,10 @@ namespace DistributedMatchEngine
           ConnectionCancelTokenSource = null;
           if (DoReconnect)
           {
+            Log.D("Reconnecting EdgeEventsConnection!");
             if (!Reconnect())
             {
-              Log.E("Failed to restart EdgeEvents Loop in DMEConnection!");
+              Log.E("Failed to restart EdgeEvents Loop in EdgeEventsConnection!");
             }
           }
         }
@@ -289,17 +295,16 @@ namespace DistributedMatchEngine
       return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
-    public async Task<bool> TestAndPostLatencyResult(string host, uint port, Loc location,
-                                                        TestType testType = TestType.PING,
+    public async Task<bool> TestConnectAndPostLatencyResult(string host, uint port, Loc location,
                                                         int numSamples = 5)
     {
-      Log.D("TestAndPostLatencyResult()");
+      Log.D("TestConnectAndPostLatencyResult()");
       if (location == null)
       {
         return false;
       }
 
-      Site site = new Site(testType, numSamples: numSamples);
+      Site site = new Site(TestType.CONNECT, numSamples: numSamples);
       site.host = host;
       site.port = (int)port;
 
@@ -322,6 +327,7 @@ namespace DistributedMatchEngine
 
     public void Dispose()
     {
+      DoReconnect = false;
       // Attempt to cancel.
       if (ConnectionCancelTokenSource != null && !ConnectionCancelTokenSource.IsCancellationRequested)
       {
