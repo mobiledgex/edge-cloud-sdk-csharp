@@ -122,6 +122,38 @@ namespace Tests
     }
 
     [Test]
+    public async static Task TestEdgeEventsConnection_Latencies()
+    {
+      Console.Error.WriteLine("If you want to run this test, you may need a local server.");
+
+      Loc loc = new Loc { Longitude = -121.8863286, Latitude = 37.3382082 }; // San Jose.
+      var findCloudletReply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+        orgName, appName, appVers, loc);
+
+      Assert.NotNull(findCloudletReply, "FindCloudlet Reply must not be null!");
+      Assert.True(findCloudletReply.Status == FindCloudletReply.Types.FindStatus.FindFound, "cannot find app!");
+
+      AppPort port1 = null;
+      foreach (var aPort in findCloudletReply.Ports)
+      {
+        port1 = aPort;
+        break;
+      }
+
+      var host = port1.FqdnPrefix + findCloudletReply.Fqdn;
+      int port = port1.PublicPort;
+      Assert.True(port > 0, "Port must be bigger than 0!");
+
+      var test1 = await me.EdgeEventsConnection.TestPingAndPostLatencyResult(host, loc);
+      Assert.True(test1, "didn't post!");
+
+      var test2 = await me.EdgeEventsConnection.TestConnectAndPostLatencyResult(host, (uint)port, loc);
+      Assert.True(test2, "didn't post!");
+    }
+
+
+
+    [Test]
     public async static Task TestTCPConnection()
     {
       string test = "{\"Data\":\"tcp test string\"}";
