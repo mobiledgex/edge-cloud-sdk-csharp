@@ -22,6 +22,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using DistributedMatchEngine.PerformanceMetrics;
 using Grpc.Core;
 using static DistributedMatchEngine.ClientEdgeEvent.Types;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
@@ -59,6 +60,11 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     internal bool Open(string openEdgeEventsCookie)
     {
+      if (!me.EnableEdgeEvents)
+      {
+        return false;
+      }
+
       if (me.sessionCookie == null || me.sessionCookie.Equals(""))
       {
         Log.E("SessionCookie not present!");
@@ -133,9 +139,10 @@ namespace DistributedMatchEngine
           ConnectionCancelTokenSource = null;
           if (DoReconnect)
           {
+            Log.D("Reconnecting EdgeEventsConnection!");
             if (!Reconnect())
             {
-              Log.E("Failed to restart EdgeEvents Loop in DMEConnection!");
+              Log.E("Failed to restart EdgeEvents Loop in EdgeEventsConnection!");
             }
           }
         }
@@ -259,8 +266,68 @@ namespace DistributedMatchEngine
       return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
+    public async Task<bool> TestUdpAndPostLatencyResult(string host, Loc location,
+                                                        int numSamples = 5)
+    {
+      Log.D("TestUdpAndPostLatencyResult()");
+      if (location == null)
+      {
+        return false;
+      }
+
+      Site site = new Site(TestType.PING, numSamples: numSamples);
+      site.host = host;
+
+      NetTest netTest = new NetTest(me);
+      netTest.sites.Enqueue(site);
+      netTest.RunNetTest();
+
+      ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
+      {
+        EventType = ClientEventType.EventLatencySamples,
+        GpsLocation = location,
+      };
+      foreach (var entry in site.samples)
+      {
+        latencySamplesEvent.Samples.Add(entry);
+      }
+
+      return await Send(latencySamplesEvent).ConfigureAwait(false);
+    }
+
+    public async Task<bool> TestConnectAndPostLatencyResult(string host, uint port, Loc location,
+                                                        int numSamples = 5)
+    {
+      Log.D("TestConnectAndPostLatencyResult()");
+      if (location == null)
+      {
+        return false;
+      }
+
+      Site site = new Site(TestType.CONNECT, numSamples: numSamples);
+      site.host = host;
+      site.port = (int)port;
+
+      NetTest netTest = new NetTest(me);
+      netTest.sites.Enqueue(site);
+      netTest.RunNetTest();
+
+      ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
+      {
+        EventType = ClientEventType.EventLatencySamples,
+        GpsLocation = location,
+      };
+      foreach (var entry in site.samples)
+      {
+        latencySamplesEvent.Samples.Add(entry);
+      }
+
+      return await Send(latencySamplesEvent).ConfigureAwait(false);
+    }
+
     public void Dispose()
     {
+      DoReconnect = false;
       // Attempt to cancel.
       if (ConnectionCancelTokenSource != null && !ConnectionCancelTokenSource.IsCancellationRequested)
       {
