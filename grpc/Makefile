@@ -97,7 +97,7 @@ endif
 
 test: build-release
 	cd SampleApp && nuget restore
-	@echo "Basic test, using the remote publshed library, provided local client depedency isn't set to use the local built file: "
+	@echo "Basic test, using the remote published library, provided local client dependency isn't set to use the local built file: "
 	nuget install -Source MobiledgeX Mobiledgex.MatchingEngineGrpc -Version $(GRPC_SDK_VERSION) -OutputDir packages
 	$(shell MSBuild SampleApp.sln /p:Configuration=Release >> $(SOLUTIONLOG))
 	dotnet SampleApp/bin/Release/netcoreapp2.1/SampleApp.dll
