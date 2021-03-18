@@ -127,8 +127,7 @@ namespace MexGrpcSampleConsoleApp
     Loc location;
     string sessionCookie;
 
-    //string dmeHost = "wifi.dme.mobiledgex.net"; // demo DME server hostname or ip.
-    string dmeHost = "192.168.1.172";
+    string dmeHost = "wifi.dme.mobiledgex.net"; // demo DME server hostname or ip.
     uint dmePort = 50051; // DME port.
     string carrierName = "";
     string orgName = "MobiledgeX-Samples";
@@ -523,7 +522,7 @@ namespace MexGrpcSampleConsoleApp
       string uri = dmeHost + ":" + dmePort;
 
       var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers);
-      var regReply = await me.RegisterClient(registerClientRequest);
+      var regReply = await me.RegisterClient(host: dmeHost, port: dmePort, registerClientRequest);
 
       Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
 
@@ -550,7 +549,10 @@ namespace MexGrpcSampleConsoleApp
         if (serverEdgeEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection)
         {
           Loc loc = new Loc { Longitude = -73.935242, Latitude = 40.730610 }; // New York City
-          await me.DmeConnection.PostLocationUpdate(loc);
+          if (me.EdgeEventsConnection != null)
+          {
+            await me.EdgeEventsConnection.PostLocationUpdate(loc);
+          }
         }
       };
 
@@ -681,7 +683,7 @@ namespace MexGrpcSampleConsoleApp
 
       foreach (var site in latencyTester.sites)
       {
-        await me.DmeConnection.PostLatencyResult(site, GetToggledLocation());
+        await me.EdgeEventsConnection.PostLatencyResult(site, GetToggledLocation());
       }
       return;
     }
