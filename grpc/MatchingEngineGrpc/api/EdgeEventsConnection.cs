@@ -266,10 +266,10 @@ namespace DistributedMatchEngine
       return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
-    public async Task<bool> TestUdpAndPostLatencyResult(string host, Loc location,
+    public async Task<bool> TestPingAndPostLatencyResult(string host, Loc location,
                                                         int numSamples = 5)
     {
-      Log.D("TestUdpAndPostLatencyResult()");
+      Log.D("TestPingAndPostLatencyResult()");
       if (location == null)
       {
         return false;
