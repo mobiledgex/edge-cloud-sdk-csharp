@@ -260,9 +260,16 @@ namespace DistributedMatchEngine
       };
       foreach (var entry in site.samples)
       {
-        latencySamplesEvent.Samples.Add(entry);
+        if (entry != null)
+        {
+          latencySamplesEvent.Samples.Add(entry);
+        }
       }
 
+      if (latencySamplesEvent.Samples.Count == 0)
+      {
+        return false;
+      }
       return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
@@ -280,7 +287,7 @@ namespace DistributedMatchEngine
 
       NetTest netTest = new NetTest(me);
       netTest.sites.Enqueue(site);
-      netTest.RunNetTest();
+      await netTest.RunNetTest(numSamples);
 
       ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
       {
@@ -289,9 +296,16 @@ namespace DistributedMatchEngine
       };
       foreach (var entry in site.samples)
       {
-        latencySamplesEvent.Samples.Add(entry);
+        if (entry != null)
+        {
+          latencySamplesEvent.Samples.Add(entry);
+        }
       }
 
+      if (latencySamplesEvent.Samples.Count == 0)
+      {
+        return false;
+      }
       return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
@@ -310,7 +324,7 @@ namespace DistributedMatchEngine
 
       NetTest netTest = new NetTest(me);
       netTest.sites.Enqueue(site);
-      netTest.RunNetTest();
+      await netTest.RunNetTest(numSamples);
 
       ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
       {
@@ -319,7 +333,15 @@ namespace DistributedMatchEngine
       };
       foreach (var entry in site.samples)
       {
-        latencySamplesEvent.Samples.Add(entry);
+        if (entry != null)
+        {
+          latencySamplesEvent.Samples.Add(entry);
+        }
+      }
+
+      if (latencySamplesEvent.Samples.Count == 0)
+      {
+        return false;
       }
 
       return await Send(latencySamplesEvent).ConfigureAwait(false);
