@@ -241,7 +241,7 @@ namespace DistributedMatchEngine
       EventBusReciever.Invoke(serverEdgeEvent);
     }
 
-    public DMEConnection DmeConnection { get; internal set; }
+    public EdgeEventsConnection EdgeEventsConnection { get; internal set; }
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
     public FindCloudletReply LastFindCloudletReply { get; private set; }
@@ -306,13 +306,13 @@ namespace DistributedMatchEngine
     }
 
     /*!
-     * GetDmeConnection
+     * GetEdgeEventsConnection
      */
-    public DMEConnection GetDMEConnection(string edgeEventCookie, string dmeHost = null, uint dmePort = 0)
+    public EdgeEventsConnection GetEdgeEventsConnection(string edgeEventCookie, string dmeHost = null, uint dmePort = 0)
     {
-      if (DmeConnection == null)
+      if (EdgeEventsConnection == null)
       {
-        DmeConnection = new DMEConnection(this, dmeHost, dmePort);
+        EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       }
 
       if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
@@ -321,21 +321,21 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      if (!DmeConnection.IsShutdown())
+      if (!EdgeEventsConnection.IsShutdown())
       {
-        return DmeConnection;
+        return EdgeEventsConnection;
       }
 
-      if (!DmeConnection.Open(edgeEventCookie))
+      if (!EdgeEventsConnection.Open(edgeEventCookie))
       {
-        return DmeConnection = null;
+        return EdgeEventsConnection = null;
       }
-      return DmeConnection;
+      return EdgeEventsConnection;
     }
 
-    DMEConnection GetDMEConnection()
+    EdgeEventsConnection GetEdgeEventsConnection()
     {
-      return DmeConnection;
+      return EdgeEventsConnection;
     }
 
     /*!
@@ -1051,7 +1051,7 @@ namespace DistributedMatchEngine
         }
         if (melModeFindCloudletReply.Status == FindStatus.FindFound)
         {
-          DmeConnection = GetDMEConnection(melModeFindCloudletReply.EdgeEventsCookie, host, port);
+          EdgeEventsConnection = GetEdgeEventsConnection(melModeFindCloudletReply.EdgeEventsCookie, host, port);
         }
         string appOfficialFqdn = melModeFindCloudletReply.Fqdn;
 
@@ -1107,7 +1107,7 @@ namespace DistributedMatchEngine
       // TODO: Refactor.
       if (fcReply.Status == FindStatus.FindFound)
       {
-        DmeConnection = GetDMEConnection(fcReply.EdgeEventsCookie, host, port);
+        EdgeEventsConnection = GetEdgeEventsConnection(fcReply.EdgeEventsCookie, host, port);
       }
       LastFindCloudletReply = fcReply;
       return fcReply;
@@ -1578,7 +1578,7 @@ namespace DistributedMatchEngine
     // Compiler generated.
     protected virtual void Dispose(bool disposing)
     {
-      if (DmeConnection == null || !DmeConnection.IsShutdown())
+      if (EdgeEventsConnection == null || !EdgeEventsConnection.IsShutdown())
       {
         if (disposing)
         {
@@ -1587,9 +1587,9 @@ namespace DistributedMatchEngine
 
         // TODO: free unmanaged resources (unmanaged objects) and override finalizer
         // TODO: set large fields to null
-        if (DmeConnection == null || !DmeConnection.IsShutdown())
+        if (EdgeEventsConnection == null || !EdgeEventsConnection.IsShutdown())
         {
-          DmeConnection.Dispose();
+          EdgeEventsConnection.Dispose();
         }
         authToken = null;
         sessionCookie = null;
