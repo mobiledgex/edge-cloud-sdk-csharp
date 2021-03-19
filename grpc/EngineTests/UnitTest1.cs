@@ -115,6 +115,12 @@ namespace Tests
       me.SetMelMessaging(new TestMelMessaging());
     }
 
+    [TearDown]
+    public void Cleanup()
+    {
+      me.Dispose();
+    }
+
     private MemoryStream getMemoryStream(string jsonStr)
     {
       var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonStr));
@@ -129,6 +135,10 @@ namespace Tests
       Loc loc = new Loc { Longitude = -121.8863286, Latitude = 37.3382082 }; // San Jose.
       var findCloudletReply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
         orgName, appName, appVers, loc);
+      // if testing local edgebox:
+      //me.useSSL = false;
+      //var findCloudletReply = await me.RegisterAndFindCloudlet("192.168.1.172", MatchingEngine.defaultDmeGrpcPort,
+      //  "mobiledgex", "arshooter", "1", loc);
 
       Assert.NotNull(findCloudletReply, "FindCloudlet Reply must not be null!");
       Assert.True(findCloudletReply.Status == FindCloudletReply.Types.FindStatus.FindFound, "cannot find app!");
@@ -144,14 +154,15 @@ namespace Tests
       int port = port1.PublicPort;
       Assert.True(port > 0, "Port must be bigger than 0!");
 
+      // In case you're using edgebox locally:
+      //host = "127.0.0.1";
+      //port = 50051;
       var test1 = await me.EdgeEventsConnection.TestPingAndPostLatencyResult(host, loc);
       Assert.True(test1, "didn't post!");
 
       var test2 = await me.EdgeEventsConnection.TestConnectAndPostLatencyResult(host, (uint)port, loc);
       Assert.True(test2, "didn't post!");
     }
-
-
 
     [Test]
     public async static Task TestTCPConnection()
