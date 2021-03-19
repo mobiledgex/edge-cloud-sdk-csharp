@@ -152,7 +152,7 @@ namespace DistributedMatchEngine
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    void Close()
+    internal void Close()
     {
       SendTerminate().ConfigureAwait(false);
       HostOverride = null; // Will use new DME on next connect.
@@ -214,13 +214,16 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventTerminateConnection
       };
-      if (!ConnectionCancelTokenSource.IsCancellationRequested)
-      {
-        ConnectionCancelTokenSource.Cancel();
-      }
       return await Send(terminateEvent);
     }
 
+    /*!
+     * Post GPS locations to EdgeEventsConnection. If there is a closer AppInst
+     * for the App, DME will send a new FindCloudletReply to use when the app
+     * is ready.
+     *
+     * \param location DistriutedMatchEngine.Loc
+     */
     public async Task<bool> PostLocationUpdate(Loc location)
     {
       Log.D("PostLocationUpdate()");
@@ -239,6 +242,13 @@ namespace DistributedMatchEngine
       return await Send(locationUpdate).ConfigureAwait(false);
     }
 
+    /*!
+     * Post a PerformanceMetrics Site object to the edge events server with App
+     * driven performance test results.
+     *
+     * \param site Contains stats the app retrieved to send to server.
+     * \param location DistriutedMatchEngine.Loc
+     */
     public async Task<bool> PostLatencyResult(Site site, Loc location)
     {
       Log.D("PostLatencyResult()");
@@ -260,16 +270,31 @@ namespace DistributedMatchEngine
       };
       foreach (var entry in site.samples)
       {
-        latencySamplesEvent.Samples.Add(entry);
+        if (entry != null)
+        {
+          latencySamplesEvent.Samples.Add(entry);
+        }
       }
 
+      if (latencySamplesEvent.Samples.Count == 0)
+      {
+        return false;
+      }
       return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
-    public async Task<bool> TestUdpAndPostLatencyResult(string host, Loc location,
+    /*!
+     * Post a PerformanceMetrics Ping stats to the EdgeEvents server connection.
+     * This call will gather and posts the results.
+     *
+     * \param host
+     * \param location DistriutedMatchEngine.Loc
+     * \param numSamples (default 5 samples)
+     */
+    public async Task<bool> TestPingAndPostLatencyResult(string host, Loc location,
                                                         int numSamples = 5)
     {
-      Log.D("TestUdpAndPostLatencyResult()");
+      Log.D("TestPingAndPostLatencyResult()");
       if (location == null)
       {
         return false;
@@ -280,7 +305,7 @@ namespace DistributedMatchEngine
 
       NetTest netTest = new NetTest(me);
       netTest.sites.Enqueue(site);
-      netTest.RunNetTest();
+      await netTest.RunNetTest(numSamples);
 
       ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
       {
@@ -289,12 +314,28 @@ namespace DistributedMatchEngine
       };
       foreach (var entry in site.samples)
       {
-        latencySamplesEvent.Samples.Add(entry);
+        if (entry != null)
+        {
+          latencySamplesEvent.Samples.Add(entry);
+        }
       }
 
+      if (latencySamplesEvent.Samples.Count == 0)
+      {
+        return false;
+      }
       return await Send(latencySamplesEvent).ConfigureAwait(false);
     }
 
+    /*!
+     * Post a PerformanceMetrics TCP connect stats to the EdgeEvents server
+     * connection. This call will gather and posts the results.
+     *
+     * \param host
+     * \param port
+     * \param location DistriutedMatchEngine.Loc
+     * \param numSamples (default 5 samples)
+     */
     public async Task<bool> TestConnectAndPostLatencyResult(string host, uint port, Loc location,
                                                         int numSamples = 5)
     {
@@ -310,7 +351,7 @@ namespace DistributedMatchEngine
 
       NetTest netTest = new NetTest(me);
       netTest.sites.Enqueue(site);
-      netTest.RunNetTest();
+      await netTest.RunNetTest(numSamples);
 
       ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
       {
@@ -319,7 +360,15 @@ namespace DistributedMatchEngine
       };
       foreach (var entry in site.samples)
       {
-        latencySamplesEvent.Samples.Add(entry);
+        if (entry != null)
+        {
+          latencySamplesEvent.Samples.Add(entry);
+        }
+      }
+
+      if (latencySamplesEvent.Samples.Count == 0)
+      {
+        return false;
       }
 
       return await Send(latencySamplesEvent).ConfigureAwait(false);
@@ -329,12 +378,10 @@ namespace DistributedMatchEngine
     {
       DoReconnect = false;
       // Attempt to cancel.
-      if (ConnectionCancelTokenSource != null && !ConnectionCancelTokenSource.IsCancellationRequested)
-      {
-        ConnectionCancelTokenSource.Cancel();
-      }
+      Close();
       streamClient = null;
       me = null;
     }
+
   }
 }

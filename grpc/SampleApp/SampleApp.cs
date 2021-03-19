@@ -87,12 +87,12 @@ namespace MexGrpcSampleConsoleApp
 
     public string GetCurrentCarrierName()
     {
-      return "26201";
+      return "";
     }
 
     public string GetMccMnc()
     {
-      return "26201";
+      return "";
     }
   }
 
@@ -685,6 +685,12 @@ namespace MexGrpcSampleConsoleApp
       {
         await me.EdgeEventsConnection.PostLatencyResult(site, GetToggledLocation());
       }
+
+      // Double post:
+      await me.EdgeEventsConnection.TestPingAndPostLatencyResult(dmeHost, GetToggledLocation());
+
+      // Test another:
+      await me.EdgeEventsConnection.TestConnectAndPostLatencyResult(dmeHost, dmePort, GetToggledLocation());
       return;
     }
   }
