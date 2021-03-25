@@ -233,12 +233,12 @@ namespace DistributedMatchEngine
     string authToken { get; set; }
 
     // For Event Consumers
-    public delegate void EventBusDelegate(ServerEdgeEvent serverEdgeEvent);
-    public event EventBusDelegate EventBusReciever;
-    public void InvokeEventBusReciever(ServerEdgeEvent serverEdgeEvent)
+    public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
+    public event EdgeEventsDelegate EdgeEventsReceiver;
+    public void InvokeEdgeEventsReciever(ServerEdgeEvent serverEdgeEvent)
     {
-      Log.D("EventBusReciever Message: " + serverEdgeEvent);
-      EventBusReciever.Invoke(serverEdgeEvent);
+      Log.D("EdgeEventsReceiver Message: " + serverEdgeEvent);
+      EdgeEventsReceiver.Invoke(serverEdgeEvent);
     }
 
     /*!
@@ -303,7 +303,7 @@ namespace DistributedMatchEngine
       SetMelMessaging(null);
 
       // Setup a dummy event delegate for monitoring events:
-      EventBusReciever += (ServerEdgeEvent serverEdgeEvent) =>
+      EdgeEventsReceiver += (ServerEdgeEvent serverEdgeEvent) =>
       {
         Log.D("MatchingEngine EdgeEvent Notice: " + serverEdgeEvent.EventType);
       };
@@ -767,6 +767,7 @@ namespace DistributedMatchEngine
       request = new RegisterClientRequest()
       {
         Ver = oldRequest.Ver,
+        CarrierName = oldRequest.CarrierName,
         OrgName = oldRequest.OrgName,
         AppName = oldRequest.AppName,
         AppVers = oldRequest.AppVers,
@@ -803,13 +804,19 @@ namespace DistributedMatchEngine
         }
 
         return reply;
-
       }
       catch (Exception e)
       {
-        Console.WriteLine("Exception hit on Register: " + e.Message);
-        throw e;
+        Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + request.CarrierName + ", appName: " + request.AppName + ", appVersion: " + request.AppVers + ", organizationName: " + request.OrgName + ", Message: " + e.Message);
+        string msg = e.Message;
+        if (msg != null && msg.Contains("NotFound"))
+        {
+          Log.E("Please check that the appName, appVersion, and orgName correspond to a valid app definition on MobiledgeX.");
+          throw e;
+        }
       }
+      // Shouldn't be here.
+      return null;
     }
 
     /*!
@@ -1598,7 +1605,7 @@ namespace DistributedMatchEngine
         {
           EdgeEventsConnection.Close();
         }
-        EventBusReciever = null;
+        EdgeEventsReceiver = null;
 
       }
 

@@ -120,7 +120,7 @@ namespace DistributedMatchEngine
 
           while (await DuplexEventStream.ResponseStream.MoveNext())
           {
-            me.InvokeEventBusReciever(DuplexEventStream.ResponseStream.Current);
+            me.InvokeEdgeEventsReciever(DuplexEventStream.ResponseStream.Current);
             if (DuplexEventStream.ResponseStream.Current.EventType == ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate)
             {
               Close();
@@ -249,7 +249,7 @@ namespace DistributedMatchEngine
      * \param site Contains stats the app retrieved to send to server.
      * \param location DistriutedMatchEngine.Loc
      */
-    public async Task<bool> PostLatencyResult(Site site, Loc location)
+    public async Task<bool> PostLatencyUpdate(Site site, Loc location)
     {
       Log.D("PostLatencyResult()");
       if (location == null)
@@ -285,13 +285,13 @@ namespace DistributedMatchEngine
 
     /*!
      * Post a PerformanceMetrics Ping stats to the EdgeEvents server connection.
-     * This call will gather and posts the results.
+     * This call will gather and post the results.
      *
      * \param host
      * \param location DistriutedMatchEngine.Loc
      * \param numSamples (default 5 samples)
      */
-    public async Task<bool> TestPingAndPostLatencyResult(string host, Loc location,
+    public async Task<bool> TestPingAndPostLatencyUpdate(string host, Loc location,
                                                         int numSamples = 5)
     {
       Log.D("TestPingAndPostLatencyResult()");
@@ -329,14 +329,14 @@ namespace DistributedMatchEngine
 
     /*!
      * Post a PerformanceMetrics TCP connect stats to the EdgeEvents server
-     * connection. This call will gather and posts the results.
+     * connection. This call will gather and post the results.
      *
      * \param host
      * \param port
      * \param location DistriutedMatchEngine.Loc
      * \param numSamples (default 5 samples)
      */
-    public async Task<bool> TestConnectAndPostLatencyResult(string host, uint port, Loc location,
+    public async Task<bool> TestConnectAndPostLatencyUpdate(string host, uint port, Loc location,
                                                         int numSamples = 5)
     {
       Log.D("TestConnectAndPostLatencyResult()");
