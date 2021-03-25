@@ -810,36 +810,57 @@ namespace DistributedMatchEngine
         throw e;
       }
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + registerAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
+      RegisterClientReply reply = null;
+      string responseStr = "";
+      try
       {
-        return null;
+        Stream responseStream = await PostRequest(CreateUri(host, port) + registerAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable RegisterClient stream! This should not happen.");
+          return null;
+        }
+
+        DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
+        responseStr = Util.StreamToString(responseStream);
+        Log.D("Response: " + responseStr);
+        byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+        ms = new MemoryStream(byteArray);
+        reply = (RegisterClientReply)deserializer.ReadObject(ms);
+
+        if (reply.tags == null)
+        {
+          reply.tags = Tag.HashtableToDictionary(reply.htags);
+        }
+
+        this.sessionCookie = reply.session_cookie;
+        this.tokenServerURI = reply.token_server_uri;
+
+        // Some platforms won't parse emums with same library binary.
+        reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+
+        if (reply.status == ReplyStatus.RS_SUCCESS)
+        {
+          LastRegisterClientRequest = request; // Update last request.
+          return reply;
+        }
+        else
+        {
+          Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", Message: " + responseStr);
+          throw new RegisterClientException("RegisterClientReply status is " + reply.status + "Message: " + responseStr);
+        }
       }
-
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(RegisterClientReply), serializerSettings);
-      string responseStr = Util.StreamToString(responseStream);
-      Log.D("Response: " + responseStr);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      RegisterClientReply reply = (RegisterClientReply)deserializer.ReadObject(ms);
-
-      if (reply.tags == null)
+      catch (HttpException he)
       {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
+        // Create a fake reply:
+        reply = new RegisterClientReply { status = ReplyStatus.RS_FAIL };
+        Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", Message: " + he.Message);
+        if (he.HttpStatusCode == HttpStatusCode.NotFound)
+        {
+          Log.E("Please check that the appName, appVersion, and orgName correspond to a valid app definition on MobiledgeX.");
+        }
+        throw he;
       }
-
-      this.sessionCookie = reply.session_cookie;
-      this.tokenServerURI = reply.token_server_uri;
-
-      // Some platforms won't parse emums with same library binary.
-      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
-
-      if (reply.status == ReplyStatus.RS_SUCCESS)
-      {
-        LastRegisterClientRequest = request; // Update last request.
-      }
-
-      return reply;
     }
 
     /*!
@@ -965,9 +986,11 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, appOfficialFqdnRequest);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + appofficialfqdnAPI, jsonStr);
+      Stream responseStream = null;
+      responseStream = await PostRequest(CreateUri(host, port) + appofficialfqdnAPI, jsonStr);
       if (responseStream == null || !responseStream.CanRead)
       {
+        Log.E("Unreadable FindCloudletMelMode reply stream!");
         return null;
       }
 
@@ -1028,9 +1051,11 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + findcloudletAPI, jsonStr);
+      Stream responseStream = null;
+      responseStream = await PostRequest(CreateUri(host, port) + findcloudletAPI, jsonStr);
       if (responseStream == null || !responseStream.CanRead)
       {
+        Log.E("Unreadable FindCloudletProximityMode reply stream!");
         return null;
       }
 
@@ -1149,75 +1174,87 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      if (melMessaging != null && melMessaging.IsMelEnabled() &&
-          netInterface.GetIPAddress(
-            GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
+      try
       {
-        FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
-        if (melModeFindCloudletReply == null)
+        if (melMessaging != null && melMessaging.IsMelEnabled() &&
+            netInterface.GetIPAddress(
+              GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
+        {
+          FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
+          if (melModeFindCloudletReply == null)
+          {
+            return null;
+          }
+          if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+          {
+            DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
+          }
+          string appOfficialFqdn = melModeFindCloudletReply.fqdn;
+
+          IPHostEntry ipHostEntry;
+          Stopwatch stopwatch = Stopwatch.StartNew();
+          while (stopwatch.ElapsedMilliseconds < httpClient.Timeout.TotalMilliseconds)
+          {
+            if (appOfficialFqdn == null || appOfficialFqdn.Length == 0)
+            {
+              break;
+            }
+
+            try
+            {
+              ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
+              if (ipHostEntry.AddressList.Length > 0)
+              {
+                Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
+                return melModeFindCloudletReply;
+              }
+            }
+            catch (ArgumentException ae)
+            {
+              Log.D("ArgumentException. Waiting for update: " + ae.Message);
+            }
+            catch (SocketException se)
+            {
+              Log.D("SocketException. Waiting for update: " + se.Message);
+            }
+            Task.Delay(300).Wait(); // Let the system process SET_TOKEN.
+          }
+
+          // Else, don't return, continue to fallback to original MODE:
+          Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
+        }
+
+        FindCloudletReply fcReply = null;
+        if (mode == FindCloudletMode.PROXIMITY)
+        {
+          fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
+        }
+        else
+        {
+          fcReply = await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
+        }
+
+        if (fcReply == null)
         {
           return null;
         }
-        if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+
+        // TODO: Refactor.
+        if (fcReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
         {
-          DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
+          DmeConnection = GetDMEConnection(fcReply.edge_events_cookie, host, port);
         }
-        string appOfficialFqdn = melModeFindCloudletReply.fqdn;
-
-        IPHostEntry ipHostEntry;
-        Stopwatch stopwatch = Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < httpClient.Timeout.TotalMilliseconds)
+        return fcReply;
+      }
+      catch (HttpException he)
+      {
+        Log.E("Exception during FindCloudlet, using DME Server: " + host + ", Message: " + he.Message);
+        if (he.HttpStatusCode == HttpStatusCode.NotFound)
         {
-          if (appOfficialFqdn == null || appOfficialFqdn.Length == 0)
-          {
-            break;
-          }
-
-          try
-          {
-            ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
-            if (ipHostEntry.AddressList.Length > 0)
-            {
-              Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
-              return melModeFindCloudletReply;
-            }
-          }
-          catch (ArgumentException ae)
-          {
-            Log.D("ArgumentException. Waiting for update: " + ae.Message);
-          }
-          catch (SocketException se)
-          {
-            Log.D("SocketException. Waiting for update: " + se.Message);
-          }
-          Task.Delay(300).Wait(); // Let the system process SET_TOKEN.
+          Log.E("Please verify app registration details.");
         }
-
-        // Else, don't return, continue to fallback to original MODE:
-        Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
+        throw he;
       }
-
-      FindCloudletReply fcReply = null;
-      if (mode == FindCloudletMode.PROXIMITY)
-      {
-        fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
-      }
-      else
-      {
-        fcReply = await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
-      }
-
-      if (fcReply == null)
-      {
-        return null;
-      }
-
-      // TODO: Refactor.
-      if (fcReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
-      {
-        DmeConnection = GetDMEConnection(fcReply.edge_events_cookie, host, port);
-      }
-      return fcReply;
     }
 
     // FindCloudlet with GetAppInstList and NetTest
@@ -1237,6 +1274,7 @@ namespace DistributedMatchEngine
 
       AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.gps_location, request.carrier_name, tags: tags);
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
+
       if (aiReply.tags == null)
       {
         aiReply.tags = Tag.HashtableToDictionary(aiReply.htags);
@@ -1453,10 +1491,19 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + verifylocationAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
+      Stream responseStream = null;
+      try {
+        responseStream = await PostRequest(CreateUri(host, port) + verifylocationAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable VerifyLocation stream! This should not happen.");
+          return null;
+        }
+      }
+      catch (HttpException he)
       {
-        return null;
+        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        throw he;
       }
 
       string responseStr = Util.StreamToString(responseStream);
@@ -1565,10 +1612,20 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + appinstlistAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
+      Stream responseStream = null;
+      try
       {
-        return null;
+        responseStream = await PostRequest(CreateUri(host, port) + appinstlistAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable GetAppInstList stream! This should not happen.");
+          return null;
+        }
+      }
+      catch (HttpException he)
+      {
+        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        throw he;
       }
 
       string responseStr = Util.StreamToString(responseStream);
@@ -1705,10 +1762,20 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + getfqdnlistAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
+      Stream responseStream;
+      try
       {
-        return null;
+        responseStream = await PostRequest(CreateUri(host, port) + getfqdnlistAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable GetFqdnList stream! This should not happen.");
+          return null;
+        }
+      }
+      catch (HttpException he)
+      {
+        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        throw he;
       }
 
       string responseStr = Util.StreamToString(responseStream);
@@ -1759,10 +1826,19 @@ namespace DistributedMatchEngine
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
-      Stream responseStream = await PostRequest(CreateUri(host, port) + dynamiclocgroupAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
+      Stream responseStream;
+      try
       {
-        return null;
+        responseStream = await PostRequest(CreateUri(host, port) + dynamiclocgroupAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable AddUserToGroup stream! This should not happen.");
+          return null;
+        }
+      } catch (HttpException he)
+      {
+        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        throw he;
       }
 
       string responseStr = Util.StreamToString(responseStream);
