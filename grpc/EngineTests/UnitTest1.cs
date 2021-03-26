@@ -157,10 +157,10 @@ namespace Tests
       // In case you're using edgebox locally:
       //host = "127.0.0.1";
       //port = 50051;
-      var test1 = await me.EdgeEventsConnection.TestPingAndPostLatencyResult(host, loc);
+      var test1 = await me.EdgeEventsConnection.TestPingAndPostLatencyUpdate(host, loc);
       Assert.True(test1, "didn't post!");
 
-      var test2 = await me.EdgeEventsConnection.TestConnectAndPostLatencyResult(host, (uint)port, loc);
+      var test2 = await me.EdgeEventsConnection.TestConnectAndPostLatencyUpdate(host, (uint)port, loc);
       Assert.True(test2, "didn't post!");
     }
 

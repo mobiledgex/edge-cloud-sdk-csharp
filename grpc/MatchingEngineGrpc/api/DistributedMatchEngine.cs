@@ -233,12 +233,12 @@ namespace DistributedMatchEngine
     string authToken { get; set; }
 
     // For Event Consumers
-    public delegate void EventBusDelegate(ServerEdgeEvent serverEdgeEvent);
-    public event EventBusDelegate EventBusReciever;
-    public void InvokeEventBusReciever(ServerEdgeEvent serverEdgeEvent)
+    public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
+    public event EdgeEventsDelegate EdgeEventsReceiver;
+    public void InvokeEdgeEventsReciever(ServerEdgeEvent serverEdgeEvent)
     {
-      Log.D("EventBusReciever Message: " + serverEdgeEvent);
-      EventBusReciever.Invoke(serverEdgeEvent);
+      Log.D("EdgeEventsReceiver Message: " + serverEdgeEvent);
+      EdgeEventsReceiver.Invoke(serverEdgeEvent);
     }
 
     /*!
@@ -303,7 +303,7 @@ namespace DistributedMatchEngine
       SetMelMessaging(null);
 
       // Setup a dummy event delegate for monitoring events:
-      EventBusReciever += (ServerEdgeEvent serverEdgeEvent) =>
+      EdgeEventsReceiver += (ServerEdgeEvent serverEdgeEvent) =>
       {
         Log.D("MatchingEngine EdgeEvent Notice: " + serverEdgeEvent.EventType);
       };
@@ -767,6 +767,7 @@ namespace DistributedMatchEngine
       request = new RegisterClientRequest()
       {
         Ver = oldRequest.Ver,
+        CarrierName = oldRequest.CarrierName,
         OrgName = oldRequest.OrgName,
         AppName = oldRequest.AppName,
         AppVers = oldRequest.AppVers,
@@ -801,15 +802,20 @@ namespace DistributedMatchEngine
         {
           LastRegisterClientRequest = request; // Update last request.
         }
-
         return reply;
-
       }
-      catch (Exception e)
+      catch (RpcException e)
       {
-        Console.WriteLine("Exception hit on Register: " + e.Message);
+        Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + request.CarrierName + ", appName: " + request.AppName + ", appVersion: " + request.AppVers + ", organizationName: " + request.OrgName + ", Message: " + e.Message);
+        string msg = e.Message;
+        if (msg == null || msg.Contains("NotFound"))
+        {
+          Log.E("Please check that the appName, appVersion, and orgName correspond to a valid app definition on MobiledgeX.");
+        }
         throw e;
       }
+      // Shouldn't be here.
+      return new RegisterClientReply { Status = ReplyStatus.RsFail }; ;
     }
 
     /*!
@@ -1048,77 +1054,85 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
-      if (melMessaging != null && melMessaging.IsMelEnabled() &&
-          netInterface.GetIPAddress(
-            GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
+      try
       {
-        FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
-        if (melModeFindCloudletReply == null)
+        if (melMessaging != null && melMessaging.IsMelEnabled() &&
+            netInterface.GetIPAddress(
+              GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
         {
-          return null;
-        }
-        if (melModeFindCloudletReply.Status == FindStatus.FindFound)
-        {
-          EdgeEventsConnection = GetEdgeEventsConnection(melModeFindCloudletReply.EdgeEventsCookie, host, port);
-        }
-        string appOfficialFqdn = melModeFindCloudletReply.Fqdn;
-
-        IPHostEntry ipHostEntry;
-        Stopwatch stopwatch = Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < httpClient.Timeout.TotalMilliseconds)
-        {
-          if (appOfficialFqdn == null || appOfficialFqdn.Length == 0)
+          FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
+          if (melModeFindCloudletReply == null)
           {
-            break;
+            return new FindCloudletReply { Status = FindStatus.FindNotfound }; ;
           }
-
-          try
+          if (melModeFindCloudletReply.Status == FindStatus.FindFound)
           {
-            ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
-            if (ipHostEntry.AddressList.Length > 0)
+            EdgeEventsConnection = GetEdgeEventsConnection(melModeFindCloudletReply.EdgeEventsCookie, host, port);
+          }
+          string appOfficialFqdn = melModeFindCloudletReply.Fqdn;
+
+          IPHostEntry ipHostEntry;
+          Stopwatch stopwatch = Stopwatch.StartNew();
+          while (stopwatch.ElapsedMilliseconds < httpClient.Timeout.TotalMilliseconds)
+          {
+            if (appOfficialFqdn == null || appOfficialFqdn.Length == 0)
             {
-              Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
-              LastFindCloudletReply = melModeFindCloudletReply;
-              return melModeFindCloudletReply;
+              break;
             }
+
+            try
+            {
+              ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
+              if (ipHostEntry.AddressList.Length > 0)
+              {
+                Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
+                LastFindCloudletReply = melModeFindCloudletReply;
+                return melModeFindCloudletReply;
+              }
+            }
+            catch (ArgumentException ae)
+            {
+              Log.D("ArgumentException. Waiting for update: " + ae.Message);
+            }
+            catch (SocketException se)
+            {
+              Log.D("SocketException. Waiting for update: " + se.Message);
+            }
+            Task.Delay(300).Wait(); // Let the system process SET_TOKEN.
           }
-          catch (ArgumentException ae)
-          {
-            Log.D("ArgumentException. Waiting for update: " + ae.Message);
-          }
-          catch (SocketException se)
-          {
-            Log.D("SocketException. Waiting for update: " + se.Message);
-          }
-          Task.Delay(300).Wait(); // Let the system process SET_TOKEN.
+
+          // Else, don't return, continue to fallback to original MODE:
+          Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
         }
 
-        // Else, don't return, continue to fallback to original MODE:
-        Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
-      }
+        FindCloudletReply fcReply = null;
+        if (mode == FindCloudletMode.PROXIMITY)
+        {
+          fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
+        }
+        else
+        {
+          fcReply = await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
+        }
 
-      FindCloudletReply fcReply = null;
-      if (mode == FindCloudletMode.PROXIMITY)
-      {
-        fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
-      }
-      else
-      {
-        fcReply = await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
-      }
+        if (fcReply == null)
+        {
+          Log.E("FindCloudlet error. Did not get any result using DME Server: " + host);
+          return new FindCloudletReply { Status = FindStatus.FindNotfound };
+        }
 
-      if (fcReply == null)
-      {
-        return null;
+        if (fcReply.Status == FindStatus.FindFound)
+        {
+          EdgeEventsConnection = GetEdgeEventsConnection(fcReply.EdgeEventsCookie, host, port);
+        }
+        LastFindCloudletReply = fcReply;
+        return fcReply;
       }
-
-      // TODO: Refactor.
-      if (fcReply.Status == FindStatus.FindFound)
+      catch (RpcException e)
       {
-        EdgeEventsConnection = GetEdgeEventsConnection(fcReply.EdgeEventsCookie, host, port);
+        Log.E("FindCloudlet exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
+        throw e;
       }
-      LastFindCloudletReply = fcReply;
-      return fcReply;
     }
 
     // FindCloudlet with GetAppInstList and NetTest
@@ -1228,9 +1242,11 @@ namespace DistributedMatchEngine
       RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest)
         .ConfigureAwait(false);
 
-      if (registerClientReply.Status != ReplyStatus.RsSuccess)
+      if (registerClientReply == null || registerClientReply.Status != ReplyStatus.RsSuccess)
       {
-        throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.Status);
+        var status = registerClientReply == null ? "null." : registerClientReply.Status.ToString();
+        Log.E("RegisterClient did not succeed: DME Server: " + host + ", status: " + status);
+        throw new RegisterClientException("RegisterClientReply status is: " + status);
       }
       // Find Cloudlet 
       FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(
@@ -1241,7 +1257,11 @@ namespace DistributedMatchEngine
       FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode)
         .ConfigureAwait(false);
 
-
+      if (findCloudletReply == null || findCloudletReply.Status != FindStatus.FindFound)
+      {
+        var status = findCloudletReply == null ? "null." : findCloudletReply.Status.ToString();
+        Log.E("FindCloudlet did not succeed: DME Server: " + host + ", status: " + status);
+      }
       return findCloudletReply;
     }
 
@@ -1308,22 +1328,30 @@ namespace DistributedMatchEngine
      */
     public async Task<VerifyLocationReply> VerifyLocation(string host, uint port, VerifyLocationRequest request)
     {
-      string token = RetrieveToken(tokenServerURI);
-      request.VerifyLocToken = token;
+      try
+      {
+        string token = RetrieveToken(tokenServerURI);
+        request.VerifyLocToken = token;
 
-      // One time use Channel:
-      Channel channel = ChannelPicker(host, port);
+        // One time use Channel:
+        Channel channel = ChannelPicker(host, port);
 
-      var client = new MatchEngineApi.MatchEngineApiClient(channel);
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      var call = client.VerifyLocationAsync(
-        request,
-        new CallOptions()
-          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
-      );
-      var responseTask = call.ResponseAsync.ConfigureAwait(false);
-      var reply = await responseTask;
-      return reply;
+        var call = client.VerifyLocationAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
+        return reply;
+      }
+      catch (RpcException e)
+      {
+        Log.E("VerifyLocation exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
+        throw e;
+      }
     }
 
     /*!
@@ -1393,20 +1421,28 @@ namespace DistributedMatchEngine
      */
     public async Task<AppInstListReply> GetAppInstList(string host, uint port, AppInstListRequest request)
     {
-      // One time use Channel:
-      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        // One time use Channel:
+        Channel channel = ChannelPicker(host, port);
 
-      var client = new MatchEngineApi.MatchEngineApiClient(channel);
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      var call = client.GetAppInstListAsync(
-        request,
-        new CallOptions()
-          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
-      );
-      var responseTask = call.ResponseAsync.ConfigureAwait(false);
-      var reply = await responseTask;
+        var call = client.GetAppInstListAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
 
-      return reply;
+        return reply;
+      }
+      catch (RpcException e)
+      {
+        Log.E("GetAppInstList exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
+        throw e;
+      }
     }
 
     /*!
@@ -1482,18 +1518,26 @@ namespace DistributedMatchEngine
      */
     public AsyncServerStreamingCall<QosPositionKpiReply> GetQosPositionKpi(string host, uint port, QosPositionRequest request)
     {
-      // One time use Channel:
-      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        // One time use Channel:
+        Channel channel = ChannelPicker(host, port);
 
-      var client = new MatchEngineApi.MatchEngineApiClient(channel);
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      var reply = client.GetQosPositionKpi(
-        request,
-        new CallOptions()
-          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
-      );
+        var reply = client.GetQosPositionKpi(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
 
-      return reply;
+        return reply;
+      }
+      catch (RpcException e)
+      {
+        Log.E("GetQosPositionKpi exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
+        throw e;
+      }
     }   
 
     private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
@@ -1522,20 +1566,28 @@ namespace DistributedMatchEngine
 
     private async Task<FqdnListReply> GetFqdnList(string host, uint port, FqdnListRequest request)
     {
-      // One time use Channel:
-      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        // One time use Channel:
+        Channel channel = ChannelPicker(host, port);
 
-      var client = new MatchEngineApi.MatchEngineApiClient(channel);
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      var call = client.GetFqdnListAsync(
-        request,
-        new CallOptions()
-          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
-      );
-      var responseTask = call.ResponseAsync.ConfigureAwait(false);
-      var reply = await responseTask;
+        var call = client.GetFqdnListAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
 
-      return reply;
+        return reply;
+      }
+      catch (RpcException e)
+      {
+        Log.E("GetFqdnList exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
+        throw e;
+      }
     }
 
     private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
@@ -1567,20 +1619,28 @@ namespace DistributedMatchEngine
 
     private async Task<DynamicLocGroupReply> AddUserToGroup(string host, uint port, DynamicLocGroupRequest request)
     {
-      // One time use Channel:
-      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        // One time use Channel:
+        Channel channel = ChannelPicker(host, port);
 
-      var client = new MatchEngineApi.MatchEngineApiClient(channel);
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
 
-      var call = client.AddUserToGroupAsync(
-        request,
-        new CallOptions()
-          .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
-      );
-      var responseTask = call.ResponseAsync.ConfigureAwait(false);
-      var reply = await responseTask;
+        var call = client.AddUserToGroupAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
 
-      return reply;
+        return reply;
+      }
+      catch (RpcException e)
+      {
+        Log.E("AddUserToGroup exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
+        throw e;
+      }
     }
 
     // Compiler generated.
@@ -1594,11 +1654,11 @@ namespace DistributedMatchEngine
       if (disposing)
       {
         // dispose managed state (managed objects)
-        if (EdgeEventsConnection != null || !EdgeEventsConnection.IsShutdown())
+        if (EdgeEventsConnection != null && !EdgeEventsConnection.IsShutdown())
         {
           EdgeEventsConnection.Close();
         }
-        EventBusReciever = null;
+        EdgeEventsReceiver = null;
 
       }
 

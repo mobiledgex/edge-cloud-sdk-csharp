@@ -86,8 +86,8 @@ namespace RestSample
   {
     static string carrierName = "";
     static string orgName = "MobiledgeX-Samples";
-    static string appName = "ComputerVision-GPU";
-    static string appVers = "2.2";
+    static string appName = "sdktest";
+    static string appVers = "9.0";
 
     // For SDK purposes only, this allows continued operation against default app insts.
     // A real app will get exceptions, and need to skip the DME, and fallback to public cloud.
@@ -157,6 +157,10 @@ namespace RestSample
       // Register and FindCloudlet to find appinst to test
       var registerClientRequest = matchingEngine.CreateRegisterClientRequest(orgName, appName, appVers);
       var registerClientReply = await matchingEngine.RegisterClient(registerClientRequest);
+      if (registerClientReply == null)
+      {
+        Console.WriteLine("Nothing returned for reply");
+      }
       var loc = await Util.GetLocationFromDevice();
       var findCloudletRequest = matchingEngine.CreateFindCloudletRequest(loc, carrierName);
       var findCloudletReply = await matchingEngine.FindCloudlet(findCloudletRequest);

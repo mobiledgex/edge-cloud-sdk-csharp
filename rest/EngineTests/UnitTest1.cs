@@ -46,8 +46,8 @@ namespace Tests
     const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
 
     const string orgName = "MobiledgeX-Samples";
-    const string appName = "HttpEcho";
-    const string appVers = "1.0";
+    const string appName = "sdktest";
+    const string appVers = "9.0";
     const string connectionTestFqdn = "autoclusterhttpecho.dusseldorf-main.tdg.mobiledgex.net";
     const string connectionTlsTestFqdn = "autoclusterhttpechotls.dusseldorf-main.tdg.mobiledgex.net";
     const string aWebSocketServerFqdn = "vivobrazil-rjo2.telefonica.mobiledgex.net"; // or, localhost.

@@ -131,8 +131,8 @@ namespace MexGrpcSampleConsoleApp
     uint dmePort = 50051; // DME port.
     string carrierName = "";
     string orgName = "MobiledgeX-Samples";
-    string appName = "ComputerVision";
-    string appVers = "2.2";
+    string appName = "sdktest";
+    string appVers = "9.0";
 
     MatchingEngine me;
 
@@ -540,7 +540,7 @@ namespace MexGrpcSampleConsoleApp
       Console.WriteLine("VerifyLocation Accuracy: " + verifyLocationReply.GpsLocationAccuracyKm);
 
       // Attach an Edge EventBus Receiver (This is not a raw delegate).
-      me.EventBusReciever += async (ServerEdgeEvent serverEdgeEvent) =>
+      me.EdgeEventsReceiver += async (ServerEdgeEvent serverEdgeEvent) =>
       {
         Console.WriteLine("Got Event: ," + "EventType: " + serverEdgeEvent.EventType + ", Messsage: " + serverEdgeEvent);
         await HandleEdgeEvent(serverEdgeEvent).ConfigureAwait(false);
@@ -571,6 +571,9 @@ namespace MexGrpcSampleConsoleApp
       }
       // Straight reflection print:
       Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
+
+      // Clean:
+      me.Dispose();
       return;
     }
 
@@ -683,14 +686,14 @@ namespace MexGrpcSampleConsoleApp
 
       foreach (var site in latencyTester.sites)
       {
-        await me.EdgeEventsConnection.PostLatencyResult(site, GetToggledLocation());
+        await me.EdgeEventsConnection.PostLatencyUpdate(site, GetToggledLocation());
       }
 
       // Double post:
-      await me.EdgeEventsConnection.TestPingAndPostLatencyResult(dmeHost, GetToggledLocation());
+      await me.EdgeEventsConnection.TestPingAndPostLatencyUpdate(dmeHost, GetToggledLocation());
 
       // Test another:
-      await me.EdgeEventsConnection.TestConnectAndPostLatencyResult(dmeHost, dmePort, GetToggledLocation());
+      await me.EdgeEventsConnection.TestConnectAndPostLatencyUpdate(dmeHost, dmePort, GetToggledLocation());
       return;
     }
   }
