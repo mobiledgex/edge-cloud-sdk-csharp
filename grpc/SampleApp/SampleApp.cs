@@ -571,6 +571,9 @@ namespace MexGrpcSampleConsoleApp
       }
       // Straight reflection print:
       Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
+
+      // Clean:
+      me.Dispose();
       return;
     }
 

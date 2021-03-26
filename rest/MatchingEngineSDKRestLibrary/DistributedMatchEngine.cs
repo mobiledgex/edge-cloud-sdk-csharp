@@ -841,25 +841,28 @@ namespace DistributedMatchEngine
 
         if (reply.status == ReplyStatus.RS_SUCCESS)
         {
-          LastRegisterClientRequest = request; // Update last request.
-          return reply;
+          LastRegisterClientRequest = request; // Update last successful request.
         }
         else
         {
-          Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", Message: " + responseStr);
-          throw new RegisterClientException("RegisterClientReply status is " + reply.status + "Message: " + responseStr);
+          Log.E("RegisterClient not successful. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", status: " + reply.status + ", Message: " + responseStr);
         }
+        return reply;
       }
       catch (HttpException he)
       {
-        // Create a fake reply:
-        reply = new RegisterClientReply { status = ReplyStatus.RS_FAIL };
-        Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", Message: " + he.Message);
+        Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
         if (he.HttpStatusCode == HttpStatusCode.NotFound)
         {
           Log.E("Please check that the appName, appVersion, and orgName correspond to a valid app definition on MobiledgeX.");
         }
         throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        // DME might not exist at all:
+        Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", Message: " + hre.Message);
+        throw hre;
       }
     }
 
@@ -1244,16 +1247,26 @@ namespace DistributedMatchEngine
         {
           DmeConnection = GetDMEConnection(fcReply.edge_events_cookie, host, port);
         }
+        else
+        {
+          Log.E("FindCloudlet not successful, using DME Server: " + host + ", status: " + fcReply.status);
+        }
         return fcReply;
       }
       catch (HttpException he)
       {
-        Log.E("Exception during FindCloudlet, using DME Server: " + host + ", Message: " + he.Message);
+        Log.E("Exception during FindCloudlet, using DME Server: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
         if (he.HttpStatusCode == HttpStatusCode.NotFound)
         {
           Log.E("Please verify app registration details.");
         }
         throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        // DME might not exist at all:
+        Log.E("Exception during FindCloudlet. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
       }
     }
 
@@ -1502,8 +1515,14 @@ namespace DistributedMatchEngine
       }
       catch (HttpException he)
       {
-        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
         throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        // DME might not exist at all:
+        Log.E("Exception during VerifyLocation. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
       }
 
       string responseStr = Util.StreamToString(responseStream);
@@ -1624,8 +1643,14 @@ namespace DistributedMatchEngine
       }
       catch (HttpException he)
       {
-        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
         throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        // DME might not exist at all:
+        Log.E("Exception during GetAppInstList. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
       }
 
       string responseStr = Util.StreamToString(responseStream);
@@ -1774,8 +1799,14 @@ namespace DistributedMatchEngine
       }
       catch (HttpException he)
       {
-        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
         throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        // DME might not exist at all:
+        Log.E("Exception during GetFqdnList. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
       }
 
       string responseStr = Util.StreamToString(responseStream);
@@ -1837,8 +1868,14 @@ namespace DistributedMatchEngine
         }
       } catch (HttpException he)
       {
-        Log.E("Exception hit: DME Server host: " + host + ", Message: " + he.Message);
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
         throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        // DME might not exist at all:
+        Log.E("Exception during AddUserToGroup. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
       }
 
       string responseStr = Util.StreamToString(responseStream);
