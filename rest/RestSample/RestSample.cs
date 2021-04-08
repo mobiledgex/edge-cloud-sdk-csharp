@@ -520,7 +520,7 @@ namespace RestSample
             //! [getqospositionoverloadexample]
           }
           catch (NotImplementedException)
-          { 
+          {
             qosReplyStream = await me.GetQosPositionKpi(fallbackDmeHost, MatchingEngine.defaultDmeRestPort, qosPositionRequest);
           }
 
@@ -547,6 +547,8 @@ namespace RestSample
           Console.WriteLine("QosPositionKpi Exception: " + httpe.Message + ", HTTP StatusCode: " + httpe.HttpStatusCode + ", API ErrorCode: " + httpe.ErrorCode + "\nStack: " + httpe.StackTrace);
         }
 
+        // Just clean. This was not in a using block.
+        me.Dispose();
       }
       catch (Exception e) // Catch All
       {

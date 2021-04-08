@@ -185,7 +185,7 @@ namespace DistributedMatchEngine
    * Main MobiledgeX SDK class. This class provides functions to find nearest cloudlet with the
    * developer's application instance deployed and to connect to that application instance.
    */
-  public partial class MatchingEngine
+  public partial class MatchingEngine : IDisposable
   { 
 
     public const string TAG = "MatchingEngine";
@@ -237,6 +237,8 @@ namespace DistributedMatchEngine
 
     public string sessionCookie { get; set; }
     string tokenServerURI;
+    private bool disposedValue;
+
     string authToken { get; set; }
 
     // Delegate for Events.
@@ -1892,5 +1894,35 @@ namespace DistributedMatchEngine
 
       return reply;
     }
-  };
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!disposedValue)
+      {
+        if (disposing)
+        {
+          httpClient.Dispose();
+        }
+
+        // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+        // TODO: set large fields to null
+        httpClient = null;
+        disposedValue = true;
+      }
+    }
+
+    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+    // ~MatchingEngine()
+    // {
+    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+      // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+      Dispose(disposing: true);
+      GC.SuppressFinalize(this);
+    }
+  }
 }
