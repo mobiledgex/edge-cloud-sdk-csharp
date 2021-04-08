@@ -52,15 +52,25 @@ namespace DistributedMatchEngine {
             "DGVudW1fYmFja2VuZBIhLmdvb2dsZS5wcm90b2J1Zi5FbnVtVmFsdWVPcHRp",
             "b25zGOKOAyABKAhiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { pbr::FileDescriptor.DescriptorProtoFileDescriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), typeof(global::DistributedMatchEngine.HealthCheck), typeof(global::DistributedMatchEngine.CloudletState), typeof(global::DistributedMatchEngine.MaintenanceState), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DeviceInfo), global::DistributedMatchEngine.DeviceInfo.Parser, new[]{ "DataNetworkType", "DeviceOs", "DeviceModel", "SignalStrength" }, null, null, null)
+          new pbr::FileDescriptor[] { global::Google.Protobuf.Reflection.DescriptorReflection.Descriptor, },
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), typeof(global::DistributedMatchEngine.HealthCheck), typeof(global::DistributedMatchEngine.CloudletState), typeof(global::DistributedMatchEngine.MaintenanceState), }, new pb::Extension[] { AppcommonExtensions.EnumBackend }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DeviceInfo), global::DistributedMatchEngine.DeviceInfo.Parser, new[]{ "DataNetworkType", "DeviceOs", "DeviceModel", "SignalStrength" }, null, null, null, null)
           }));
     }
     #endregion
 
   }
+  /// <summary>Holder for extension identifiers generated from the top level of appcommon.proto</summary>
+  public static partial class AppcommonExtensions {
+    /// <summary>
+    /// Backend defines a field that is filled in by the back-end,
+    /// not by the user.
+    /// </summary>
+    public static readonly pb::Extension<global::Google.Protobuf.Reflection.EnumValueOptions, bool> EnumBackend =
+      new pb::Extension<global::Google.Protobuf.Reflection.EnumValueOptions, bool>(51042, pb::FieldCodec.ForBool(408336, false));
+  }
+
   #region Enums
   /// <summary>
   /// Layer4 Protocol
@@ -211,7 +221,11 @@ namespace DistributedMatchEngine {
   ///
   /// AppPort describes an L4 or L7 public access port/path mapping. This is used to track external to internal mappings for access via a shared load balancer or reverse proxy.
   /// </summary>
-  public sealed partial class AppPort : pb::IMessage<AppPort> {
+  public sealed partial class AppPort : pb::IMessage<AppPort>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<AppPort> _parser = new pb::MessageParser<AppPort>(() => new AppPort());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -253,7 +267,7 @@ namespace DistributedMatchEngine {
 
     /// <summary>Field number for the "proto" field.</summary>
     public const int ProtoFieldNumber = 1;
-    private global::DistributedMatchEngine.LProto proto_ = 0;
+    private global::DistributedMatchEngine.LProto proto_ = global::DistributedMatchEngine.LProto.Unknown;
     /// <summary>
     /// TCP (L4) or UDP (L4) protocol
     /// </summary>
@@ -376,7 +390,7 @@ namespace DistributedMatchEngine {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Proto != 0) hash ^= Proto.GetHashCode();
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) hash ^= Proto.GetHashCode();
       if (InternalPort != 0) hash ^= InternalPort.GetHashCode();
       if (PublicPort != 0) hash ^= PublicPort.GetHashCode();
       if (FqdnPrefix.Length != 0) hash ^= FqdnPrefix.GetHashCode();
@@ -396,7 +410,10 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Proto != 0) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) {
         output.WriteRawTag(8);
         output.WriteEnum((int) Proto);
       }
@@ -427,12 +444,50 @@ namespace DistributedMatchEngine {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Proto);
+      }
+      if (InternalPort != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(InternalPort);
+      }
+      if (PublicPort != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(PublicPort);
+      }
+      if (FqdnPrefix.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(FqdnPrefix);
+      }
+      if (EndPort != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(EndPort);
+      }
+      if (Tls != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(Tls);
+      }
+      if (Nginx != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(Nginx);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Proto != 0) {
+      if (Proto != global::DistributedMatchEngine.LProto.Unknown) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Proto);
       }
       if (InternalPort != 0) {
@@ -464,7 +519,7 @@ namespace DistributedMatchEngine {
       if (other == null) {
         return;
       }
-      if (other.Proto != 0) {
+      if (other.Proto != global::DistributedMatchEngine.LProto.Unknown) {
         Proto = other.Proto;
       }
       if (other.InternalPort != 0) {
@@ -490,6 +545,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -526,7 +584,50 @@ namespace DistributedMatchEngine {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Proto = (global::DistributedMatchEngine.LProto) input.ReadEnum();
+            break;
+          }
+          case 16: {
+            InternalPort = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            PublicPort = input.ReadInt32();
+            break;
+          }
+          case 42: {
+            FqdnPrefix = input.ReadString();
+            break;
+          }
+          case 48: {
+            EndPort = input.ReadInt32();
+            break;
+          }
+          case 56: {
+            Tls = input.ReadBool();
+            break;
+          }
+          case 64: {
+            Nginx = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 
@@ -534,7 +635,11 @@ namespace DistributedMatchEngine {
   ///
   /// DeviceInfo
   /// </summary>
-  public sealed partial class DeviceInfo : pb::IMessage<DeviceInfo> {
+  public sealed partial class DeviceInfo : pb::IMessage<DeviceInfo>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<DeviceInfo> _parser = new pb::MessageParser<DeviceInfo>(() => new DeviceInfo());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -667,6 +772,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (DataNetworkType.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(DataNetworkType);
@@ -686,7 +794,33 @@ namespace DistributedMatchEngine {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DataNetworkType.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DataNetworkType);
+      }
+      if (DeviceOs.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DeviceOs);
+      }
+      if (DeviceModel.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(DeviceModel);
+      }
+      if (SignalStrength != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(SignalStrength);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -731,6 +865,9 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -755,7 +892,38 @@ namespace DistributedMatchEngine {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DataNetworkType = input.ReadString();
+            break;
+          }
+          case 18: {
+            DeviceOs = input.ReadString();
+            break;
+          }
+          case 26: {
+            DeviceModel = input.ReadString();
+            break;
+          }
+          case 32: {
+            SignalStrength = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 

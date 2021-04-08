@@ -155,6 +155,9 @@ namespace DistributedMatchEngine
     internal void Close()
     {
       SendTerminate().ConfigureAwait(false);
+      DuplexEventStream.Dispose();
+      DuplexEventStream = null;
+      streamClient = null;
       HostOverride = null; // Will use new DME on next connect.
       PortOverride = 0;
     }
@@ -377,9 +380,8 @@ namespace DistributedMatchEngine
     public void Dispose()
     {
       DoReconnect = false;
-      // Attempt to cancel.
+      // Attempt to cancel connection.
       Close();
-      streamClient = null;
       me = null;
     }
 

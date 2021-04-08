@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GRPC_SDK_VERSION := 2.26.0
+GRPC_SDK_VERSION := 2.36.4
 GRPCTOOLS := Grpc.Tools.$(GRPC_SDK_VERSION)
 TEMP_DIR := packages/
 CURL_URL := https://www.nuget.org/api/v2/package/Grpc.Tools/$(GRPC_SDK_VERSION)

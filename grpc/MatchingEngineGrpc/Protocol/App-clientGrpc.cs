@@ -15,27 +15,57 @@ namespace DistributedMatchEngine {
   {
     static readonly string __ServiceName = "distributed_match_engine.MatchEngineApi";
 
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.RegisterClientRequest> __Marshaller_distributed_match_engine_RegisterClientRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.RegisterClientRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.RegisterClientReply> __Marshaller_distributed_match_engine_RegisterClientReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.RegisterClientReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletRequest> __Marshaller_distributed_match_engine_FindCloudletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FindCloudletRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletReply> __Marshaller_distributed_match_engine_FindCloudletReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FindCloudletReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.PlatformFindCloudletRequest> __Marshaller_distributed_match_engine_PlatformFindCloudletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.PlatformFindCloudletRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationRequest> __Marshaller_distributed_match_engine_VerifyLocationRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.VerifyLocationRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationReply> __Marshaller_distributed_match_engine_VerifyLocationReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.VerifyLocationReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.GetLocationRequest> __Marshaller_distributed_match_engine_GetLocationRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.GetLocationRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.GetLocationReply> __Marshaller_distributed_match_engine_GetLocationReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.GetLocationReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.DynamicLocGroupRequest> __Marshaller_distributed_match_engine_DynamicLocGroupRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.DynamicLocGroupRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.DynamicLocGroupReply> __Marshaller_distributed_match_engine_DynamicLocGroupReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.DynamicLocGroupReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppInstListRequest> __Marshaller_distributed_match_engine_AppInstListRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.AppInstListRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppInstListReply> __Marshaller_distributed_match_engine_AppInstListReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.AppInstListReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.FqdnListRequest> __Marshaller_distributed_match_engine_FqdnListRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FqdnListRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.FqdnListReply> __Marshaller_distributed_match_engine_FqdnListReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FqdnListReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppOfficialFqdnRequest> __Marshaller_distributed_match_engine_AppOfficialFqdnRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.AppOfficialFqdnRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppOfficialFqdnReply> __Marshaller_distributed_match_engine_AppOfficialFqdnReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.AppOfficialFqdnReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPositionRequest> __Marshaller_distributed_match_engine_QosPositionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPositionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPositionKpiReply> __Marshaller_distributed_match_engine_QosPositionKpiReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPositionKpiReply.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.ClientEdgeEvent> __Marshaller_distributed_match_engine_ClientEdgeEvent = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.ClientEdgeEvent.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.ServerEdgeEvent> __Marshaller_distributed_match_engine_ServerEdgeEvent = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.ServerEdgeEvent.Parser.ParseFrom);
+    static void __Helper_SerializeMessage(global::Google.Protobuf.IMessage message, grpc::SerializationContext context)
+    {
+      #if !GRPC_DISABLE_PROTOBUF_BUFFER_SERIALIZATION
+      if (message is global::Google.Protobuf.IBufferMessage)
+      {
+        context.SetPayloadLength(message.CalculateSize());
+        global::Google.Protobuf.MessageExtensions.WriteTo(message, context.GetBufferWriter());
+        context.Complete();
+        return;
+      }
+      #endif
+      context.Complete(global::Google.Protobuf.MessageExtensions.ToByteArray(message));
+    }
+
+    static class __Helper_MessageCache<T>
+    {
+      public static readonly bool IsBufferMessage = global::System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(global::Google.Protobuf.IBufferMessage)).IsAssignableFrom(typeof(T));
+    }
+
+    static T __Helper_DeserializeMessage<T>(grpc::DeserializationContext context, global::Google.Protobuf.MessageParser<T> parser) where T : global::Google.Protobuf.IMessage<T>
+    {
+      #if !GRPC_DISABLE_PROTOBUF_BUFFER_SERIALIZATION
+      if (__Helper_MessageCache<T>.IsBufferMessage)
+      {
+        return parser.ParseFrom(context.PayloadAsReadOnlySequence());
+      }
+      #endif
+      return parser.ParseFrom(context.PayloadAsNewBuffer());
+    }
+
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.RegisterClientRequest> __Marshaller_distributed_match_engine_RegisterClientRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.RegisterClientRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.RegisterClientReply> __Marshaller_distributed_match_engine_RegisterClientReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.RegisterClientReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletRequest> __Marshaller_distributed_match_engine_FindCloudletRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.FindCloudletRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletReply> __Marshaller_distributed_match_engine_FindCloudletReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.FindCloudletReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.PlatformFindCloudletRequest> __Marshaller_distributed_match_engine_PlatformFindCloudletRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.PlatformFindCloudletRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationRequest> __Marshaller_distributed_match_engine_VerifyLocationRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.VerifyLocationRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationReply> __Marshaller_distributed_match_engine_VerifyLocationReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.VerifyLocationReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.GetLocationRequest> __Marshaller_distributed_match_engine_GetLocationRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.GetLocationRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.GetLocationReply> __Marshaller_distributed_match_engine_GetLocationReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.GetLocationReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.DynamicLocGroupRequest> __Marshaller_distributed_match_engine_DynamicLocGroupRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.DynamicLocGroupRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.DynamicLocGroupReply> __Marshaller_distributed_match_engine_DynamicLocGroupReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.DynamicLocGroupReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppInstListRequest> __Marshaller_distributed_match_engine_AppInstListRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.AppInstListRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppInstListReply> __Marshaller_distributed_match_engine_AppInstListReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.AppInstListReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.FqdnListRequest> __Marshaller_distributed_match_engine_FqdnListRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.FqdnListRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.FqdnListReply> __Marshaller_distributed_match_engine_FqdnListReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.FqdnListReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppOfficialFqdnRequest> __Marshaller_distributed_match_engine_AppOfficialFqdnRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.AppOfficialFqdnRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.AppOfficialFqdnReply> __Marshaller_distributed_match_engine_AppOfficialFqdnReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.AppOfficialFqdnReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPositionRequest> __Marshaller_distributed_match_engine_QosPositionRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.QosPositionRequest.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPositionKpiReply> __Marshaller_distributed_match_engine_QosPositionKpiReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.QosPositionKpiReply.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.ClientEdgeEvent> __Marshaller_distributed_match_engine_ClientEdgeEvent = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.ClientEdgeEvent.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.ServerEdgeEvent> __Marshaller_distributed_match_engine_ServerEdgeEvent = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.ServerEdgeEvent.Parser));
 
     static readonly grpc::Method<global::DistributedMatchEngine.RegisterClientRequest, global::DistributedMatchEngine.RegisterClientReply> __Method_RegisterClient = new grpc::Method<global::DistributedMatchEngine.RegisterClientRequest, global::DistributedMatchEngine.RegisterClientReply>(
         grpc::MethodType.Unary,

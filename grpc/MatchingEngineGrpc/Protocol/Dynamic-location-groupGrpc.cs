@@ -15,8 +15,38 @@ namespace DistributedMatchEngine {
   {
     static readonly string __ServiceName = "distributed_match_engine.DynamicLocGroupApi";
 
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.DlgMessage> __Marshaller_distributed_match_engine_DlgMessage = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.DlgMessage.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::DistributedMatchEngine.DlgReply> __Marshaller_distributed_match_engine_DlgReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.DlgReply.Parser.ParseFrom);
+    static void __Helper_SerializeMessage(global::Google.Protobuf.IMessage message, grpc::SerializationContext context)
+    {
+      #if !GRPC_DISABLE_PROTOBUF_BUFFER_SERIALIZATION
+      if (message is global::Google.Protobuf.IBufferMessage)
+      {
+        context.SetPayloadLength(message.CalculateSize());
+        global::Google.Protobuf.MessageExtensions.WriteTo(message, context.GetBufferWriter());
+        context.Complete();
+        return;
+      }
+      #endif
+      context.Complete(global::Google.Protobuf.MessageExtensions.ToByteArray(message));
+    }
+
+    static class __Helper_MessageCache<T>
+    {
+      public static readonly bool IsBufferMessage = global::System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(global::Google.Protobuf.IBufferMessage)).IsAssignableFrom(typeof(T));
+    }
+
+    static T __Helper_DeserializeMessage<T>(grpc::DeserializationContext context, global::Google.Protobuf.MessageParser<T> parser) where T : global::Google.Protobuf.IMessage<T>
+    {
+      #if !GRPC_DISABLE_PROTOBUF_BUFFER_SERIALIZATION
+      if (__Helper_MessageCache<T>.IsBufferMessage)
+      {
+        return parser.ParseFrom(context.PayloadAsReadOnlySequence());
+      }
+      #endif
+      return parser.ParseFrom(context.PayloadAsNewBuffer());
+    }
+
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.DlgMessage> __Marshaller_distributed_match_engine_DlgMessage = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.DlgMessage.Parser));
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.DlgReply> __Marshaller_distributed_match_engine_DlgReply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DistributedMatchEngine.DlgReply.Parser));
 
     static readonly grpc::Method<global::DistributedMatchEngine.DlgMessage, global::DistributedMatchEngine.DlgReply> __Method_SendToGroup = new grpc::Method<global::DistributedMatchEngine.DlgMessage, global::DistributedMatchEngine.DlgReply>(
         grpc::MethodType.Unary,
