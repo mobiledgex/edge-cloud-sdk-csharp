@@ -151,7 +151,8 @@ namespace DistributedMatchEngine
     // Stdout:
     public static void S(string msg)
     {
-      Console.WriteLine(msg);
+      TextWriter errorWriter = Console.Error;
+      errorWriter.WriteLine("Warning: " + msg);
     }
     // Stderr:
     public static void E(string msg)
@@ -235,10 +236,42 @@ namespace DistributedMatchEngine
     // For Event Consumers
     public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
     public event EdgeEventsDelegate EdgeEventsReceiver;
-    public void InvokeEdgeEventsReciever(ServerEdgeEvent serverEdgeEvent)
+    public delegate void EdgeEventsNewCloudletDelegate(FindCloudletEvent newCloudlet);
+    public event EdgeEventsNewCloudletDelegate EdgeEventsNewCloudletReceiver;
+
+    // TODO: move to EdgeEventsConnection file scope.
+    internal bool InvokeEdgeEventsReciever(ServerEdgeEvent serverEdgeEvent)
     {
-      Log.D("EdgeEventsReceiver Message: " + serverEdgeEvent);
-      EdgeEventsReceiver.Invoke(serverEdgeEvent);
+      // No subscribers:
+      if (EdgeEventsReceiver == null)
+      {
+        Log.S("No event receivers for EdgeEventsReceiver ServerEdgeEvent raw types. Add a handler to receive raw event triggers.");
+        return false;
+      }
+      else
+      {
+        // Fire to subscribers:
+        Log.D("EdgeEventsReceiver Message: " + serverEdgeEvent);
+        EdgeEventsReceiver.Invoke(serverEdgeEvent);
+        return true;
+      }
+    }
+
+    internal bool InvokeEdgeEventsNewCloudletReceiver(FindCloudletReply findCloudletReply, FindCloudletEventTrigger trigger)
+    {
+      // No subscribers:
+      if (EdgeEventsNewCloudletReceiver == null)
+      {
+        Log.S("No event receivers for EdgeEventsNewCloudletReceiver FindCloudletEvent notification. Add a handler to receive new FindCloudletEvent triggers.");
+        return false;
+      }
+      else
+      {
+        // Fire to subscribers:
+        Log.D("EdgeEventsReceiver Message: " + findCloudletReply + ", with trigger: " + trigger);
+        EdgeEventsNewCloudletReceiver.Invoke(new FindCloudletEvent(findCloudletReply, trigger));
+        return true;
+      }
     }
 
     /*!
@@ -246,10 +279,16 @@ namespace DistributedMatchEngine
      */
     public bool EnableEdgeEvents { get; set; } = true;
     public EdgeEventsConnection EdgeEventsConnection { get; internal set; }
+    /*!
+     * Automatically switched EdgeEventsConnection. If set to false, the application needs
+     * to tell MatchingEngine to swap the App's SDK instance to the new cloudlet
+     * once it has migrated the app state to the new edge AppInst.
+     */
+    public bool AutoMigrateEdgeEventsConnection { get; set; } = true;
 
     public RegisterClientRequest LastRegisterClientRequest { get; private set; }
     public FindCloudletReply LastFindCloudletReply { get; private set; }
-
+    
     /*!
      * Constructor for MatchingEngine class.
      * \param carrierInfo (CarrierInfo): 
@@ -301,12 +340,6 @@ namespace DistributedMatchEngine
 
       // Default to empty.
       SetMelMessaging(null);
-
-      // Setup a dummy event delegate for monitoring events:
-      EdgeEventsReceiver += (ServerEdgeEvent serverEdgeEvent) =>
-      {
-        Log.D("MatchingEngine EdgeEvent Notice: " + serverEdgeEvent.EventType);
-      };
     }
 
     /*!
@@ -1690,6 +1723,5 @@ namespace DistributedMatchEngine
       Dispose(disposing: true);
       GC.SuppressFinalize(this);
     }
-  };
-
+  }
 }
