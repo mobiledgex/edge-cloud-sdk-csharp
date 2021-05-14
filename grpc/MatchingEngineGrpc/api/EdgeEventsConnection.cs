@@ -128,8 +128,6 @@ namespace DistributedMatchEngine
               Close();
             }
           }
-
-          Log.D("DMEConnection loop has exited.");
         }
         catch (OperationCanceledException ex) when (ex.CancellationToken == ConnectionCancelTokenSource.Token)
         {
@@ -216,7 +214,10 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventTerminateConnection
       };
-      return await Send(terminateEvent);
+
+      bool ret = await Send(terminateEvent);
+      ConnectionCancelTokenSource.Cancel();
+      return ret;
     }
 
     /*!
