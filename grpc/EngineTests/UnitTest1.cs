@@ -240,10 +240,7 @@ namespace Tests
       {
         HttpClient httpClient = await me.GetHTTPClient(uri);
         Assert.ByVal(httpClient, Is.Not.Null);
-
-        //StringContent content = new StringContent(message);
         HttpResponseMessage response = await httpClient.GetAsync(httpClient.BaseAddress + "/automation.html");
-
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
         Assert.ByVal(responseBody, Is.Not.Null);
@@ -256,10 +253,6 @@ namespace Tests
                     "\n      <p>test server is running</p>" +
                     "\n   </body>" +
                     "\n</html>\n";
-
-        Console.WriteLine(responseBody);
-
-        Console.WriteLine(responseBodyTest);
         Assert.True(responseBody.Equals(responseBodyTest));
       }
       catch (HttpRequestException e)
