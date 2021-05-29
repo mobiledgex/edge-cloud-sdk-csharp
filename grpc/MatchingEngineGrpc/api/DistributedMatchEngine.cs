@@ -799,8 +799,6 @@ namespace DistributedMatchEngine
         }
         throw e;
       }
-      // Shouldn't be here.
-      return new RegisterClientReply { Status = ReplyStatus.RsFail }; ;
     }
 
     /*!
