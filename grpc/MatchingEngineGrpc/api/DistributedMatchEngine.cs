@@ -211,7 +211,7 @@ namespace DistributedMatchEngine
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
-    public DeviceInfoApp deviceInfo { get; private set; } // FIXME: Field wrap GRPC DeviceInfo. Remove GetDeviceInfo()
+    public DeviceInfoApp deviceInfo { get; private set; }
     private MelMessagingInterface melMessaging { get; set; }
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
@@ -735,20 +735,6 @@ namespace DistributedMatchEngine
       return request;
     }
 
-    private RegisterClientRequest UpdateRequestForDeviceInfo(RegisterClientRequest request)
-    {
-      Dictionary<string, string> dict = deviceInfo.GetDeviceInfo();
-
-      if (dict == null)
-      {
-        return request;
-      }
-
-      CopyTagField(request.Tags, dict);
-
-      return request;
-    }
-
     /*!
      * RegisterClient overload with hardcoded DME host and port. Only use for testing.
      * \ingroup functions_dmeapis
@@ -778,7 +764,6 @@ namespace DistributedMatchEngine
 
       // MEL Enablement:
       request = UpdateRequestForUniqueID(request);
-      request = UpdateRequestForDeviceInfo(request);
 
       // One time use Channel:
       Channel channel = ChannelPicker(host, port);

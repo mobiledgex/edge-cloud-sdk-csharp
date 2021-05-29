@@ -1,0 +1,9 @@
+*.orig
+*.swp
+*.vs
+*.DS_Store
+*.vscode
+obj
+lib
+bin
+packages
