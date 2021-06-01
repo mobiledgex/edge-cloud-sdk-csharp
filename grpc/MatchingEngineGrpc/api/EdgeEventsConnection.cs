@@ -40,7 +40,7 @@ namespace DistributedMatchEngine
     private uint PortOverride;
 
     MatchingEngine me;
-    private string edgeEventsCoookie { get; set; }
+    public string edgeEventsCookie { get; set; }
 
     Task ReadStreamTask;
     internal bool DoReconnect = true;
@@ -81,7 +81,7 @@ namespace DistributedMatchEngine
         return true;
       }
 
-      edgeEventsCoookie = openEdgeEventsCookie;
+      edgeEventsCookie = openEdgeEventsCookie;
       Channel channel;
       if (HostOverride == null || HostOverride.Trim().Length == 0 || PortOverride == 0)
       {
@@ -168,7 +168,7 @@ namespace DistributedMatchEngine
         return false;
       }
 
-      return Open(edgeEventsCoookie);
+      return Open(edgeEventsCookie);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
