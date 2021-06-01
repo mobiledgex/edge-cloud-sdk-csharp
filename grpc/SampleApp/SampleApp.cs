@@ -112,14 +112,27 @@ namespace MexGrpcSampleConsoleApp
 
   class DummyDeviceInfo : DeviceInfoApp
   {
-    public Dictionary<string, string> GetDeviceInfo()
+
+    public DeviceDynamicInfo GetDeviceDynamicInfo()
     {
-      Dictionary<string, string> dict = new Dictionary<string, string>();
-      dict["one"] = "ONE";
-      dict["two"] = "TWO";
-      return dict;
+      DeviceDynamicInfo DeviceDynamicInfo = new DeviceDynamicInfo()
+      {
+        CarrierName = "TDG",
+        DataNetworkType = "GSM",
+        SignalStrength = 0
+      };
+      return DeviceDynamicInfo;
     }
 
+    public DeviceStaticInfo GetDeviceStaticInfo()
+    {
+      DeviceStaticInfo DeviceStaticInfo = new DeviceStaticInfo()
+      {
+        DeviceModel = "iPhone",
+        DeviceOs = "iOS 14.2"
+      };
+      return DeviceStaticInfo;
+    }
   }
 
   class MexGrpcLibApp
@@ -176,18 +189,12 @@ namespace MexGrpcSampleConsoleApp
     }
     FindCloudletRequest CreateFindCloudletRequest(string carrierName, Loc gpsLocation)
     {
-      var deviceInfo = new DeviceInfo
-      {
-        DeviceOs = "testos",
-        DeviceModel = "testmodel",
-      };
       var request = new FindCloudletRequest
       {
         Ver = 1,
         SessionCookie = sessionCookie,
         CarrierName = carrierName,
-        GpsLocation = gpsLocation,
-        DeviceInfo = deviceInfo,
+        GpsLocation = gpsLocation
       };
       return request;
     }
@@ -362,10 +369,10 @@ namespace MexGrpcSampleConsoleApp
           {
             switch (edgeEvent.ResponseStream.Current.EventType)
             {
-              case ServerEdgeEvent.Types.ServerEventType.EventInitConnection:
+              case ServerEventType.EventInitConnection:
                 Console.WriteLine("Successfully initiated persistent edge event connection");
                 continue;
-              case ServerEdgeEvent.Types.ServerEventType.EventLatencyRequest:
+              case ServerEventType.EventLatencyRequest:
                 // Console.WriteLine("Latency requested. Measuring latency \n");
 
                 // FIXME: This needs to be updated once a more official server lands.
@@ -507,7 +514,7 @@ namespace MexGrpcSampleConsoleApp
         Console.Error.WriteLine("Error: " + e.Message);
         Console.Error.WriteLine("Stack: " + e.StackTrace);
       }
-   }
+    }
 
     public async Task RunSampleFlow()
     {
@@ -653,7 +660,12 @@ namespace MexGrpcSampleConsoleApp
             Console.Error.WriteLine("Unhandled ServerEdgeEvent: " + serverEdgeEvent);
           }
           break;
-        case ServerEventType.EventUnknown:
+         case ServerEventType.EventError:
+             {
+              Console.Error.WriteLine("Unhandled ServerEdgeEvent: " + serverEdgeEvent);
+             }
+             break;
+         case ServerEventType.EventUnknown:
           {
             Console.Error.WriteLine("Unhandled ServerEdgeEvent: " + serverEdgeEvent);
           }

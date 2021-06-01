@@ -40,7 +40,7 @@ namespace DistributedMatchEngine
     private uint PortOverride;
 
     MatchingEngine me;
-    private string edgeEventsCoookie { get; set; }
+    public string edgeEventsCookie { get; set; }
 
     Task ReadStreamTask;
     internal bool DoReconnect = true;
@@ -81,8 +81,7 @@ namespace DistributedMatchEngine
         return true;
       }
 
-      edgeEventsCoookie = openEdgeEventsCookie;
-      var uri = "";
+      edgeEventsCookie = openEdgeEventsCookie;
       Channel channel;
       if (HostOverride == null || HostOverride.Trim().Length == 0 || PortOverride == 0)
       {
@@ -101,7 +100,9 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventInitConnection,
         SessionCookie = me.sessionCookie,
-        EdgeEventsCookie = openEdgeEventsCookie
+        EdgeEventsCookie = openEdgeEventsCookie,
+        DeviceStaticInfo = me.deviceInfo.GetDeviceStaticInfo(),
+        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
       };
 
       // Attach a reader and loop until gone:
@@ -167,7 +168,7 @@ namespace DistributedMatchEngine
         return false;
       }
 
-      return Open(edgeEventsCoookie);
+      return Open(edgeEventsCookie);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
@@ -236,7 +237,8 @@ namespace DistributedMatchEngine
       ClientEdgeEvent locationUpdate = new ClientEdgeEvent
       {
         EventType = ClientEventType.EventLocationUpdate,
-        GpsLocation = location
+        GpsLocation = location,
+        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
       };
 
       return await Send(locationUpdate).ConfigureAwait(false);
@@ -267,6 +269,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
+        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
       };
       foreach (var entry in site.samples)
       {
@@ -311,6 +314,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
+        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
       };
       foreach (var entry in site.samples)
       {
@@ -357,6 +361,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
+        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
       };
       foreach (var entry in site.samples)
       {

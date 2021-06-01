@@ -16,13 +16,13 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace DistributedMatchEngine
 {
   public interface DeviceInfoApp
   {
-    Dictionary<string, string> GetDeviceInfo();
+    DeviceDynamicInfo GetDeviceDynamicInfo();
+    DeviceStaticInfo GetDeviceStaticInfo();
   }
 
   /*!
@@ -31,9 +31,13 @@ namespace DistributedMatchEngine
    */
   public class EmptyDeviceInfo : DeviceInfoApp
   {
-    public Dictionary<string, string> GetDeviceInfo()
+    public DeviceDynamicInfo GetDeviceDynamicInfo()
     {
-      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceInfo() is not defined!");
+      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceDynamicInfo() is not defined!");
+    }
+    public DeviceStaticInfo GetDeviceStaticInfo()
+    {
+      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceStaticInfo() is not defined!");
     }
   }
 }
