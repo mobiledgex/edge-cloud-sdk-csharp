@@ -1,0 +1,7 @@
+*.orig
+*.swp
+*.vs
+*.DS_Store
+obj
+lib
+bin
