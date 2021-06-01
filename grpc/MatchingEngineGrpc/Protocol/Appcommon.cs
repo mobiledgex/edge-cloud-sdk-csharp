@@ -29,33 +29,35 @@ namespace DistributedMatchEngine {
             "LwoFcHJvdG8YASABKA4yIC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTFBy",
             "b3RvEhUKDWludGVybmFsX3BvcnQYAiABKAUSEwoLcHVibGljX3BvcnQYAyAB",
             "KAUSEwoLZnFkbl9wcmVmaXgYBSABKAkSEAoIZW5kX3BvcnQYBiABKAUSCwoD",
-            "dGxzGAcgASgIEg0KBW5naW54GAggASgIImkKCkRldmljZUluZm8SGQoRZGF0",
-            "YV9uZXR3b3JrX3R5cGUYASABKAkSEQoJZGV2aWNlX29zGAIgASgJEhQKDGRl",
-            "dmljZV9tb2RlbBgDIAEoCRIXCg9zaWduYWxfc3RyZW5ndGgYBCABKA0qPwoG",
-            "TFByb3RvEhMKD0xfUFJPVE9fVU5LTk9XThAAEg8KC0xfUFJPVE9fVENQEAES",
-            "DwoLTF9QUk9UT19VRFAQAiqFAQoLSGVhbHRoQ2hlY2sSGAoUSEVBTFRIX0NI",
-            "RUNLX1VOS05PV04QABIkCiBIRUFMVEhfQ0hFQ0tfRkFJTF9ST09UTEJfT0ZG",
-            "TElORRABEiEKHUhFQUxUSF9DSEVDS19GQUlMX1NFUlZFUl9GQUlMEAISEwoP",
-            "SEVBTFRIX0NIRUNLX09LEAMq7wEKDUNsb3VkbGV0U3RhdGUSGgoWQ0xPVURM",
-            "RVRfU1RBVEVfVU5LTk9XThAAEhkKFUNMT1VETEVUX1NUQVRFX0VSUk9SUxAB",
-            "EhgKFENMT1VETEVUX1NUQVRFX1JFQURZEAISGgoWQ0xPVURMRVRfU1RBVEVf",
-            "T0ZGTElORRADEh4KGkNMT1VETEVUX1NUQVRFX05PVF9QUkVTRU5UEAQSFwoT",
-            "Q0xPVURMRVRfU1RBVEVfSU5JVBAFEhoKFkNMT1VETEVUX1NUQVRFX1VQR1JB",
-            "REUQBhIcChhDTE9VRExFVF9TVEFURV9ORUVEX1NZTkMQByrAAgoQTWFpbnRl",
-            "bmFuY2VTdGF0ZRIUChBOT1JNQUxfT1BFUkFUSU9OEAASFQoRTUFJTlRFTkFO",
-            "Q0VfU1RBUlQQARIcChJGQUlMT1ZFUl9SRVFVRVNURUQQAhoEkPYYARIXCg1G",
-            "QUlMT1ZFUl9ET05FEAMaBJD2GAESGAoORkFJTE9WRVJfRVJST1IQBBoEkPYY",
-            "ARIhCh1NQUlOVEVOQU5DRV9TVEFSVF9OT19GQUlMT1ZFUhAFEhcKDUNSTV9S",
-            "RVFVRVNURUQQBhoEkPYYARIfChVDUk1fVU5ERVJfTUFJTlRFTkFOQ0UQBxoE",
-            "kPYYARITCglDUk1fRVJST1IQCBoEkPYYARIfChVOT1JNQUxfT1BFUkFUSU9O",
-            "X0lOSVQQCRoEkPYYARIbChFVTkRFUl9NQUlOVEVOQU5DRRAfGgSQ9hgBOjkK",
-            "DGVudW1fYmFja2VuZBIhLmdvb2dsZS5wcm90b2J1Zi5FbnVtVmFsdWVPcHRp",
-            "b25zGOKOAyABKAhiBnByb3RvMw=="));
+            "dGxzGAcgASgIEg0KBW5naW54GAggASgIIjsKEERldmljZUluZm9TdGF0aWMS",
+            "EQoJZGV2aWNlX29zGAEgASgJEhQKDGRldmljZV9tb2RlbBgCIAEoCSJdChFE",
+            "ZXZpY2VJbmZvRHluYW1pYxIZChFkYXRhX25ldHdvcmtfdHlwZRgBIAEoCRIX",
+            "Cg9zaWduYWxfc3RyZW5ndGgYAiABKAQSFAoMY2Fycmllcl9uYW1lGAMgASgJ",
+            "Kj8KBkxQcm90bxITCg9MX1BST1RPX1VOS05PV04QABIPCgtMX1BST1RPX1RD",
+            "UBABEg8KC0xfUFJPVE9fVURQEAIqhQEKC0hlYWx0aENoZWNrEhgKFEhFQUxU",
+            "SF9DSEVDS19VTktOT1dOEAASJAogSEVBTFRIX0NIRUNLX0ZBSUxfUk9PVExC",
+            "X09GRkxJTkUQARIhCh1IRUFMVEhfQ0hFQ0tfRkFJTF9TRVJWRVJfRkFJTBAC",
+            "EhMKD0hFQUxUSF9DSEVDS19PSxADKu8BCg1DbG91ZGxldFN0YXRlEhoKFkNM",
+            "T1VETEVUX1NUQVRFX1VOS05PV04QABIZChVDTE9VRExFVF9TVEFURV9FUlJP",
+            "UlMQARIYChRDTE9VRExFVF9TVEFURV9SRUFEWRACEhoKFkNMT1VETEVUX1NU",
+            "QVRFX09GRkxJTkUQAxIeChpDTE9VRExFVF9TVEFURV9OT1RfUFJFU0VOVBAE",
+            "EhcKE0NMT1VETEVUX1NUQVRFX0lOSVQQBRIaChZDTE9VRExFVF9TVEFURV9V",
+            "UEdSQURFEAYSHAoYQ0xPVURMRVRfU1RBVEVfTkVFRF9TWU5DEAcqwAIKEE1h",
+            "aW50ZW5hbmNlU3RhdGUSFAoQTk9STUFMX09QRVJBVElPThAAEhUKEU1BSU5U",
+            "RU5BTkNFX1NUQVJUEAESHAoSRkFJTE9WRVJfUkVRVUVTVEVEEAIaBJD2GAES",
+            "FwoNRkFJTE9WRVJfRE9ORRADGgSQ9hgBEhgKDkZBSUxPVkVSX0VSUk9SEAQa",
+            "BJD2GAESIQodTUFJTlRFTkFOQ0VfU1RBUlRfTk9fRkFJTE9WRVIQBRIXCg1D",
+            "Uk1fUkVRVUVTVEVEEAYaBJD2GAESHwoVQ1JNX1VOREVSX01BSU5URU5BTkNF",
+            "EAcaBJD2GAESEwoJQ1JNX0VSUk9SEAgaBJD2GAESHwoVTk9STUFMX09QRVJB",
+            "VElPTl9JTklUEAkaBJD2GAESGwoRVU5ERVJfTUFJTlRFTkFOQ0UQHxoEkPYY",
+            "ATo5CgxlbnVtX2JhY2tlbmQSIS5nb29nbGUucHJvdG9idWYuRW51bVZhbHVl",
+            "T3B0aW9ucxjijgMgASgIYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { pbr::FileDescriptor.DescriptorProtoFileDescriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), typeof(global::DistributedMatchEngine.HealthCheck), typeof(global::DistributedMatchEngine.CloudletState), typeof(global::DistributedMatchEngine.MaintenanceState), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DeviceInfo), global::DistributedMatchEngine.DeviceInfo.Parser, new[]{ "DataNetworkType", "DeviceOs", "DeviceModel", "SignalStrength" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DeviceStaticInfo), global::DistributedMatchEngine.DeviceStaticInfo.Parser, new[]{ "DeviceOs", "DeviceModel" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DeviceDynamicInfo), global::DistributedMatchEngine.DeviceDynamicInfo.Parser, new[]{ "DataNetworkType", "SignalStrength", "CarrierName" }, null, null, null)
           }));
     }
     #endregion
@@ -532,13 +534,13 @@ namespace DistributedMatchEngine {
 
   /// <summary>
   ///
-  /// DeviceInfo
+  /// DeviceStaticInfo
   /// </summary>
-  public sealed partial class DeviceInfo : pb::IMessage<DeviceInfo> {
-    private static readonly pb::MessageParser<DeviceInfo> _parser = new pb::MessageParser<DeviceInfo>(() => new DeviceInfo());
+  public sealed partial class DeviceStaticInfo : pb::IMessage<DeviceStaticInfo> {
+    private static readonly pb::MessageParser<DeviceStaticInfo> _parser = new pb::MessageParser<DeviceStaticInfo>(() => new DeviceStaticInfo());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<DeviceInfo> Parser { get { return _parser; } }
+    public static pb::MessageParser<DeviceStaticInfo> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -551,24 +553,190 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public DeviceInfo() {
+    public DeviceStaticInfo() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public DeviceInfo(DeviceInfo other) : this() {
-      dataNetworkType_ = other.dataNetworkType_;
+    public DeviceStaticInfo(DeviceStaticInfo other) : this() {
       deviceOs_ = other.deviceOs_;
       deviceModel_ = other.deviceModel_;
-      signalStrength_ = other.signalStrength_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public DeviceInfo Clone() {
-      return new DeviceInfo(this);
+    public DeviceStaticInfo Clone() {
+      return new DeviceStaticInfo(this);
+    }
+
+    /// <summary>Field number for the "device_os" field.</summary>
+    public const int DeviceOsFieldNumber = 1;
+    private string deviceOs_ = "";
+    /// <summary>
+    /// Android or iOS
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DeviceOs {
+      get { return deviceOs_; }
+      set {
+        deviceOs_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "device_model" field.</summary>
+    public const int DeviceModelFieldNumber = 2;
+    private string deviceModel_ = "";
+    /// <summary>
+    /// Device model
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DeviceModel {
+      get { return deviceModel_; }
+      set {
+        deviceModel_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DeviceStaticInfo);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DeviceStaticInfo other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DeviceOs != other.DeviceOs) return false;
+      if (DeviceModel != other.DeviceModel) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DeviceOs.Length != 0) hash ^= DeviceOs.GetHashCode();
+      if (DeviceModel.Length != 0) hash ^= DeviceModel.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (DeviceOs.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DeviceOs);
+      }
+      if (DeviceModel.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DeviceModel);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DeviceOs.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceOs);
+      }
+      if (DeviceModel.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceModel);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DeviceStaticInfo other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DeviceOs.Length != 0) {
+        DeviceOs = other.DeviceOs;
+      }
+      if (other.DeviceModel.Length != 0) {
+        DeviceModel = other.DeviceModel;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DeviceOs = input.ReadString();
+            break;
+          }
+          case 18: {
+            DeviceModel = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  ///
+  /// DeviceDynamicInfo
+  /// </summary>
+  public sealed partial class DeviceDynamicInfo : pb::IMessage<DeviceDynamicInfo> {
+    private static readonly pb::MessageParser<DeviceDynamicInfo> _parser = new pb::MessageParser<DeviceDynamicInfo>(() => new DeviceDynamicInfo());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DeviceDynamicInfo> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppcommonReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeviceDynamicInfo() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeviceDynamicInfo(DeviceDynamicInfo other) : this() {
+      dataNetworkType_ = other.dataNetworkType_;
+      signalStrength_ = other.signalStrength_;
+      carrierName_ = other.carrierName_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeviceDynamicInfo Clone() {
+      return new DeviceDynamicInfo(this);
     }
 
     /// <summary>Field number for the "data_network_type" field.</summary>
@@ -585,55 +753,41 @@ namespace DistributedMatchEngine {
       }
     }
 
-    /// <summary>Field number for the "device_os" field.</summary>
-    public const int DeviceOsFieldNumber = 2;
-    private string deviceOs_ = "";
-    /// <summary>
-    /// Android or iOS
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DeviceOs {
-      get { return deviceOs_; }
-      set {
-        deviceOs_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "device_model" field.</summary>
-    public const int DeviceModelFieldNumber = 3;
-    private string deviceModel_ = "";
-    /// <summary>
-    /// Device model
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DeviceModel {
-      get { return deviceModel_; }
-      set {
-        deviceModel_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "signal_strength" field.</summary>
-    public const int SignalStrengthFieldNumber = 4;
-    private uint signalStrength_;
+    public const int SignalStrengthFieldNumber = 2;
+    private ulong signalStrength_;
     /// <summary>
     /// Device signal strength (0-5)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public uint SignalStrength {
+    public ulong SignalStrength {
       get { return signalStrength_; }
       set {
         signalStrength_ = value;
       }
     }
 
+    /// <summary>Field number for the "carrier_name" field.</summary>
+    public const int CarrierNameFieldNumber = 3;
+    private string carrierName_ = "";
+    /// <summary>
+    /// Carrier name (can be different from cloudlet org if using "")
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as DeviceInfo);
+    public string CarrierName {
+      get { return carrierName_; }
+      set {
+        carrierName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(DeviceInfo other) {
+    public override bool Equals(object other) {
+      return Equals(other as DeviceDynamicInfo);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DeviceDynamicInfo other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -641,9 +795,8 @@ namespace DistributedMatchEngine {
         return true;
       }
       if (DataNetworkType != other.DataNetworkType) return false;
-      if (DeviceOs != other.DeviceOs) return false;
-      if (DeviceModel != other.DeviceModel) return false;
       if (SignalStrength != other.SignalStrength) return false;
+      if (CarrierName != other.CarrierName) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -651,9 +804,8 @@ namespace DistributedMatchEngine {
     public override int GetHashCode() {
       int hash = 1;
       if (DataNetworkType.Length != 0) hash ^= DataNetworkType.GetHashCode();
-      if (DeviceOs.Length != 0) hash ^= DeviceOs.GetHashCode();
-      if (DeviceModel.Length != 0) hash ^= DeviceModel.GetHashCode();
-      if (SignalStrength != 0) hash ^= SignalStrength.GetHashCode();
+      if (SignalStrength != 0UL) hash ^= SignalStrength.GetHashCode();
+      if (CarrierName.Length != 0) hash ^= CarrierName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -671,17 +823,13 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(10);
         output.WriteString(DataNetworkType);
       }
-      if (DeviceOs.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(DeviceOs);
+      if (SignalStrength != 0UL) {
+        output.WriteRawTag(16);
+        output.WriteUInt64(SignalStrength);
       }
-      if (DeviceModel.Length != 0) {
+      if (CarrierName.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(DeviceModel);
-      }
-      if (SignalStrength != 0) {
-        output.WriteRawTag(32);
-        output.WriteUInt32(SignalStrength);
+        output.WriteString(CarrierName);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -694,14 +842,11 @@ namespace DistributedMatchEngine {
       if (DataNetworkType.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(DataNetworkType);
       }
-      if (DeviceOs.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceOs);
+      if (SignalStrength != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(SignalStrength);
       }
-      if (DeviceModel.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceModel);
-      }
-      if (SignalStrength != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SignalStrength);
+      if (CarrierName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CarrierName);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -710,21 +855,18 @@ namespace DistributedMatchEngine {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(DeviceInfo other) {
+    public void MergeFrom(DeviceDynamicInfo other) {
       if (other == null) {
         return;
       }
       if (other.DataNetworkType.Length != 0) {
         DataNetworkType = other.DataNetworkType;
       }
-      if (other.DeviceOs.Length != 0) {
-        DeviceOs = other.DeviceOs;
-      }
-      if (other.DeviceModel.Length != 0) {
-        DeviceModel = other.DeviceModel;
-      }
-      if (other.SignalStrength != 0) {
+      if (other.SignalStrength != 0UL) {
         SignalStrength = other.SignalStrength;
+      }
+      if (other.CarrierName.Length != 0) {
+        CarrierName = other.CarrierName;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -741,16 +883,12 @@ namespace DistributedMatchEngine {
             DataNetworkType = input.ReadString();
             break;
           }
-          case 18: {
-            DeviceOs = input.ReadString();
+          case 16: {
+            SignalStrength = input.ReadUInt64();
             break;
           }
           case 26: {
-            DeviceModel = input.ReadString();
-            break;
-          }
-          case 32: {
-            SignalStrength = input.ReadUInt32();
+            CarrierName = input.ReadString();
             break;
           }
         }
