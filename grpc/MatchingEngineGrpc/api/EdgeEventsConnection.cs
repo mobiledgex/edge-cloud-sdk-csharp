@@ -101,8 +101,8 @@ namespace DistributedMatchEngine
         EventType = ClientEventType.EventInitConnection,
         SessionCookie = me.sessionCookie,
         EdgeEventsCookie = openEdgeEventsCookie,
-        DeviceStaticInfo = me.deviceInfo.GetDeviceStaticInfo(),
-        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
+        DeviceStaticInfo = me.deviceStaticInfo,
+        DeviceDynamicInfo = me.deviceDynamicInfo
       };
 
       // Attach a reader and loop until gone:
@@ -238,7 +238,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLocationUpdate,
         GpsLocation = location,
-        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
+        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
       };
 
       return await Send(locationUpdate).ConfigureAwait(false);
@@ -269,7 +269,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
+        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
       };
       foreach (var entry in site.samples)
       {
@@ -314,7 +314,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
+        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
       };
       foreach (var entry in site.samples)
       {
@@ -361,7 +361,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceDynamicInfo = me.deviceInfo.GetDeviceDynamicInfo()
+        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
       };
       foreach (var entry in site.samples)
       {
