@@ -231,6 +231,8 @@ namespace DistributedMatchEngine
     private bool disposedValue = false;
 
     string authToken { get; set; }
+    internal DeviceStaticInfo deviceStaticInfo;
+    internal DeviceDynamicInfo deviceDynamicInfo;
 
     // For Event Consumers
     public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
@@ -301,6 +303,9 @@ namespace DistributedMatchEngine
 
       // Default to empty.
       SetMelMessaging(null);
+
+      deviceDynamicInfo = GetDeviceDynamicInfo();
+      deviceStaticInfo = GetDeviceStaticInfo();
 
       // Setup a dummy event delegate for monitoring events:
       EdgeEventsReceiver += (ServerEdgeEvent serverEdgeEvent) =>
@@ -402,6 +407,24 @@ namespace DistributedMatchEngine
     public ulong GetCellID()
     {
       return carrierInfo.GetCellID();
+    }
+
+    /*!
+    * GetDeviceStaticInfo
+    * \ingroup functions_dmeutils
+    */
+    public DeviceStaticInfo GetDeviceStaticInfo()
+    {
+      return deviceInfo.GetDeviceStaticInfo();
+    }
+
+    /*!
+    * GetDeviceDynamicInfo
+    * \ingroup functions_dmeutils
+    */
+    public DeviceDynamicInfo GetDeviceDynamicInfo()
+    {
+      return deviceInfo.GetDeviceDynamicInfo();
     }
 
     /*!
