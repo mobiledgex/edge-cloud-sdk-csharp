@@ -231,6 +231,8 @@ namespace DistributedMatchEngine
     private bool disposedValue = false;
 
     string authToken { get; set; }
+
+    // DeviceInfo initialized for InitConnection Message to avoid crashes on Unity Android Player
     internal DeviceStaticInfo deviceStaticInfo;
     internal DeviceDynamicInfo deviceDynamicInfo;
 
@@ -303,9 +305,6 @@ namespace DistributedMatchEngine
 
       // Default to empty.
       SetMelMessaging(null);
-
-      deviceDynamicInfo = GetDeviceDynamicInfo();
-      deviceStaticInfo = GetDeviceStaticInfo();
 
       // Setup a dummy event delegate for monitoring events:
       EdgeEventsReceiver += (ServerEdgeEvent serverEdgeEvent) =>
@@ -1062,6 +1061,8 @@ namespace DistributedMatchEngine
     {
       try
       {
+        deviceStaticInfo = GetDeviceStaticInfo();
+        deviceDynamicInfo = GetDeviceDynamicInfo();
         if (melMessaging != null && melMessaging.IsMelEnabled() &&
             netInterface.GetIPAddress(
               GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
