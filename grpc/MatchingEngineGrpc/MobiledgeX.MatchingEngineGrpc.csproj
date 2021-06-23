@@ -8,7 +8,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
-    <ReleaseVersion>2.5.1-6</ReleaseVersion>
+    <ReleaseVersion>2.6</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
     <Owners>MobiledgeX, Inc.</Owners>
     <Title>MobiledgeX MatchingEngine SDK gRPC Library</Title>
