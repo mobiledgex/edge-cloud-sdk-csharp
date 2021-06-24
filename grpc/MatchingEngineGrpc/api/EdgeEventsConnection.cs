@@ -122,10 +122,6 @@ namespace DistributedMatchEngine
           while (await DuplexEventStream.ResponseStream.MoveNext())
           {
             me.InvokeEdgeEventsReciever(DuplexEventStream.ResponseStream.Current);
-            if (DuplexEventStream.ResponseStream.Current.EventType == ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate)
-            {
-              Close();
-            }
           }
 
           Log.D("DMEConnection loop has exited.");
