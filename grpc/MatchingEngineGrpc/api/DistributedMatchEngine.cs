@@ -329,15 +329,7 @@ namespace DistributedMatchEngine
         // Will not init!
         return null;
       }
-
-      if (!EdgeEventsConnection.IsShutdown())
-      {
-        return EdgeEventsConnection;
-      }
-      else
-      {
-        return null;
-      }
+      return EdgeEventsConnection;
     }
 
     EdgeEventsConnection GetEdgeEventsConnection()
