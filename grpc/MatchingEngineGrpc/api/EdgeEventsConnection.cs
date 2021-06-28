@@ -34,7 +34,7 @@ namespace DistributedMatchEngine
     // DME region GRPC Streaming Client.
     MatchEngineApi.MatchEngineApiClient streamClient;
     private AsyncDuplexStreamingCall<ClientEdgeEvent, ServerEdgeEvent> DuplexEventStream;
-    CancellationTokenSource ConnectionCancelTokenSource;
+    public CancellationTokenSource ConnectionCancelTokenSource;
 
     private string HostOverride;
     private uint PortOverride;
@@ -46,7 +46,7 @@ namespace DistributedMatchEngine
     internal EdgeEventsConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
     {
       me = matchingEngine;
-      ConnectionCancelTokenSource = new CancellationTokenSource();
+
       if (host != null && host.Trim().Length != 0)
       {
         HostOverride = host;
@@ -74,11 +74,7 @@ namespace DistributedMatchEngine
         return false;
       }
 
-      if (IsShutdown())
-      {
-        Log.E("EdgeEventsConnection is Shutdown");
-        return false;
-      }
+      ConnectionCancelTokenSource = new CancellationTokenSource();
 
       Channel channel;
       if (HostOverride == null || HostOverride.Trim().Length == 0 || PortOverride == 0)
@@ -133,7 +129,7 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Close()
     {
-      ConnectionCancelTokenSource.Cancel();
+      ConnectionCancelTokenSource.Dispose();
       SendTerminate().ConfigureAwait(false);
       HostOverride = null; // Will use new DME on next connect.
       PortOverride = 0;
