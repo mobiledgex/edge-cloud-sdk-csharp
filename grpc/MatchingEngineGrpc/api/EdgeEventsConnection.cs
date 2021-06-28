@@ -40,15 +40,13 @@ namespace DistributedMatchEngine
     private uint PortOverride;
 
     MatchingEngine me;
-    public string edgeEventsCookie { get; set; }
 
     Task ReadStreamTask;
-    internal bool DoReconnect = true;
 
     internal EdgeEventsConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
     {
-      this.me = matchingEngine;
-
+      me = matchingEngine;
+      ConnectionCancelTokenSource = new CancellationTokenSource();
       if (host != null && host.Trim().Length != 0)
       {
         HostOverride = host;
@@ -58,7 +56,7 @@ namespace DistributedMatchEngine
 
     // TODO: Throw and print some useful informative Exceptions.
     [MethodImpl(MethodImplOptions.Synchronized)]
-    internal bool Open(string openEdgeEventsCookie)
+    public bool Open(DeviceStaticInfo deviceStaticInfo, DeviceDynamicInfo deviceDynamicInfo)
     {
       if (!me.EnableEdgeEvents)
       {
@@ -70,18 +68,18 @@ namespace DistributedMatchEngine
         Log.E("SessionCookie not present!");
         return false;
       }
-      if (openEdgeEventsCookie == null || openEdgeEventsCookie.Equals(""))
+      if (me.edgeEventsCookie == null || me.edgeEventsCookie.Equals(""))
       {
         Log.E("EdgeEventsCookie not present!");
         return false;
       }
 
-      if (!IsShutdown())
+      if (IsShutdown())
       {
-        return true;
+        Log.E("EdgeEventsConnection is Shutdown");
+        return false;
       }
 
-      edgeEventsCookie = openEdgeEventsCookie;
       Channel channel;
       if (HostOverride == null || HostOverride.Trim().Length == 0 || PortOverride == 0)
       {
@@ -100,71 +98,45 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventInitConnection,
         SessionCookie = me.sessionCookie,
-        EdgeEventsCookie = openEdgeEventsCookie,
-        DeviceStaticInfo = me.deviceStaticInfo,
-        DeviceDynamicInfo = me.deviceDynamicInfo
+        EdgeEventsCookie = me.edgeEventsCookie,
+        DeviceStaticInfo = deviceStaticInfo,
+        DeviceDynamicInfo = deviceDynamicInfo,
       };
+
+      Log.S("Write init message to server, with cancelToken: ");
+      DuplexEventStream = streamClient.StreamEdgeEvent(
+        cancellationToken: ConnectionCancelTokenSource.Token
+      );
+      DuplexEventStream.RequestStream.WriteAsync(clientEdgeEvent).ConfigureAwait(false);
 
       // Attach a reader and loop until gone:
       ReadStreamTask = Task.Run(async () =>
       {
-        try
-        {
-          ConnectionCancelTokenSource = new CancellationTokenSource();
-
-          Log.S("Write init message to server, with cancelToken: ");
-          DuplexEventStream = streamClient.StreamEdgeEvent(
-            cancellationToken: ConnectionCancelTokenSource.Token
-          );
-          await DuplexEventStream.RequestStream.WriteAsync(clientEdgeEvent);
-          Log.D("Now Listening to Events...");
-
-          while (await DuplexEventStream.ResponseStream.MoveNext())
+      try
+      {
+        while (await DuplexEventStream.ResponseStream.MoveNext())
           {
+            Log.D("Received Event: "+ DuplexEventStream.ResponseStream.Current);
             me.InvokeEdgeEventsReciever(DuplexEventStream.ResponseStream.Current);
           }
-
-          Log.D("DMEConnection loop has exited.");
         }
         catch (OperationCanceledException ex) when (ex.CancellationToken == ConnectionCancelTokenSource.Token)
         {
+          Log.D("Operation Canceled Exception");
           DuplexEventStream = null;
           ReadStreamTask = null;
         }
-        finally
-        {
-          ConnectionCancelTokenSource = null;
-          if (DoReconnect)
-          {
-            Log.D("Reconnecting EdgeEventsConnection!");
-            if (!Reconnect())
-            {
-              Log.E("Failed to restart EdgeEvents Loop in EdgeEventsConnection!");
-            }
-          }
-        }
       });
-
       return true;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    internal void Close()
+    public void Close()
     {
+      ConnectionCancelTokenSource.Cancel();
       SendTerminate().ConfigureAwait(false);
       HostOverride = null; // Will use new DME on next connect.
       PortOverride = 0;
-    }
-
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    bool Reconnect()
-    {
-      if (!IsShutdown())
-      {
-        return false;
-      }
-
-      return Open(edgeEventsCookie);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
@@ -206,7 +178,6 @@ namespace DistributedMatchEngine
 
     public async Task<Boolean> SendTerminate()
     {
-
       ClientEdgeEvent terminateEvent = new ClientEdgeEvent
       {
         EventType = ClientEventType.EventTerminateConnection
@@ -274,7 +245,6 @@ namespace DistributedMatchEngine
           latencySamplesEvent.Samples.Add(entry);
         }
       }
-
       if (latencySamplesEvent.Samples.Count == 0)
       {
         return false;
@@ -377,7 +347,6 @@ namespace DistributedMatchEngine
 
     public void Dispose()
     {
-      DoReconnect = false;
       // Attempt to cancel.
       Close();
       streamClient = null;
