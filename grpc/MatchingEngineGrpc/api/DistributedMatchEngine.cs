@@ -227,14 +227,11 @@ namespace DistributedMatchEngine
     public bool useSSL { get; set; } = true;
 
     public string sessionCookie { get; set; }
+    public string edgeEventsCookie { get; set; }
     string tokenServerURI;
     private bool disposedValue = false;
 
     string authToken { get; set; }
-
-    // DeviceInfo initialized for InitConnection Message to avoid crashes on Unity Android Player
-    internal DeviceStaticInfo deviceStaticInfo;
-    internal DeviceDynamicInfo deviceDynamicInfo;
 
     // For Event Consumers
     public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
@@ -331,16 +328,6 @@ namespace DistributedMatchEngine
       {
         // Will not init!
         return null;
-      }
-
-      if (!EdgeEventsConnection.IsShutdown())
-      {
-        return EdgeEventsConnection;
-      }
-
-      if (!EdgeEventsConnection.Open(edgeEventCookie))
-      {
-        return EdgeEventsConnection = null;
       }
       return EdgeEventsConnection;
     }
@@ -1061,8 +1048,6 @@ namespace DistributedMatchEngine
     {
       try
       {
-        deviceStaticInfo = GetDeviceStaticInfo();
-        deviceDynamicInfo = GetDeviceDynamicInfo();
         if (melMessaging != null && melMessaging.IsMelEnabled() &&
             netInterface.GetIPAddress(
               GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
@@ -1074,6 +1059,7 @@ namespace DistributedMatchEngine
           }
           if (melModeFindCloudletReply.Status == FindStatus.FindFound)
           {
+            edgeEventsCookie = melModeFindCloudletReply.EdgeEventsCookie;
             EdgeEventsConnection = GetEdgeEventsConnection(melModeFindCloudletReply.EdgeEventsCookie, host, port);
           }
           string appOfficialFqdn = melModeFindCloudletReply.Fqdn;
@@ -1130,6 +1116,7 @@ namespace DistributedMatchEngine
 
         if (fcReply.Status == FindStatus.FindFound)
         {
+          edgeEventsCookie = fcReply.EdgeEventsCookie;
           EdgeEventsConnection = GetEdgeEventsConnection(fcReply.EdgeEventsCookie, host, port);
         }
         LastFindCloudletReply = fcReply;
