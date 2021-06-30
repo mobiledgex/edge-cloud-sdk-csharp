@@ -34,7 +34,7 @@ namespace DistributedMatchEngine
     // DME region GRPC Streaming Client.
     MatchEngineApi.MatchEngineApiClient streamClient;
     private AsyncDuplexStreamingCall<ClientEdgeEvent, ServerEdgeEvent> DuplexEventStream;
-    public CancellationTokenSource ConnectionCancelTokenSource;
+    internal CancellationTokenSource ConnectionCancelTokenSource;
 
     private string HostOverride;
     private uint PortOverride;
@@ -56,7 +56,7 @@ namespace DistributedMatchEngine
 
     // TODO: Throw and print some useful informative Exceptions.
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public bool Open(DeviceStaticInfo deviceStaticInfo, DeviceDynamicInfo deviceDynamicInfo)
+    public bool Open()
     {
       if (!me.EnableEdgeEvents)
       {
@@ -89,6 +89,8 @@ namespace DistributedMatchEngine
       streamClient = new MatchEngineApi.MatchEngineApiClient(channel);
 
       // Open a connection:
+      DeviceStaticInfo deviceStaticInfo = me.GetDeviceStaticInfo();
+      DeviceDynamicInfo deviceDynamicInfo = me.GetDeviceDynamicInfo();
 
       ClientEdgeEvent clientEdgeEvent = new ClientEdgeEvent
       {
