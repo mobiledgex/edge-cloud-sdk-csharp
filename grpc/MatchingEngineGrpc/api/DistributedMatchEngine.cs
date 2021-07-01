@@ -227,6 +227,7 @@ namespace DistributedMatchEngine
     public bool useSSL { get; set; } = true;
 
     public string sessionCookie { get; set; }
+    public string edgeEventsCookie { get; set; }
     string tokenServerURI;
     private bool disposedValue = false;
 
@@ -328,16 +329,6 @@ namespace DistributedMatchEngine
         // Will not init!
         return null;
       }
-
-      if (!EdgeEventsConnection.IsShutdown())
-      {
-        return EdgeEventsConnection;
-      }
-
-      if (!EdgeEventsConnection.Open(edgeEventCookie))
-      {
-        return EdgeEventsConnection = null;
-      }
       return EdgeEventsConnection;
     }
 
@@ -402,6 +393,24 @@ namespace DistributedMatchEngine
     public ulong GetCellID()
     {
       return carrierInfo.GetCellID();
+    }
+
+    /*!
+    * GetDeviceStaticInfo
+    * \ingroup functions_dmeutils
+    */
+    public DeviceStaticInfo GetDeviceStaticInfo()
+    {
+      return deviceInfo.GetDeviceStaticInfo();
+    }
+
+    /*!
+    * GetDeviceDynamicInfo
+    * \ingroup functions_dmeutils
+    */
+    public DeviceDynamicInfo GetDeviceDynamicInfo()
+    {
+      return deviceInfo.GetDeviceDynamicInfo();
     }
 
     /*!
@@ -1050,6 +1059,7 @@ namespace DistributedMatchEngine
           }
           if (melModeFindCloudletReply.Status == FindStatus.FindFound)
           {
+            edgeEventsCookie = melModeFindCloudletReply.EdgeEventsCookie;
             EdgeEventsConnection = GetEdgeEventsConnection(melModeFindCloudletReply.EdgeEventsCookie, host, port);
           }
           string appOfficialFqdn = melModeFindCloudletReply.Fqdn;
@@ -1106,6 +1116,7 @@ namespace DistributedMatchEngine
 
         if (fcReply.Status == FindStatus.FindFound)
         {
+          edgeEventsCookie = fcReply.EdgeEventsCookie;
           EdgeEventsConnection = GetEdgeEventsConnection(fcReply.EdgeEventsCookie, host, port);
         }
         LastFindCloudletReply = fcReply;
