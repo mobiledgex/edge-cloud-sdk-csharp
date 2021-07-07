@@ -61,12 +61,19 @@ namespace MexGrpcSampleConsoleApp
     string sessionCookie;
     string eeSessionCookie;
 
-    string dmeHost = "127.0.0.1"; // demo DME server hostname or ip.
+    /*string dmeHost = "127.0.0.1"; // demo DME server hostname or ip.
     int dmePort = 50051; // DME port.
     string carrierName = "";
     string orgName = "mobiledgex";
     string appName = "arshooter";
-    string appVers = "1";
+    string appVers = "1";*/
+
+    string dmeHost = "us-qa.dme.mobiledgex.net"; // demo DME server hostname or ip.
+    int dmePort = 50051; // DME port.
+    string carrierName = "";
+    string orgName = "testmonitor";
+    string appName = "app-us-k8s";
+    string appVers = "v1";
 
     Loc sanfran = new Loc
     {
@@ -97,6 +104,8 @@ namespace MexGrpcSampleConsoleApp
 
     string[] deviceOs = new string[]{ "Android", "iOS"};
 
+    string[] deviceModels = new string[]{"Platos", "Apple", "Nokia"};
+
     int iteration = 0;
 
     MatchEngineApi.MatchEngineApiClient client;
@@ -111,21 +120,28 @@ namespace MexGrpcSampleConsoleApp
         Console.WriteLine("url is " + uri);
 
         // Channel:
-        // ChannelCredentials channelCredentials = new SslCredentials();
-        ChannelCredentials channelCredentials = ChannelCredentials.Insecure;
+        ChannelCredentials channelCredentials = new SslCredentials();
+        //ChannelCredentials channelCredentials = ChannelCredentials.Insecure;
         Channel channel = new Channel(uri, channelCredentials);
 
         client = new MatchEngineApi.MatchEngineApiClient(channel);
 
         RegisterClientReply regReply = null;
         for (int i = 0; i < 1; i++)
-        { 
-        var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, appVers, "");
-        regReply = client.RegisterClient(registerClientRequest);
-        Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
-        Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
-        sessionCookie = regReply.SessionCookie;
-          Thread.Sleep(1000);
+        {
+          try {
+            Thread.Sleep(1000);
+            var registerClientRequest = CreateRegisterClientRequest(getCarrierName(), orgName, appName, appVers, "");
+            regReply = client.RegisterClient(registerClientRequest);
+            Console.WriteLine("RegisterClient Reply Status: " + regReply.Status);
+            Console.WriteLine("RegisterClient TokenServerURI: " + regReply.TokenServerUri);
+            sessionCookie = regReply.SessionCookie;
+            //Thread.Sleep(1000);
+          }
+          catch (Exception e)
+          {
+            Console.WriteLine("RegisterClient Exception is " + e.Message);
+          }
         }
 
         for (int i = 0; i < 1; i++)
@@ -164,6 +180,33 @@ namespace MexGrpcSampleConsoleApp
         await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent1);
         Console.WriteLine("Listening for events");
 
+        var times = new List<Sample>();
+                var sample1 = new Sample
+                {
+                  Value = -1,
+                };
+                times.Add(sample1);
+                var sample2 = new Sample
+                {
+                  Value = 0,
+                };
+                times.Add(sample2);
+                var sample3 = new Sample
+                {
+                  Value = 2,
+                };
+                times.Add(sample3);
+                var sample4 = new Sample
+                {
+                  Value = -3,
+                };
+                times.Add(sample4);
+                var sample5 = new Sample
+                {
+                  Value = 5,
+                };
+                times.Add(sample5);
+
         var readTask = Task.Run(async () =>
         {
           while (await edgeEvent.ResponseStream.MoveNext())
@@ -174,9 +217,9 @@ namespace MexGrpcSampleConsoleApp
                 Console.WriteLine("Successfully initiated persistent edge event connection");
                 continue;
               case ServerEdgeEvent.Types.ServerEventType.EventLatencyRequest:
-                // Console.WriteLine("Latency requested. Measuring latency \n");
+                Console.WriteLine("Latency requested. Measuring latency \n");
 
-                IPAddress remoteIP = Dns.GetHostAddresses("127.0.0.1")[0];
+                /*IPAddress remoteIP = Dns.GetHostAddresses("127.0.0.1")[0];
                 IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, dmePort);
                 // calculate min, max, and avg
                 float min = 0;
@@ -242,31 +285,40 @@ namespace MexGrpcSampleConsoleApp
                   Max = max,
                   Avg = avg,
                   StdDev = stdDev
-                };
+                };*/
+                
+                
                 var latencyEdgeEvent = CreateClientEdgeEvent(location, eventType: ClientEdgeEvent.Types.ClientEventType.EventLatencySamples, samples: times);
                 await edgeEvent.RequestStream.WriteAsync(latencyEdgeEvent);
                 continue;
               case ServerEdgeEvent.Types.ServerEventType.EventLatencyProcessed:
                 var l = edgeEvent.ResponseStream.Current.Statistics;
                 Console.WriteLine("Latency results: \n" +
-                "        Latency: " + "Avg: " + l.Avg + ", Min: " + l.Min + ", Max: " + l.Max + ", StdDev: " +l.StdDev + "\n");
+                "        Latency: " + "Avg: " + l.Avg + ", Min: " + l.Min + ", Max: " + l.Max + ", StdDev: " + l.StdDev + ", Variance: " + l.Variance + ", NumSamples: " + l.NumSamples + ", Timestamp" + l.Timestamp + "\n");
                 continue;
               case ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate:
                 var newFindCloudletReply = edgeEvent.ResponseStream.Current.NewCloudlet;
                 Console.WriteLine("FindCloudlet Reply Status: " + newFindCloudletReply.Status);
                 Console.WriteLine("FindCloudlet fqdn: " + newFindCloudletReply.Fqdn);
                 continue;
+              case ServerEdgeEvent.Types.ServerEventType.EventError:
+                Console.WriteLine("EVENT_ERROR: error is " + edgeEvent.ResponseStream.Current.ErrorMsg);
+                continue;
               default:
-                Console.WriteLine("EdgeServerEvent: \n" +
-                "        AppInstHealth " + edgeEvent.ResponseStream.Current.HealthCheck + "\n");
+                Console.WriteLine("EdgeServerEvent: " + edgeEvent.ResponseStream.Current.EventType + "\n" +
+                "        AppInstHealth " + edgeEvent.ResponseStream.Current.HealthCheck + "\n" +
+                "        MaintenanceState " + edgeEvent.ResponseStream.Current.MaintenanceState + "\n" +
+                "        ErrorMsg " + edgeEvent.ResponseStream.Current.ErrorMsg + "\n");
                 continue;
             }
           }
         });
 
-        
+        /*var clientEdgeEvent2 = CreateClientEdgeEvent(null);
+            await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
+            Console.WriteLine("Sent location edge event");*/
         for (int i = 0; i < 1000; i++) {
-          if (i % 2 == 0)
+          /*if (i % 2 == 0)
           {
             location = locs[i % 3];
             var clientEdgeEvent2 = CreateClientEdgeEvent(location);
@@ -283,9 +335,18 @@ namespace MexGrpcSampleConsoleApp
             var clientEdgeEvent2 = CreateClientEdgeEvent(locs[i%3], eventType: ClientEdgeEvent.Types.ClientEventType.EventCustomEvent, samples: dummySamples, customEventName: "testBlah");
             await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent2);
             Console.WriteLine("Sent custom edge event");
+          }*/
+          if (i % 2 == 0)
+          {
+            var clientEdgeEvent = CreateClientEdgeEvent(location, eventType: ClientEdgeEvent.Types.ClientEventType.EventLatencySamples, samples: times);
+            await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent);
           }
-          
-          Thread.Sleep(10000);
+          else
+          {
+            var clientEdgeEvent = CreateClientEdgeEvent(location, eventType: ClientEdgeEvent.Types.ClientEventType.EventLocationUpdate);
+            await edgeEvent.RequestStream.WriteAsync(clientEdgeEvent);
+          }
+          Thread.Sleep(500);
         }
 
         var clientEdgeEvent3 = CreateClientEdgeEvent(location, eventType: ClientEdgeEvent.Types.ClientEventType.EventTerminateConnection);
@@ -380,18 +441,12 @@ namespace MexGrpcSampleConsoleApp
 
     FindCloudletRequest CreateFindCloudletRequest(string carrierName, Loc gpsLocation)
     {
-      var deviceInfo = new DeviceInfo
-      {
-        DeviceOs = "testos",
-        DeviceModel = "testmodel",
-      };
       var request = new FindCloudletRequest
       {
         Ver = 1,
         SessionCookie = sessionCookie,
-        CarrierName = carrierName,
-        GpsLocation = gpsLocation,
-        DeviceInfo = deviceInfo,
+        //CarrierName = carriers[0],
+        GpsLocation = locs[1],
       };
       return request;
     }
@@ -400,22 +455,46 @@ namespace MexGrpcSampleConsoleApp
     // carrier length: 6
     // datanettype length: 4
     // deviceos length: 2
+    // devicemodels length: 3
     ClientEdgeEvent CreateClientEdgeEvent(Loc gpsLocation, ClientEdgeEvent.Types.ClientEventType eventType = ClientEdgeEvent.Types.ClientEventType.EventLocationUpdate, List<Sample> samples = null, string customEventName = "")
     {
-      var deviceInfo = new DeviceInfo
+      var deviceInfoStatic = new DeviceInfoStatic
       {
-        DataNetworkType = dataNetTypes[3],
-        DeviceOs = deviceOs[1],
+        //DeviceOs = deviceOs[1],
+        //DeviceModel = deviceModels[1],
+          DeviceOs = "Android_Version_29",
+          DeviceModel = "SM-G988U"
+      };
+      var deviceInfoDynamic = new DeviceInfoDynamic
+      {
+        //DataNetworkType = dataNetTypes[1],
+        DataNetworkType = "NETWORK_TYPE_5G",
+        CarrierName = "311480",
+        SignalStrength = 3,
       };
       var clientEvent = new ClientEdgeEvent
       {
         SessionCookie = sessionCookie,
         EdgeEventsCookie = eeSessionCookie,
         EventType = eventType, 
-        GpsLocation = locs[0],
-        CarrierName = carriers[1],
-        DeviceInfo = deviceInfo,
+        GpsLocation = locs[1],
       };
+
+      //if (eventType == ClientEdgeEvent.Types.ClientEventType.EventInitConnection)
+      //{
+        clientEvent.DeviceInfoStatic = deviceInfoStatic;
+        clientEvent.DeviceInfoDynamic = deviceInfoDynamic;
+        clientEvent.GpsLocation = locs[1];
+      //}
+      /*else
+      {
+        if (eventType == ClientEdgeEvent.Types.ClientEventType.EventLocationUpdate)
+        {
+          Console.WriteLine("event location update");
+          deviceInfoDynamic.DataNetworkType = dataNetTypes[2];
+        }
+        clientEvent.DeviceInfoDynamic = deviceInfoDynamic;
+      }*/
 
       if (customEventName != "")
       {
