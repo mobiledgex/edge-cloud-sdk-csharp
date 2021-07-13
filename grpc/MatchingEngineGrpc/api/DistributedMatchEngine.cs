@@ -1129,8 +1129,14 @@ namespace DistributedMatchEngine
       }
     }
 
-    // FindCloudlet with GetAppInstList and NetTest
-    private async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request)
+    /// <summary>
+    /// FindCloudlet with GetAppInstList and NetTest
+    /// </summary>
+    /// <param name="host">Distributed Matching Engine Host</param>
+    /// <param name="port">istributed Matching Engine Port</param>
+    /// <param name="request">FindCloudletRequest</param>
+    /// <returns>FindCloudletReply</returns>
+    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request)
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
