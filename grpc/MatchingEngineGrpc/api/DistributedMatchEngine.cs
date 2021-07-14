@@ -1130,7 +1130,7 @@ namespace DistributedMatchEngine
     }
 
     /// <summary>
-    /// FindCloudlet with GetAppInstList and NetTest
+    /// FindCloudlet based on performance (latency)
     /// </summary>
     /// <param name="host">Distributed Matching Engine Host</param>
     /// <param name="port">Distributed Matching Engine Port</param>
