@@ -1136,7 +1136,7 @@ namespace DistributedMatchEngine
     /// <param name="port">Distributed Matching Engine Port</param>
     /// <param name="request">FindCloudletRequest</param>
     /// <returns>FindCloudletReply</returns>
-    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request)
+    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request, int numOfSamples = 5)
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
@@ -1172,7 +1172,7 @@ namespace DistributedMatchEngine
 
       try
       {
-        sites = await netTest.RunNetTest(5);
+        sites = await netTest.RunNetTest(numOfSamples);
       }
       catch (AggregateException ae)
       {
