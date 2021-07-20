@@ -1012,21 +1012,41 @@ namespace DistributedMatchEngine
       {
         foreach (Appinstance appinstance in cloudlet.Appinstances)
         {
-          AppPort appPort = appinstance.Ports[0];
-
-          switch (appPort.Proto)
+          if (!deviceInfo.IsUdpPingSupported())
           {
-            case LProto.Tcp:
-              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
-              break;
+            AppPort tcpPort = null;
+            foreach (AppPort appPort in appinstance.Ports)
+            {
+              if (appPort.Proto == LProto.Tcp)
+              {
+                tcpPort = appPort;
+                break;
+              }
+            }
+            if(tcpPort == null)
+            {
+              throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support UDP Ping and your Application Instance doesn't have any TCP Ports.");
+            }
+            sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
+          }
+          else
+          {
+            AppPort appPort = appinstance.Ports[0];
 
-            case LProto.Udp:
-              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
-              break;
+            switch (appPort.Proto)
+            {
+              case LProto.Tcp:
+                sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
+                break;
 
-            default:
-              Log.E("Unsupported protocol " + appPort.Proto + " found when trying to create sites for NetTest");
-              break;
+              case LProto.Udp:
+                sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
+                break;
+
+              default:
+                Log.E("Unsupported protocol " + appPort.Proto + " found when trying to create sites for NetTest");
+                break;
+            }
           }
         }
       }

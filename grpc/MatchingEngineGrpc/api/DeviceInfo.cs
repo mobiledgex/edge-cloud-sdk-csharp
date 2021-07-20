@@ -23,6 +23,7 @@ namespace DistributedMatchEngine
   {
     DeviceDynamicInfo GetDeviceDynamicInfo();
     DeviceStaticInfo GetDeviceStaticInfo();
+    bool IsUdpPingSupported();
   }
 
   /*!
@@ -38,6 +39,11 @@ namespace DistributedMatchEngine
     public DeviceStaticInfo GetDeviceStaticInfo()
     {
       throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceStaticInfo() is not defined!");
+    }
+
+    public bool IsUdpPingSupported()
+    {
+      return true; //Added to avoid ping test on iOS devices
     }
   }
 }
