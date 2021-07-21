@@ -1012,7 +1012,7 @@ namespace DistributedMatchEngine
       {
         foreach (Appinstance appinstance in cloudlet.Appinstances)
         {
-          if (!deviceInfo.IsUdpPingSupported())
+          if (!deviceInfo.IsPingSupported())
           {
             AppPort tcpPort = null;
             foreach (AppPort appPort in appinstance.Ports)
