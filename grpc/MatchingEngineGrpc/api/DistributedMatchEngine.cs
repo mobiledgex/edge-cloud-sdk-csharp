@@ -1012,21 +1012,41 @@ namespace DistributedMatchEngine
       {
         foreach (Appinstance appinstance in cloudlet.Appinstances)
         {
-          AppPort appPort = appinstance.Ports[0];
-
-          switch (appPort.Proto)
+          if (!deviceInfo.IsPingSupported())
           {
-            case LProto.Tcp:
-              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
-              break;
+            AppPort tcpPort = null;
+            foreach (AppPort appPort in appinstance.Ports)
+            {
+              if (appPort.Proto == LProto.Tcp)
+              {
+                tcpPort = appPort;
+                break;
+              }
+            }
+            if(tcpPort == null)
+            {
+              throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
+            }
+            sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
+          }
+          else
+          {
+            AppPort appPort = appinstance.Ports[0];
 
-            case LProto.Udp:
-              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
-              break;
+            switch (appPort.Proto)
+            {
+              case LProto.Tcp:
+                sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
+                break;
 
-            default:
-              Log.E("Unsupported protocol " + appPort.Proto + " found when trying to create sites for NetTest");
-              break;
+              case LProto.Udp:
+                sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
+                break;
+
+              default:
+                Log.E("Unsupported protocol " + appPort.Proto + " found when trying to create sites for NetTest");
+                break;
+            }
           }
         }
       }
@@ -1136,7 +1156,7 @@ namespace DistributedMatchEngine
     /// <param name="port">Distributed Matching Engine Port</param>
     /// <param name="request">FindCloudletRequest</param>
     /// <returns>FindCloudletReply</returns>
-    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request)
+    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request, int numOfSamples = 5)
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
@@ -1172,7 +1192,7 @@ namespace DistributedMatchEngine
 
       try
       {
-        sites = await netTest.RunNetTest(5);
+        sites = await netTest.RunNetTest(numOfSamples);
       }
       catch (AggregateException ae)
       {
