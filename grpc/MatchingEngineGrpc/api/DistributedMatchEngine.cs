@@ -1025,7 +1025,7 @@ namespace DistributedMatchEngine
             }
             if(tcpPort == null)
             {
-              throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support UDP Ping and your Application Instance doesn't have any TCP Ports.");
+              throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
             }
             sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples));
           }
