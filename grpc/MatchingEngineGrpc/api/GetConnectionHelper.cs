@@ -44,6 +44,18 @@ namespace DistributedMatchEngine
 
       // Get remote ip of the provided host
       IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
+
+      if(remoteIP.AddressFamily == AddressFamily.InterNetworkV6
+        && localEndPoint.AddressFamily == AddressFamily.InterNetwork)
+      {
+        if (remoteIP.IsIPv4MappedToIPv6)
+        {
+          Console.WriteLine("remoteIP.AddressFamily: " + remoteIP.AddressFamily + ", Address: " + remoteIP.ToString());
+          Console.WriteLine("Mapping remote IPV6 to IPV4");
+          remoteIP.MapToIPv4();
+        } 
+      }
+
       IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
       Console.WriteLine("got remote endpoint: " + remoteEndPoint);
 
@@ -200,6 +212,16 @@ namespace DistributedMatchEngine
 
       // Get remote ip of the provided host
       IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
+      if (remoteIP.AddressFamily == AddressFamily.InterNetworkV6
+        && localEndPoint.AddressFamily == AddressFamily.InterNetwork)
+      {
+        if (remoteIP.IsIPv4MappedToIPv6)
+        {
+          Console.WriteLine("remoteIP.AddressFamily: " + remoteIP.AddressFamily + ", Address: " + remoteIP.ToString());
+          Console.WriteLine("Mapping remote IPV6 to IPV4");
+          remoteIP.MapToIPv4();
+        }
+      }
       IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
 
       // Create Socket and bind to local ip and connect to remote endpoint
