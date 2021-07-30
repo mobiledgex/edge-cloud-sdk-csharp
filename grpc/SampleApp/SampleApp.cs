@@ -133,6 +133,11 @@ namespace MexGrpcSampleConsoleApp
       };
       return DeviceStaticInfo;
     }
+
+    public bool IsPingSupported()
+    {
+      return true;
+    }
   }
 
   class MexGrpcLibApp

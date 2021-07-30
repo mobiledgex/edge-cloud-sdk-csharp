@@ -599,7 +599,7 @@ namespace DistributedMatchEngine
       return token;
     }
 
-    internal void CopyTagField(MapField<string,string> dest, Dictionary<string, string> src)
+    internal void CopyTagField(MapField<string, string> dest, Dictionary<string, string> src)
     {
       if (dest == null)
       {
@@ -611,7 +611,7 @@ namespace DistributedMatchEngine
         return;
       }
 
-      foreach(var entry in src)
+      foreach (var entry in src)
       {
         if (entry.Value != null)
         {
