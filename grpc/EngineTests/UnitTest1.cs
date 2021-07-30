@@ -102,6 +102,11 @@ namespace Tests
         };
         return DeviceStaticInfo;
       }
+
+      public bool IsPingSupported()
+      {
+        return true;
+      }
     }
 
     public class TestMelMessaging : MelMessagingInterface
