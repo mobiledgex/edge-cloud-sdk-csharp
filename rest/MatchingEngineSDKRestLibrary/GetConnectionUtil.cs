@@ -308,7 +308,6 @@ namespace DistributedMatchEngine
 
     private static string GetAvailableInterface(NetInterface netInterface, Regex interfaceNamesRegex)
     {
-      string foundName = "";
       NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
 
       foreach (NetworkInterface iface in netInterfaces)
@@ -326,7 +325,7 @@ namespace DistributedMatchEngine
           }
           else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
           {
-            // No-op. Every interface has IpV6.
+            return iName;
           }
           else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null)
           {
@@ -338,7 +337,7 @@ namespace DistributedMatchEngine
           }
         }
       }
-      return foundName;
+      return null;
     }
 
     public string GetAvailableCellularName(NetworkInterfaceName networkInterfaceName)
@@ -349,35 +348,6 @@ namespace DistributedMatchEngine
     public string GetAvailableWiFiName(NetworkInterfaceName networkInterfaceName)
     {
       return GetAvailableInterface(netInterface, networkInterfaceName.WIFI);
-    }
-
-    // Gets IP Address of an available edge network interface, or wifi if that's available.
-    private IPEndPoint GetLocalIP(int port = 0)
-    {
-      if (netInterface == null)
-      {
-        throw new GetConnectionException("Have not integrated NetworkInterface");
-      }
-
-      string host;
-      if (useOnlyWifi || !netInterface.HasCellular())
-      {
-        host = netInterface.GetIPAddress(GetAvailableWiFiName(netInterface.GetNetworkInterfaceName()));
-      }
-      else
-      {
-        host = netInterface.GetIPAddress(GetAvailableCellularName(netInterface.GetNetworkInterfaceName()));
-      }
-
-      if (host == null || host == "")
-      {
-        string type = useOnlyWifi ? "Wifi" : "Cellular";
-        throw new GetConnectionException("Could not get " + type + " interface");
-      }
-      // Gets IP address of host
-      IPAddress localIP = Dns.GetHostAddresses(host)[0];
-      IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
-      return localEndPoint;
     }
 
     /*!

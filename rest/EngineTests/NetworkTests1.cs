@@ -82,12 +82,10 @@ namespace EngineTests
     public void TestInterfacesNotExist()
     {
       string nameWifi = me.GetAvailableWiFiName(new AndroidNetworkInterfaceNameBad());
-      Assert.NotNull(nameWifi);
-      Assert.IsEmpty(nameWifi);
+      Assert.IsNull(nameWifi);
 
       string nameCell = me.GetAvailableCellularName(new AndroidNetworkInterfaceNameBad());
-      Assert.NotNull(nameCell);
-      Assert.IsEmpty(nameCell);
+      Assert.IsNull(nameCell);
     }
 
     [Test]
