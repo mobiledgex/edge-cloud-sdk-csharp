@@ -12,7 +12,7 @@
     <Title>MobiledgeX MatchingEngineSDK Rest Library</Title>
     <PackageId>MobiledgeX.MatchingEngineSDKRestLibrary</PackageId>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
-    <AssemblyVersion>3.0.0-rc1</AssemblyVersion>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
     <FileVersion>3.0.0-rc1</FileVersion>
     <Copyright>Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
   </PropertyGroup>
