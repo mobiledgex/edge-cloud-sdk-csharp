@@ -241,6 +241,11 @@ namespace DistributedMatchEngine
 
     string authToken { get; set; }
 
+    // Global local endpoint override for FindCloudlet, NetTest, and GetConnection API helpers.
+    // This is used for background App related operations like EdgeEvents processing, if set.
+    // Default routing otherwise.
+    public string LocalIP { get; set; }
+
     // Delegate for Events.
     public delegate void EventBusDelegate(ServerEdgeEvent serverEdgeEvent);
     public EventBusDelegate EventBusReciever { get; internal set; }
@@ -902,11 +907,6 @@ namespace DistributedMatchEngine
       };
     }
 
-    public Task<FindCloudletReply> FindCloudletPerformanceMode(string dmeHost, object defaultDmeGrpcPort, FindCloudletRequest findCloudletRequest, IPEndPoint localEndPoint)
-    {
-      throw new NotImplementedException();
-    }
-
     private AppOfficialFqdnReply.AOFStatus ParseAofStatus(string responseStr)
     {
       string key = "status";
@@ -1144,7 +1144,7 @@ namespace DistributedMatchEngine
     }
 
     // Helper function for FindCloudlet
-    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
+    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply, int testPort = 0, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
     {
       List<NetTest.Site> sites = new List<NetTest.Site>();
 
@@ -1152,21 +1152,56 @@ namespace DistributedMatchEngine
       {
         foreach (Appinstance appinstance in cloudlet.appinstances)
         {
-          AppPort appPort = appinstance.ports[0];
-
-          switch (appPort.proto)
+          // Find an test AppPort to add from cloudlet.
+          AppPort useAppPort = null;
+          if (testPort != 0)
           {
-            case LProto.L_PROTO_TCP:
-              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
-              break;
+            foreach (var aPort in appinstance.ports)
+            {
+              if (IsInPortRange(aPort, testPort))
+              {
+                useAppPort = aPort;
+              }
+            }
+          }
+          else
+          {
+            // Many servers block ICMP packets, including AppInsts/Cloudlets. EdgeEventsConfig should specify the TCP port in the application config for testing any particular App.
+            foreach (var port in appinstance.ports)
+            {
+              if (port.proto == LProto.L_PROTO_UDP)
+              {
+                if (useAppPort == null)
+                {
+                  useAppPort = port;
+                }
+              }
+              else if (port.proto == LProto.L_PROTO_TCP)
+              {
+                useAppPort = port;
+                break;
+              }
+            }
 
-            case LProto.L_PROTO_UDP:
-              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
-              break;
+            if (useAppPort.proto == LProto.L_PROTO_UDP)
+            {
+              Log.E("Warning: Found only UDP port. ICMP Ping testing will likely fail. Please specify a TCP port in your app.");
+            }
 
-            default:
-              Log.E("Unsupported protocol " + appPort.proto + " found when trying to create sites for NetTest");
-              break;
+            switch (useAppPort.proto)
+            {
+              case LProto.L_PROTO_TCP:
+                sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
+                break;
+
+              case LProto.L_PROTO_UDP:
+                sites.Add(InitUdpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
+                break;
+
+              default:
+                Log.E("Unsupported protocol " + useAppPort.proto + " found when trying to create sites for NetTest");
+                break;
+            }
           }
         }
       }
@@ -1244,7 +1279,7 @@ namespace DistributedMatchEngine
         }
         else
         {
-          fcReply = await FindCloudletPerformanceMode(host, port, request).ConfigureAwait(false);
+          fcReply = await FindCloudletPerformanceMode(host, port, request, localEndPoint: localEndPoint).ConfigureAwait(false);
         }
 
         if (fcReply == null)
@@ -1281,7 +1316,7 @@ namespace DistributedMatchEngine
     }
 
     // FindCloudlet with GetAppInstList and NetTest
-    private async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request, int numOfSamples = 5, IPEndPoint localEndPoint = null)
+    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request, int testPort = 0, int numOfSamples = 5, IPEndPoint localEndPoint = null)
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
@@ -1307,7 +1342,9 @@ namespace DistributedMatchEngine
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.status);
       }
 
-      NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, localEndPoint: localEndPoint);
+      // Check for global override for site performance testing:
+      IPEndPoint useEndpoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, testPort: testPort, localEndPoint: useEndpoint);
       if (sites.Length == 0)
       {
         throw new FindCloudletException("No sites returned from GetAppInstList");

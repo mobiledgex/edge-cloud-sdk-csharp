@@ -374,6 +374,18 @@ namespace DistributedMatchEngine
       return null;
     }
 
+    public IPEndPoint GetIPEndPointByHostName(string hostName, uint port = 0)
+    {
+      if (hostName == null)
+      {
+        return null;
+      }
+      IPAddress localIP = Dns.GetHostAddresses(hostName)[0];
+      IPEndPoint localEndPoint = new IPEndPoint(localIP, (int)port);
+
+      return localEndPoint;
+    }
+
     public IPAddress GetIPAddressByFamily(string sourceNetInterfaceName, AddressFamily addressfamily = AddressFamily.InterNetwork)
     {
       if (!NetworkInterface.GetIsNetworkAvailable())
