@@ -47,6 +47,7 @@ namespace DistributedMatchEngine
       Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
       if (localEndPoint != null)
       {
+        Console.WriteLine("LocalEndPoint will be used: " + localEndPoint.Address);
         s.Bind(localEndPoint);
         Console.WriteLine("bound local endpoint: " + localEndPoint);
       }
@@ -121,6 +122,7 @@ namespace DistributedMatchEngine
       TcpClient tcpClient;
       if (localEndPoint != null)
       {
+        Console.WriteLine("LocalEndPoint will be used: " + localEndPoint.Address);
         tcpClient = new TcpClient(localEndPoint);
         Console.WriteLine("bound local endpoint: " + localEndPoint);
       }
@@ -209,6 +211,7 @@ namespace DistributedMatchEngine
       Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
       if (localEndPoint != null)
       {
+        Console.WriteLine("LocalEndPoint will be used: " + localEndPoint.Address);
         s.Bind(localEndPoint);
         Console.WriteLine("bound local endpoint: " + localEndPoint);
       }

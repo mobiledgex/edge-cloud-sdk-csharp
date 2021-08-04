@@ -170,7 +170,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
 
       stopWatch.Start();
       TimeSpan ts;
-      using (var socket = await matchingEngine.GetTCPConnection(site.host, site.port, TestTimeoutMS).ConfigureAwait(false))
+      using (var socket = await matchingEngine.GetTCPConnection(site.host, site.port, TestTimeoutMS, site.localEndPoint).ConfigureAwait(false))
       {
         ts = stopWatch.Elapsed;
         stopWatch.Stop();
@@ -180,8 +180,8 @@ namespace DistributedMatchEngine.PerformanceMetrics
       return ts.TotalMilliseconds;
     }
 
-    // Create a client and connect/disconnect on a partcular site.
-    // TODO: This method does NOT use the Cellular interface pending availbility of a socket handler.
+    // Create a client and connect/disconnect on a partcular L7 HTTP test website L7 path.
+    // TODO: This method does NOT use the MatchingEngine's localEndPoint interface pending availbility of a socket handler.
     public async Task<Double> ConnectAndDisconnect(Site site)
     {
       stopWatch.Reset();
