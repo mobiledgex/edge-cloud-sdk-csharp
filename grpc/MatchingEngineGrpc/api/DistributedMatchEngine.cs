@@ -233,6 +233,11 @@ namespace DistributedMatchEngine
 
     string authToken { get; set; }
 
+    // Global local endpoint override for FindCloudlet, NetTest, and GetConnection API helpers.
+    // This is used for background App related operations like EdgeEvents processing, if set.
+    // Default routing otherwise.
+    public string LocalIP { get; set; }
+
     // For Event Consumers
     public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
     public event EdgeEventsDelegate EdgeEventsReceiver;
@@ -1009,7 +1014,7 @@ namespace DistributedMatchEngine
     }
 
     // Helper function for FindCloudlet
-    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
+    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply, int testPort = 0, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
     {
       List<NetTest.Site> sites = new List<NetTest.Site>();
 
@@ -1028,7 +1033,7 @@ namespace DistributedMatchEngine
                 break;
               }
             }
-            if(tcpPort == null)
+            if (tcpPort == null)
             {
               throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
             }
@@ -1036,21 +1041,56 @@ namespace DistributedMatchEngine
           }
           else
           {
-            AppPort appPort = appinstance.Ports[0];
-
-            switch (appPort.Proto)
+            // Find an test AppPort to add from cloudlet.
+            AppPort useAppPort = null;
+            if (testPort != 0)
             {
-              case LProto.Tcp:
-                sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
-                break;
+              foreach (var aPort in appinstance.Ports)
+              {
+                if (IsInPortRange(aPort, testPort))
+                {
+                  useAppPort = aPort;
+                }
+              }
+            }
+            else
+            {
+              // Many servers block ICMP packets, including AppInsts/Cloudlets. EdgeEventsConfig should specify the TCP port in the application config for testing any particular App.
+              foreach (var port in appinstance.Ports)
+              {
+                if (port.Proto == LProto.Udp)
+                {
+                  if (useAppPort == null)
+                  {
+                    useAppPort = port;
+                  }
+                }
+                else if (port.Proto == LProto.Tcp)
+                {
+                  useAppPort = port;
+                  break;
+                }
+              }
 
-              case LProto.Udp:
-                sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
-                break;
+              if (useAppPort.Proto == LProto.Udp)
+              {
+                Log.E("Warning: Found only UDP port. ICMP Ping testing will likely fail. Please specify a TCP port in your app.");
+              }
 
-              default:
-                Log.E("Unsupported protocol " + appPort.Proto + " found when trying to create sites for NetTest");
-                break;
+              switch (useAppPort.Proto)
+              {
+                case LProto.Tcp:
+                  sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
+                  break;
+
+                case LProto.Udp:
+                  sites.Add(InitUdpSite(useAppPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
+                  break;
+
+                default:
+                  Log.E("Unsupported protocol " + useAppPort.Proto + " found when trying to create sites for NetTest");
+                  break;
+              }
             }
           }
         }
@@ -1065,6 +1105,7 @@ namespace DistributedMatchEngine
      * \param port(uint): DME port (REST: 38001, GRPC: 50051)
      * \param request (FindCloudletRequest)
      * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
+     * \param localEndpoint (IPEndPoint) Optional. Specifiy a local interface IPEndPoint for performance mode.
      * \return Task<FindCloudletReply>
      * \section findcloudletoverloadexample Example
      * \snippet RestSample.cs findcloudletoverloadexample
@@ -1160,8 +1201,11 @@ namespace DistributedMatchEngine
     /// <param name="host">Distributed Matching Engine Host</param>
     /// <param name="port">Distributed Matching Engine Port</param>
     /// <param name="request">FindCloudletRequest</param>
+    /// <param name="testPort">A TCP Test port (Optional)</param>
+    /// <param name="numOfSamples">Number of rounds of testing per cloudlet lcoations (Optional)</param>
+    /// <param name="localEndPoint">local IPEndPoint to test from (Optional)</param>
     /// <returns>FindCloudletReply</returns>
-    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request, int numOfSamples = 5, IPEndPoint localEndPoint = null)
+    public async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request, int testPort = 0, int numOfSamples = 5, IPEndPoint localEndPoint = null)
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
@@ -1183,7 +1227,9 @@ namespace DistributedMatchEngine
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.Status);
       }
 
-      NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, localEndPoint: localEndPoint);
+      // Check for global override for site performance testing:
+      IPEndPoint useEndpoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, testPort: testPort, localEndPoint: useEndpoint);
       if (sites.Length == 0)
       {
         throw new FindCloudletException("No sites returned from GetAppInstList");

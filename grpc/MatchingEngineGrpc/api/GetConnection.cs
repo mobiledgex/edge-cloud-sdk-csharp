@@ -53,7 +53,8 @@ namespace DistributedMatchEngine
       desiredPort = GetPort(appPort, desiredPort);
       string host = GetHost(reply, appPort);
 
-      Socket s = await GetTCPConnection(host, desiredPort, timeoutMs, localEndPoint).ConfigureAwait(false);
+      IPEndPoint useEndPoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      Socket s = await GetTCPConnection(host, desiredPort, timeoutMs, useEndPoint).ConfigureAwait(false);
       return s;
     }
 
@@ -77,7 +78,8 @@ namespace DistributedMatchEngine
       desiredPort = GetPort(appPort, desiredPort);
       string host = GetHost(reply, appPort);
 
-      SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeoutMs, allowSelfSignedCerts, localEndPoint).ConfigureAwait(false);
+      IPEndPoint useEndPoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeoutMs, allowSelfSignedCerts, useEndPoint).ConfigureAwait(false);
       return stream;
     }
 
@@ -101,7 +103,8 @@ namespace DistributedMatchEngine
       desiredPort = GetPort(appPort, desiredPort);
       string host = GetHost(reply, appPort);
 
-      Socket s = await GetUDPConnection(host, desiredPort, timeoutMs, localEndPoint).ConfigureAwait(false);
+      IPEndPoint useEndPoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      Socket s = await GetUDPConnection(host, desiredPort, timeoutMs, useEndPoint).ConfigureAwait(false);
       return s;
     }
 
