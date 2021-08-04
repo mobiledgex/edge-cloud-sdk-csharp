@@ -351,8 +351,20 @@ namespace DistributedMatchEngine
       return GetAvailableInterfaceName(netInterface, networkInterfaceName.WIFI);
     }
 
+    public IPEndPoint GetIPEndPointByHostName(string hostName, uint port = 0)
+    {
+      if (hostName == null)
+      {
+        return null;
+      }
+      IPAddress localIP = Dns.GetHostAddresses(hostName)[0];
+      IPEndPoint localEndPoint = new IPEndPoint(localIP, (int)port);
+
+      return localEndPoint;
+    }
+
     /*!
-     * Returns local unicast address in an IPEndPoint, if any.
+     * From interface name, returns local unicast address in an IPEndPoint, if any.
      */
     public IPEndPoint GetIPEndPointByName(string interfaceName, uint port = 0, AddressFamily addressFamily = AddressFamily.InterNetwork)
     {
