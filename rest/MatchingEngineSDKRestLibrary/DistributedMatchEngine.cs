@@ -902,6 +902,11 @@ namespace DistributedMatchEngine
       };
     }
 
+    public Task<FindCloudletReply> FindCloudletPerformanceMode(string dmeHost, object defaultDmeGrpcPort, FindCloudletRequest findCloudletRequest, IPEndPoint localEndPoint)
+    {
+      throw new NotImplementedException();
+    }
+
     private AppOfficialFqdnReply.AOFStatus ParseAofStatus(string responseStr)
     {
       string key = "status";
@@ -971,9 +976,9 @@ namespace DistributedMatchEngine
      * \subsection findcloudletperformanceexample Performance Example
      * \snippet RestSample.cs findcloudletperformanceexample
      */
-    public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+    public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY, IPEndPoint localEndPoint = null)
     {
-      return await FindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort, request, mode);
+      return await FindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort, request, mode, localEndPoint);
     }
 
     private async Task<FindCloudletReply> FindCloudletMelMode(string host, uint port, FindCloudletRequest request)
@@ -1112,7 +1117,7 @@ namespace DistributedMatchEngine
       return site;
     }
 
-    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
+    private NetTest.Site InitTcpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
     {
       NetTest.Site site = new NetTest.Site(numSamples: numSamples);
 
@@ -1121,10 +1126,11 @@ namespace DistributedMatchEngine
 
       site.appInst = appinstance;
       site.cloudletLocation = cloudletLocation;
+      site.localEndPoint = localEndPoint;
       return site;
     }
 
-    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
+    private NetTest.Site InitUdpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
     {
       NetTest.Site site = new NetTest.Site(testType: NetTest.TestType.PING, numSamples: numSamples);
 
@@ -1133,11 +1139,12 @@ namespace DistributedMatchEngine
 
       site.appInst = appinstance;
       site.cloudletLocation = cloudletLocation;
+      site.localEndPoint = localEndPoint;
       return site;
     }
 
     // Helper function for FindCloudlet
-    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES)
+    private NetTest.Site[] CreateSitesFromAppInstReply(AppInstListReply reply, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
     {
       List<NetTest.Site> sites = new List<NetTest.Site>();
 
@@ -1150,11 +1157,11 @@ namespace DistributedMatchEngine
           switch (appPort.proto)
           {
             case LProto.L_PROTO_TCP:
-              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
+              sites.Add(InitTcpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
               break;
 
             case LProto.L_PROTO_UDP:
-              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples));
+              sites.Add(InitUdpSite(appPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
               break;
 
             default:
@@ -1173,11 +1180,12 @@ namespace DistributedMatchEngine
      * \param port(uint): DME port (REST: 38001, GRPC: 50051)
      * \param request (FindCloudletRequest)
      * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
+     * \param localEndpoint (IPEndPoint) Optional. Specifiy a local interface IPEndPoint for performance mode.
      * \return Task<FindCloudletReply>
      * \section findcloudletoverloadexample Example
      * \snippet RestSample.cs findcloudletoverloadexample
      */
-    public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+    public async Task<FindCloudletReply> FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY, IPEndPoint localEndPoint = null)
     {
       try
       {
@@ -1273,7 +1281,7 @@ namespace DistributedMatchEngine
     }
 
     // FindCloudlet with GetAppInstList and NetTest
-    private async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request)
+    private async Task<FindCloudletReply> FindCloudletPerformanceMode(string host, uint port, FindCloudletRequest request, int numOfSamples = 5, IPEndPoint localEndPoint = null)
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
@@ -1299,7 +1307,7 @@ namespace DistributedMatchEngine
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.status);
       }
 
-      NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply);
+      NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, localEndPoint: localEndPoint);
       if (sites.Length == 0)
       {
         throw new FindCloudletException("No sites returned from GetAppInstList");

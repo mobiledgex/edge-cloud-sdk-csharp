@@ -37,6 +37,7 @@ using System.Collections.Concurrent;
 using System.Json;
 using System.Collections;
 using System.Runtime.Serialization;
+using System.Net;
 
 namespace Tests
 {
@@ -813,6 +814,146 @@ namespace Tests
       }
     }
 
+    [Test]
+    public async static Task TestNetTestLocalEndpointsMac()
+    {
+      Console.WriteLine("This is sort of a mac only test.");
+      var loc = await Util.GetLocationFromDevice();
+      FindCloudletReply findCloudletReply = null;
+      IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
+
+      Console.WriteLine("Attempting to test localEndpoint usage.");
+      Assert.NotNull(localEndPoint);
+
+      try
+      {
+        // Overide, test to another server:
+        var registerRequest = me.CreateRegisterClientRequest(orgName: orgName, appName: appName, appVersion: appVers);
+        var registerReply = await me.RegisterClient(dmeHost, MatchingEngine.defaultDmeRestPort, registerRequest);
+
+        var findCloudletRequest = me.CreateFindCloudletRequest(loc: loc);
+        findCloudletReply = await me.FindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+          findCloudletRequest, mode: FindCloudletMode.PERFORMANCE, localEndPoint: localEndPoint);
+      }
+      catch (DmeDnsException dde)
+      {
+        Console.WriteLine("Workflow DmeDnsException is " + dde);
+      }
+      catch (RegisterClientException rce)
+      {
+        Console.WriteLine("Workflow RegisterClientException is " + rce);
+        return;
+      }
+      catch (FindCloudletException fce)
+      {
+        Console.WriteLine("Workflow FindCloudletException is " + fce);
+        return;
+      }
+      Assert.ByVal(findCloudletReply, Is.Not.Null);
+      Assert.ByVal(findCloudletReply.fqdn, Is.Not.Null);
+      if (findCloudletReply != null)
+      {
+        Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.status);
+        Console.WriteLine("FindCloudlet:" +
+                " ver: " + findCloudletReply.ver +
+                ", fqdn: " + findCloudletReply.fqdn +
+                ", cloudlet_location: " +
+                " long: " + findCloudletReply.cloudlet_location.longitude +
+                ", lat: " + findCloudletReply.cloudlet_location.latitude); ;
+        // App Ports:
+        foreach (AppPort p in findCloudletReply.ports)
+        {
+          Console.WriteLine("Port: fqdn_prefix: " + p.fqdn_prefix +
+                ", protocol: " + p.proto +
+                ", public_port: " + p.public_port +
+                ", internal_port: " + p.internal_port +
+                ", end_port: " + p.end_port);
+        }
+      }
+
+      NetTest netTest = new NetTest(me);
+
+      // Site 1
+      Dictionary<int, AppPort> appPortsDict1 = me.GetTCPAppPorts(findCloudletReply);
+      Assert.True(appPortsDict1.Count > 0, "No dictionary results for TCP Port!");
+      Assert.True(findCloudletReply.ports.Length > 0, "No Ports!");
+
+      var appPort = appPortsDict1[2016]; // Known port;
+
+      int public_port1 = appPort.public_port;
+      Site site1 = new Site { host = appPort.fqdn_prefix + findCloudletReply.fqdn, port = public_port1, localEndPoint = localEndPoint};
+
+      netTest.sites.Enqueue(site1);
+
+      try
+      {
+        Site siteOne = new Site();
+
+        netTest.PingIntervalMS = 500;
+        netTest.doTest(true);
+        await Task.Delay(5000).ConfigureAwait(false);
+        netTest.doTest(false);
+        netTest.sites.TryPeek(out siteOne);
+
+        Console.WriteLine("Should have a localEndPoint here next:");
+        Assert.NotNull(siteOne.localEndPoint);
+
+        double avg1 = siteOne.average;
+        Console.WriteLine("Average 1: " + siteOne.average + ", Test running? " + netTest.runTest);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample 1: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+
+        await Task.Delay(3000).ConfigureAwait(false);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample 1.5: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+        netTest.sites.TryPeek(out siteOne);
+        double avg15 = siteOne.average;
+        Console.WriteLine("Average 1.5: " + siteOne.average + ", Test running? " + netTest.runTest);
+        Assert.False(netTest.runTest, "Should be stopped, along with the average calculation.");
+        Assert.True(avg1 == avg15, "Thread didn't stop. Averages are not equal (or subject to noise)!");
+
+        netTest.doTest(true);
+        await Task.Delay(6000).ConfigureAwait(false);
+        netTest.doTest(false);
+        netTest.sites.TryPeek(out siteOne);
+        Console.WriteLine("Average 2: " + siteOne.average);
+        Assert.True(avg15 != siteOne.average, "Thread didn't restart!");
+
+
+        netTest.sites.TryPeek(out siteOne);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+
+        Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
+        netTest.doTest(false);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Excepton while testing: " + e.Message);
+        if (e.InnerException != null)
+        {
+          Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
+        }
+      }
+    }
 
     [Test]
     public async static Task TestUniqueIdText()
