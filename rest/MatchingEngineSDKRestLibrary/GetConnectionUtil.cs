@@ -351,6 +351,75 @@ namespace DistributedMatchEngine
     }
 
     /*!
+     * Returns local unicast address in an IPEndPoint, if any.
+     */
+    public IPEndPoint GetIPEndPointByName(string interfaceName, uint port = 0, AddressFamily addressFamily = AddressFamily.InterNetwork)
+    {
+      if (interfaceName == null)
+      {
+        return null;
+      }
+      NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        string iName = iface.Name;
+        if (interfaceName.Equals(iName))
+        {
+          var ipAddr = GetIPAddressByFamily(iName, addressFamily);
+          IPEndPoint endpoint = new IPEndPoint(ipAddr, (int)port);
+          return endpoint;
+        }
+      }
+      return null;
+    }
+
+    public IPAddress GetIPAddressByFamily(string sourceNetInterfaceName, AddressFamily addressfamily = AddressFamily.InterNetwork)
+    {
+      if (!NetworkInterface.GetIsNetworkAvailable())
+      {
+        return null;
+      }
+
+      NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+      IPAddress ipAddressV4 = null;
+      IPAddress ipAddressV6 = null;
+
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        if (iface.Name.Equals(sourceNetInterfaceName))
+        {
+          IPInterfaceProperties ipifaceProperties = iface.GetIPProperties();
+          foreach (UnicastIPAddressInformation ip in ipifaceProperties.UnicastAddresses)
+          {
+            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+            {
+              ipAddressV4 = ip.Address;
+            }
+            if (ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
+            {
+              ipAddressV6 = ip.Address;
+            }
+          }
+
+          if (addressfamily == AddressFamily.InterNetworkV6)
+          {
+            Log.S("IPV6 IP Address found: " + ipAddressV6);
+            return ipAddressV6;
+          }
+
+          if (addressfamily == AddressFamily.InterNetwork)
+          {
+            Log.S("IPV4 IP Address found: " + ipAddressV4);
+            return ipAddressV4;
+          }
+        }
+      }
+      return null;
+    }
+
+    /*!
      * Returns a Dictionary mapping a port that the developer specified when creating their app through MobiledgeX console to an AppPort object.
      * This AppPort object will contain relevant information necessary to connect to the desired port.
      * This object will be used in GetConnection functions.
