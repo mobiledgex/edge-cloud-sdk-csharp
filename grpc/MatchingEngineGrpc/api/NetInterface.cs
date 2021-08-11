@@ -94,6 +94,7 @@ namespace DistributedMatchEngine
     {
       return NetworkInterface.GetAllNetworkInterfaces();
     }
+
     public string GetIPAddress(string sourceNetInterfaceName, AddressFamily addressfamily = AddressFamily.InterNetwork)
     {
       if (!NetworkInterface.GetIsNetworkAvailable())
@@ -103,7 +104,6 @@ namespace DistributedMatchEngine
 
       NetworkInterface[] netInterfaces = GetInterfaces();
 
-      string ipAddress = null;
       string ipAddressV4 = null;
       string ipAddressV6 = null;
       Log.S("Looking for: " + sourceNetInterfaceName + ", known Wifi: " + networkInterfaceName.WIFI + ", known Cellular: " + networkInterfaceName.CELLULAR);
@@ -138,7 +138,7 @@ namespace DistributedMatchEngine
           }
         }
       }
-      return ipAddress;
+      return null;
     }
 
     // This assumes the UP status is correct.

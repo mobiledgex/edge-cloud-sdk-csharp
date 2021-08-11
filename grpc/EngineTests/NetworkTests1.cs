@@ -19,6 +19,7 @@ using System;
 using DistributedMatchEngine;
 using NUnit.Framework;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace EngineTests
 {
@@ -74,12 +75,10 @@ namespace EngineTests
     public void TestInterfacesNotExist()
     {
       string nameWifi = me.GetAvailableWiFiName(new AndroidNetworkInterfaceNameBad());
-      Assert.NotNull(nameWifi);
-      Assert.IsEmpty(nameWifi);
+      Assert.IsNull(nameWifi);
 
       string nameCell = me.GetAvailableCellularName(new AndroidNetworkInterfaceNameBad());
-      Assert.NotNull(nameCell);
-      Assert.IsEmpty(nameCell);
+      Assert.IsNull(nameCell);
     }
 
     [Test]
@@ -95,6 +94,21 @@ namespace EngineTests
       Assert.AreEqual(nameCell, "en0");
     }
 
+    [Test]
+    public void TestMacInterfacesEndPointsExist()
+    {
+      IPEndPoint endpoint = me.GetIPEndPointByName("lo0");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint IPv4: " + endpoint);
+
+      IPEndPoint endpointv6 = me.GetIPEndPointByName("lo0", 123, System.Net.Sockets.AddressFamily.InterNetworkV6);
+      Assert.NotNull(endpointv6);
+      Console.WriteLine("EndPoint IPv6: " + endpointv6);
+
+      endpoint = me.GetIPEndPointByHostName("127.0.0.1");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint: " + endpoint);
+    }
 
     [Test]
     public void TestWindowsInterfacesExist()
@@ -113,8 +127,25 @@ namespace EngineTests
       Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("Wi-Fi"));
       Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi"));
       Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi 4"));
+
+
+    }
+
+    [Test]
+    public void TestWindowsInterfacesIPEndPointsExist()
+    {
+      IPEndPoint endpoint = me.GetIPEndPointByName("localhost");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint IPv4: " + endpoint);
+
+      IPEndPoint endpointv6 = me.GetIPEndPointByName("localhost", 123, System.Net.Sockets.AddressFamily.InterNetworkV6);
+      Assert.NotNull(endpointv6);
+      Console.WriteLine("EndPoint IPv6: " + endpointv6);
+
+      endpoint = me.GetIPEndPointByHostName("127.0.0.1");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint: " + endpoint);
     }
   }
-
 }
 
