@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['default_5fgetconnection_5ftimeout_5fms_27',['DEFAULT_GETCONNECTION_TIMEOUT_MS',['../class_distributed_match_engine_1_1_matching_engine.html#aa11041b5de841e190acf078493d39d76',1,'DistributedMatchEngine::MatchingEngine']]],
-  ['distance_28',['distance',['../class_distributed_match_engine_1_1_cloudlet_location.html#a392fb10496570dde52800fa170e11f33',1,'DistributedMatchEngine::CloudletLocation']]],
-  ['distributedmatchengine_29',['DistributedMatchEngine',['../namespace_distributed_match_engine.html',1,'']]],
-  ['dluserthroughput_5fmin_30',['dluserthroughput_min',['../class_distributed_match_engine_1_1_qos_position_result.html#ad16879dc5fbdeb7fd21c25a33a67a2a8',1,'DistributedMatchEngine::QosPositionResult']]],
-  ['dmednsexception_31',['DmeDnsException',['../class_distributed_match_engine_1_1_dme_dns_exception.html',1,'DistributedMatchEngine']]],
-  ['mel_32',['Mel',['../namespace_distributed_match_engine_1_1_mel.html',1,'DistributedMatchEngine']]],
-  ['performancemetrics_33',['PerformanceMetrics',['../namespace_distributed_match_engine_1_1_performance_metrics.html',1,'DistributedMatchEngine']]]
+  ['emptycarrierinfo_16',['EmptyCarrierInfo',['../class_distributed_match_engine_1_1_empty_carrier_info.html',1,'DistributedMatchEngine']]],
+  ['emptydeviceinfo_17',['EmptyDeviceInfo',['../class_distributed_match_engine_1_1_empty_device_info.html',1,'DistributedMatchEngine']]],
+  ['emptynetinterface_18',['EmptyNetInterface',['../class_distributed_match_engine_1_1_empty_net_interface.html',1,'DistributedMatchEngine']]],
+  ['emptyuniqueid_19',['EmptyUniqueID',['../class_distributed_match_engine_1_1_empty_unique_i_d.html',1,'DistributedMatchEngine']]],
+  ['enableenhancedlocationservices_20',['EnableEnhancedLocationServices',['../class_distributed_match_engine_1_1_matching_engine.html#ab8011087bfbc93ebf3b8015371d22f88',1,'DistributedMatchEngine::MatchingEngine']]],
+  ['enablesslprotocols_21',['EnableSSLProtocols',['../group__functions__getconnectionutils.html#gae0f12497ca7cd290c0ce07b910cbcf0c',1,'DistributedMatchEngine::MatchingEngine']]],
+  ['exceptions_22',['Exceptions',['../group__exceptions.html',1,'']]]
 ];

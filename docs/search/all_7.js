@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['httpexception_77',['HttpException',['../class_distributed_match_engine_1_1_http_exception.html',1,'DistributedMatchEngine']]]
+  ['iosnetworkinterfacename_53',['IOSNetworkInterfaceName',['../class_distributed_match_engine_1_1_i_o_s_network_interface_name.html',1,'DistributedMatchEngine']]]
 ];

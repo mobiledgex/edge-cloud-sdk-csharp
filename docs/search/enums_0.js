@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['aistatus_273',['AIStatus',['../class_distributed_match_engine_1_1_app_inst_list_reply.html#a93a3f53843ae01d23d849f791b2ab7b3',1,'DistributedMatchEngine::AppInstListReply']]]
+  ['findcloudletmode_153',['FindCloudletMode',['../namespace_distributed_match_engine.html#a46042bc4ff8fe502ffe8e56c3386504d',1,'DistributedMatchEngine']]]
 ];
