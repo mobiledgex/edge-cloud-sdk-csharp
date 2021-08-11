@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['emptycarrierinfo_34',['EmptyCarrierInfo',['../class_distributed_match_engine_1_1_empty_carrier_info.html',1,'DistributedMatchEngine']]],
-  ['emptydeviceinfo_35',['EmptyDeviceInfo',['../class_distributed_match_engine_1_1_empty_device_info.html',1,'DistributedMatchEngine']]],
-  ['emptynetinterface_36',['EmptyNetInterface',['../class_distributed_match_engine_1_1_empty_net_interface.html',1,'DistributedMatchEngine']]],
-  ['emptyuniqueid_37',['EmptyUniqueID',['../class_distributed_match_engine_1_1_empty_unique_i_d.html',1,'DistributedMatchEngine']]],
-  ['enablesslprotocols_38',['EnableSSLProtocols',['../group__functions__getconnectionutils.html#gae0f12497ca7cd290c0ce07b910cbcf0c',1,'DistributedMatchEngine::MatchingEngine']]],
-  ['end_5fport_39',['end_port',['../class_distributed_match_engine_1_1_app_port.html#a909f09d5428a938730e273452892739c',1,'DistributedMatchEngine::AppPort']]],
-  ['exceptions_40',['Exceptions',['../group__exceptions.html',1,'']]]
+  ['findcloudlet_23',['FindCloudlet',['../group__functions__dmeapis.html#ga7a59f3a8bdd685821005e95dc4353bc0',1,'DistributedMatchEngine.MatchingEngine.FindCloudlet(FindCloudletRequest request, FindCloudletMode mode=FindCloudletMode.PROXIMITY, IPEndPoint localEndPoint=null)'],['../group__functions__dmeapis.html#ga0e82440ee800b0a94a66b5c8122d895f',1,'DistributedMatchEngine.MatchingEngine.FindCloudlet(string host, uint port, FindCloudletRequest request, FindCloudletMode mode=FindCloudletMode.PROXIMITY, IPEndPoint localEndPoint=null)']]],
+  ['findcloudletexception_24',['FindCloudletException',['../class_distributed_match_engine_1_1_find_cloudlet_exception.html',1,'DistributedMatchEngine']]],
+  ['findcloudletmode_25',['FindCloudletMode',['../namespace_distributed_match_engine.html#a46042bc4ff8fe502ffe8e56c3386504d',1,'DistributedMatchEngine']]],
+  ['function_20groups_26',['Function Groups',['../group__functiongroups.html',1,'']]]
 ];

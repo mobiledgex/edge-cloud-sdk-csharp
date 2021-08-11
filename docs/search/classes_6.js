@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getconnectionexception_163',['GetConnectionException',['../class_distributed_match_engine_1_1_get_connection_exception.html',1,'DistributedMatchEngine']]]
+  ['httpexception_92',['HttpException',['../class_distributed_match_engine_1_1_http_exception.html',1,'DistributedMatchEngine']]]
 ];
