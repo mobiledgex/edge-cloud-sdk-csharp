@@ -402,21 +402,21 @@ namespace DistributedMatchEngine
     }
 
     /*!
-    * GetDeviceStaticInfo
+    * GetDeviceInfoStatic
     * \ingroup functions_dmeutils
     */
-    public DeviceStaticInfo GetDeviceStaticInfo()
+    public DeviceInfoStatic GetDeviceInfoStatic()
     {
-      return deviceInfo.GetDeviceStaticInfo();
+      return deviceInfo.GetDeviceInfoStatic();
     }
 
     /*!
-    * GetDeviceDynamicInfo
+    * GetDeviceInfoDynamic
     * \ingroup functions_dmeutils
     */
-    public DeviceDynamicInfo GetDeviceDynamicInfo()
+    public DeviceInfoDynamic GetDeviceInfoDynamic()
     {
-      return deviceInfo.GetDeviceDynamicInfo();
+      return deviceInfo.GetDeviceInfoDynamic();
     }
 
     /*!

@@ -82,25 +82,25 @@ namespace Tests
 
     class TestDeviceInfo : DeviceInfoApp
     {
-      public DeviceDynamicInfo GetDeviceDynamicInfo()
+      public DeviceInfoDynamic GetDeviceInfoDynamic()
       {
-        DeviceDynamicInfo DeviceDynamicInfo = new DeviceDynamicInfo()
+        DeviceInfoDynamic DeviceInfoDynamic = new DeviceInfoDynamic()
         {
           CarrierName = "GDDT",
           DataNetworkType = "GSM",
           SignalStrength = 0
         };
-        return DeviceDynamicInfo;
+        return DeviceInfoDynamic;
       }
 
-      public DeviceStaticInfo GetDeviceStaticInfo()
+      public DeviceInfoStatic GetDeviceInfoStatic()
       {
-        DeviceStaticInfo DeviceStaticInfo = new DeviceStaticInfo()
+        DeviceInfoStatic DeviceInfoStatic = new DeviceInfoStatic()
         {
           DeviceModel = "iPhone",
           DeviceOs = "iOS 14.2"
         };
-        return DeviceStaticInfo;
+        return DeviceInfoStatic;
       }
 
       public bool IsPingSupported()
