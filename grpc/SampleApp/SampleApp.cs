@@ -133,6 +133,11 @@ namespace MexGrpcSampleConsoleApp
       };
       return DeviceStaticInfo;
     }
+
+    public bool IsPingSupported()
+    {
+      return true;
+    }
   }
 
   class MexGrpcLibApp
@@ -140,12 +145,12 @@ namespace MexGrpcSampleConsoleApp
     Loc location;
     string sessionCookie;
 
-    string dmeHost = "wifi.dme.mobiledgex.net"; // demo DME server hostname or ip.
+    string dmeHost = "eu-qa.dme.mobiledgex.net"; // demo DME server hostname or ip.
     uint dmePort = 50051; // DME port.
     string carrierName = "";
-    string orgName = "MobiledgeX-Samples";
-    string appName = "sdktest";
-    string appVers = "9.0";
+    string orgName = "automation_dev_org";
+    string appName = "automation-sdk-porttest";
+    string appVers = "1.0";
 
     MatchingEngine me;
 
@@ -565,7 +570,7 @@ namespace MexGrpcSampleConsoleApp
 
       // Blocking GRPC call:
       var fcRequest = me.CreateFindCloudletRequest(location);
-      var findCloudletReply = await me.FindCloudlet(host: dmeHost, port: dmePort, fcRequest);
+      var findCloudletReply = await me.FindCloudlet(host: dmeHost, port: dmePort, fcRequest, mode: FindCloudletMode.PERFORMANCE);
       Console.WriteLine("FindCloudlet Status: " + findCloudletReply.Status);
       // appinst server end port might not exist:
       foreach (AppPort p in findCloudletReply.Ports)

@@ -26,6 +26,7 @@ using System.Threading;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net;
 
 /*!
  * PerformanceMetrics Namespace
@@ -84,16 +85,18 @@ namespace DistributedMatchEngine.PerformanceMetrics
        */
       public Appinstance appInst;
       public Loc cloudletLocation;
+      public IPEndPoint localEndPoint;
 
       /*!
        * Constructor for Site class.
        * \param testType (TestType): Optional. Defaults to CONNECT
        * \param numSamples (int): Optional. Size of rolling sample set. Defaults to 3
        */
-      public Site(TestType testType = TestType.CONNECT, int numSamples = DEFAULT_NUM_SAMPLES)
+      public Site(TestType testType = TestType.CONNECT, int numSamples = DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
       {
         this.testType = testType;
         samples = new double[numSamples];
+        this.localEndPoint = localEndPoint;
       }
 
       public void addSample(double time)
@@ -167,7 +170,7 @@ namespace DistributedMatchEngine.PerformanceMetrics
 
       stopWatch.Start();
       TimeSpan ts;
-      using (var socket = await matchingEngine.GetTCPConnection(site.host, site.port, TestTimeoutMS).ConfigureAwait(false))
+      using (var socket = await matchingEngine.GetTCPConnection(site.host, site.port, TestTimeoutMS, site.localEndPoint).ConfigureAwait(false))
       {
         ts = stopWatch.Elapsed;
         stopWatch.Stop();
@@ -177,8 +180,8 @@ namespace DistributedMatchEngine.PerformanceMetrics
       return ts.TotalMilliseconds;
     }
 
-    // Create a client and connect/disconnect on a partcular site.
-    // TODO: This method does NOT use the Cellular interface pending availbility of a socket handler.
+    // Create a client and connect/disconnect on a partcular L7 HTTP test website L7 path.
+    // TODO: This method does NOT use the MatchingEngine's localEndPoint interface pending availbility of a socket handler.
     public async Task<Double> ConnectAndDisconnect(Site site)
     {
       stopWatch.Reset();

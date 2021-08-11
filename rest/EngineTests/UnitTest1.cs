@@ -37,6 +37,7 @@ using System.Collections.Concurrent;
 using System.Json;
 using System.Collections;
 using System.Runtime.Serialization;
+using System.Net;
 
 namespace Tests
 {
@@ -48,9 +49,7 @@ namespace Tests
     const string orgName = "MobiledgeX-Samples";
     const string appName = "sdktest";
     const string appVers = "9.0";
-    const string connectionTestFqdn = "autoclusterhttpecho.paradise-main.gddt.mobiledgex.net";
-    const string connectionTlsTestFqdn = "autoclusterhttpechotls.paradise-main.gddt.mobiledgex.net";
-    const string aWebSocketServerFqdn = "vivobrazil-rjo2.sonoral.mobiledgex.net"; // or, localhost.
+    const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.cerust.mobiledgex.net";
 
     static MatchingEngine me;
 
@@ -260,26 +259,27 @@ namespace Tests
     [Test]
     public async static Task TestTCPConnection()
     {
-      string test = "{\"Data\": \"tcp test string\"}";
-      string message = "POST / HTTP/1.1\r\n" +
-          "Host: 10.227.69.96:3001\r\n" +
-          "User-Agent: curl/7.54.0\r\n" +
-          "Accept: */*\r\n" +
-          "Content-Length: " +
-          test.Length + "\r\n" +
-          "Content-Type: application/json\r\n" + "\r\n" + test;
-      byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
+      byte[] bytes = Encoding.UTF8.GetBytes("ping");
 
+      var loc = await Util.GetLocationFromDevice();
+      FindCloudletReply reply1 = null;
+      // Overide, test to another server:
+      reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+        orgName: orgName,
+        appName: appName,
+        appVersion: appVers,
+        loc: loc);
+      int knownPort = 2016;
       //! [gettcpconnexample]
       string receiveMessage = "";
       try
       {
-        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 3001, 5000);
+        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, knownPort, 5000);
         Assert.ByVal(tcpConnection, Is.Not.Null);
 
-        tcpConnection.Send(bytesMessage);
+        tcpConnection.Send(bytes);
 
-        byte[] buffer = new byte[message.Length * 2]; // C# chars are unicode-16 bits
+        byte[] buffer = new byte[bytes.Length * 2]; // C# chars are unicode-16 bits
         int numRead = tcpConnection.Receive(buffer);
         byte[] readBuffer = new byte[numRead];
         Array.Copy(buffer, readBuffer, numRead);
@@ -297,7 +297,7 @@ namespace Tests
         Console.WriteLine("TCP socket exception is " + e);
       }
       //! [gettcpconnexample]
-      Assert.True(receiveMessage.Contains("tcp test string"));
+      Assert.True(receiveMessage.Contains("pong"));
       Console.WriteLine("TestTCPConnection finished.");
     }
 
@@ -316,23 +316,29 @@ namespace Tests
       string message = Util.StreamToString(ms);
 
       string uriString = connectionTestFqdn;
-      UriBuilder uriBuilder = new UriBuilder("http", uriString, 3001);
+      UriBuilder uriBuilder = new UriBuilder("http", uriString, 8085);
       Uri uri = uriBuilder.Uri;
 
       //! [gethttpexample]
+      // HTTP Connection Test
       try
       {
         HttpClient httpClient = await me.GetHTTPClient(uri);
         Assert.ByVal(httpClient, Is.Not.Null);
-
-        StringContent content = new StringContent(message);
-        HttpResponseMessage response = await httpClient.PostAsync(httpClient.BaseAddress, content);
-
+        HttpResponseMessage response = await httpClient.GetAsync(httpClient.BaseAddress + "/automation.html");
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
         Assert.ByVal(responseBody, Is.Not.Null);
-        Console.WriteLine("http response body is " + responseBody);
-        Assert.True(responseBody.Contains("HTTP Connection Test"));
+        string responseBodyTest =
+                    "<html>" +
+                    "\n   <head>" +
+                    "\n      <title>Automation test server</title>" +
+                    "\n   </head>" +
+                    "\n   <body>" +
+                    "\n      <p>test server is running</p>" +
+                    "\n   </body>" +
+                    "\n</html>\n";
+        Assert.True(responseBody.Equals(responseBodyTest));
       }
       catch (HttpRequestException e)
       {
@@ -344,36 +350,46 @@ namespace Tests
     [Test]
     public async static Task TestTCPTLSConnection()
     {
+
+      MatchingEngine.ServerRequiresClientCertificateAuthentication(false);
+
       //! [gettcptlsconnexample]
       try
       {
-        string test = "{\"Data\": \"Ping\"}";
-        string message = "POST / HTTP/1.1\r\n" +
-          "Host: 37.50.200.204:3001\r\n" +
-          "User-Agent: curl/7.54.0\r\n" +
-          "Accept: */*\r\n" +
-          "Content-Length: " +
-          test.Length + "\r\n" +
-          "Content-Type: application/json\r\n" + "\r\n" + test;
-        byte[] bytes = Encoding.UTF8.GetBytes(message);
+        var loc = await Util.GetLocationFromDevice();
+        FindCloudletReply reply1 = null;
 
-        MatchingEngine.ServerRequiresClientCertificateAuthentication(false);
+        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers,
+          loc: loc);
 
-        SslStream stream = await me.GetTCPTLSConnection(connectionTlsTestFqdn, 3001, 5000, true);
+        int knownPort = 2015;
+        var appPorts = me.GetAppPortsByProtocol(reply1, LProto.L_PROTO_TCP);
+        var appPort = appPorts[knownPort]; // Known port of this instance.
+        string host = appPort.fqdn_prefix + reply1.fqdn;
+        Console.WriteLine("Ports1: " + appPort.internal_port);
+        string url = me.CreateUrl(reply1, appPort, "https", knownPort);
+        Console.WriteLine("Url to use: " + url);
+        var appTcpPorts = me.GetTCPAppPorts(reply1);
+
+        SslStream stream = await me.GetTCPTLSConnection(host, appPort.public_port, 5000);
+
         Assert.ByVal(stream, Is.Not.Null);
         Assert.ByVal(stream.CipherAlgorithm, Is.Not.Null);
 
-        stream.Write(bytes);
+        stream.Write(Encoding.UTF8.GetBytes("ping"));
 
-        await Task.Delay(500);
-        byte[] readBuffer = new byte[bytes.Length*2];
+        await Task.Delay(200);
+        byte[] readBuffer = new byte[4096]; // Just a big buffer.
 
         Assert.True(stream.CanRead);
-        stream.Read(readBuffer);
+        int numRead = stream.Read(readBuffer, 0, readBuffer.Length);
 
-        string response = Encoding.UTF8.GetString(readBuffer);
+        string response = Encoding.UTF8.GetString(readBuffer, 0, numRead);
         Console.WriteLine("Response: " + response);
-        Assert.True(response.Contains("Ping"));
+        Assert.True(response.Contains("pong"));
         stream.Close();
       }
       catch (AuthenticationException e)
@@ -398,23 +414,43 @@ namespace Tests
     {
       string message = "Websockets connection test";
       byte[] bytesMessage = Encoding.ASCII.GetBytes(message);
-
-      //! [getwebsocketexample]
-      ClientWebSocket socket = null;
-      string url = "ws://" + aWebSocketServerFqdn + ":" + 3000;
-      UriBuilder uriBuilder = new UriBuilder(url);
-      Uri uri = uriBuilder.Uri;
+      var loc = await Util.GetLocationFromDevice();
+      FindCloudletReply reply = null;
 
       try
       {
-        socket = await me.GetWebsocketConnection(uri, 5000);
+        reply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers,
+          loc: loc);
       }
-      catch (Exception e)
+      catch (DmeDnsException dde)
       {
-        Console.WriteLine("Websocket Initial GetConnectionException is " + e.Message);
-        Assert.ByVal(socket, Is.Not.Null);
-        Assert.True(socket.State == WebSocketState.Open);
+        Console.WriteLine("Workflow DmeDnsException is " + dde);
       }
+      catch (NotImplementedException nie)
+      {
+        Console.WriteLine("NotImplementedException is " + nie);
+      }
+      catch (RegisterClientException rce)
+      {
+        Console.WriteLine("Workflow RegisterClient is " + rce);
+        return;
+      }
+      Assert.ByVal(reply, Is.Not.Null);
+
+      Assert.True(reply.status.Equals(FindCloudletReply.FindStatus.FIND_FOUND));
+
+      //! [getwebsocketexample]
+      ClientWebSocket socket = null;
+      int knownPort = 3765;
+      var appPorts = me.GetAppPortsByProtocol(reply, LProto.L_PROTO_TCP);
+      var appPort = appPorts[knownPort]; // Known port of this instance.
+      string url = "ws://" + me.GetHost(reply, appPort) + ":" + appPort.public_port + "/ws";
+      Console.WriteLine("URL : " + url);
+      UriBuilder uriBuilder = new UriBuilder(url);
+      Uri uri = uriBuilder.Uri;
 
       try
       {
@@ -778,6 +814,146 @@ namespace Tests
       }
     }
 
+    [Test]
+    public async static Task TestNetTestLocalEndpointsMac()
+    {
+      Console.WriteLine("This is sort of a mac only test.");
+      var loc = await Util.GetLocationFromDevice();
+      FindCloudletReply findCloudletReply = null;
+      IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
+
+      Console.WriteLine("Attempting to test localEndpoint usage.");
+      Assert.NotNull(localEndPoint);
+
+      try
+      {
+        // Overide, test to another server:
+        var registerRequest = me.CreateRegisterClientRequest(orgName: orgName, appName: appName, appVersion: appVers);
+        var registerReply = await me.RegisterClient(dmeHost, MatchingEngine.defaultDmeRestPort, registerRequest);
+
+        var findCloudletRequest = me.CreateFindCloudletRequest(loc: loc);
+        findCloudletReply = await me.FindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+          findCloudletRequest, mode: FindCloudletMode.PERFORMANCE, localEndPoint: localEndPoint);
+      }
+      catch (DmeDnsException dde)
+      {
+        Console.WriteLine("Workflow DmeDnsException is " + dde);
+      }
+      catch (RegisterClientException rce)
+      {
+        Console.WriteLine("Workflow RegisterClientException is " + rce);
+        return;
+      }
+      catch (FindCloudletException fce)
+      {
+        Console.WriteLine("Workflow FindCloudletException is " + fce);
+        return;
+      }
+      Assert.ByVal(findCloudletReply, Is.Not.Null);
+      Assert.ByVal(findCloudletReply.fqdn, Is.Not.Null);
+      if (findCloudletReply != null)
+      {
+        Console.WriteLine("FindCloudlet Reply Status: " + findCloudletReply.status);
+        Console.WriteLine("FindCloudlet:" +
+                " ver: " + findCloudletReply.ver +
+                ", fqdn: " + findCloudletReply.fqdn +
+                ", cloudlet_location: " +
+                " long: " + findCloudletReply.cloudlet_location.longitude +
+                ", lat: " + findCloudletReply.cloudlet_location.latitude); ;
+        // App Ports:
+        foreach (AppPort p in findCloudletReply.ports)
+        {
+          Console.WriteLine("Port: fqdn_prefix: " + p.fqdn_prefix +
+                ", protocol: " + p.proto +
+                ", public_port: " + p.public_port +
+                ", internal_port: " + p.internal_port +
+                ", end_port: " + p.end_port);
+        }
+      }
+
+      NetTest netTest = new NetTest(me);
+
+      // Site 1
+      Dictionary<int, AppPort> appPortsDict1 = me.GetTCPAppPorts(findCloudletReply);
+      Assert.True(appPortsDict1.Count > 0, "No dictionary results for TCP Port!");
+      Assert.True(findCloudletReply.ports.Length > 0, "No Ports!");
+
+      var appPort = appPortsDict1[2016]; // Known port;
+
+      int public_port1 = appPort.public_port;
+      Site site1 = new Site { host = appPort.fqdn_prefix + findCloudletReply.fqdn, port = public_port1, localEndPoint = localEndPoint};
+
+      netTest.sites.Enqueue(site1);
+
+      try
+      {
+        Site siteOne = new Site();
+
+        netTest.PingIntervalMS = 500;
+        netTest.doTest(true);
+        await Task.Delay(5000).ConfigureAwait(false);
+        netTest.doTest(false);
+        netTest.sites.TryPeek(out siteOne);
+
+        Console.WriteLine("Should have a localEndPoint here next:");
+        Assert.NotNull(siteOne.localEndPoint);
+
+        double avg1 = siteOne.average;
+        Console.WriteLine("Average 1: " + siteOne.average + ", Test running? " + netTest.runTest);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample 1: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+
+        await Task.Delay(3000).ConfigureAwait(false);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample 1.5: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+        netTest.sites.TryPeek(out siteOne);
+        double avg15 = siteOne.average;
+        Console.WriteLine("Average 1.5: " + siteOne.average + ", Test running? " + netTest.runTest);
+        Assert.False(netTest.runTest, "Should be stopped, along with the average calculation.");
+        Assert.True(avg1 == avg15, "Thread didn't stop. Averages are not equal (or subject to noise)!");
+
+        netTest.doTest(true);
+        await Task.Delay(6000).ConfigureAwait(false);
+        netTest.doTest(false);
+        netTest.sites.TryPeek(out siteOne);
+        Console.WriteLine("Average 2: " + siteOne.average);
+        Assert.True(avg15 != siteOne.average, "Thread didn't restart!");
+
+
+        netTest.sites.TryPeek(out siteOne);
+        foreach (Site s in netTest.sites)
+        {
+          for (int i = 0; i < s.samples.Length; i++)
+          {
+            Console.WriteLine("Sample: " + s.samples[i]);
+          }
+          Assert.True(s.average < 2000);
+        }
+
+        Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
+        netTest.doTest(false);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Excepton while testing: " + e.Message);
+        if (e.InnerException != null)
+        {
+          Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
+        }
+      }
+    }
 
     [Test]
     public async static Task TestUniqueIdText()

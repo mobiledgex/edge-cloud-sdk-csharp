@@ -22,6 +22,7 @@ using System.Net.WebSockets;
 using System.Net.Security;
 
 using System.Threading.Tasks;
+using System.Net;
 
 namespace DistributedMatchEngine
 {
@@ -42,7 +43,7 @@ namespace DistributedMatchEngine
      * \param timeout (int): Optional
      * \return Task<Socket>
      */
-    public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
+    public async Task<Socket> GetTCPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, IPEndPoint localEndPoint = null)
     {
       if (timeoutMs <= 0)
       {
@@ -52,7 +53,8 @@ namespace DistributedMatchEngine
       desiredPort = GetPort(appPort, desiredPort);
       string host = GetHost(reply, appPort);
 
-      Socket s = await GetTCPConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
+      IPEndPoint useEndPoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      Socket s = await GetTCPConnection(host, desiredPort, timeoutMs, useEndPoint).ConfigureAwait(false);
       return s;
     }
 
@@ -66,7 +68,7 @@ namespace DistributedMatchEngine
      * \param timeout (int): Optional
      * \return Task<SslStream>
      */
-    public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, bool allowSelfSignedCerts = false)
+    public async Task<SslStream> GetTCPTLSConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, bool allowSelfSignedCerts = false, IPEndPoint localEndPoint = null)
     {
       if (timeoutMs <= 0)
       {
@@ -76,7 +78,8 @@ namespace DistributedMatchEngine
       desiredPort = GetPort(appPort, desiredPort);
       string host = GetHost(reply, appPort);
 
-      SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeoutMs, allowSelfSignedCerts).ConfigureAwait(false);
+      IPEndPoint useEndPoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      SslStream stream = await GetTCPTLSConnection(host, desiredPort, timeoutMs, allowSelfSignedCerts, useEndPoint).ConfigureAwait(false);
       return stream;
     }
 
@@ -90,7 +93,7 @@ namespace DistributedMatchEngine
      * \param timeout (int): Optional
      * \return Task<Socket>
      */
-    public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS)
+    public async Task<Socket> GetUDPConnection(FindCloudletReply reply, AppPort appPort, int desiredPort = 0, int timeoutMs = DEFAULT_GETCONNECTION_TIMEOUT_MS, IPEndPoint localEndPoint = null)
     {
       if (timeoutMs <= 0)
       {
@@ -100,7 +103,8 @@ namespace DistributedMatchEngine
       desiredPort = GetPort(appPort, desiredPort);
       string host = GetHost(reply, appPort);
 
-      Socket s = await GetUDPConnection(host, desiredPort, timeoutMs).ConfigureAwait(false);
+      IPEndPoint useEndPoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
+      Socket s = await GetUDPConnection(host, desiredPort, timeoutMs, useEndPoint).ConfigureAwait(false);
       return s;
     }
 

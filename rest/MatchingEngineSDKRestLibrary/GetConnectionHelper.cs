@@ -33,14 +33,10 @@ namespace DistributedMatchEngine
   public partial class MatchingEngine
   {
     // GetTCPConnection helper function
-    public async Task<Socket> GetTCPConnection(string host, int port, int timeoutMs)
+    public async Task<Socket> GetTCPConnection(string host, int port, int timeoutMs, IPEndPoint localEndPoint = null)
     {
       ManualResetEvent TimeoutObj = new ManualResetEvent(false);
       Exception handlerException = new Exception();
-
-      // Using integration with IOS or Android sdk, get cellular interface
-      IPEndPoint localEndPoint = GetLocalIP();
-      Console.WriteLine("got local endpoint: " + localEndPoint);
 
       // Get remote ip of the provided host
       IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
@@ -49,8 +45,12 @@ namespace DistributedMatchEngine
 
       // Create Socket and bind to local ip and connect to remote endpoint
       Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-      s.Bind(localEndPoint);
-      Console.WriteLine("bound local endpoint: " + localEndPoint);
+      if (localEndPoint != null)
+      {
+        Console.WriteLine("LocalEndPoint will be used: " + localEndPoint.Address);
+        s.Bind(localEndPoint);
+        Console.WriteLine("bound local endpoint: " + localEndPoint);
+      }
 
       // Reset static variables that handler uses
       TimeoutObj.Reset();
@@ -113,16 +113,24 @@ namespace DistributedMatchEngine
     }
 
     // GetTCPTLSConnection helper function
-    public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs, bool allowSelfSignedCerts = false)
+    public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs, bool allowSelfSignedCerts = false, IPEndPoint localEndPoint = null)
     {
       CancellationTokenSource source = new CancellationTokenSource();
       CancellationToken token = source.Token;
 
-      // Using integration with IOS or Android sdk, get cellular interface
-      IPEndPoint localEndPoint = GetLocalIP();
-
       // Create tcp client
-      TcpClient tcpClient = new TcpClient(localEndPoint);
+      TcpClient tcpClient;
+      if (localEndPoint != null)
+      {
+        Console.WriteLine("LocalEndPoint will be used: " + localEndPoint.Address);
+        tcpClient = new TcpClient(localEndPoint);
+        Console.WriteLine("bound local endpoint: " + localEndPoint);
+      }
+      else
+      {
+        tcpClient = new TcpClient();
+      }
+
       var task = tcpClient.ConnectAsync(host, port);
 
       // Wait returns true if Task completes execution before timeout, false otherwise
@@ -189,22 +197,24 @@ namespace DistributedMatchEngine
     }
 
     // GetUDPConnection helper function
-    public async Task<Socket> GetUDPConnection(string host, int port, int timeoutMs)
+    public async Task<Socket> GetUDPConnection(string host, int port, int timeoutMs, IPEndPoint localEndPoint = null)
     {
       // For retrieving exceptions:
       ManualResetEvent TimeoutObj = new ManualResetEvent(false);
       Exception handlerException = new Exception();
-
-      // Using integration with IOS or Android sdk, get cellular interface
-      IPEndPoint localEndPoint = GetLocalIP();
 
       // Get remote ip of the provided host
       IPAddress remoteIP = Dns.GetHostAddresses(host)[0];
       IPEndPoint remoteEndPoint = new IPEndPoint(remoteIP, port);
 
       // Create Socket and bind to local ip and connect to remote endpoint
-      Socket s = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-      s.Bind(localEndPoint);
+      Socket s = new Socket(remoteEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+      if (localEndPoint != null)
+      {
+        Console.WriteLine("LocalEndPoint will be used: " + localEndPoint.Address);
+        s.Bind(localEndPoint);
+        Console.WriteLine("bound local endpoint: " + localEndPoint);
+      }
 
       // Reset static variables that handler uses
       TimeoutObj.Reset();

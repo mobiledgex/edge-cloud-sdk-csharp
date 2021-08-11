@@ -308,7 +308,6 @@ namespace DistributedMatchEngine
 
     private static string GetAvailableInterface(NetInterface netInterface, Regex interfaceNamesRegex)
     {
-      string foundName = "";
       NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
 
       foreach (NetworkInterface iface in netInterfaces)
@@ -326,7 +325,7 @@ namespace DistributedMatchEngine
           }
           else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetworkV6) != null)
           {
-            // No-op. Every interface has IpV6.
+            return iName;
           }
           else if (netInterface.GetIPAddress(iName, AddressFamily.InterNetwork) != null)
           {
@@ -338,7 +337,7 @@ namespace DistributedMatchEngine
           }
         }
       }
-      return foundName;
+      return null;
     }
 
     public string GetAvailableCellularName(NetworkInterfaceName networkInterfaceName)
@@ -351,33 +350,85 @@ namespace DistributedMatchEngine
       return GetAvailableInterface(netInterface, networkInterfaceName.WIFI);
     }
 
-    // Gets IP Address of an available edge network interface, or wifi if that's available.
-    private IPEndPoint GetLocalIP(int port = 0)
+    /*!
+     * Returns local unicast address in an IPEndPoint, if any.
+     */
+    public IPEndPoint GetIPEndPointByName(string interfaceName, uint port = 0, AddressFamily addressFamily = AddressFamily.InterNetwork)
     {
-      if (netInterface == null)
+      if (interfaceName == null)
       {
-        throw new GetConnectionException("Have not integrated NetworkInterface");
+        return null;
       }
+      NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
 
-      string host;
-      if (useOnlyWifi || !netInterface.HasCellular())
+      foreach (NetworkInterface iface in netInterfaces)
       {
-        host = netInterface.GetIPAddress(GetAvailableWiFiName(netInterface.GetNetworkInterfaceName()));
+        string iName = iface.Name;
+        if (interfaceName.Equals(iName))
+        {
+          var ipAddr = GetIPAddressByFamily(iName, addressFamily);
+          IPEndPoint endpoint = new IPEndPoint(ipAddr, (int)port);
+          return endpoint;
+        }
       }
-      else
-      {
-        host = netInterface.GetIPAddress(GetAvailableCellularName(netInterface.GetNetworkInterfaceName()));
-      }
+      return null;
+    }
 
-      if (host == null || host == "")
+    public IPEndPoint GetIPEndPointByHostName(string hostName, uint port = 0)
+    {
+      if (hostName == null)
       {
-        string type = useOnlyWifi ? "Wifi" : "Cellular";
-        throw new GetConnectionException("Could not get " + type + " interface");
+        return null;
       }
-      // Gets IP address of host
-      IPAddress localIP = Dns.GetHostAddresses(host)[0];
-      IPEndPoint localEndPoint = new IPEndPoint(localIP, port);
+      IPAddress localIP = Dns.GetHostAddresses(hostName)[0];
+      IPEndPoint localEndPoint = new IPEndPoint(localIP, (int)port);
+
       return localEndPoint;
+    }
+
+    public IPAddress GetIPAddressByFamily(string sourceNetInterfaceName, AddressFamily addressfamily = AddressFamily.InterNetwork)
+    {
+      if (!NetworkInterface.GetIsNetworkAvailable())
+      {
+        return null;
+      }
+
+      NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+      IPAddress ipAddressV4 = null;
+      IPAddress ipAddressV6 = null;
+
+      foreach (NetworkInterface iface in netInterfaces)
+      {
+        if (iface.Name.Equals(sourceNetInterfaceName))
+        {
+          IPInterfaceProperties ipifaceProperties = iface.GetIPProperties();
+          foreach (UnicastIPAddressInformation ip in ipifaceProperties.UnicastAddresses)
+          {
+            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+            {
+              ipAddressV4 = ip.Address;
+            }
+            if (ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
+            {
+              ipAddressV6 = ip.Address;
+            }
+          }
+
+          if (addressfamily == AddressFamily.InterNetworkV6)
+          {
+            Log.S("IPV6 IP Address found: " + ipAddressV6);
+            return ipAddressV6;
+          }
+
+          if (addressfamily == AddressFamily.InterNetwork)
+          {
+            Log.S("IPV4 IP Address found: " + ipAddressV4);
+            return ipAddressV4;
+          }
+        }
+      }
+      return null;
     }
 
     /*!
