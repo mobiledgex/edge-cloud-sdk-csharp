@@ -285,7 +285,7 @@ namespace DistributedMatchEngine {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionRequest), global::DistributedMatchEngine.QosPositionRequest.Parser, new[]{ "Ver", "SessionCookie", "Positions", "LteCategory", "BandSelection", "CellId", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiResult), global::DistributedMatchEngine.QosPositionKpiResult.Parser, new[]{ "Positionid", "GpsLocation", "DluserthroughputMin", "DluserthroughputAvg", "DluserthroughputMax", "UluserthroughputMin", "UluserthroughputAvg", "UluserthroughputMax", "LatencyMin", "LatencyAvg", "LatencyMax" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPositionKpiReply), global::DistributedMatchEngine.QosPositionKpiReply.Parser, new[]{ "Ver", "Status", "PositionResults", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EdgeEventsCookie", "EventType", "GpsLocation", "Samples", "DeviceStaticInfo", "DeviceDynamicInfo", "CustomEvent", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) }, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ClientEdgeEvent), global::DistributedMatchEngine.ClientEdgeEvent.Parser, new[]{ "SessionCookie", "EdgeEventsCookie", "EventType", "GpsLocation", "Samples", "DeviceInfoStatic", "DeviceInfoDynamic", "CustomEvent", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ClientEdgeEvent.Types.ClientEventType) }, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.ServerEdgeEvent), global::DistributedMatchEngine.ServerEdgeEvent.Parser, new[]{ "EventType", "CloudletState", "MaintenanceState", "HealthCheck", "Statistics", "NewCloudlet", "ErrorMsg", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.ServerEdgeEvent.Types.ServerEventType) }, new pbr::GeneratedClrTypeInfo[] { null, })
           }));
     }
@@ -7334,8 +7334,8 @@ namespace DistributedMatchEngine {
       eventType_ = other.eventType_;
       gpsLocation_ = other.gpsLocation_ != null ? other.gpsLocation_.Clone() : null;
       samples_ = other.samples_.Clone();
-      DeviceStaticInfo_ = other.DeviceStaticInfo_ != null ? other.DeviceStaticInfo_.Clone() : null;
-      DeviceDynamicInfo_ = other.DeviceDynamicInfo_ != null ? other.DeviceDynamicInfo_.Clone() : null;
+      deviceInfoStatic_ = other.deviceInfoStatic_ != null ? other.deviceInfoStatic_.Clone() : null;
+      deviceInfoDynamic_ = other.deviceInfoDynamic_ != null ? other.deviceInfoDynamic_.Clone() : null;
       customEvent_ = other.customEvent_;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -7413,24 +7413,24 @@ namespace DistributedMatchEngine {
     }
 
     /// <summary>Field number for the "device_info_static" field.</summary>
-    public const int DeviceStaticInfoFieldNumber = 6;
-    private global::DistributedMatchEngine.DeviceStaticInfo DeviceStaticInfo_;
+    public const int DeviceInfoStaticFieldNumber = 6;
+    private global::DistributedMatchEngine.DeviceInfoStatic deviceInfoStatic_;
     /// <summary>
     /// 
     /// _(optional)_ Static device information for latency and deviceinfo stats 
     /// Send on EVENT_INIT_CONNECTION to get this information in latency stats and deviceinfo stats
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.DeviceStaticInfo DeviceStaticInfo {
-      get { return DeviceStaticInfo_; }
+    public global::DistributedMatchEngine.DeviceInfoStatic DeviceInfoStatic {
+      get { return deviceInfoStatic_; }
       set {
-        DeviceStaticInfo_ = value;
+        deviceInfoStatic_ = value;
       }
     }
 
     /// <summary>Field number for the "device_info_dynamic" field.</summary>
-    public const int DeviceDynamicInfoFieldNumber = 7;
-    private global::DistributedMatchEngine.DeviceDynamicInfo DeviceDynamicInfo_;
+    public const int DeviceInfoDynamicFieldNumber = 7;
+    private global::DistributedMatchEngine.DeviceInfoDynamic deviceInfoDynamic_;
     /// <summary>
     ///
     /// _(optional)_ Dynamic device information for latency and deviceinfo stats
@@ -7439,10 +7439,10 @@ namespace DistributedMatchEngine {
     /// Send on EVENT_LATENCY_SAMPLES to get this information in latency stats
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::DistributedMatchEngine.DeviceDynamicInfo DeviceDynamicInfo {
-      get { return DeviceDynamicInfo_; }
+    public global::DistributedMatchEngine.DeviceInfoDynamic DeviceInfoDynamic {
+      get { return deviceInfoDynamic_; }
       set {
-        DeviceDynamicInfo_ = value;
+        deviceInfoDynamic_ = value;
       }
     }
 
@@ -7491,8 +7491,8 @@ namespace DistributedMatchEngine {
       if (EventType != other.EventType) return false;
       if (!object.Equals(GpsLocation, other.GpsLocation)) return false;
       if(!samples_.Equals(other.samples_)) return false;
-      if (!object.Equals(DeviceStaticInfo, other.DeviceStaticInfo)) return false;
-      if (!object.Equals(DeviceDynamicInfo, other.DeviceDynamicInfo)) return false;
+      if (!object.Equals(DeviceInfoStatic, other.DeviceInfoStatic)) return false;
+      if (!object.Equals(DeviceInfoDynamic, other.DeviceInfoDynamic)) return false;
       if (CustomEvent != other.CustomEvent) return false;
       if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -7506,8 +7506,8 @@ namespace DistributedMatchEngine {
       if (EventType != 0) hash ^= EventType.GetHashCode();
       if (gpsLocation_ != null) hash ^= GpsLocation.GetHashCode();
       hash ^= samples_.GetHashCode();
-      if (DeviceStaticInfo_ != null) hash ^= DeviceStaticInfo.GetHashCode();
-      if (DeviceDynamicInfo_ != null) hash ^= DeviceDynamicInfo.GetHashCode();
+      if (deviceInfoStatic_ != null) hash ^= DeviceInfoStatic.GetHashCode();
+      if (deviceInfoDynamic_ != null) hash ^= DeviceInfoDynamic.GetHashCode();
       if (CustomEvent.Length != 0) hash ^= CustomEvent.GetHashCode();
       hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
@@ -7540,13 +7540,13 @@ namespace DistributedMatchEngine {
         output.WriteMessage(GpsLocation);
       }
       samples_.WriteTo(output, _repeated_samples_codec);
-      if (DeviceStaticInfo_ != null) {
+      if (deviceInfoStatic_ != null) {
         output.WriteRawTag(50);
-        output.WriteMessage(DeviceStaticInfo);
+        output.WriteMessage(DeviceInfoStatic);
       }
-      if (DeviceDynamicInfo_ != null) {
+      if (deviceInfoDynamic_ != null) {
         output.WriteRawTag(58);
-        output.WriteMessage(DeviceDynamicInfo);
+        output.WriteMessage(DeviceInfoDynamic);
       }
       if (CustomEvent.Length != 0) {
         output.WriteRawTag(66);
@@ -7574,11 +7574,11 @@ namespace DistributedMatchEngine {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(GpsLocation);
       }
       size += samples_.CalculateSize(_repeated_samples_codec);
-      if (DeviceStaticInfo_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeviceStaticInfo);
+      if (deviceInfoStatic_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeviceInfoStatic);
       }
-      if (DeviceDynamicInfo_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeviceDynamicInfo);
+      if (deviceInfoDynamic_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeviceInfoDynamic);
       }
       if (CustomEvent.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CustomEvent);
@@ -7611,17 +7611,17 @@ namespace DistributedMatchEngine {
         GpsLocation.MergeFrom(other.GpsLocation);
       }
       samples_.Add(other.samples_);
-      if (other.DeviceStaticInfo_ != null) {
-        if (DeviceStaticInfo_ == null) {
-          DeviceStaticInfo = new global::DistributedMatchEngine.DeviceStaticInfo();
+      if (other.deviceInfoStatic_ != null) {
+        if (deviceInfoStatic_ == null) {
+          DeviceInfoStatic = new global::DistributedMatchEngine.DeviceInfoStatic();
         }
-        DeviceStaticInfo.MergeFrom(other.DeviceStaticInfo);
+        DeviceInfoStatic.MergeFrom(other.DeviceInfoStatic);
       }
-      if (other.DeviceDynamicInfo_ != null) {
-        if (DeviceDynamicInfo_ == null) {
-          DeviceDynamicInfo = new global::DistributedMatchEngine.DeviceDynamicInfo();
+      if (other.deviceInfoDynamic_ != null) {
+        if (deviceInfoDynamic_ == null) {
+          DeviceInfoDynamic = new global::DistributedMatchEngine.DeviceInfoDynamic();
         }
-        DeviceDynamicInfo.MergeFrom(other.DeviceDynamicInfo);
+        DeviceInfoDynamic.MergeFrom(other.DeviceInfoDynamic);
       }
       if (other.CustomEvent.Length != 0) {
         CustomEvent = other.CustomEvent;
@@ -7662,17 +7662,17 @@ namespace DistributedMatchEngine {
             break;
           }
           case 50: {
-            if (DeviceStaticInfo_ == null) {
-              DeviceStaticInfo = new global::DistributedMatchEngine.DeviceStaticInfo();
+            if (deviceInfoStatic_ == null) {
+              DeviceInfoStatic = new global::DistributedMatchEngine.DeviceInfoStatic();
             }
-            input.ReadMessage(DeviceStaticInfo);
+            input.ReadMessage(DeviceInfoStatic);
             break;
           }
           case 58: {
-            if (DeviceDynamicInfo_ == null) {
-              DeviceDynamicInfo = new global::DistributedMatchEngine.DeviceDynamicInfo();
+            if (deviceInfoDynamic_ == null) {
+              DeviceInfoDynamic = new global::DistributedMatchEngine.DeviceInfoDynamic();
             }
-            input.ReadMessage(DeviceDynamicInfo);
+            input.ReadMessage(DeviceInfoDynamic);
             break;
           }
           case 66: {

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['timestamp_185',['Timestamp',['../class_distributed_match_engine_1_1_timestamp.html',1,'DistributedMatchEngine']]],
-  ['tokenexception_186',['TokenException',['../class_distributed_match_engine_1_1_token_exception.html',1,'DistributedMatchEngine']]]
+  ['windows10networkinterfacename_106',['Windows10NetworkInterfaceName',['../class_distributed_match_engine_1_1_windows10_network_interface_name.html',1,'DistributedMatchEngine']]]
 ];

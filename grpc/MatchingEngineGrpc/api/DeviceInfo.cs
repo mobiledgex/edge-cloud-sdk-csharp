@@ -21,8 +21,8 @@ namespace DistributedMatchEngine
 {
   public interface DeviceInfoApp
   {
-    DeviceDynamicInfo GetDeviceDynamicInfo();
-    DeviceStaticInfo GetDeviceStaticInfo();
+    DeviceInfoDynamic GetDeviceInfoDynamic();
+    DeviceInfoStatic GetDeviceInfoStatic();
     bool IsPingSupported();
   }
 
@@ -32,13 +32,13 @@ namespace DistributedMatchEngine
    */
   public class EmptyDeviceInfo : DeviceInfoApp
   {
-    public DeviceDynamicInfo GetDeviceDynamicInfo()
+    public DeviceInfoDynamic GetDeviceInfoDynamic()
     {
-      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceDynamicInfo() is not defined!");
+      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceInfoDynamic() is not defined!");
     }
-    public DeviceStaticInfo GetDeviceStaticInfo()
+    public DeviceInfoStatic GetDeviceInfoStatic()
     {
-      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceStaticInfo() is not defined!");
+      throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceInfoStatic() is not defined!");
     }
 
     public bool IsPingSupported()
