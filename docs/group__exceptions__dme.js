@@ -1,7 +1,7 @@
 var group__exceptions__dme =
 [
     [ "DmeDnsException", "class_distributed_match_engine_1_1_dme_dns_exception.html", [
-      [ "DmeDnsException", "class_distributed_match_engine_1_1_dme_dns_exception.html#a3f45012d6d2ab72b125252cd8767fb52", null ]
+      [ "DmeDnsException", "class_distributed_match_engine_1_1_dme_dns_exception.html#a8f4bc9747ad87d393c94f7047f1c15ce", null ]
     ] ],
     [ "HttpException", "class_distributed_match_engine_1_1_http_exception.html", [
       [ "HttpException", "class_distributed_match_engine_1_1_http_exception.html#a8cf180108e147a043b0d74d0b0f7f22a", null ],

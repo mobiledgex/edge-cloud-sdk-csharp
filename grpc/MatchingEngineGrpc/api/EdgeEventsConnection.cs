@@ -89,16 +89,16 @@ namespace DistributedMatchEngine
       streamClient = new MatchEngineApi.MatchEngineApiClient(channel);
 
       // Open a connection:
-      DeviceStaticInfo deviceStaticInfo = me.GetDeviceStaticInfo();
-      DeviceDynamicInfo deviceDynamicInfo = me.GetDeviceDynamicInfo();
+      DeviceInfoStatic deviceInfoStatic = me.GetDeviceInfoStatic();
+      DeviceInfoDynamic deviceInfoDynamic = me.GetDeviceInfoDynamic();
 
       ClientEdgeEvent clientEdgeEvent = new ClientEdgeEvent
       {
         EventType = ClientEventType.EventInitConnection,
         SessionCookie = me.sessionCookie,
         EdgeEventsCookie = me.edgeEventsCookie,
-        DeviceStaticInfo = deviceStaticInfo,
-        DeviceDynamicInfo = deviceDynamicInfo,
+        DeviceInfoStatic = deviceInfoStatic,
+        DeviceInfoDynamic = deviceInfoDynamic,
       };
 
       Log.S("Write init message to server, with cancelToken: ");
@@ -204,7 +204,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLocationUpdate,
         GpsLocation = location,
-        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
+        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
       };
 
       return await Send(locationUpdate).ConfigureAwait(false);
@@ -235,7 +235,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
+        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
       };
       foreach (var entry in site.samples)
       {
@@ -279,7 +279,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
+        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
       };
       foreach (var entry in site.samples)
       {
@@ -326,7 +326,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceDynamicInfo = me.GetDeviceDynamicInfo()
+        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
       };
       foreach (var entry in site.samples)
       {

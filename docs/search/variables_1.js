@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['band_5fselection_238',['band_selection',['../class_distributed_match_engine_1_1_qos_position_request.html#ae0969f1deb7455bca069e547e52eb0f6',1,'DistributedMatchEngine::QosPositionRequest']]]
+  ['default_5fgetconnection_5ftimeout_5fms_152',['DEFAULT_GETCONNECTION_TIMEOUT_MS',['../class_distributed_match_engine_1_1_matching_engine.html#aa11041b5de841e190acf078493d39d76',1,'DistributedMatchEngine::MatchingEngine']]]
 ];

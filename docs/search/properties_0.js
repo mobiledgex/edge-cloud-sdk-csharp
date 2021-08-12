@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size_284',['size',['../class_distributed_match_engine_1_1_performance_metrics_1_1_net_test_1_1_site.html#a9f7201930fa5e5785f5af5f62baee701',1,'DistributedMatchEngine::PerformanceMetrics::NetTest::Site']]]
+  ['enableenhancedlocationservices_155',['EnableEnhancedLocationServices',['../class_distributed_match_engine_1_1_matching_engine.html#ab8011087bfbc93ebf3b8015371d22f88',1,'DistributedMatchEngine::MatchingEngine']]]
 ];

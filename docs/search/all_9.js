@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['l_5fproto_5ftcp_80',['L_PROTO_TCP',['../group__classes__datastructs.html#ggac15a4d7fb8ca867efcda5a99419884b6abf0bb7ca06af15496f2bb1d098880587',1,'DistributedMatchEngine']]],
-  ['l_5fproto_5fudp_81',['L_PROTO_UDP',['../group__classes__datastructs.html#ggac15a4d7fb8ca867efcda5a99419884b6af1568ccf0a5820d96dde4438a2f91988',1,'DistributedMatchEngine']]],
-  ['l_5fproto_5funknown_82',['L_PROTO_UNKNOWN',['../group__classes__datastructs.html#ggac15a4d7fb8ca867efcda5a99419884b6a005957ca766c2dcfc9fa94370a9c70d9',1,'DistributedMatchEngine']]],
-  ['limit_83',['limit',['../class_distributed_match_engine_1_1_app_inst_list_request.html#ade866901b1cbf197f9bedcdc0449fa46',1,'DistributedMatchEngine::AppInstListRequest']]],
-  ['linuxnetworkinterfacename_84',['LinuxNetworkInterfaceName',['../class_distributed_match_engine_1_1_linux_network_interface_name.html',1,'DistributedMatchEngine']]],
-  ['loc_85',['Loc',['../class_distributed_match_engine_1_1_loc.html',1,'DistributedMatchEngine']]],
-  ['lproto_86',['LProto',['../group__classes__datastructs.html#gac15a4d7fb8ca867efcda5a99419884b6',1,'DistributedMatchEngine']]],
-  ['lte_5fcategory_87',['lte_category',['../class_distributed_match_engine_1_1_qos_position_request.html#a9974346ef14caf4431bf237ae2e19134',1,'DistributedMatchEngine::QosPositionRequest']]]
+  ['macnetworkinterfacename_55',['MacNetworkInterfaceName',['../class_distributed_match_engine_1_1_mac_network_interface_name.html',1,'DistributedMatchEngine.MacNetworkInterfaceName'],['../class_distributed_match_engine_1_1_mac_network_interface_name.html#a8074270d34e9890ef0cbb3032a6b6b5c',1,'DistributedMatchEngine.MacNetworkInterfaceName.MacNetworkInterfaceName()']]],
+  ['matchingengine_56',['MatchingEngine',['../class_distributed_match_engine_1_1_matching_engine.html',1,'DistributedMatchEngine.MatchingEngine'],['../class_distributed_match_engine_1_1_matching_engine.html#ac16acdd9772a7aa9d023b3d3a9e27629',1,'DistributedMatchEngine.MatchingEngine.MatchingEngine()']]],
+  ['matchingengine_20api_20exceptions_57',['MatchingEngine API Exceptions',['../group__exceptions__dme.html',1,'']]],
+  ['matchingengine_20apis_58',['MatchingEngine APIs',['../group__functions__dmeapis.html',1,'']]],
+  ['matchingengine_20data_20structures_59',['MatchingEngine Data Structures',['../group__classes__datastructs.html',1,'']]],
+  ['matchingengine_20utility_20functions_60',['MatchingEngine Utility Functions',['../group__functions__dmeutils.html',1,'']]]
 ];
