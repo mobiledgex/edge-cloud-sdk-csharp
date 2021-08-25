@@ -44,13 +44,10 @@ namespace MexGrpcSampleConsoleApp
     {
       Console.WriteLine("Hello MobiledgeX GRPC Library Sample App!");
 
-
       var mexGrpcLibApp = new MexGrpcLibApp();
       try
       {
         await mexGrpcLibApp.RunSampleFlow();
-        Console.WriteLine("Sleeping for some time to receive some info events from the server.");
-        await Task.Delay(120 * 1000);
       }
       catch (AggregateException ae)
       {
@@ -263,7 +260,7 @@ namespace MexGrpcSampleConsoleApp
           uriLocation = response.Headers["Location"];
         }
       }
-      catch (System.Net.WebException we)
+      catch (WebException we)
       {
         response = (HttpWebResponse)we.Response;
         if (response != null)
@@ -558,7 +555,7 @@ namespace MexGrpcSampleConsoleApp
         await HandleEdgeEvent(serverEdgeEvent).ConfigureAwait(false);
 
         // Fling a new location for response:
-        if (serverEdgeEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection)
+        if (serverEdgeEvent.EventType == ServerEventType.EventInitConnection)
         {
           Loc loc = new Loc { Longitude = -73.935242, Latitude = 40.730610 }; // New York City
           if (me.EdgeEventsConnection != null)
@@ -570,7 +567,16 @@ namespace MexGrpcSampleConsoleApp
 
       // Blocking GRPC call:
       var fcRequest = me.CreateFindCloudletRequest(location);
-      var findCloudletReply = await me.FindCloudlet(host: dmeHost, port: dmePort, fcRequest, mode: FindCloudletMode.PERFORMANCE);
+      var findCloudletReply = await me.FindCloudlet(host: dmeHost, port: dmePort, fcRequest, mode: FindCloudletMode.PROXIMITY);
+      if(me.EdgeEventsConnection != null)
+      {
+        me.EdgeEventsConnection.Open();
+      }
+      else
+      {
+        Console.Error.WriteLine("EdgeEventsConnection Not Found");
+      }
+     
       Console.WriteLine("FindCloudlet Status: " + findCloudletReply.Status);
       // appinst server end port might not exist:
       foreach (AppPort p in findCloudletReply.Ports)
@@ -584,7 +590,11 @@ namespace MexGrpcSampleConsoleApp
       // Straight reflection print:
       Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
 
-      // Clean:
+      Console.WriteLine("Sleeping for some time to receive some info events from the server.");
+      await Task.Delay(120 * 1000);
+
+      Console.WriteLine("Disposing MatchingEngine");
+      //clean
       me.Dispose();
       return;
     }
