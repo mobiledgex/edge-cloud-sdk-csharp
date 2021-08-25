@@ -43,16 +43,11 @@ namespace MexGrpcSampleConsoleApp
     static async Task Main(string[] args)
     {
       Console.WriteLine("Hello MobiledgeX GRPC Library Sample App!");
-      MatchingEngine me;
 
       var mexGrpcLibApp = new MexGrpcLibApp();
       try
       {
-        me = await mexGrpcLibApp.RunSampleFlow();
-        Console.WriteLine("Sleeping for some time to receive some info events from the server.");
-        await Task.Delay(120 * 1000);
-        //Clean
-        me.Dispose();
+        await mexGrpcLibApp.RunSampleFlow();
       }
       catch (AggregateException ae)
       {
@@ -63,10 +58,6 @@ namespace MexGrpcSampleConsoleApp
       {
         Console.Error.WriteLine("Exception running sample: " + e.Message);
         Console.Error.WriteLine("Excetpion stack trace: " + e.StackTrace);
-      }
-      finally
-      {
-        Console.WriteLine("Finished running sample");
       }
     }
   }
@@ -527,7 +518,7 @@ namespace MexGrpcSampleConsoleApp
       }
     }
 
-    public async Task<MatchingEngine> RunSampleFlow()
+    public async Task RunSampleFlow()
     {
       me = new MatchingEngine(
         netInterface: new SimpleNetInterface(new MacNetworkInterfaceName()),
@@ -599,8 +590,13 @@ namespace MexGrpcSampleConsoleApp
       // Straight reflection print:
       Console.WriteLine("FindCloudlet Reply: " + findCloudletReply);
 
+      Console.WriteLine("Sleeping for some time to receive some info events from the server.");
+      await Task.Delay(120 * 1000);
 
-      return me;
+      Console.WriteLine("Disposing MatchingEngine");
+      //clean
+      me.Dispose();
+      return;
     }
 
     // TODO: The client must retrieve a real GPS location from the platform, even if it is just the last known location,
