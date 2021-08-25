@@ -171,6 +171,10 @@ namespace Tests
       int port = port1.PublicPort;
       Assert.True(port > 0, "Port must be bigger than 0!");
 
+      Assert.True(me.EdgeEventsConnection != null);
+
+      me.EdgeEventsConnection.Open();
+
       // In case you're using edgebox locally:
       //host = "127.0.0.1";
       //port = 50051;
