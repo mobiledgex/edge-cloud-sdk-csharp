@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <PackageId>MobiledgeX.MatchingEngineGrpc</PackageId>
-    <Version>3.0.0-rc2</Version>
+    <Version>3.0.0</Version>
     <Authors>MobiledgeX, Inc</Authors>
     <Company>MobiledgeX, Inc.</Company>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
-    <ReleaseVersion>3.0.0-rc3</ReleaseVersion>
+    <ReleaseVersion>3.0.0</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
     <Owners>MobiledgeX, Inc.</Owners>
     <Title>MobiledgeX MatchingEngine SDK gRPC Library</Title>
