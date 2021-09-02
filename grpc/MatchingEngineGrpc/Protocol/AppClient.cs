@@ -7764,7 +7764,7 @@ namespace DistributedMatchEngine {
     public const int CloudletStateFieldNumber = 2;
     private global::DistributedMatchEngine.CloudletState cloudletState_ = 0;
     /// <summary>
-    /// Cloudlet state information
+    /// Cloudlet state information if cloudlet state is not CLOUDLET_STATE_READY
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.CloudletState CloudletState {
@@ -7778,7 +7778,7 @@ namespace DistributedMatchEngine {
     public const int MaintenanceStateFieldNumber = 3;
     private global::DistributedMatchEngine.MaintenanceState maintenanceState_ = 0;
     /// <summary>
-    /// Cloudlet maintenance state information
+    /// Cloudlet maintenance state information if maintenance state is not NORMAL_OPERATION
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.MaintenanceState MaintenanceState {
@@ -7792,7 +7792,7 @@ namespace DistributedMatchEngine {
     public const int HealthCheckFieldNumber = 4;
     private global::DistributedMatchEngine.HealthCheck healthCheck_ = 0;
     /// <summary>
-    /// AppInst health state information
+    /// AppInst health state information if health check is not HEALTH_CHECK_OK
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.HealthCheck HealthCheck {
@@ -7821,10 +7821,11 @@ namespace DistributedMatchEngine {
     private global::DistributedMatchEngine.FindCloudletReply newCloudlet_;
     /// <summary>
     /// 
-    /// New and closer cloudlet if event_type is EVENT_CLOUDLET_UPDATE. 
-    /// Also sent on EVENT_CLOUDLET_STATE, if cloudlet_state != CLOUDLET_STATE_READY
-    /// Also sent on EVENT_CLOUDLET_MAINTENANCE, if maintenance_state == UNDER_MAINTENANCE
-    /// Also sent on EVENT_APPINST_HEALTH, if health_check != HEALTH_CHECK_OK &amp;&amp; health_check != HEALTH_CHECK_UNKNOWN
+    /// New and closer cloudlet if event_type is EVENT_CLOUDLET_UPDATE.
+    /// (EVENT_CLOUDLET_UPDATE occurs if the client is closer to a different cloudlet, or a new closer appinst is created, or a previously down appinst/cloudlet that is closest to the client is now operational)
+    /// Also sent on EVENT_CLOUDLET_STATE if another cloudlet is available
+    /// Also sent on EVENT_CLOUDLET_MAINTENANCE, if another cloudlet is available and maintenance_state == UNDER_MAINTENANCE
+    /// Also sent on EVENT_APPINST_HEALTH, if another cloudlet is available and health_check != HEALTH_CHECK_UNKNOWN
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.FindCloudletReply NewCloudlet {
