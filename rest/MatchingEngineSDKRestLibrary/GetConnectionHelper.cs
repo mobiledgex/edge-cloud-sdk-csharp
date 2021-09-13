@@ -112,7 +112,15 @@ namespace DistributedMatchEngine
       }
     }
 
-    // GetTCPTLSConnection helper function
+    /// <summary>
+    /// GetTCPTLSConnection helper function
+    /// </summary>
+    /// <param name="host"></param>
+    /// <param name="port"></param>
+    /// <param name="timeoutMs"></param>
+    /// <param name="allowSelfSignedCerts"> Works in Debug Mode only</param>
+    /// <param name="localEndPoint"></param>
+    /// <returns></returns>
     public async Task<SslStream> GetTCPTLSConnection(string host, int port, int timeoutMs, bool allowSelfSignedCerts = false, IPEndPoint localEndPoint = null)
     {
       CancellationTokenSource source = new CancellationTokenSource();
@@ -149,7 +157,7 @@ namespace DistributedMatchEngine
 
             // Print server certificate information
             Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
-
+#if DEBUG
             // Check if the sender (eg. the specific sslStream) allows self signed server certs
             if (allowSelfSignedCerts) {
               if (sslPolicyErrors.HasFlag(SslPolicyErrors.RemoteCertificateChainErrors) && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
@@ -158,6 +166,7 @@ namespace DistributedMatchEngine
               }
               Console.WriteLine("Server certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
             }
+#endif
             // Do not allow this client to communicate with unauthenticated servers.
             return false;
           }), null);
