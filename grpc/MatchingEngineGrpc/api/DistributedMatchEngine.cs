@@ -969,7 +969,7 @@ namespace DistributedMatchEngine
         fcReply.Ports.AddRange(appinstance.Ports);
       }
       CopyTagField(fcReply.Tags, reply.Tags);
-      return reply;
+      return fcReply;
     }
 
     private NetTest.Site InitHttpSite(AppPort appPort, Appinstance appinstance, Loc cloudletLocation = null, int numSamples = NetTest.Site.DEFAULT_NUM_SAMPLES, IPEndPoint localEndPoint = null)
