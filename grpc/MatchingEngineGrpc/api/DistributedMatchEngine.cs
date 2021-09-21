@@ -1226,12 +1226,18 @@ namespace DistributedMatchEngine
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.Status);
       }
 
+      if(aiReply.Cloudlets.Count == 0)
+      {
+        Log.E("Check FindCloudletPerformance Request parameters. Empty cloudlet list returned from GetAppInstList.");
+        return new FindCloudletReply { Status = FindStatus.FindNotfound };
+      }
+
       // Check for global override for site performance testing:
       IPEndPoint useEndpoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
       NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, testPort: testPort, localEndPoint: useEndpoint);
       if (sites.Length == 0)
       {
-        throw new FindCloudletException("No sites returned from GetAppInstList");
+        throw new FindCloudletException("No sites returned from CreateSitesFromAppInstReply");
       }
 
       NetTest netTest = new NetTest(this);
