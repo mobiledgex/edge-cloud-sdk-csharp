@@ -1049,6 +1049,7 @@ namespace DistributedMatchEngine
                 if (IsInPortRange(aPort, testPort))
                 {
                   useAppPort = aPort;
+                  sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
                 }
               }
             }
