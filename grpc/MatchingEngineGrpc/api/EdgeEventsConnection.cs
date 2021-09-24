@@ -46,7 +46,6 @@ namespace DistributedMatchEngine
     internal EdgeEventsConnection(MatchingEngine matchingEngine, string host = null, uint port = 0)
     {
       me = matchingEngine;
-
       if (host != null && host.Trim().Length != 0)
       {
         HostOverride = host;
@@ -110,11 +109,11 @@ namespace DistributedMatchEngine
       // Attach a reader and loop until gone:
       ReadStreamTask = Task.Run(async () =>
       {
-      try
-      {
-        while (await DuplexEventStream.ResponseStream.MoveNext())
+        try
+        {
+          while (await DuplexEventStream.ResponseStream.MoveNext())
           {
-            Log.D("Received Event: "+ DuplexEventStream.ResponseStream.Current);
+            Log.D("Received Event: " + DuplexEventStream.ResponseStream.Current);
             me.InvokeEdgeEventsReciever(DuplexEventStream.ResponseStream.Current);
           }
         }
@@ -131,9 +130,9 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Close()
     {
+      SendTerminate().ConfigureAwait(false);
       ConnectionCancelTokenSource.Cancel();
       ConnectionCancelTokenSource.Dispose();
-      SendTerminate().ConfigureAwait(false);
       HostOverride = null; // Will use new DME on next connect.
       PortOverride = 0;
     }
