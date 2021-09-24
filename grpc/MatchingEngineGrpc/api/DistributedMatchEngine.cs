@@ -961,7 +961,8 @@ namespace DistributedMatchEngine
         Ver = reply.Ver,
         Status = reply.Status,
         Fqdn = appinstance.Fqdn,
-        CloudletLocation = site.cloudletLocation
+        CloudletLocation = site.cloudletLocation,
+        EdgeEventsCookie = appinstance.EdgeEventsCookie
       };
 
       if (appinstance.Ports != null)
@@ -1049,6 +1050,7 @@ namespace DistributedMatchEngine
                 if (IsInPortRange(aPort, testPort))
                 {
                   useAppPort = aPort;
+                  sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
                 }
               }
             }
