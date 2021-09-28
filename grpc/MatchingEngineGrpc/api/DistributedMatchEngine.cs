@@ -415,6 +415,14 @@ namespace DistributedMatchEngine
     */
     public DeviceInfoDynamic GetDeviceInfoDynamic()
     {
+      if (useOnlyWifi)
+      {
+        DeviceInfoDynamic deviceInfoDynamic = new DeviceInfoDynamic
+        {
+          CarrierName = ""
+        };
+        return deviceInfoDynamic;
+      }
       return deviceInfo.GetDeviceInfoDynamic();
     }
 
