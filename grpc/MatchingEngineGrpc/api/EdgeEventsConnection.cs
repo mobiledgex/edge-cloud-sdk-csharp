@@ -56,7 +56,7 @@ namespace DistributedMatchEngine
 
     // TODO: Throw and print some useful informative Exceptions.
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public bool Open()
+    public bool Open(DeviceInfoDynamic deviceInfoDynamic = null, DeviceInfoStatic deviceInfoStatic = null)
     {
       if (!me.EnableEdgeEvents)
       {
@@ -89,16 +89,13 @@ namespace DistributedMatchEngine
       streamClient = new MatchEngineApi.MatchEngineApiClient(channel);
 
       // Open a connection:
-      DeviceInfoStatic deviceInfoStatic = me.GetDeviceInfoStatic();
-      DeviceInfoDynamic deviceInfoDynamic = me.GetDeviceInfoDynamic();
-
       ClientEdgeEvent clientEdgeEvent = new ClientEdgeEvent
       {
         EventType = ClientEventType.EventInitConnection,
         SessionCookie = me.sessionCookie,
         EdgeEventsCookie = me.edgeEventsCookie,
-        DeviceInfoStatic = deviceInfoStatic,
-        DeviceInfoDynamic = deviceInfoDynamic,
+        DeviceInfoStatic = deviceInfoStatic == null ? me.GetDeviceInfoStatic() : deviceInfoStatic,
+        DeviceInfoDynamic = deviceInfoDynamic == null ? me.GetDeviceInfoDynamic() : deviceInfoDynamic,
       };
 
       Log.S("Write init message to server, with cancelToken: ");
@@ -110,11 +107,11 @@ namespace DistributedMatchEngine
       // Attach a reader and loop until gone:
       ReadStreamTask = Task.Run(async () =>
       {
-      try
-      {
-        while (await DuplexEventStream.ResponseStream.MoveNext())
+        try
+        {
+          while (await DuplexEventStream.ResponseStream.MoveNext())
           {
-            Log.D("Received Event: "+ DuplexEventStream.ResponseStream.Current);
+            Log.D("Received Event: " + DuplexEventStream.ResponseStream.Current);
             me.InvokeEdgeEventsReciever(DuplexEventStream.ResponseStream.Current);
           }
         }
@@ -191,7 +188,7 @@ namespace DistributedMatchEngine
      *
      * \param location DistriutedMatchEngine.Loc
      */
-    public async Task<bool> PostLocationUpdate(Loc location)
+    public async Task<bool> PostLocationUpdate(Loc location, DeviceInfoDynamic deviceInfoDynamic = null)
     {
       Log.D("PostLocationUpdate()");
       if (location == null)
@@ -199,12 +196,11 @@ namespace DistributedMatchEngine
         Log.E("Cannot post null location!");
         return false;
       }
-
       ClientEdgeEvent locationUpdate = new ClientEdgeEvent
       {
         EventType = ClientEventType.EventLocationUpdate,
         GpsLocation = location,
-        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
+        DeviceInfoDynamic = deviceInfoDynamic == null ? me.GetDeviceInfoDynamic() : deviceInfoDynamic,
       };
 
       return await Send(locationUpdate).ConfigureAwait(false);
@@ -217,7 +213,7 @@ namespace DistributedMatchEngine
      * \param site Contains stats the app retrieved to send to server.
      * \param location DistriutedMatchEngine.Loc
      */
-    public async Task<bool> PostLatencyUpdate(Site site, Loc location)
+    public async Task<bool> PostLatencyUpdate(Site site, Loc location, DeviceInfoDynamic deviceInfoDynamic = null)
     {
       Log.D("PostLatencyResult()");
       if (location == null)
@@ -235,7 +231,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
+        DeviceInfoDynamic = deviceInfoDynamic == null ? me.GetDeviceInfoDynamic() : deviceInfoDynamic,
       };
       foreach (var entry in site.samples)
       {
@@ -260,7 +256,7 @@ namespace DistributedMatchEngine
      * \param numSamples (default 5 samples)
      */
     public async Task<bool> TestPingAndPostLatencyUpdate(string host, Loc location,
-                                                        int numSamples = 5)
+                                                        int numSamples = 5, DeviceInfoDynamic deviceInfoDynamic = null)
     {
       Log.D("TestPingAndPostLatencyResult()");
       if (location == null)
@@ -279,7 +275,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
+        DeviceInfoDynamic = deviceInfoDynamic == null ? me.GetDeviceInfoDynamic() : deviceInfoDynamic,
       };
       foreach (var entry in site.samples)
       {
@@ -306,7 +302,7 @@ namespace DistributedMatchEngine
      * \param numSamples (default 5 samples)
      */
     public async Task<bool> TestConnectAndPostLatencyUpdate(string host, uint port, Loc location,
-                                                        int numSamples = 5)
+                                                        int numSamples = 5, DeviceInfoDynamic deviceInfoDynamic = null)
     {
       Log.D("TestConnectAndPostLatencyResult()");
       if (location == null)
@@ -326,7 +322,7 @@ namespace DistributedMatchEngine
       {
         EventType = ClientEventType.EventLatencySamples,
         GpsLocation = location,
-        DeviceInfoDynamic = me.GetDeviceInfoDynamic()
+        DeviceInfoDynamic = deviceInfoDynamic == null ? me.GetDeviceInfoDynamic() : deviceInfoDynamic,
       };
       foreach (var entry in site.samples)
       {
