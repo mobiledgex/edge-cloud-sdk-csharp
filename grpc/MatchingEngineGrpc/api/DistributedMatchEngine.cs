@@ -328,7 +328,10 @@ namespace DistributedMatchEngine
       {
         EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       }
-
+      if (EdgeEventsConnection.IsShutdown())
+      {
+        EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
+      }
       if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
       {
         // Will not init!
