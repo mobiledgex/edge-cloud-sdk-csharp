@@ -128,7 +128,7 @@ namespace DistributedMatchEngine
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Close()
     {
-	    SendTerminate().ConfigureAwait(false);
+      SendTerminate().ConfigureAwait(false);
       ConnectionCancelTokenSource.Cancel();
       ConnectionCancelTokenSource.Dispose();
       HostOverride = null; // Will use new DME on next connect.
