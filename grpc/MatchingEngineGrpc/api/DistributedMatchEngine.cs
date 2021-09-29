@@ -324,21 +324,39 @@ namespace DistributedMatchEngine
       {
         return null;
       }
+      if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
+      {
+        Log.E("edgeEventCookie is empty, Will not initialize EdgeEventsConnection");
+        return null;
+      }
       if (EdgeEventsConnection == null)
       {
         EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
-      }
-
-      if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
-      {
-        // Will not init!
-        return null;
       }
       return EdgeEventsConnection;
     }
 
     EdgeEventsConnection GetEdgeEventsConnection()
     {
+      return EdgeEventsConnection;
+    }
+
+
+    public EdgeEventsConnection RestartEdgeEventsConnection(string edgeEventsCookie, string dmeHost = null, uint dmePort = 0)
+    {
+      if (edgeEventsCookie == null || edgeEventsCookie.Trim().Length == 0)
+      {
+        return null;
+      }
+      if (EdgeEventsConnection != null)
+      {
+        if (!EdgeEventsConnection.IsShutdown())
+        {
+          EdgeEventsConnection.Close();
+        }
+      }
+      this.edgeEventsCookie = edgeEventsCookie;
+      EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       return EdgeEventsConnection;
     }
 
