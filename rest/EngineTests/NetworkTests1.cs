@@ -51,6 +51,16 @@ namespace EngineTests
       {
         return 0;
       }
+
+      public string GetDataNetworkPath()
+      {
+        return "";
+      }
+
+      public ulong GetSignalStrength()
+      {
+        return 0;
+      }
     }
 
     [SetUp]
