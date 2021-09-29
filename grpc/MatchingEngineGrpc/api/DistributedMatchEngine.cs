@@ -324,14 +324,14 @@ namespace DistributedMatchEngine
       {
         return null;
       }
-      if (EdgeEventsConnection == null)
-      {
-        EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
-      }
       if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
       {
         Log.E("edgeEventCookie is empty, Will not initialize EdgeEventsConnection");
         return null;
+      }
+      if (EdgeEventsConnection == null)
+      {
+        EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       }
       return EdgeEventsConnection;
     }
