@@ -56,12 +56,12 @@ namespace DistributedMatchEngine
 
     public string GetDataNetworkPath()
     {
-      throw new NotImplementedException();
+      throw new NotImplementedException("Required CarrierInfo interface function: GetDataNetworkPath() is not defined!");
     }
 
     public ulong GetSignalStrength()
     {
-      throw new NotImplementedException();
+      throw new NotImplementedException("Required CarrierInfo interface function: GetSignalStrength() is not defined!");
     }
   }
 }
