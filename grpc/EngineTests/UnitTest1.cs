@@ -636,7 +636,7 @@ namespace Tests
     public async static Task TestNetTest()
     {
       var loc = await Util.GetLocationFromDevice();
-      const int NOISE_THRESHOLD = 5; //Threshold for difference between net test averages
+      const int NOISE_THRESHOLD = 15; //Threshold for difference between net test averages
       FindCloudletReply reply1 = null;
 
       try
