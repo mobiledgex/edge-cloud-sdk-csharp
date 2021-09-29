@@ -65,6 +65,16 @@ namespace Tests
       {
         return 0;
       }
+
+      public ulong GetSingalStrength()
+      {
+        return 0;
+      }
+
+      public string GetDataNetworkType()
+      {
+        return "";
+      }
     }
 
     class TestUniqueID : UniqueID
@@ -626,6 +636,7 @@ namespace Tests
     public async static Task TestNetTest()
     {
       var loc = await Util.GetLocationFromDevice();
+      const int NOISE_THRESHOLD = 15; //Threshold for difference between net test averages
       FindCloudletReply reply1 = null;
 
       try
@@ -728,8 +739,10 @@ namespace Tests
         netTest.sites.TryPeek(out siteOne);
         double avg15 = siteOne.average;
         Console.WriteLine("Average 1.5: " + siteOne.average + ", Test running? " + netTest.runTest);
-        Assert.False(netTest.runTest, "Should be stopped, along with the average calculation.");
-        Assert.True(avg1 == avg15, "Thread didn't stop. Averages are not equal (or subject to noise)!");
+        Assert.False(netTest.runTest, "Thread didn't stop. Should be stopped, along with the average calculation.");
+        float noise = MathF.Abs((float)avg1 - (float)avg15);
+        Console.WriteLine("Average1 == Average1.5 is {0}, noise detected = {1}", avg1 == avg15, noise);
+        Assert.True(noise < NOISE_THRESHOLD, "Difference between Average1 and Average1.5 is {0} which is greater than NOISE_THRESHOLD of {1}", noise, NOISE_THRESHOLD);
 
         netTest.doTest(true);
         await Task.Delay(6000).ConfigureAwait(false);
