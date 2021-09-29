@@ -43,6 +43,16 @@ namespace EngineTests
       {
         return 0;
       }
+
+      public ulong GetSingalStrength()
+      {
+        return 0;
+      }
+
+      public string GetDataNetworkType()
+      {
+        return "";
+      }
     }
 
     [SetUp]

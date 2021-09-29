@@ -29,6 +29,8 @@ namespace DistributedMatchEngine
     string GetCurrentCarrierName();
     string GetMccMnc();
     ulong GetCellID();
+    ulong GetSingalStrength();
+    string GetDataNetworkType();
   }
 
   /*!
@@ -50,6 +52,16 @@ namespace DistributedMatchEngine
     public ulong GetCellID()
     {
       throw new NotImplementedException("Required CarrierInfo interface function: GetCellID() is not defined!");
+    }
+
+    public ulong GetSingalStrength()
+    {
+      throw new NotImplementedException("Required CarrierInfo interface function: GetSingalStength() is not defined!");
+    }
+
+    public string GetDataNetworkType()
+    {
+      throw new NotImplementedException("Required CarrierInfo interface function: GetDataNetworkType() is not defined!");
     }
   }
 }
