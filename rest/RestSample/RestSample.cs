@@ -46,6 +46,7 @@ namespace RestSample
   class DummyDeviceInfo : DeviceInfo
   {
     DummyCarrierInfo carrierInfo = new DummyCarrierInfo();
+
     Dictionary<string, string> DeviceInfo.GetDeviceInfo()
     {
       Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -55,6 +56,11 @@ namespace RestSample
       dict["DeviceModel"] = "C#SDK";
       dict["DeviceOS"] = "TestOS";
       return dict;
+    }
+
+    public bool IsPingSupported()
+    {
+      return true;
     }
 
   }
