@@ -23,6 +23,7 @@ namespace DistributedMatchEngine
   public interface DeviceInfo
   {
     Dictionary<string, string> GetDeviceInfo();
+    bool IsPingSupported();
   }
 
   /*!
@@ -34,6 +35,11 @@ namespace DistributedMatchEngine
     public Dictionary<string, string> GetDeviceInfo()
     {
       throw new NotImplementedException("Required DeviceInfo interface function: GetDeviceInfo() is not defined!");
+    }
+
+    public bool IsPingSupported()
+    {
+      throw new NotImplementedException("Required DeviceInfo interface function: IsPingSupported() is not defined!");
     }
   }
 }
