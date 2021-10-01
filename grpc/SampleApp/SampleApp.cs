@@ -91,6 +91,16 @@ namespace MexGrpcSampleConsoleApp
     {
       return "";
     }
+
+    public string GetDataNetworkType()
+    {
+      return "";
+    }
+
+    public ulong GetSingalStrength()
+    {
+      return 0;
+    }
   }
 
   // This interface is optional but is used in the sample.
@@ -142,7 +152,7 @@ namespace MexGrpcSampleConsoleApp
     Loc location;
     string sessionCookie;
 
-    string dmeHost = "eu-qa.dme.mobiledgex.net"; // demo DME server hostname or ip.
+    string dmeHost = "us-qa.dme.mobiledgex.net"; // demo DME server hostname or ip.
     uint dmePort = 50051; // DME port.
     string carrierName = "";
     string orgName = "automation_dev_org";

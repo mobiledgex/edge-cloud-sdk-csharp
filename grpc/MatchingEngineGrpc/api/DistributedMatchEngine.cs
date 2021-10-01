@@ -324,21 +324,39 @@ namespace DistributedMatchEngine
       {
         return null;
       }
+      if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
+      {
+        Log.E("edgeEventCookie is empty, Will not initialize EdgeEventsConnection");
+        return null;
+      }
       if (EdgeEventsConnection == null)
       {
         EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
-      }
-
-      if (edgeEventCookie == null || edgeEventCookie.Trim().Length == 0)
-      {
-        // Will not init!
-        return null;
       }
       return EdgeEventsConnection;
     }
 
     EdgeEventsConnection GetEdgeEventsConnection()
     {
+      return EdgeEventsConnection;
+    }
+
+
+    public EdgeEventsConnection RestartEdgeEventsConnection(string edgeEventsCookie, string dmeHost = null, uint dmePort = 0)
+    {
+      if (edgeEventsCookie == null || edgeEventsCookie.Trim().Length == 0)
+      {
+        return null;
+      }
+      if (EdgeEventsConnection != null)
+      {
+        if (!EdgeEventsConnection.IsShutdown())
+        {
+          EdgeEventsConnection.Close();
+        }
+      }
+      this.edgeEventsCookie = edgeEventsCookie;
+      EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       return EdgeEventsConnection;
     }
 
@@ -415,6 +433,14 @@ namespace DistributedMatchEngine
     */
     public DeviceInfoDynamic GetDeviceInfoDynamic()
     {
+      if (useOnlyWifi)
+      {
+        DeviceInfoDynamic deviceInfoDynamic = new DeviceInfoDynamic
+        {
+          CarrierName = ""
+        };
+        return deviceInfoDynamic;
+      }
       return deviceInfo.GetDeviceInfoDynamic();
     }
 
@@ -961,7 +987,8 @@ namespace DistributedMatchEngine
         Ver = reply.Ver,
         Status = reply.Status,
         Fqdn = appinstance.Fqdn,
-        CloudletLocation = site.cloudletLocation
+        CloudletLocation = site.cloudletLocation,
+        EdgeEventsCookie = appinstance.EdgeEventsCookie
       };
 
       if (appinstance.Ports != null)
@@ -1049,6 +1076,7 @@ namespace DistributedMatchEngine
                 if (IsInPortRange(aPort, testPort))
                 {
                   useAppPort = aPort;
+                  sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
                 }
               }
             }
@@ -1226,12 +1254,18 @@ namespace DistributedMatchEngine
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.Status);
       }
 
+      if(aiReply.Cloudlets.Count == 0)
+      {
+        Log.E("Check FindCloudletPerformance Request parameters. Empty cloudlet list returned from GetAppInstList.");
+        return new FindCloudletReply { Status = FindStatus.FindNotfound };
+      }
+
       // Check for global override for site performance testing:
       IPEndPoint useEndpoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
       NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, testPort: testPort, localEndPoint: useEndpoint);
       if (sites.Length == 0)
       {
-        throw new FindCloudletException("No sites returned from GetAppInstList");
+        throw new FindCloudletException("No sites returned from CreateSitesFromAppInstReply");
       }
 
       NetTest netTest = new NetTest(this);

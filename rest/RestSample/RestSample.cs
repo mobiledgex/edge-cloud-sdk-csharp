@@ -45,12 +45,22 @@ namespace RestSample
 
   class DummyDeviceInfo : DeviceInfo
   {
+    DummyCarrierInfo carrierInfo = new DummyCarrierInfo();
+
     Dictionary<string, string> DeviceInfo.GetDeviceInfo()
     {
       Dictionary<string, string> dict = new Dictionary<string, string>();
-      dict["one"] = "ONE";
-      dict["two"] = "TWO";
+      dict["DataNetworkPath"] = carrierInfo.GetDataNetworkPath();
+      dict["CarrierName"] = carrierInfo.GetCurrentCarrierName();
+      dict["SignalStrength"] = carrierInfo.GetSignalStrength().ToString();
+      dict["DeviceModel"] = "C#SDK";
+      dict["DeviceOS"] = "TestOS";
       return dict;
+    }
+
+    public bool IsPingSupported()
+    {
+      return true;
     }
 
   }
@@ -70,6 +80,16 @@ namespace RestSample
     public string GetMccMnc()
     {
       return "26201";
+    }
+
+    public string GetDataNetworkPath()
+    {
+      return "GSM";
+    }
+
+    public ulong GetSignalStrength()
+    {
+      return 2;
     }
   }
 

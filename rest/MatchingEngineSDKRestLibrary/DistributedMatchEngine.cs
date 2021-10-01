@@ -1161,46 +1161,71 @@ namespace DistributedMatchEngine
               if (IsInPortRange(aPort, testPort))
               {
                 useAppPort = aPort;
+                sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
               }
+            }
+            if(useAppPort == null)
+            {
+              throw new FindCloudletException("FindCloudPerformance error, the Tcp testPort supplied was not found");
             }
           }
           else
           {
-            // Many servers block ICMP packets, including AppInsts/Cloudlets. EdgeEventsConfig should specify the TCP port in the application config for testing any particular App.
-            foreach (var port in appinstance.ports)
+            if (!deviceInfo.IsPingSupported())
             {
-              if (port.proto == LProto.L_PROTO_UDP)
+              AppPort tcpPort = null;
+              foreach (AppPort appPort in appinstance.ports)
               {
-                if (useAppPort == null)
+                if (appPort.proto == LProto.L_PROTO_TCP)
                 {
-                  useAppPort = port;
+                  tcpPort = appPort;
+                  break;
                 }
               }
-              else if (port.proto == LProto.L_PROTO_TCP)
+              if (tcpPort == null)
               {
-                useAppPort = port;
-                break;
+                throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
               }
+              sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
             }
-
-            if (useAppPort.proto == LProto.L_PROTO_UDP)
+            else
             {
-              Log.E("Warning: Found only UDP port. ICMP Ping testing will likely fail. Please specify a TCP port in your app.");
-            }
+              foreach (var port in appinstance.ports)
+              {
+                if (port.proto == LProto.L_PROTO_UDP)
+                {
+                  if (useAppPort == null)
+                  {
+                    useAppPort = port;
+                  }
+                }
+                else if (port.proto == LProto.L_PROTO_TCP)
+                {
+                  useAppPort = port;
+                  break;
+                }
+              }
 
-            switch (useAppPort.proto)
-            {
-              case LProto.L_PROTO_TCP:
-                sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
-                break;
+              if (useAppPort.proto == LProto.L_PROTO_UDP)
+              {
+                Log.E("Warning: Found only UDP port. ICMP Ping testing will likely fail. Please specify a TCP port in your app.");
+              }
 
-              case LProto.L_PROTO_UDP:
-                sites.Add(InitUdpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
-                break;
+              switch (useAppPort.proto)
+              {
+                case LProto.L_PROTO_TCP:
+                  sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
+                  break;
 
-              default:
-                Log.E("Unsupported protocol " + useAppPort.proto + " found when trying to create sites for NetTest");
-                break;
+                case LProto.L_PROTO_UDP:
+                  sites.Add(InitUdpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
+                  break;
+
+                default:
+                  Log.E("Unsupported protocol " + useAppPort.proto + " found when trying to create sites for NetTest");
+                  break;
+              }
+
             }
           }
         }
@@ -1342,12 +1367,18 @@ namespace DistributedMatchEngine
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.status);
       }
 
+      if (aiReply.cloudlets.Length == 0)
+      {
+        Log.E("Check FindCloudletPerformance Request parameters. Empty cloudlet list returned from GetAppInstList.");
+        return new FindCloudletReply { status = FindCloudletReply.FindStatus.FIND_FOUND};
+      }
+
       // Check for global override for site performance testing:
       IPEndPoint useEndpoint = localEndPoint != null ? localEndPoint : GetIPEndPointByHostName(this.LocalIP);
       NetTest.Site[] sites = CreateSitesFromAppInstReply(aiReply, testPort: testPort, localEndPoint: useEndpoint);
       if (sites.Length == 0)
       {
-        throw new FindCloudletException("No sites returned from GetAppInstList");
+        throw new FindCloudletException("No sites returned from CreateSitesFromAppInstReply");
       }
 
       NetTest netTest = new NetTest(this);

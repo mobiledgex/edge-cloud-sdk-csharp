@@ -69,6 +69,16 @@ namespace Tests
       {
         return 0;
       }
+
+      public string GetDataNetworkPath()
+      {
+        return "";
+      }
+
+      public ulong GetSignalStrength()
+      {
+        return 0;
+      }
     }
 
     class TestUniqueID : UniqueID
@@ -86,10 +96,14 @@ namespace Tests
 
     class TestDeviceInfo : DeviceInfo
     {
-
       Dictionary<string, string> DeviceInfo.GetDeviceInfo()
       {
         return new Dictionary<string, string>();
+      }
+
+      public bool IsPingSupported()
+      {
+        return false;
       }
     }
 
@@ -672,6 +686,41 @@ namespace Tests
       {
         Console.WriteLine("Timeout test exception " + e.Message);
         Assert.False(e.Message.Contains("Timeout"));
+      }
+    }
+
+
+    [Test]
+    [TestCase(0)]
+    [TestCase(2016)] //Known Port
+    public async static Task TestFindCloudletPerformanceMode(int testPort)
+    {
+      var loc = await Util.GetLocationFromDevice();
+      RegisterClientReply registerReply;
+      FindCloudletReply fcReply;
+      try
+      {
+        RegisterClientRequest registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers);
+        registerReply = await me.RegisterClient(dmeHost, MatchingEngine.defaultDmeRestPort,
+          registerClientRequest
+          );
+        Assert.AreEqual(registerReply.status, ReplyStatus.RsSuccess, "TestFindCloudletPerformanceMode: RegisterClient Failed");
+        FindCloudletRequest fcReq = me.CreateFindCloudletRequest(loc, me.carrierInfo.GetCurrentCarrierName());
+        fcReply = await me.FindCloudletPerformanceMode(dmeHost, MatchingEngine.defaultDmeRestPort,fcReq, testPort: testPort);
+        Assert.AreEqual(fcReply.status, FindCloudletReply.FindStatus.FIND_FOUND, "TestFindCloudletPerformanceMode: FindCloudletPerformanceMode Failed");
+        Assert.NotNull(fcReply.fqdn);
+      }
+      catch (DmeDnsException dde)
+      {
+        Assert.Fail("Workflow DmeDnsException is " + dde);
+      }
+      catch (RegisterClientException rce)
+      {
+        Assert.Fail("Workflow RegisterClientException is " + rce);
+      }
+      catch (FindCloudletException fce)
+      {
+        Assert.Fail("Workflow FindCloudletException is " + fce);
       }
     }
 
