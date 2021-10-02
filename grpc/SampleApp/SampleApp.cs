@@ -97,7 +97,7 @@ namespace MexGrpcSampleConsoleApp
       return "";
     }
 
-    public ulong GetSingalStrength()
+    public ulong GetSignalStrength()
     {
       return 0;
     }

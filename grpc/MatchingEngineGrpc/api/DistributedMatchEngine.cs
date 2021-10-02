@@ -683,7 +683,8 @@ namespace DistributedMatchEngine
       }
       else
       {
-        channel = new Channel(host, (int)port, new SslCredentials());
+        string pemKey = Util.GetISGROOTX1PEM();
+        channel = new Channel(host, (int)port, new SslCredentials(pemKey));
       }
 
       return channel;
