@@ -66,7 +66,7 @@ namespace Tests
         return 0;
       }
 
-      public ulong GetSingalStrength()
+      public ulong GetSignalStrength()
       {
         return 0;
       }

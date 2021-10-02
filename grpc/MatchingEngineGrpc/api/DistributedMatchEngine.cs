@@ -683,7 +683,8 @@ namespace DistributedMatchEngine
       }
       else
       {
-        channel = new Channel(host, (int)port, new SslCredentials());
+        string pemKey = Util.GetISGROOTX1PEM();
+        channel = new Channel(host, (int)port, new SslCredentials(pemKey));
       }
 
       return channel;
@@ -951,7 +952,7 @@ namespace DistributedMatchEngine
         Fqdn = appOfficialFqdnReply.AppOfficialFqdn,
         // Don't set location.
       };
-      foreach(var aPort in appOfficialFqdnReply.Ports)
+      foreach (var aPort in appOfficialFqdnReply.Ports)
       {
         fcReply.Ports.Add(aPort);
       }
@@ -1254,7 +1255,7 @@ namespace DistributedMatchEngine
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.Status);
       }
 
-      if(aiReply.Cloudlets.Count == 0)
+      if (aiReply.Cloudlets.Count == 0)
       {
         Log.E("Check FindCloudletPerformance Request parameters. Empty cloudlet list returned from GetAppInstList.");
         return new FindCloudletReply { Status = FindStatus.FindNotfound };
@@ -1303,7 +1304,7 @@ namespace DistributedMatchEngine
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
-      string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
+      string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null,
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), dmePort,
@@ -1330,7 +1331,7 @@ namespace DistributedMatchEngine
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
-       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = "", 
+       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = "",
       UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
@@ -1387,7 +1388,8 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      if (carrierName == null) {
+      if (carrierName == null)
+      {
         carrierName = GetCarrierName();
       }
 
@@ -1481,7 +1483,8 @@ namespace DistributedMatchEngine
         return null;
       }
 
-      if (carrierName == null) {
+      if (carrierName == null)
+      {
         carrierName = GetCarrierName();
       }
 
@@ -1642,7 +1645,7 @@ namespace DistributedMatchEngine
         Log.E("GetQosPositionKpi exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
         throw e;
       }
-    }   
+    }
 
     private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
     {
@@ -1694,7 +1697,7 @@ namespace DistributedMatchEngine
       }
     }
 
-    private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
+    private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0,
       string userData = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
@@ -1784,8 +1787,8 @@ namespace DistributedMatchEngine
     // override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
     ~MatchingEngine()
     {
-       // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-       Dispose(disposing: false);
+      // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+      Dispose(disposing: false);
     }
 
     public void Dispose()
