@@ -21,12 +21,13 @@ CURL_URL := https://www.nuget.org/api/v2/package/Grpc.Tools/$(GRPC_SDK_VERSION)
 ABSOLUTEPATH := $(shell grealpath ../..)
 DME_PROTO_PATH = $(ABSOLUTEPATH)/edge-proto/dme
 THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/edge-proto/third_party
+EDGEPROTOGEN_PATH = $(ABSOLUTEPATH)/edge-proto/edgeprotogen
 
 APPLIBBASE := MatchingEngineGrpc
 PROTOCOL_OUT:= MatchingEngineGrpc/Protocol
 BINOUT := $(APPLIBBASE)/bin
 # Google APIs are for the server, but are referenced in the shared client/server proto.
-PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis
+PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis $(EDGEPROTOGEN_PATH)
 
 PROTO_INCLUDE_FLAGS += $(addprefix --proto_path ,$(PROTO_INCLUDE_DIRECTORIES))
 
