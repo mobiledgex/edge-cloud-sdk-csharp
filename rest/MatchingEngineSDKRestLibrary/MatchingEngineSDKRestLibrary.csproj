@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ReleaseVersion>3.0.3</ReleaseVersion>
+    <ReleaseVersion>3.0.3-rc1</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
     <PackageVersion>3.0.3</PackageVersion>
     <Authors>MobiledgeX, Inc.</Authors>
@@ -18,11 +18,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>lib\Debug\netstandard2.0</OutputPath>
+    <OutputPath>lib\Debug\netstandard2.0\netstandard2.0</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType></DebugType>
-    <OutputPath>lib\Release\netstandard2.0</OutputPath>
+    <OutputPath>lib\Release\netstandard2.0\netstandard2.0</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2" />
