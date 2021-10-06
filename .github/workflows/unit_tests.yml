@@ -17,9 +17,9 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies REST
-        run: dotnet restore ./rest/
+        run: dotnet restore ./rest/EngineTests
       - name: Build REST
-        run: dotnet build ./rest/ --configuration Debug --no-restore
+        run: dotnet build ./rest/EngineTests --configuration Debug --no-restore
       - name: Test REST
         run: dotnet test ./rest/EngineTests --no-restore --verbosity normal
       - name: Install dependencies gRPC
