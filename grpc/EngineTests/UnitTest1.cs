@@ -34,6 +34,7 @@ using System.Net.WebSockets;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace Tests
 {
@@ -778,6 +779,10 @@ namespace Tests
     [Test]
     public async static Task TestNetTestLocalEndpointsMac()
     {
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+      {
+        return;
+      }
       Console.WriteLine("This is sort of a mac only test.");
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply findCloudletReply = null;

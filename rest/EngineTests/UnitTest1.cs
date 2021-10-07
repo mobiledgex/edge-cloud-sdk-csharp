@@ -38,6 +38,7 @@ using System.Json;
 using System.Collections;
 using System.Runtime.Serialization;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace Tests
 {
@@ -867,7 +868,11 @@ namespace Tests
     public async static Task TestNetTestLocalEndpointsMac()
     {
       Console.WriteLine("This is sort of a mac only test.");
-      var loc = await Util.GetLocationFromDevice();
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+      {
+        return;
+      }
+        var loc = await Util.GetLocationFromDevice();
       FindCloudletReply findCloudletReply = null;
       IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
 
