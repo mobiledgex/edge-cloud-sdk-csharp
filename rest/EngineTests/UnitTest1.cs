@@ -872,7 +872,7 @@ namespace Tests
       {
         return;
       }
-        var loc = await Util.GetLocationFromDevice();
+      var loc = await Util.GetLocationFromDevice();
       FindCloudletReply findCloudletReply = null;
       IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
 
