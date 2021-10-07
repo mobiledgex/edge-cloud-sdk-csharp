@@ -64,6 +64,7 @@ build-proto:
 	mkdir -p $(APPLIBBASE)
 	@echo Generating GRPC source code...
 	@echo The following *should* also skip server REST APIs from shared proto.
+	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(PROTOCOL_OUT) --grpc_out=no_server:$(PROTOCOL_OUT) $(EDGEPROTOGEN_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
 	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(PROTOCOL_OUT) --grpc_out=no_server:$(PROTOCOL_OUT) $(DME_PROTO_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
 	mkdir -p $(PROTOCOL_OUT)/google/api
 	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(PROTOCOL_OUT)/google/api --grpc_out=no_server:$(PROTOCOL_OUT) $(THIRD_PARTY_PROTOS_PATH)/googleapis/google/api/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
