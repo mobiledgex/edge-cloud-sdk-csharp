@@ -6,24 +6,20 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: ['2.0', '3.1.x', '5.0.x' ]
-
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1.7.2
+        uses: actions/setup-dotnet@v1.8.2
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-version: 3.1
       - name: Install dependencies REST
         run: dotnet restore ./rest/EngineTests
       - name: Build REST
         run: dotnet build ./rest/EngineTests --configuration Debug --no-restore
       - name: Test REST
-        run: dotnet test ./rest/EngineTests --no-restore --verbosity normal
+        run: dotnet test ./rest/EngineTests --verbosity normal
       - name: Install dependencies gRPC
-        run: dotnet restore ./grpc/
+        run: dotnet restore ./grpc/EngineTests
       - name: Build gRPC
         run: dotnet build ./grpc/EngineTests --configuration Debug --no-restore
       - name: Test gRPC
