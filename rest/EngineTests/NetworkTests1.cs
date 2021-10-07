@@ -103,36 +103,38 @@ namespace EngineTests
     [Test]
     public void TestMacInterfacesExist()
     {
-      if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
       {
-        // Using the Mac Interface, where this test might run...
-        string nameWifi = me.GetAvailableWiFiName(new MacNetworkInterfaceName());
-        Assert.NotNull(nameWifi);
-        Assert.True(nameWifi.Contains("en"));
-
-        string nameCell = me.GetAvailableCellularName(new MacNetworkInterfaceName());
-        Assert.NotNull(nameCell);
-        Assert.True(nameCell.Contains("en"));
+        return;
       }
+      // Using the Mac Interface, where this test might run...
+      string nameWifi = me.GetAvailableWiFiName(new MacNetworkInterfaceName());
+      Assert.NotNull(nameWifi);
+      Assert.True(nameWifi.Contains("en"));
+
+      string nameCell = me.GetAvailableCellularName(new MacNetworkInterfaceName());
+      Assert.NotNull(nameCell);
+      Assert.True(nameCell.Contains("en"));
     }
 
     [Test]
     public void TestMacInterfacesEndPointsExist()
     {
-      if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
       {
-        IPEndPoint endpoint = me.GetIPEndPointByName("lo0");
-        Assert.NotNull(endpoint);
-        Console.WriteLine("EndPoint IPv4: " + endpoint);
-
-        IPEndPoint endpointv6 = me.GetIPEndPointByName("lo0", 123, System.Net.Sockets.AddressFamily.InterNetworkV6);
-        Assert.NotNull(endpointv6);
-        Console.WriteLine("EndPoint IPv6: " + endpointv6);
-
-        endpoint = me.GetIPEndPointByHostName("127.0.0.1");
-        Assert.NotNull(endpoint);
-        Console.WriteLine("EndPoint: " + endpoint);
+        return;
       }
+      IPEndPoint endpoint = me.GetIPEndPointByName("lo0");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint IPv4: " + endpoint);
+
+      IPEndPoint endpointv6 = me.GetIPEndPointByName("lo0", 123, System.Net.Sockets.AddressFamily.InterNetworkV6);
+      Assert.NotNull(endpointv6);
+      Console.WriteLine("EndPoint IPv6: " + endpointv6);
+
+      endpoint = me.GetIPEndPointByHostName("127.0.0.1");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint: " + endpoint);
     }
 
     [Test]
@@ -140,41 +142,43 @@ namespace EngineTests
     {
       // Using the Windows Interface, where this test might run...
       // GetAvailableWiFiName only passes on Windows machine
-      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
       {
-        string nameWifi = me.GetAvailableWiFiName(new Windows10NetworkInterfaceName());
-        Assert.NotNull(nameWifi);
-        Assert.AreEqual(nameWifi, "Ethernet");
-
-        string nameCell = me.GetAvailableCellularName(new Windows10NetworkInterfaceName());
-        Assert.NotNull(nameCell);
-        Assert.AreEqual(nameCell, "Ethernet");
-
-
-        var windowsInterfaceNames = new Windows10NetworkInterfaceName();
-        Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("Wi-Fi"));
-        Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi"));
-        Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi 4"));
+        return;
       }
+      string nameWifi = me.GetAvailableWiFiName(new Windows10NetworkInterfaceName());
+      Assert.NotNull(nameWifi);
+      Assert.AreEqual(nameWifi, "Ethernet");
+
+      string nameCell = me.GetAvailableCellularName(new Windows10NetworkInterfaceName());
+      Assert.NotNull(nameCell);
+      Assert.AreEqual(nameCell, "Ethernet");
+
+
+      var windowsInterfaceNames = new Windows10NetworkInterfaceName();
+      Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("Wi-Fi"));
+      Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi"));
+      Assert.True(windowsInterfaceNames.CELLULAR.IsMatch("WiFi 4"));
     }
 
     [Test]
     public void TestWindowsInterfacesIPEndPointsExist()
     {
-      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
       {
-        IPEndPoint endpoint = me.GetIPEndPointByName("localhost");
-        Assert.NotNull(endpoint);
-        Console.WriteLine("EndPoint IPv4: " + endpoint);
-
-        IPEndPoint endpointv6 = me.GetIPEndPointByName("localhost", 123, System.Net.Sockets.AddressFamily.InterNetworkV6);
-        Assert.NotNull(endpointv6);
-        Console.WriteLine("EndPoint IPv6: " + endpointv6);
-
-        endpoint = me.GetIPEndPointByHostName("127.0.0.1");
-        Assert.NotNull(endpoint);
-        Console.WriteLine("EndPoint: " + endpoint);
+        return;
       }
+      IPEndPoint endpoint = me.GetIPEndPointByName("localhost");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint IPv4: " + endpoint);
+
+      IPEndPoint endpointv6 = me.GetIPEndPointByName("localhost", 123, System.Net.Sockets.AddressFamily.InterNetworkV6);
+      Assert.NotNull(endpointv6);
+      Console.WriteLine("EndPoint IPv6: " + endpointv6);
+
+      endpoint = me.GetIPEndPointByHostName("127.0.0.1");
+      Assert.NotNull(endpoint);
+      Console.WriteLine("EndPoint: " + endpoint);
     }
   }
 
