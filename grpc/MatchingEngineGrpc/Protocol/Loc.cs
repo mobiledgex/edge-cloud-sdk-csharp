@@ -263,7 +263,7 @@ namespace DistributedMatchEngine {
     public const int LatitudeFieldNumber = 1;
     private double latitude_;
     /// <summary>
-    /// latitude in WGS 84 coordinates
+    /// Latitude in WGS 84 coordinates
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Latitude {
@@ -277,7 +277,7 @@ namespace DistributedMatchEngine {
     public const int LongitudeFieldNumber = 2;
     private double longitude_;
     /// <summary>
-    /// longitude in WGS 84 coordinates
+    /// Longitude in WGS 84 coordinates
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Longitude {
@@ -291,7 +291,7 @@ namespace DistributedMatchEngine {
     public const int HorizontalAccuracyFieldNumber = 3;
     private double horizontalAccuracy_;
     /// <summary>
-    /// horizontal accuracy (radius in meters)
+    /// Horizontal accuracy (radius in meters)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double HorizontalAccuracy {
@@ -305,7 +305,7 @@ namespace DistributedMatchEngine {
     public const int VerticalAccuracyFieldNumber = 4;
     private double verticalAccuracy_;
     /// <summary>
-    /// vertical accuracy (meters)
+    /// Vertical accuracy (meters)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double VerticalAccuracy {
@@ -320,7 +320,7 @@ namespace DistributedMatchEngine {
     private double altitude_;
     /// <summary>
     /// On android only lat and long are guaranteed to be supplied
-    /// altitude in meters
+    /// Altitude in meters
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Altitude {
@@ -334,7 +334,7 @@ namespace DistributedMatchEngine {
     public const int CourseFieldNumber = 6;
     private double course_;
     /// <summary>
-    /// course (IOS) / bearing (Android) (degrees east relative to true north)
+    /// Course (IOS) / bearing (Android) (degrees east relative to true north)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Course {
@@ -348,7 +348,7 @@ namespace DistributedMatchEngine {
     public const int SpeedFieldNumber = 7;
     private double speed_;
     /// <summary>
-    /// speed (IOS) / velocity (Android) (meters/sec)
+    /// Speed (IOS) / velocity (Android) (meters/sec)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Speed {
@@ -362,7 +362,7 @@ namespace DistributedMatchEngine {
     public const int TimestampFieldNumber = 8;
     private global::DistributedMatchEngine.Timestamp timestamp_;
     /// <summary>
-    /// timestamp
+    /// Timestamp
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Timestamp Timestamp {
@@ -618,7 +618,7 @@ namespace DistributedMatchEngine {
     public const int ValueFieldNumber = 1;
     private double value_;
     /// <summary>
-    /// latency value
+    /// Latency value
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Value {
@@ -632,7 +632,7 @@ namespace DistributedMatchEngine {
     public const int TimestampFieldNumber = 2;
     private global::DistributedMatchEngine.Timestamp timestamp_;
     /// <summary>
-    /// timestamp
+    /// Timestamp
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Timestamp Timestamp {
@@ -817,7 +817,7 @@ namespace DistributedMatchEngine {
     public const int AvgFieldNumber = 1;
     private double avg_;
     /// <summary>
-    /// average
+    /// Average
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Avg {
@@ -831,7 +831,7 @@ namespace DistributedMatchEngine {
     public const int MinFieldNumber = 2;
     private double min_;
     /// <summary>
-    /// minimum
+    /// Minimum
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Min {
@@ -845,7 +845,7 @@ namespace DistributedMatchEngine {
     public const int MaxFieldNumber = 3;
     private double max_;
     /// <summary>
-    /// maximum
+    /// Maximum
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Max {
@@ -859,7 +859,7 @@ namespace DistributedMatchEngine {
     public const int StdDevFieldNumber = 4;
     private double stdDev_;
     /// <summary>
-    /// square root of unbiased variance
+    /// Square root of unbiased variance
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double StdDev {
@@ -873,7 +873,7 @@ namespace DistributedMatchEngine {
     public const int VarianceFieldNumber = 5;
     private double variance_;
     /// <summary>
-    /// unbiased variance
+    /// Unbiased variance
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public double Variance {
@@ -887,7 +887,7 @@ namespace DistributedMatchEngine {
     public const int NumSamplesFieldNumber = 6;
     private ulong numSamples_;
     /// <summary>
-    /// number of samples to create stats
+    /// Number of samples to create stats
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ulong NumSamples {
@@ -901,7 +901,7 @@ namespace DistributedMatchEngine {
     public const int TimestampFieldNumber = 7;
     private global::DistributedMatchEngine.Timestamp timestamp_;
     /// <summary>
-    /// timestamp
+    /// Timestamp
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::DistributedMatchEngine.Timestamp Timestamp {
