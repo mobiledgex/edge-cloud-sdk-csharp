@@ -567,10 +567,9 @@ namespace MexGrpcSampleConsoleApp
         // Fling a new location for response:
         if (serverEdgeEvent.EventType == ServerEventType.EventInitConnection)
         {
-          Loc loc = new Loc { Longitude = -73.935242, Latitude = 40.730610 }; // New York City
           if (me.EdgeEventsConnection != null)
           {
-            await me.EdgeEventsConnection.PostLocationUpdate(loc);
+            await me.EdgeEventsConnection.PostLocationUpdate(GetToggledLocation());
           }
         }
       };
@@ -578,7 +577,7 @@ namespace MexGrpcSampleConsoleApp
       // Blocking GRPC call:
       var fcRequest = me.CreateFindCloudletRequest(location);
       var findCloudletReply = await me.FindCloudlet(host: dmeHost, port: dmePort, fcRequest, mode: FindCloudletMode.PROXIMITY);
-      if(me.EdgeEventsConnection != null)
+      if (me.EdgeEventsConnection != null)
       {
         me.EdgeEventsConnection.Open();
       }
@@ -586,7 +585,7 @@ namespace MexGrpcSampleConsoleApp
       {
         Console.Error.WriteLine("EdgeEventsConnection Not Found");
       }
-     
+
       Console.WriteLine("FindCloudlet Status: " + findCloudletReply.Status);
       // appinst server end port might not exist:
       foreach (AppPort p in findCloudletReply.Ports)
@@ -666,6 +665,10 @@ namespace MexGrpcSampleConsoleApp
         case ServerEventType.EventCloudletUpdate:
           {
             var newFindCloudletReply = serverEdgeEvent.NewCloudlet;
+            if (newFindCloudletReply != me.LastFindCloudletReply)
+            {
+              me.RestartEdgeEventsConnection(newFindCloudletReply.EdgeEventsCookie, dmeHost, dmePort);
+            }
             Console.WriteLine("FindCloudlet Reply Status: " + newFindCloudletReply.Status);
             Console.WriteLine("FindCloudlet fqdn: " + newFindCloudletReply.Fqdn);
           }
@@ -685,12 +688,12 @@ namespace MexGrpcSampleConsoleApp
             Console.Error.WriteLine("Unhandled ServerEdgeEvent: " + serverEdgeEvent);
           }
           break;
-         case ServerEventType.EventError:
-             {
-              Console.Error.WriteLine("Unhandled ServerEdgeEvent: " + serverEdgeEvent);
-             }
-             break;
-         case ServerEventType.EventUnknown:
+        case ServerEventType.EventError:
+          {
+            Console.Error.WriteLine("Unhandled ServerEdgeEvent: " + serverEdgeEvent);
+          }
+          break;
+        case ServerEventType.EventUnknown:
           {
             Console.Error.WriteLine("Unhandled ServerEdgeEvent: " + serverEdgeEvent);
           }
