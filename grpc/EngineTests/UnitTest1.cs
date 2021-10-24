@@ -1054,7 +1054,7 @@ namespace Tests
       {
         latestServerEvent = ServerEdgeEvent;
       };
-      me.RestartEdgeEventsConnection(latestServerEvent.NewCloudlet.EdgeEventsCookie, dmeHost, MatchingEngine.defaultDmeGrpcPort);
+      me.RestartEdgeEventsConnection(latestServerEvent.NewCloudlet, dmeHost, MatchingEngine.defaultDmeGrpcPort);
       me.EdgeEventsConnection.Open();
       me.EdgeEventsReceiver += (ServerEdgeEvent) =>
       {

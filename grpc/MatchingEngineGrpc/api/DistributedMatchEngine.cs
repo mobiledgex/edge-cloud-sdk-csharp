@@ -342,10 +342,11 @@ namespace DistributedMatchEngine
     }
 
 
-    public EdgeEventsConnection RestartEdgeEventsConnection(string edgeEventsCookie, string dmeHost = null, uint dmePort = 0)
+    public EdgeEventsConnection RestartEdgeEventsConnection(FindCloudletReply newCloudlet, string dmeHost = null, uint dmePort = 0)
     {
-      if (edgeEventsCookie == null || edgeEventsCookie.Trim().Length == 0)
+      if (newCloudlet.EdgeEventsCookie == null || newCloudlet.EdgeEventsCookie.Trim().Length == 0)
       {
+        Log.E("Error restarting edge events connection, EdgeEventsCookie is empty");
         return null;
       }
       if (EdgeEventsConnection != null)
@@ -355,7 +356,8 @@ namespace DistributedMatchEngine
           EdgeEventsConnection.Close();
         }
       }
-      this.edgeEventsCookie = edgeEventsCookie;
+      LastFindCloudletReply = newCloudlet;
+      edgeEventsCookie = newCloudlet.EdgeEventsCookie;
       EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       return EdgeEventsConnection;
     }
