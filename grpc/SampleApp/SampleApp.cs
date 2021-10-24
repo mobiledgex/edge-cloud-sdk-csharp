@@ -667,7 +667,7 @@ namespace MexGrpcSampleConsoleApp
             var newFindCloudletReply = serverEdgeEvent.NewCloudlet;
             if (newFindCloudletReply != me.LastFindCloudletReply)
             {
-              me.RestartEdgeEventsConnection(newFindCloudletReply.EdgeEventsCookie, dmeHost, dmePort);
+              me.RestartEdgeEventsConnection(newFindCloudletReply, dmeHost, dmePort);
             }
             Console.WriteLine("FindCloudlet Reply Status: " + newFindCloudletReply.Status);
             Console.WriteLine("FindCloudlet fqdn: " + newFindCloudletReply.Fqdn);
