@@ -25,35 +25,36 @@ namespace DistributedMatchEngine {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cg9hcHBjb21tb24ucHJvdG8SGGRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZRog",
-            "Z29vZ2xlL3Byb3RvYnVmL2Rlc2NyaXB0b3IucHJvdG8aEmVkZ2Vwcm90b2dl",
-            "bi5wcm90byK/AQoHQXBwUG9ydBIvCgVwcm90bxgBIAEoDjIgLmRpc3RyaWJ1",
-            "dGVkX21hdGNoX2VuZ2luZS5MUHJvdG8SFQoNaW50ZXJuYWxfcG9ydBgCIAEo",
-            "BRITCgtwdWJsaWNfcG9ydBgDIAEoBRITCgtmcWRuX3ByZWZpeBgFIAEoCRIQ",
-            "CghlbmRfcG9ydBgGIAEoBRILCgN0bHMYByABKAgSDQoFbmdpbngYCCABKAgS",
-            "FAoMbWF4X3BrdF9zaXplGAkgASgDIjsKEERldmljZUluZm9TdGF0aWMSEQoJ",
-            "ZGV2aWNlX29zGAEgASgJEhQKDGRldmljZV9tb2RlbBgCIAEoCSJdChFEZXZp",
-            "Y2VJbmZvRHluYW1pYxIZChFkYXRhX25ldHdvcmtfdHlwZRgBIAEoCRIXCg9z",
-            "aWduYWxfc3RyZW5ndGgYAiABKAQSFAoMY2Fycmllcl9uYW1lGAMgASgJKj8K",
-            "BkxQcm90bxITCg9MX1BST1RPX1VOS05PV04QABIPCgtMX1BST1RPX1RDUBAB",
-            "Eg8KC0xfUFJPVE9fVURQEAIqqAEKC0hlYWx0aENoZWNrEhgKFEhFQUxUSF9D",
-            "SEVDS19VTktOT1dOEAASJAogSEVBTFRIX0NIRUNLX0ZBSUxfUk9PVExCX09G",
-            "RkxJTkUQARIhCh1IRUFMVEhfQ0hFQ0tfRkFJTF9TRVJWRVJfRkFJTBACEhMK",
-            "D0hFQUxUSF9DSEVDS19PSxADEiEKHUhFQUxUSF9DSEVDS19DTE9VRExFVF9P",
-            "RkZMSU5FEAQq7wEKDUNsb3VkbGV0U3RhdGUSGgoWQ0xPVURMRVRfU1RBVEVf",
-            "VU5LTk9XThAAEhkKFUNMT1VETEVUX1NUQVRFX0VSUk9SUxABEhgKFENMT1VE",
-            "TEVUX1NUQVRFX1JFQURZEAISGgoWQ0xPVURMRVRfU1RBVEVfT0ZGTElORRAD",
-            "Eh4KGkNMT1VETEVUX1NUQVRFX05PVF9QUkVTRU5UEAQSFwoTQ0xPVURMRVRf",
-            "U1RBVEVfSU5JVBAFEhoKFkNMT1VETEVUX1NUQVRFX1VQR1JBREUQBhIcChhD",
-            "TE9VRExFVF9TVEFURV9ORUVEX1NZTkMQByrAAgoQTWFpbnRlbmFuY2VTdGF0",
-            "ZRIUChBOT1JNQUxfT1BFUkFUSU9OEAASFQoRTUFJTlRFTkFOQ0VfU1RBUlQQ",
-            "ARIcChJGQUlMT1ZFUl9SRVFVRVNURUQQAhoEkPYYARIXCg1GQUlMT1ZFUl9E",
-            "T05FEAMaBJD2GAESGAoORkFJTE9WRVJfRVJST1IQBBoEkPYYARIhCh1NQUlO",
-            "VEVOQU5DRV9TVEFSVF9OT19GQUlMT1ZFUhAFEhcKDUNSTV9SRVFVRVNURUQQ",
-            "BhoEkPYYARIfChVDUk1fVU5ERVJfTUFJTlRFTkFOQ0UQBxoEkPYYARITCglD",
-            "Uk1fRVJST1IQCBoEkPYYARIfChVOT1JNQUxfT1BFUkFUSU9OX0lOSVQQCRoE",
-            "kPYYARIbChFVTkRFUl9NQUlOVEVOQU5DRRAfGgSQ9hgBYgZwcm90bzM="));
+            "Z29vZ2xlL3Byb3RvYnVmL2Rlc2NyaXB0b3IucHJvdG8ivwEKB0FwcFBvcnQS",
+            "LwoFcHJvdG8YASABKA4yIC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTFBy",
+            "b3RvEhUKDWludGVybmFsX3BvcnQYAiABKAUSEwoLcHVibGljX3BvcnQYAyAB",
+            "KAUSEwoLZnFkbl9wcmVmaXgYBSABKAkSEAoIZW5kX3BvcnQYBiABKAUSCwoD",
+            "dGxzGAcgASgIEg0KBW5naW54GAggASgIEhQKDG1heF9wa3Rfc2l6ZRgJIAEo",
+            "AyI7ChBEZXZpY2VJbmZvU3RhdGljEhEKCWRldmljZV9vcxgBIAEoCRIUCgxk",
+            "ZXZpY2VfbW9kZWwYAiABKAkiXQoRRGV2aWNlSW5mb0R5bmFtaWMSGQoRZGF0",
+            "YV9uZXR3b3JrX3R5cGUYASABKAkSFwoPc2lnbmFsX3N0cmVuZ3RoGAIgASgE",
+            "EhQKDGNhcnJpZXJfbmFtZRgDIAEoCSo/CgZMUHJvdG8SEwoPTF9QUk9UT19V",
+            "TktOT1dOEAASDwoLTF9QUk9UT19UQ1AQARIPCgtMX1BST1RPX1VEUBACKqgB",
+            "CgtIZWFsdGhDaGVjaxIYChRIRUFMVEhfQ0hFQ0tfVU5LTk9XThAAEiQKIEhF",
+            "QUxUSF9DSEVDS19GQUlMX1JPT1RMQl9PRkZMSU5FEAESIQodSEVBTFRIX0NI",
+            "RUNLX0ZBSUxfU0VSVkVSX0ZBSUwQAhITCg9IRUFMVEhfQ0hFQ0tfT0sQAxIh",
+            "Ch1IRUFMVEhfQ0hFQ0tfQ0xPVURMRVRfT0ZGTElORRAEKu8BCg1DbG91ZGxl",
+            "dFN0YXRlEhoKFkNMT1VETEVUX1NUQVRFX1VOS05PV04QABIZChVDTE9VRExF",
+            "VF9TVEFURV9FUlJPUlMQARIYChRDTE9VRExFVF9TVEFURV9SRUFEWRACEhoK",
+            "FkNMT1VETEVUX1NUQVRFX09GRkxJTkUQAxIeChpDTE9VRExFVF9TVEFURV9O",
+            "T1RfUFJFU0VOVBAEEhcKE0NMT1VETEVUX1NUQVRFX0lOSVQQBRIaChZDTE9V",
+            "RExFVF9TVEFURV9VUEdSQURFEAYSHAoYQ0xPVURMRVRfU1RBVEVfTkVFRF9T",
+            "WU5DEAcqwAIKEE1haW50ZW5hbmNlU3RhdGUSFAoQTk9STUFMX09QRVJBVElP",
+            "ThAAEhUKEU1BSU5URU5BTkNFX1NUQVJUEAESHAoSRkFJTE9WRVJfUkVRVUVT",
+            "VEVEEAIaBJD2GAESFwoNRkFJTE9WRVJfRE9ORRADGgSQ9hgBEhgKDkZBSUxP",
+            "VkVSX0VSUk9SEAQaBJD2GAESIQodTUFJTlRFTkFOQ0VfU1RBUlRfTk9fRkFJ",
+            "TE9WRVIQBRIXCg1DUk1fUkVRVUVTVEVEEAYaBJD2GAESHwoVQ1JNX1VOREVS",
+            "X01BSU5URU5BTkNFEAcaBJD2GAESEwoJQ1JNX0VSUk9SEAgaBJD2GAESHwoV",
+            "Tk9STUFMX09QRVJBVElPTl9JTklUEAkaBJD2GAESGwoRVU5ERVJfTUFJTlRF",
+            "TkFOQ0UQHxoEkPYYATo5CgxlbnVtX2JhY2tlbmQSIS5nb29nbGUucHJvdG9i",
+            "dWYuRW51bVZhbHVlT3B0aW9ucxjijgMgASgIYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { pbr::FileDescriptor.DescriptorProtoFileDescriptor, global::Edgeprotogen.EdgeprotogenReflection.Descriptor, },
+          new pbr::FileDescriptor[] { pbr::FileDescriptor.DescriptorProtoFileDescriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), typeof(global::DistributedMatchEngine.HealthCheck), typeof(global::DistributedMatchEngine.CloudletState), typeof(global::DistributedMatchEngine.MaintenanceState), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.AppPort), global::DistributedMatchEngine.AppPort.Parser, new[]{ "Proto", "InternalPort", "PublicPort", "FqdnPrefix", "EndPort", "Tls", "Nginx", "MaxPktSize" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.DeviceInfoStatic), global::DistributedMatchEngine.DeviceInfoStatic.Parser, new[]{ "DeviceOs", "DeviceModel" }, null, null, null),
@@ -347,7 +348,7 @@ namespace DistributedMatchEngine {
     public const int NginxFieldNumber = 8;
     private bool nginx_;
     /// <summary>
-    /// Use nginx proxy for this port if you really need a transparent proxy (udp only)
+    /// use nginx proxy for this port if you really need a transparent proxy (udp only)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public bool Nginx {
