@@ -19,6 +19,7 @@ using DistributedMatchEngine;
 using NUnit.Framework;
 using System.Text.RegularExpressions;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace EngineTests
 {
@@ -102,19 +103,27 @@ namespace EngineTests
     [Test]
     public void TestMacInterfacesExist()
     {
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+      {
+        return;
+      }
       // Using the Mac Interface, where this test might run...
       string nameWifi = me.GetAvailableWiFiName(new MacNetworkInterfaceName());
       Assert.NotNull(nameWifi);
-      Assert.AreEqual(nameWifi, "en0");
+      Assert.True(nameWifi.Contains("en"));
 
       string nameCell = me.GetAvailableCellularName(new MacNetworkInterfaceName());
       Assert.NotNull(nameCell);
-      Assert.AreEqual(nameCell, "en0");
+      Assert.True(nameCell.Contains("en"));
     }
 
     [Test]
     public void TestMacInterfacesEndPointsExist()
     {
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+      {
+        return;
+      }
       IPEndPoint endpoint = me.GetIPEndPointByName("lo0");
       Assert.NotNull(endpoint);
       Console.WriteLine("EndPoint IPv4: " + endpoint);
@@ -133,6 +142,10 @@ namespace EngineTests
     {
       // Using the Windows Interface, where this test might run...
       // GetAvailableWiFiName only passes on Windows machine
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+      {
+        return;
+      }
       string nameWifi = me.GetAvailableWiFiName(new Windows10NetworkInterfaceName());
       Assert.NotNull(nameWifi);
       Assert.AreEqual(nameWifi, "Ethernet");
@@ -151,6 +164,10 @@ namespace EngineTests
     [Test]
     public void TestWindowsInterfacesIPEndPointsExist()
     {
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+      {
+        return;
+      }
       IPEndPoint endpoint = me.GetIPEndPointByName("localhost");
       Assert.NotNull(endpoint);
       Console.WriteLine("EndPoint IPv4: " + endpoint);
