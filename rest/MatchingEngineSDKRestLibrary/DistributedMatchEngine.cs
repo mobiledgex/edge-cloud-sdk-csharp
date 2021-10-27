@@ -30,7 +30,7 @@ using DistributedMatchEngine.PerformanceMetrics;
 using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
 using System.Runtime.Serialization;
-
+using System.Security.Cryptography.X509Certificates;
 
 /*!
  * DistributedMatchEngine Namespace
@@ -264,7 +264,10 @@ namespace DistributedMatchEngine
      */
     public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null, DeviceInfo deviceInfo = null)
     {
-      httpClient = new HttpClient();
+      HttpClientHandler handler = new HttpClientHandler();
+      handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+      handler.ClientCertificates.Add(new X509Certificate2(Util.GetISGROOTX1PEM()));
+      httpClient = new HttpClient(handler);
       httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
       if (carrierInfo == null)
       {
