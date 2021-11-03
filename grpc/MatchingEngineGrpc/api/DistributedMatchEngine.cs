@@ -30,7 +30,6 @@ using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
 using Grpc.Core;
 using Google.Protobuf.Collections;
-using System.Runtime.CompilerServices;
 using static DistributedMatchEngine.FindCloudletReply.Types;
 using static DistributedMatchEngine.AppInstListReply.Types;
 using static DistributedMatchEngine.DynamicLocGroupRequest.Types;
@@ -1052,7 +1051,6 @@ namespace DistributedMatchEngine
       {
         foreach (Appinstance appinstance in cloudlet.Appinstances)
         {
-          // Find an test AppPort to add from cloudlet.
           AppPort useAppPort = null;
           if (testPort != 0)
           {
@@ -1132,7 +1130,6 @@ namespace DistributedMatchEngine
                   Log.E("Unsupported protocol " + useAppPort.Proto + " found when trying to create sites for NetTest");
                   break;
               }
-
             }
           }
         }
