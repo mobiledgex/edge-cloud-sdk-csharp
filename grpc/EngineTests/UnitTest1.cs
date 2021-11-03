@@ -637,7 +637,7 @@ namespace Tests
     public async static Task TestNetTest()
     {
       var loc = await Util.GetLocationFromDevice();
-      const int NOISE_THRESHOLD = 15; //Threshold for difference between net test averages
+      const int NOISE_THRESHOLD = 100; //Threshold for difference between net test averages
       FindCloudletReply reply1 = null;
 
       try
@@ -750,8 +750,9 @@ namespace Tests
         netTest.doTest(false);
         netTest.sites.TryPeek(out siteOne);
         Console.WriteLine("Average 2: " + siteOne.average);
-        Assert.True(avg15 != siteOne.average, "Thread didn't restart!");
-
+        noise = MathF.Abs((float)avg15 - (float)siteOne.average);
+        Console.WriteLine("Average1.5 == Average2 is {0}, noise detected = {1}", avg15 == siteOne.average, noise);
+        Assert.True(noise < NOISE_THRESHOLD, "Difference between Average1.5 and Average2 is {0} which is greater than NOISE_THRESHOLD of {1}", noise, NOISE_THRESHOLD);
 
         netTest.sites.TryPeek(out siteOne);
         foreach (Site s in netTest.sites)
@@ -784,10 +785,10 @@ namespace Tests
         return;
       }
       Console.WriteLine("This is sort of a mac only test.");
+      const int NOISE_THRESHOLD = 100; //Threshold for difference between net test averages
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply findCloudletReply = null;
       IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
-
       Console.WriteLine("Attempting to test localEndpoint usage.");
       Assert.NotNull(localEndPoint);
 
@@ -887,15 +888,20 @@ namespace Tests
         double avg15 = siteOne.average;
         Console.WriteLine("Average 1.5: " + siteOne.average + ", Test running? " + netTest.runTest);
         Assert.False(netTest.runTest, "Should be stopped, along with the average calculation.");
-        Assert.True(avg1 == avg15, "Thread didn't stop. Averages are not equal (or subject to noise)!");
+
+        float noise = MathF.Abs((float)avg1 - (float)avg15);
+        Console.WriteLine("Average1 == Average1.5 is {0}, noise detected = {1}", avg1 == avg15, noise);
+        Assert.True(noise < NOISE_THRESHOLD, "Difference between Average1 and Average1.5 is {0} which is greater than NOISE_THRESHOLD of {1}", noise, NOISE_THRESHOLD);
 
         netTest.doTest(true);
         await Task.Delay(6000).ConfigureAwait(false);
         netTest.doTest(false);
         netTest.sites.TryPeek(out siteOne);
         Console.WriteLine("Average 2: " + siteOne.average);
-        Assert.True(avg15 != siteOne.average, "Thread didn't restart!");
 
+        noise = MathF.Abs((float)avg15 - (float)siteOne.average);
+        Console.WriteLine("Average1.5 == Average2 is {0}, noise detected = {1}", avg15 == siteOne.average, noise);
+        Assert.True(noise < NOISE_THRESHOLD, "Difference between Average1.5 and Average2 is {0} which is greater than NOISE_THRESHOLD of {1}", noise, NOISE_THRESHOLD);
 
         netTest.sites.TryPeek(out siteOne);
         foreach (Site s in netTest.sites)
