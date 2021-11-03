@@ -30,6 +30,7 @@ using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
 using Grpc.Core;
 using Google.Protobuf.Collections;
+using System.Runtime.CompilerServices;
 using static DistributedMatchEngine.FindCloudletReply.Types;
 using static DistributedMatchEngine.AppInstListReply.Types;
 using static DistributedMatchEngine.DynamicLocGroupRequest.Types;
@@ -1051,41 +1052,51 @@ namespace DistributedMatchEngine
       {
         foreach (Appinstance appinstance in cloudlet.Appinstances)
         {
-          if (!deviceInfo.IsPingSupported())
+          // Find an test AppPort to add from cloudlet.
+          AppPort useAppPort = null;
+          if (testPort != 0)
           {
-            AppPort tcpPort = null;
-            foreach (AppPort appPort in appinstance.Ports)
+            foreach (var aPort in appinstance.Ports)
             {
-              if (appPort.Proto == LProto.Tcp)
+              if (IsInPortRange(aPort, testPort))
               {
-                tcpPort = appPort;
-                break;
-              }
-            }
-            if (tcpPort == null)
-            {
-              throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
-            }
-            sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
-          }
-          else
-          {
-            // Find an test AppPort to add from cloudlet.
-            AppPort useAppPort = null;
-            if (testPort != 0)
-            {
-              foreach (var aPort in appinstance.Ports)
-              {
-                if (IsInPortRange(aPort, testPort))
+                useAppPort = aPort;
+                if(aPort.Proto == LProto.Tcp)
                 {
-                  useAppPort = aPort;
                   sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
+                }
+                else
+                {
+                  throw new FindCloudletException("Only TCP ports is allowed to be used as testPorts ");
                 }
               }
             }
+            if (useAppPort == null)
+            {
+              throw new FindCloudletException("FindCloudPerformance error, the Tcp testPort supplied was not found");
+            }
+          }
+          else
+          {
+            if (!deviceInfo.IsPingSupported())
+            {
+              AppPort tcpPort = null;
+              foreach (AppPort appPort in appinstance.Ports)
+              {
+                if (appPort.Proto == LProto.Tcp)
+                {
+                  tcpPort = appPort;
+                  break;
+                }
+              }
+              if (tcpPort == null)
+              {
+                throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
+              }
+              sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
+            }
             else
             {
-              // Many servers block ICMP packets, including AppInsts/Cloudlets. EdgeEventsConfig should specify the TCP port in the application config for testing any particular App.
               foreach (var port in appinstance.Ports)
               {
                 if (port.Proto == LProto.Udp)
@@ -1121,6 +1132,7 @@ namespace DistributedMatchEngine
                   Log.E("Unsupported protocol " + useAppPort.Proto + " found when trying to create sites for NetTest");
                   break;
               }
+
             }
           }
         }
