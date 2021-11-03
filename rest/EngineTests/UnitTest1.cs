@@ -728,7 +728,7 @@ namespace Tests
     [Test]
     public async static Task TestNetTest()
     {
-      const int NOISE_THRESHOLD = 50; //Threshold for difference between net test averages
+      const int NOISE_THRESHOLD = 150; //Threshold for difference between net test averages
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply reply1 = null;
 
@@ -877,7 +877,7 @@ namespace Tests
       {
         return;
       }
-      const int NOISE_THRESHOLD = 50; //Threshold for difference between net test averages
+      const int NOISE_THRESHOLD = 150; //Threshold for difference between net test averages
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply findCloudletReply = null;
       IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
