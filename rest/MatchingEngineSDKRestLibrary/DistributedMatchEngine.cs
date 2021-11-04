@@ -1167,13 +1167,13 @@ namespace DistributedMatchEngine
                 }
                 else
                 {
-                  throw new FindCloudletException("FindCloudPerformance error, the Tcp testPort supplied was not found");
+                  throw new FindCloudletException("FindCloudletPerformance error, the Tcp testPort supplied was not found");
                 }
               }
             }
             if(useAppPort == null)
             {
-              throw new FindCloudletException("FindCloudPerformance error, the Tcp testPort supplied was not found");
+              throw new FindCloudletException("FindCloudletPerformance error, the Tcp testPort supplied was not found");
             }
           }
           else
