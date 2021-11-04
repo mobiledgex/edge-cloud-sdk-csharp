@@ -1161,12 +1161,19 @@ namespace DistributedMatchEngine
               if (IsInPortRange(aPort, testPort))
               {
                 useAppPort = aPort;
-                sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
+                if (aPort.proto == LProto.L_PROTO_TCP)
+                {
+                  sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
+                }
+                else
+                {
+                  throw new FindCloudletException("FindCloudletPerformance error, the Tcp testPort supplied was not found");
+                }
               }
             }
             if(useAppPort == null)
             {
-              throw new FindCloudletException("FindCloudPerformance error, the Tcp testPort supplied was not found");
+              throw new FindCloudletException("FindCloudletPerformance error, the Tcp testPort supplied was not found");
             }
           }
           else
