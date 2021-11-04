@@ -1071,7 +1071,7 @@ namespace DistributedMatchEngine
             }
             if (useAppPort == null)
             {
-              throw new FindCloudletException("FindCloudPerformance error, the Tcp testPort supplied was not found");
+              throw new FindCloudletException("FindCloudlet Performance error, the Tcp testPort supplied was not found");
             }
           }
           else
