@@ -637,7 +637,7 @@ namespace Tests
     public async static Task TestNetTest()
     {
       var loc = await Util.GetLocationFromDevice();
-      const int NOISE_THRESHOLD = 15; //Threshold for difference between net test averages
+      const int NOISE_THRESHOLD = 150; //Threshold for difference between net test averages
       FindCloudletReply reply1 = null;
 
       try
@@ -750,8 +750,9 @@ namespace Tests
         netTest.doTest(false);
         netTest.sites.TryPeek(out siteOne);
         Console.WriteLine("Average 2: " + siteOne.average);
-        Assert.True(avg15 != siteOne.average, "Thread didn't restart!");
-
+        noise = MathF.Abs((float)avg15 - (float)siteOne.average);
+        Console.WriteLine("Average1.5 == Average2 is {0}, noise detected = {1}", avg15 == siteOne.average, noise);
+        Assert.True(noise < NOISE_THRESHOLD, "Difference between Average1.5 and Average2 is {0} which is greater than NOISE_THRESHOLD of {1}", noise, NOISE_THRESHOLD);
 
         netTest.sites.TryPeek(out siteOne);
         foreach (Site s in netTest.sites)
@@ -784,10 +785,10 @@ namespace Tests
         return;
       }
       Console.WriteLine("This is sort of a mac only test.");
+      const int NOISE_THRESHOLD = 150; //Threshold for difference between net test averages
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply findCloudletReply = null;
       IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
-
       Console.WriteLine("Attempting to test localEndpoint usage.");
       Assert.NotNull(localEndPoint);
 
@@ -887,15 +888,20 @@ namespace Tests
         double avg15 = siteOne.average;
         Console.WriteLine("Average 1.5: " + siteOne.average + ", Test running? " + netTest.runTest);
         Assert.False(netTest.runTest, "Should be stopped, along with the average calculation.");
-        Assert.True(avg1 == avg15, "Thread didn't stop. Averages are not equal (or subject to noise)!");
+
+        float noise = MathF.Abs((float)avg1 - (float)avg15);
+        Console.WriteLine("Average1 == Average1.5 is {0}, noise detected = {1}", avg1 == avg15, noise);
+        Assert.True(noise < NOISE_THRESHOLD, "Difference between Average1 and Average1.5 is {0} which is greater than NOISE_THRESHOLD of {1}", noise, NOISE_THRESHOLD);
 
         netTest.doTest(true);
         await Task.Delay(6000).ConfigureAwait(false);
         netTest.doTest(false);
         netTest.sites.TryPeek(out siteOne);
         Console.WriteLine("Average 2: " + siteOne.average);
-        Assert.True(avg15 != siteOne.average, "Thread didn't restart!");
 
+        noise = MathF.Abs((float)avg15 - (float)siteOne.average);
+        Console.WriteLine("Average1.5 == Average2 is {0}, noise detected = {1}", avg15 == siteOne.average, noise);
+        Assert.True(noise < NOISE_THRESHOLD, "Difference between Average1.5 and Average2 is {0} which is greater than NOISE_THRESHOLD of {1}", noise, NOISE_THRESHOLD);
 
         netTest.sites.TryPeek(out siteOne);
         foreach (Site s in netTest.sites)
@@ -953,5 +959,252 @@ namespace Tests
         }
       }
     }
+
+    [Test]
+    public static void TestGetDeviceInfo()
+    {
+      TestDeviceInfo deviceInfo = new TestDeviceInfo();
+      Assert.True(me.GetDeviceInfoDynamic().CarrierName == deviceInfo.GetDeviceInfoDynamic().CarrierName);
+      Assert.True(me.GetDeviceInfoDynamic().DataNetworkType == deviceInfo.GetDeviceInfoDynamic().DataNetworkType);
+      Assert.True(me.GetDeviceInfoDynamic().SignalStrength == deviceInfo.GetDeviceInfoDynamic().SignalStrength);
+      Assert.True(me.GetDeviceInfoStatic().DeviceModel == deviceInfo.GetDeviceInfoStatic().DeviceModel);
+      Assert.True(me.GetDeviceInfoStatic().DeviceOs == deviceInfo.GetDeviceInfoStatic().DeviceOs);
+    }
+
+    [Test]
+    [TestCase("", true, true)]
+    [TestCase("", false, false)]
+    [TestCase("GDDT", false, true)]
+    public async static Task TestOpenEdgeEventsConnection(string CarrierName, bool useDeviceInofStaticInConstructor, bool useDeviceInfoDynamicInConstructor)
+    {
+      Loc loc = new Loc { Longitude = -121.8863286, Latitude = 37.3382082 }; // San Jose.
+      var findCloudletReply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+        orgName, appName, appVers, loc);
+      Assert.NotNull(findCloudletReply, "FindCloudlet Reply must not be null!");
+      Assert.True(findCloudletReply.Status == FindCloudletReply.Types.FindStatus.FindFound, "cannot find app!");
+
+      AppPort port1 = null;
+      foreach (var aPort in findCloudletReply.Ports)
+      {
+        port1 = aPort;
+        break;
+      }
+
+      var host = port1.FqdnPrefix + findCloudletReply.Fqdn;
+      int port = port1.PublicPort;
+      Assert.True(port > 0, "Port must be bigger than 0!");
+
+      Assert.True(me.EdgeEventsConnection != null);
+      DeviceInfoDynamic deviceInfoDynamic = new DeviceInfoDynamic()
+      {
+        CarrierName = CarrierName,
+        DataNetworkType = "",
+        SignalStrength = 0
+      };
+      DeviceInfoStatic deviceInfoStatic = new DeviceInfoStatic()
+      {
+        DeviceModel = "VS Studio",
+        DeviceOs = ".NET"
+      };
+      me.EdgeEventsConnection.Open(
+        deviceInfoStatic: useDeviceInofStaticInConstructor == true ? deviceInfoStatic : null,
+        deviceInfoDynamic: useDeviceInfoDynamicInConstructor == true ? deviceInfoDynamic : null
+        );
+      ServerEdgeEvent latestServerEvent = null;
+      me.EdgeEventsReceiver += (ServerEdgeEvent) =>
+      {
+        latestServerEvent = ServerEdgeEvent;
+      };
+      await Task.Delay(3000);
+      Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection);
+    }
+
+
+    [Test]
+    public async static Task TestRestartEdgeEventsConnection()
+    {
+      const int DELAY_TIME = 3000;
+      Loc sanJoseLoc = new Loc { Longitude = -121.8863286, Latitude = 37.3382082 }; // San Jose.
+      Loc buckhornLoc = new Loc { Longitude = 50, Latitude = 13}; // San Jose.
+      var findCloudletReply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+        orgName, appName, appVers, sanJoseLoc);
+      Assert.NotNull(findCloudletReply, "FindCloudlet Reply must not be null!");
+      Assert.True(findCloudletReply.Status == FindCloudletReply.Types.FindStatus.FindFound, "cannot find app!");
+
+      AppPort port1 = null;
+      foreach (var aPort in findCloudletReply.Ports)
+      {
+        port1 = aPort;
+        break;
+      }
+
+      var host = port1.FqdnPrefix + findCloudletReply.Fqdn;
+      int port = port1.PublicPort;
+      Assert.True(port > 0, "Port must be bigger than 0!");
+
+      Assert.True(me.EdgeEventsConnection != null);
+      me.EdgeEventsConnection.Open();
+      ServerEdgeEvent latestServerEvent = null;
+      me.EdgeEventsReceiver += (ServerEdgeEvent) =>
+      {
+        latestServerEvent = ServerEdgeEvent;
+      };
+      await Task.Delay(DELAY_TIME);
+      Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection, "Server did't respond with a INIT_CONNECTION, it might be an error or increase the DELAY_TIME");
+      bool locationSamplesSent = await me.EdgeEventsConnection.PostLocationUpdate(buckhornLoc).ConfigureAwait(false);
+      await Task.Delay(DELAY_TIME);
+      Assert.True(locationSamplesSent, "Failed to send location samples");
+      Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventCloudletUpdate, "Server did't respond with EventCloudletUpdate, One of the two AppInsts might be down or Increase the delay time or it might be an error ");
+      Assert.True(latestServerEvent.NewCloudlet != null, "NewCloudlet received is null, One of the two AppInsts might be down or it might be an error ");
+      me.EdgeEventsReceiver -= (ServerEdgeEvent) =>
+      {
+        latestServerEvent = ServerEdgeEvent;
+      };
+      me.RestartEdgeEventsConnection(latestServerEvent.NewCloudlet, dmeHost, MatchingEngine.defaultDmeGrpcPort);
+      me.EdgeEventsConnection.Open();
+      me.EdgeEventsReceiver += (ServerEdgeEvent) =>
+      {
+        latestServerEvent = ServerEdgeEvent;
+      };
+      await Task.Delay(DELAY_TIME);
+      Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection, " 2nd Connection Server did't respond with a INIT_CONNECTION, it might be an error or increase the DELAY_TIME");
+      locationSamplesSent = false;
+      locationSamplesSent = await me.EdgeEventsConnection.PostLocationUpdate(buckhornLoc).ConfigureAwait(false);
+      await Task.Delay(DELAY_TIME);
+      Assert.True(locationSamplesSent, "2nd Connection Failed to send location samples");
+    }
+
+
+    [Test]
+    [TestCase("connect")]
+    [TestCase("ping")]
+    public async static Task TestCloseEdgeEventsConnection(string testTypeStr)
+    {
+      const int DELAY_TIME = 3000;
+      TestType testType = testTypeStr == "connect" ? TestType.CONNECT : TestType.PING;
+      Loc loc = new Loc { Longitude = -121.8863286, Latitude = 37.3382082 }; // San Jose.
+      var findCloudletReply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+        orgName, appName, appVers, loc);
+      Assert.NotNull(findCloudletReply, "FindCloudlet Reply must not be null!");
+      Assert.True(findCloudletReply.Status == FindCloudletReply.Types.FindStatus.FindFound, "cannot find app!");
+
+      AppPort port1 = null;
+      foreach (var aPort in findCloudletReply.Ports)
+      {
+        port1 = aPort;
+        break;
+      }
+
+      var host = port1.FqdnPrefix + findCloudletReply.Fqdn;
+      int port = port1.PublicPort;
+      bool latencySamplesSent;
+      Assert.True(port > 0, "Port must be bigger than 0!");
+
+      Assert.True(me.EdgeEventsConnection != null);
+      me.EdgeEventsConnection.Open();
+      ServerEdgeEvent latestServerEvent = null;
+      me.EdgeEventsReceiver += (ServerEdgeEvent) =>
+      {
+        latestServerEvent = ServerEdgeEvent;
+      };
+      await Task.Delay(DELAY_TIME);
+      Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection, "Server did't respond with a INIT_CONNECTION, it might be an error or increase the DELAY_TIME");
+      switch (testType)
+      {
+        case TestType.CONNECT:
+          latencySamplesSent = await me.EdgeEventsConnection.TestConnectAndPostLatencyUpdate(host: host, port: (uint)port, location: loc, numSamples: 10).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.True(latencySamplesSent, "Failed to run net test and post latency");
+          Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventLatencyProcessed, "Server did't respond with a latency samples, it might be an error or increase the DELAY_TIME");
+          me.EdgeEventsConnection.Close();
+          await Task.Delay(DELAY_TIME);
+          latencySamplesSent = await me.EdgeEventsConnection.TestConnectAndPostLatencyUpdate(host: host, port: (uint)port, location: loc, numSamples: 10).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.False(latencySamplesSent, "Did send latency samples, Although it was supposed to close connection");
+          break;
+        case TestType.PING:
+          latencySamplesSent = await me.EdgeEventsConnection.TestPingAndPostLatencyUpdate(host: host, location: loc, numSamples: 10).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.True(latencySamplesSent, "Failed to run net test and post latency");
+          Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventLatencyProcessed, "Server did't respond with a latency samples, it might be an error or increase the DELAY_TIME");
+          me.EdgeEventsConnection.Close();
+          await Task.Delay(DELAY_TIME);
+          latencySamplesSent = await me.EdgeEventsConnection.TestPingAndPostLatencyUpdate(host: host, location: loc, numSamples: 10).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.False(latencySamplesSent, "Did send latency samples, Although it was supposed to close connection");
+          break;
+      }
+    }
+
+    [Test]
+    [TestCase("connect")]
+    [TestCase("ping")]
+    public async static Task TestPauseAndResumeEdgeEventsConnectionUpdates(string testTypeStr)
+    {
+      const int DELAY_TIME = 3000;
+      TestType testType = testTypeStr == "connect" ? TestType.CONNECT : TestType.PING;
+      Loc loc = new Loc { Longitude = -121.8863286, Latitude = 37.3382082 }; // San Jose.
+      var findCloudletReply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+        orgName, appName, appVers, loc);
+      Assert.NotNull(findCloudletReply, "FindCloudlet Reply must not be null!");
+      Assert.True(findCloudletReply.Status == FindCloudletReply.Types.FindStatus.FindFound, "cannot find app!");
+
+      AppPort port1 = null;
+      foreach (var aPort in findCloudletReply.Ports)
+      {
+        port1 = aPort;
+        break;
+      }
+
+      var host = port1.FqdnPrefix + findCloudletReply.Fqdn;
+      int port = port1.PublicPort;
+      bool latencySamplesSent;
+      Assert.True(port > 0, "Port must be bigger than 0!");
+
+      Assert.True(me.EdgeEventsConnection != null);
+      me.EdgeEventsConnection.Open();
+      ServerEdgeEvent latestServerEvent = null;
+      me.EdgeEventsReceiver += (ServerEdgeEvent) =>
+      {
+        latestServerEvent = ServerEdgeEvent;
+      };
+      await Task.Delay(DELAY_TIME);
+      Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventInitConnection, "Server did't respond with a INIT_CONNECTION, it might be an error or increase the DELAY_TIME");
+      switch (testType)
+      {
+        case TestType.CONNECT:
+          latencySamplesSent = await me.EdgeEventsConnection.TestConnectAndPostLatencyUpdate(host, (uint)port, loc).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.True(latencySamplesSent, "Failed to run net test and post latency");
+          Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventLatencyProcessed, "Server did't respond with a latency samples, it might be an error or increase the DELAY_TIME");
+          await Task.Delay(DELAY_TIME);
+          me.EdgeEventsConnection.PauseSendingUpdates();
+          latencySamplesSent = await me.EdgeEventsConnection.TestConnectAndPostLatencyUpdate(host, (uint)port, loc).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.False(latencySamplesSent, "Did send latency samples, Although it was supposed to pause TestConnectAndPostLatencyUpdate ");
+          me.EdgeEventsConnection.ResumeSendingUpdates();
+          latencySamplesSent = await me.EdgeEventsConnection.TestConnectAndPostLatencyUpdate(host, (uint)port, loc).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.True(latencySamplesSent, "Failed to send latency samples, Error in ResumeSendingUpdates");
+          break;
+        case TestType.PING:
+          latencySamplesSent = await me.EdgeEventsConnection.TestPingAndPostLatencyUpdate(host, loc).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.True(latencySamplesSent, "Failed to run net test and post latency");
+          Assert.True(latestServerEvent.EventType == ServerEdgeEvent.Types.ServerEventType.EventLatencyProcessed, "Server did't respond with a latency samples, it might be an error or increase the DELAY_TIME");
+          await Task.Delay(DELAY_TIME);
+          me.EdgeEventsConnection.PauseSendingUpdates();
+          latencySamplesSent = await me.EdgeEventsConnection.TestPingAndPostLatencyUpdate(host, loc).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.False(latencySamplesSent, "Did send latency samples, Although it was supposed to pause TestPingAndPostLatencyUpdate");
+          me.EdgeEventsConnection.ResumeSendingUpdates();
+          latencySamplesSent = await me.EdgeEventsConnection.TestPingAndPostLatencyUpdate(host, loc).ConfigureAwait(false);
+          await Task.Delay(DELAY_TIME);
+          Assert.True(latencySamplesSent, "Failed to send latency samples, Error in ResumeSendingUpdates");
+          break;
+      }
+     
+    }
+
   }
 }

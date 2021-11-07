@@ -342,10 +342,11 @@ namespace DistributedMatchEngine
     }
 
 
-    public EdgeEventsConnection RestartEdgeEventsConnection(string edgeEventsCookie, string dmeHost = null, uint dmePort = 0)
+    public EdgeEventsConnection RestartEdgeEventsConnection(FindCloudletReply newCloudlet, string dmeHost = null, uint dmePort = 0)
     {
-      if (edgeEventsCookie == null || edgeEventsCookie.Trim().Length == 0)
+      if (newCloudlet.EdgeEventsCookie == null || newCloudlet.EdgeEventsCookie.Trim().Length == 0)
       {
+        Log.E("Error restarting edge events connection, EdgeEventsCookie is empty");
         return null;
       }
       if (EdgeEventsConnection != null)
@@ -355,7 +356,8 @@ namespace DistributedMatchEngine
           EdgeEventsConnection.Close();
         }
       }
-      this.edgeEventsCookie = edgeEventsCookie;
+      LastFindCloudletReply = newCloudlet;
+      edgeEventsCookie = newCloudlet.EdgeEventsCookie;
       EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       return EdgeEventsConnection;
     }
@@ -1049,41 +1051,50 @@ namespace DistributedMatchEngine
       {
         foreach (Appinstance appinstance in cloudlet.Appinstances)
         {
-          if (!deviceInfo.IsPingSupported())
+          AppPort useAppPort = null;
+          if (testPort != 0)
           {
-            AppPort tcpPort = null;
-            foreach (AppPort appPort in appinstance.Ports)
+            foreach (var aPort in appinstance.Ports)
             {
-              if (appPort.Proto == LProto.Tcp)
+              if (IsInPortRange(aPort, testPort))
               {
-                tcpPort = appPort;
-                break;
-              }
-            }
-            if (tcpPort == null)
-            {
-              throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
-            }
-            sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
-          }
-          else
-          {
-            // Find an test AppPort to add from cloudlet.
-            AppPort useAppPort = null;
-            if (testPort != 0)
-            {
-              foreach (var aPort in appinstance.Ports)
-              {
-                if (IsInPortRange(aPort, testPort))
+                useAppPort = aPort;
+                if(aPort.Proto == LProto.Tcp)
                 {
-                  useAppPort = aPort;
                   sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
+                }
+                else
+                {
+                  throw new FindCloudletException("Only TCP ports is allowed to be used as testPorts ");
                 }
               }
             }
+            if (useAppPort == null)
+            {
+              throw new FindCloudletException("FindCloudlet Performance error, the Tcp testPort supplied was not found");
+            }
+          }
+          else
+          {
+            if (!deviceInfo.IsPingSupported())
+            {
+              AppPort tcpPort = null;
+              foreach (AppPort appPort in appinstance.Ports)
+              {
+                if (appPort.Proto == LProto.Tcp)
+                {
+                  tcpPort = appPort;
+                  break;
+                }
+              }
+              if (tcpPort == null)
+              {
+                throw new FindCloudletException("FindCloudlet Performance is not supported, Your device doesn't support Ping and your Application Instance doesn't have any TCP Ports.");
+              }
+              sites.Add(InitTcpSite(tcpPort, appinstance, cloudletLocation: cloudlet.GpsLocation, numSamples: numSamples, localEndPoint: localEndPoint));
+            }
             else
             {
-              // Many servers block ICMP packets, including AppInsts/Cloudlets. EdgeEventsConfig should specify the TCP port in the application config for testing any particular App.
               foreach (var port in appinstance.Ports)
               {
                 if (port.Proto == LProto.Udp)

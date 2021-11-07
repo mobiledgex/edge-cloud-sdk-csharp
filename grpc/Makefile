@@ -21,12 +21,13 @@ CURL_URL := https://www.nuget.org/api/v2/package/Grpc.Tools/$(GRPC_SDK_VERSION)
 ABSOLUTEPATH := $(shell grealpath ../..)
 DME_PROTO_PATH = $(ABSOLUTEPATH)/edge-proto/dme
 THIRD_PARTY_PROTOS_PATH = $(ABSOLUTEPATH)/edge-proto/third_party
+EDGEPROTOGEN_PATH = $(ABSOLUTEPATH)/edge-proto/edgeprotogen
 
 APPLIBBASE := MatchingEngineGrpc
 PROTOCOL_OUT:= MatchingEngineGrpc/Protocol
 BINOUT := $(APPLIBBASE)/bin
 # Google APIs are for the server, but are referenced in the shared client/server proto.
-PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis
+PROTO_INCLUDE_DIRECTORIES := $(DME_PROTO_PATH) $(THIRD_PARTY_PROTOS_PATH)/googleapis $(EDGEPROTOGEN_PATH)
 
 PROTO_INCLUDE_FLAGS += $(addprefix --proto_path ,$(PROTO_INCLUDE_DIRECTORIES))
 
@@ -63,6 +64,7 @@ build-proto:
 	mkdir -p $(APPLIBBASE)
 	@echo Generating GRPC source code...
 	@echo The following *should* also skip server REST APIs from shared proto.
+	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(PROTOCOL_OUT) --grpc_out=no_server:$(PROTOCOL_OUT) $(EDGEPROTOGEN_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
 	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(PROTOCOL_OUT) --grpc_out=no_server:$(PROTOCOL_OUT) $(DME_PROTO_PATH)/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
 	mkdir -p $(PROTOCOL_OUT)/google/api
 	$(PROTOC) $(PROTO_INCLUDE_FLAGS) --csharp_out $(PROTOCOL_OUT)/google/api --grpc_out=no_server:$(PROTOCOL_OUT) $(THIRD_PARTY_PROTOS_PATH)/googleapis/google/api/*.proto --plugin=protoc-gen-grpc=packages/$(GRPCTOOLS)/tools/$(PLATFORM)/grpc_csharp_plugin
