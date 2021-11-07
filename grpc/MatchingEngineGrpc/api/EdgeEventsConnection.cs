@@ -35,7 +35,7 @@ namespace DistributedMatchEngine
     MatchEngineApi.MatchEngineApiClient streamClient;
     private AsyncDuplexStreamingCall<ClientEdgeEvent, ServerEdgeEvent> DuplexEventStream;
     internal CancellationTokenSource ConnectionCancelTokenSource;
-
+    internal CancellationTokenSource RunNetTestCancelTokenSource;
     private string HostOverride;
     private uint PortOverride;
 
@@ -74,6 +74,7 @@ namespace DistributedMatchEngine
       }
 
       ConnectionCancelTokenSource = new CancellationTokenSource();
+      RunNetTestCancelTokenSource = new CancellationTokenSource();
 
       Channel channel;
       if (HostOverride == null || HostOverride.Trim().Length == 0 || PortOverride == 0)
@@ -128,11 +129,32 @@ namespace DistributedMatchEngine
     public void Close()
     {
       SendTerminate().ConfigureAwait(false);
+      RunNetTestCancelTokenSource.Cancel();
       ConnectionCancelTokenSource.Cancel();
       ConnectionCancelTokenSource.Dispose();
       HostOverride = null; // Will use new DME on next connect.
       PortOverride = 0;
     }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public void PauseSendingUpdates()
+    {
+      if(!IsRunNetTestCancelled())
+      {
+        RunNetTestCancelTokenSource.Cancel();
+      }
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public void ResumeSendingUpdates()
+    {
+      if (!IsRunNetTestCancelled())
+      {
+        PauseSendingUpdates();
+      }
+      RunNetTestCancelTokenSource = new CancellationTokenSource();
+    }
+
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public bool IsShutdown()
@@ -143,6 +165,22 @@ namespace DistributedMatchEngine
       }
       if (ConnectionCancelTokenSource.IsCancellationRequested)
       {
+        return true;
+      }
+      return false;
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public bool IsRunNetTestCancelled()
+    {
+      if (RunNetTestCancelTokenSource == null)
+      {
+        Log.D("RunNetTestCancelTokenSource = null");
+        return true;
+      }
+      if (RunNetTestCancelTokenSource.IsCancellationRequested)
+      {
+        Log.D("RunNetTestCancelTokenSource.IsCancellationRequested = true");
         return true;
       }
       return false;
@@ -268,7 +306,24 @@ namespace DistributedMatchEngine
 
       NetTest netTest = new NetTest(me);
       netTest.sites.Enqueue(site);
-      await netTest.RunNetTest(numSamples);
+     
+      if (IsRunNetTestCancelled())
+      {
+        Log.D("RunNetTest Cancelled");
+        return false;
+      }
+      try
+      {
+        await Task.Run(async () => await netTest.RunNetTest(numSamples), RunNetTestCancelTokenSource.Token).ConfigureAwait(false);
+      }
+      catch (ObjectDisposedException ode)
+      {
+        Log.S("Stopping TestConnectAndPostLatencyUpdate, " + ode.ObjectName + " is already disposed");
+      }
+      catch (TaskCanceledException)
+      {
+        Log.S("Stopping TestConnectAndPostLatencyUpdate, RunNetTest Task cancelled");
+      }
 
       ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
       {
@@ -315,7 +370,24 @@ namespace DistributedMatchEngine
 
       NetTest netTest = new NetTest(me);
       netTest.sites.Enqueue(site);
-      await netTest.RunNetTest(numSamples);
+
+      if (IsRunNetTestCancelled())
+      {
+        Log.D("RunNetTest Cancelled");
+        return false;
+      }
+        try
+        {
+          await Task.Run(async () => await netTest.RunNetTest(numSamples), RunNetTestCancelTokenSource.Token).ConfigureAwait(false);
+        }
+        catch (ObjectDisposedException ode)
+        {
+          Log.S("Stopping TestConnectAndPostLatencyUpdate, " + ode.ObjectName + " is already disposed");
+        }
+        catch (TaskCanceledException)
+        {
+          Log.S("Stopping TestConnectAndPostLatencyUpdate, RunNetTest Task cancelled");
+        }
 
       ClientEdgeEvent latencySamplesEvent = new ClientEdgeEvent
       {
