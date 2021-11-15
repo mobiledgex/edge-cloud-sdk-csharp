@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <RootNamespace>Doxygen</RootNamespace>
-    <ReleaseVersion>3.0.3</ReleaseVersion>
+    <ReleaseVersion>3.0.5-debug</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
