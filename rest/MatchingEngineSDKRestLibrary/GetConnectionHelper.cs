@@ -161,9 +161,9 @@ namespace DistributedMatchEngine
         // Create ssl stream on top of tcp client and validate server cert
         SslStream sslStream = new SslStream(tcpClient.GetStream(),false,
           new RemoteCertificateValidationCallback((object sender,
-                                                            X509Certificate certificate,
-                                                            X509Chain chain,
-                                                            SslPolicyErrors sslPolicyErrors) =>
+                                                   X509Certificate certificate,
+                                                   X509Chain chain,
+                                                   SslPolicyErrors sslPolicyErrors) =>
                   {
                     string certificateInfo = $"Info about certficate used in Authentication: " +
                     $"\n Issuer {certificate.Issuer}," +
