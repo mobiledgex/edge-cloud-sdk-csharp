@@ -26,6 +26,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
+using System.Security.Authentication;
 
 namespace DistributedMatchEngine
 {
@@ -140,37 +141,65 @@ namespace DistributedMatchEngine
       }
 
       var task = tcpClient.ConnectAsync(host, port);
-
+    
+#if DEBUG //Add Staging Certificate 
+      using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+      {
+        X509Certificate2 stagingCert = new X509Certificate2(Util.GetStagingCertRawBytes());
+        if (!store.Certificates.Contains(stagingCert))
+        {
+          store.Open(OpenFlags.ReadWrite);
+          store.Add(stagingCert);
+        }
+      }
+#endif
+   
       // Wait returns true if Task completes execution before timeout, false otherwise
       if (await Task.WhenAny(task, Task.Delay(timeoutMs, token)).ConfigureAwait(false) == task)
       {
+
         // Create ssl stream on top of tcp client and validate server cert
-        SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
+        SslStream sslStream = new SslStream(tcpClient.GetStream(),false,
           new RemoteCertificateValidationCallback((object sender,
-                                                   X509Certificate certificate,
-                                                   X509Chain chain,
-                                                   SslPolicyErrors sslPolicyErrors) => {
+                                                            X509Certificate certificate,
+                                                            X509Chain chain,
+                                                            SslPolicyErrors sslPolicyErrors) =>
+                  {
+                    string certificateInfo = $"Info about certficate used in Authentication: " +
+                    $"\n Issuer {certificate.Issuer}," +
+                    $"\n Issued to : {certificate.Subject}," +
+                    $"\n ExpirationDate: {certificate.GetExpirationDateString()}. ";
+                    Log.D(certificateInfo);
+                    string chainElements = "ChainELements:";
+                    foreach (X509ChainElement chainElement in chain.ChainElements)
+                    {
+                      chainElements += $"\n Cert Issuer: {chainElement.Certificate.Issuer}";
+                    }
+                    Log.D(chainElements);
 
-            // Callback when receive server certificate/validation
-            Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
-            if (sslPolicyErrors == SslPolicyErrors.None) return true;
+                    // Callback when receive server certificate/validation
+                    Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
+                    if (sslPolicyErrors == SslPolicyErrors.None) return true;
 
-            // Print server certificate information
-            Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
+                    // Print server certificate information
+                    Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
 #if DEBUG
-            // Check if the sender (eg. the specific sslStream) allows self signed server certs
-            if (allowSelfSignedCerts) {
-              if (sslPolicyErrors.HasFlag(SslPolicyErrors.RemoteCertificateChainErrors) && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot) {
-                Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
-                return true;
-              }
-              Console.WriteLine("Server certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
-            }
+                    // Check if the sender (eg. the specific sslStream) allows self signed server certs
+                    if (allowSelfSignedCerts)
+                    {
+                      if (sslPolicyErrors.HasFlag(SslPolicyErrors.RemoteCertificateChainErrors) && chain.ChainStatus[0].Status == X509ChainStatusFlags.UntrustedRoot)
+                      {
+                        Console.WriteLine("Self-signed server certificate allowed. Bypassing untrusted root");
+                        return true;
+                      }
+                      Console.WriteLine("Server certificate chain status is: {0}. Additional chain status info: {1}", chain.ChainStatus[0].Status.ToString(), chain.ChainStatus[0].StatusInformation);
+                    }
 #endif
-            // Do not allow this client to communicate with unauthenticated servers.
-            return false;
-          }), null);
-
+                    // Do not allow this client to communicate with unauthenticated servers.
+                    return false;
+                  })
+        );
+       
         // Grab client certificates if user configures server to require client certs
         X509CertificateCollection clientCerts = null;
         if (serverRequiresClientCertAuth)
