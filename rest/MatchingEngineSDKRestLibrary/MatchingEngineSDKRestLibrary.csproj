@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ReleaseVersion>3.0.3</ReleaseVersion>
+    <ReleaseVersion>3.0.6</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>3.0.3</PackageVersion>
+    <PackageVersion>3.0.6</PackageVersion>
     <Authors>MobiledgeX, Inc.</Authors>
     <Description>MobiledgeX MatchingEngineSDK Rest Library</Description>
     <Owners>MobiledgeX, Inc.</Owners>
@@ -12,13 +12,14 @@
     <Title>MobiledgeX MatchingEngineSDK Rest Library</Title>
     <PackageId>MobiledgeX.MatchingEngineSDKRestLibrary</PackageId>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
-    <AssemblyVersion>3.0.3</AssemblyVersion>
+    <AssemblyVersion>3.0.6</AssemblyVersion>
     <FileVersion>3.0.3</FileVersion>
     <Copyright>Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>lib\Debug\netstandard2.0</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType></DebugType>
