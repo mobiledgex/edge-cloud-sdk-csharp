@@ -159,7 +159,7 @@ namespace DistributedMatchEngine
       {
 
         // Create ssl stream on top of tcp client and validate server cert
-        SslStream sslStream = new SslStream(tcpClient.GetStream(),false,
+        SslStream sslStream = new SslStream(tcpClient.GetStream(), false,
           new RemoteCertificateValidationCallback((object sender,
                                                    X509Certificate certificate,
                                                    X509Chain chain,
@@ -179,7 +179,7 @@ namespace DistributedMatchEngine
 
                     // Callback when receive server certificate/validation
                     Console.WriteLine("Server certificate subject: {0}, Effective date: {1}, Expiration date: {2}", certificate.Subject, certificate.GetEffectiveDateString(), certificate.GetExpirationDateString());
-                    if (sslPolicyErrors == SslPolicyErrors.None) return true;
+                    if (sslPolicyErrors == SslPolicyErrors.None) { return true; }
 
                     // Print server certificate information
                     Console.WriteLine("Server certificate error: {0}", sslPolicyErrors.ToString());
