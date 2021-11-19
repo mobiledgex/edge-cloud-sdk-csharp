@@ -95,7 +95,7 @@ fxlB7VBBjX9v5oUep0o/j68R/iDlCOM4VVfRa8gX6T2FU7fNdatvGro7uQzIvWof
 gN9WUwCbEMBy/YhBSrXycKA8crgGg3x1mIsopn88JKwmMBa68oS7EHM9w7C4y71M
 7DiA+/9Qdp9RBWJpTS9i/mDnJg1xvo8Xz49mrrgfmcAXTCJqXi24NatI3Oc=
 -----END CERTIFICATE-----";
-     byte[] certBytes = Encoding.ASCII.GetBytes(certText);
+      byte[] certBytes = Encoding.ASCII.GetBytes(certText);
       return certBytes;
     }
   }
