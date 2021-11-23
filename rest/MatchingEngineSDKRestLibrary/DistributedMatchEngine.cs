@@ -751,7 +751,7 @@ namespace DistributedMatchEngine
       {
         if (pair.Key != null && pair.Value != null)
         {
-          Log.D("XXX Tags Dictonary Add Key: " + pair.Key + ", Value: " + pair.Value);
+          Log.D("Tags Dictonary Add Key: " + pair.Key + ", Value: " + pair.Value);
           request.tags.Add(pair.Key, pair.Value);
         }
       }
@@ -792,12 +792,12 @@ namespace DistributedMatchEngine
         request.htags = Tag.DictionaryToHashtable(request.tags);
       }
       // Debug Log Serialization issues:
-      Log.D("XXX  Pre Serialize: Request Reference" + request);
-      Log.D("XXX  Pre Serialize OrgName: " + request.org_name + ", " + "AppName: " + request.app_name + ", AppVer: " + request.app_vers);
-      Log.D("XXX  Pre Serialize AuthToken: " + request.auth_token + ", " + "CellID: " + request.cell_id + ", Ver: " + request.ver);
-      Log.D("XXX  Pre Serialize Tag Reference: " + request.tags);
+      Log.D("Pre Serialize: Request Reference" + request);
+      Log.D("Pre Serialize OrgName: " + request.org_name + ", " + "AppName: " + request.app_name + ", AppVer: " + request.app_vers);
+      Log.D("Pre Serialize AuthToken: " + request.auth_token + ", " + "CellID: " + request.cell_id + ", Ver: " + request.ver);
+      Log.D("Pre Serialize Tag Reference: " + request.tags);
       if (request.tags != null) {
-        Log.D("XXX  Pre Serialize Tags Count: " + request.tags.Count);
+        Log.D("Pre Serialize Tags Count: " + request.tags.Count);
       }
 
       string jsonStr = "";
