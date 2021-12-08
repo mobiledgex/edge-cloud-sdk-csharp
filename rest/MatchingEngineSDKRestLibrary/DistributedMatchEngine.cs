@@ -759,6 +759,27 @@ namespace DistributedMatchEngine
       return request;
     }
 
+
+    private FindCloudletRequest UpdateRequestForQoSNetworkSlicing(FindCloudletRequest request, IPEndPoint localEndPoint)
+    {
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          return request;
+        }
+        localEndPoint = endPoint;
+      }
+      
+      if (request.tags == null)
+      {
+        request.tags = new Dictionary<string, string>();
+      }
+      request.tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
+      return request;
+    }
+
     /*!
      * RegisterClient overload with hardcoded DME host and port. Only use for testing.
      * \ingroup functions_dmeapis
@@ -1305,14 +1326,7 @@ namespace DistributedMatchEngine
         }
 
         FindCloudletReply fcReply = null;
-        if(localEndPoint != null)
-        {
-          if(request.tags == null)
-          {
-            request.tags = new Dictionary<string, string>();
-          }
-          request.tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
-        }
+        request = UpdateRequestForQoSNetworkSlicing(request, localEndPoint);
         if (mode == FindCloudletMode.PROXIMITY)
         {
           fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
