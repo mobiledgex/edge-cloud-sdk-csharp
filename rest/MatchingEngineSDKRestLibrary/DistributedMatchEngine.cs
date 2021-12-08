@@ -1305,6 +1305,14 @@ namespace DistributedMatchEngine
         }
 
         FindCloudletReply fcReply = null;
+        if(localEndPoint != null)
+        {
+          if(request.tags == null)
+          {
+            request.tags = new Dictionary<string, string>();
+          }
+          request.tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
+        }
         if (mode == FindCloudletMode.PROXIMITY)
         {
           fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
