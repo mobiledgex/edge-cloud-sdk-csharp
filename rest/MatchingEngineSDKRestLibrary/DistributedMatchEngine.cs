@@ -909,7 +909,7 @@ namespace DistributedMatchEngine
       catch (HttpRequestException hre)
       {
         // DME might not exist at all:
-        Console.WriteLine("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", Message: " + hre.Message);
+        Log.E("Exception during RegisterClient. DME Server used: " + host + ", carrierName: " + GetCarrierName() + ", appName: " + request.app_name + ", appVersion: " + request.app_vers + ", organizationName: " + request.org_name + ", Message: " + hre.Message);
         throw hre;
       }
     }

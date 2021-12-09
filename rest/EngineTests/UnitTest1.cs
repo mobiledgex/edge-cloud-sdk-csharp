@@ -46,12 +46,11 @@ namespace Tests
   {
     // Test to an alternate server:
     //const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
-
     //const string orgName = "MobiledgeX-Samples";
     //const string appName = "sdktest";
     //const string appVers = "9.0";
+    //FIXME change to main, once the updates are in.
     const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
-
     const string orgName = "Ahmed-Org";
     const string appName = "sdk-test";
     const string appVers = "9.0";
