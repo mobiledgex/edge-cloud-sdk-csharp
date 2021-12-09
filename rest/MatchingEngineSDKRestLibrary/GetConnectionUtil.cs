@@ -468,7 +468,7 @@ namespace DistributedMatchEngine
       AppPort[] ports = reply.ports;
       foreach (AppPort port in ports)
       {
-        if (port.proto == LProto.L_PROTO_TCP)
+        if (port.proto == LProto.Tcp)
         {
           tcpAppPorts.Add(port.internal_port, port);
         }
@@ -490,7 +490,7 @@ namespace DistributedMatchEngine
       AppPort[] ports = reply.ports;
       foreach (AppPort port in ports)
       {
-        if (port.proto == LProto.L_PROTO_UDP)
+        if (port.proto == LProto.Udp)
         {
           udpAppPorts.Add(port.internal_port, port);
         }
