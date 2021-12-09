@@ -760,7 +760,7 @@ namespace DistributedMatchEngine
     }
 
 
-    private FindCloudletRequest UpdateRequestForQoSNetworkSlicing(FindCloudletRequest request, IPEndPoint localEndPoint)
+    private FindCloudletRequest UpdateRequestForQoSNetworkPriority(FindCloudletRequest request, IPEndPoint localEndPoint)
     {
       if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
       {
@@ -772,6 +772,26 @@ namespace DistributedMatchEngine
         localEndPoint = endPoint;
       }
       
+      if (request.tags == null)
+      {
+        request.tags = new Dictionary<string, string>();
+      }
+      request.tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
+      return request;
+    }
+
+    private AppInstListRequest UpdateRequestForQoSNetworkPriority(AppInstListRequest request, IPEndPoint localEndPoint)
+    {
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          return request;
+        }
+        localEndPoint = endPoint;
+      }
+
       if (request.tags == null)
       {
         request.tags = new Dictionary<string, string>();
@@ -1326,7 +1346,7 @@ namespace DistributedMatchEngine
         }
 
         FindCloudletReply fcReply = null;
-        request = UpdateRequestForQoSNetworkSlicing(request, localEndPoint);
+        request = UpdateRequestForQoSNetworkPriority(request, localEndPoint);
         if (mode == FindCloudletMode.PROXIMITY)
         {
           fcReply = await FindCloudletProximityMode(host, port, request).ConfigureAwait(false);
@@ -1385,6 +1405,7 @@ namespace DistributedMatchEngine
       tags["Buffer"] = bytes.ToString();
 
       AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.gps_location, request.carrier_name, tags: tags);
+      appInstListRequest = UpdateRequestForQoSNetworkPriority(appInstListRequest, localEndPoint);
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
 
       if (aiReply.tags == null)
