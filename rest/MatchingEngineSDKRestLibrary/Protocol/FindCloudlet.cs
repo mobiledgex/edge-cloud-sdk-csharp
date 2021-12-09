@@ -72,18 +72,18 @@ namespace DistributedMatchEngine
     public enum FindStatus
     {
       [EnumMember]
-      FIND_UNKNOWN = 0,
+      Unknown = 0,
       [EnumMember]
-      FIND_FOUND = 1,
+      Found = 1,
       [EnumMember]
-      FIND_NOTFOUND = 2
+      NotFound = 2
     }
 
     [DataMember]
     public UInt32 ver;
 
     //! Status return
-    public FindStatus status = FindStatus.FIND_UNKNOWN;
+    public FindStatus status = FindStatus.Unknown;
 
     [DataMember(Name = "status")]
     private string find_status_string
@@ -100,7 +100,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          status = FindStatus.FIND_UNKNOWN;
+          status = FindStatus.Unknown;
         }
       }
     }

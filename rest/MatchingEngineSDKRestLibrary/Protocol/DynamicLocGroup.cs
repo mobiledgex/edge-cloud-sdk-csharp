@@ -76,7 +76,7 @@ namespace DistributedMatchEngine
     public UInt32 ver;
 
     // Status of the reply
-    public ReplyStatus status = ReplyStatus.RS_UNDEFINED;
+    public ReplyStatus status = ReplyStatus.Undefined;
 
     [DataMember(Name = "status")]
     private string reply_status_string
@@ -94,7 +94,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          status = ReplyStatus.RS_UNDEFINED;
+          status = ReplyStatus.Undefined;
         }
       }
     }
