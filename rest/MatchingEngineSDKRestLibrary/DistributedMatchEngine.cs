@@ -1115,7 +1115,7 @@ namespace DistributedMatchEngine
       ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply), serializerSettings);
       FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(ms);
-      if (reply.tags != null)
+      if (reply.tags == null)
       {
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
