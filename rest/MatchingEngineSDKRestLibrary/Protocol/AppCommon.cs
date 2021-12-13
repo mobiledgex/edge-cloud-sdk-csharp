@@ -107,13 +107,13 @@ namespace DistributedMatchEngine
   {
     //! Unknown protocol
     [EnumMember]
-    L_PROTO_UNKNOWN = 0,
+    Unknown = 0,
     //! TCP (L4) protocol
     [EnumMember]
-    L_PROTO_TCP = 1,
+    Tcp = 1,
     //! UDP (L4) protocol
     [EnumMember]
-    L_PROTO_UDP = 2,
+    Udp = 2,
   }
 
   /*!
@@ -126,7 +126,7 @@ namespace DistributedMatchEngine
   public class AppPort
   {
     //! TCP (L4), UDP (L4), or HTTP (L7) protocol
-    public LProto proto = LProto.L_PROTO_UNKNOWN;
+    public LProto proto = LProto.Unknown;
 
     [DataMember(Name = "proto")]
     private string proto_string
@@ -143,7 +143,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          proto = LProto.L_PROTO_UNKNOWN;
+          proto = LProto.Unknown;
         }
       }
     }
@@ -273,17 +273,11 @@ namespace DistributedMatchEngine
   public enum ReplyStatus
   {
     [EnumMember]
-    RS_UNDEFINED = 0,
+    Undefined = 0,
     [EnumMember]
-    RsUndefined = 0,
+    Success = 1,
     [EnumMember]
-    RS_SUCCESS = 1,
-    [EnumMember]
-    RsSuccess = 1,
-    [EnumMember]
-    RS_FAIL = 2,
-    [EnumMember]
-    RsFail = 2
+    Fail = 2
   }
 
   /*!
