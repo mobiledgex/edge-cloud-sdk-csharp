@@ -688,7 +688,7 @@ namespace DistributedMatchEngine
       }
       catch
       {
-        replyStatus = ReplyStatus.RS_UNDEFINED;
+        replyStatus = ReplyStatus.Undefined;
       }
       return replyStatus;
     }
@@ -885,9 +885,9 @@ namespace DistributedMatchEngine
         this.tokenServerURI = reply.token_server_uri;
 
         // Some platforms won't parse emums with same library binary.
-        reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+        reply.status = reply.status == ReplyStatus.Undefined ? ParseReplyStatus(responseStr) : reply.status;
 
-        if (reply.status == ReplyStatus.RS_SUCCESS)
+        if (reply.status == ReplyStatus.Success)
         {
           LastRegisterClientRequest = request; // Update last successful request.
         }
@@ -975,7 +975,7 @@ namespace DistributedMatchEngine
       }
       catch
       {
-        status = FindCloudletReply.FindStatus.FIND_UNKNOWN;
+        status = FindCloudletReply.FindStatus.Unknown;
       }
       return status;
     }
@@ -997,7 +997,7 @@ namespace DistributedMatchEngine
           }
           catch
           {
-            appports[i].proto = LProto.L_PROTO_UNKNOWN;
+            appports[i].proto = LProto.Unknown;
           }
         }
       }
@@ -1088,7 +1088,7 @@ namespace DistributedMatchEngine
         ports = ports
       };
 
-      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.FIND_FOUND : FindCloudletReply.FindStatus.FIND_NOTFOUND;
+      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.Found : FindCloudletReply.FindStatus.NotFound;
 
       return fcReply;
     }
@@ -1115,13 +1115,13 @@ namespace DistributedMatchEngine
       ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply), serializerSettings);
       FindCloudletReply reply = (FindCloudletReply)deserializer.ReadObject(ms);
-      if (reply.tags != null)
+      if (reply.tags == null)
       {
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
       // Reparse if default value.
-      reply.status = reply.status == FindCloudletReply.FindStatus.FIND_UNKNOWN ? ParseFindStatus(responseStr) : reply.status;
+      reply.status = reply.status == FindCloudletReply.FindStatus.Unknown ? ParseFindStatus(responseStr) : reply.status;
 
       // Port has an emum to reparse if set to default as well:
       ParseAppPortTypes(reply.ports, responseStr);
@@ -1202,7 +1202,7 @@ namespace DistributedMatchEngine
               if (IsInPortRange(aPort, testPort))
               {
                 useAppPort = aPort;
-                if (aPort.proto == LProto.L_PROTO_TCP)
+                if (aPort.proto == LProto.Tcp)
                 {
                   sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
                 }
@@ -1224,7 +1224,7 @@ namespace DistributedMatchEngine
               AppPort tcpPort = null;
               foreach (AppPort appPort in appinstance.ports)
               {
-                if (appPort.proto == LProto.L_PROTO_TCP)
+                if (appPort.proto == LProto.Tcp)
                 {
                   tcpPort = appPort;
                   break;
@@ -1240,32 +1240,32 @@ namespace DistributedMatchEngine
             {
               foreach (var port in appinstance.ports)
               {
-                if (port.proto == LProto.L_PROTO_UDP)
+                if (port.proto == LProto.Udp)
                 {
                   if (useAppPort == null)
                   {
                     useAppPort = port;
                   }
                 }
-                else if (port.proto == LProto.L_PROTO_TCP)
+                else if (port.proto == LProto.Tcp)
                 {
                   useAppPort = port;
                   break;
                 }
               }
 
-              if (useAppPort.proto == LProto.L_PROTO_UDP)
+              if (useAppPort.proto == LProto.Udp)
               {
                 Log.E("Warning: Found only UDP port. ICMP Ping testing will likely fail. Please specify a TCP port in your app.");
               }
 
               switch (useAppPort.proto)
               {
-                case LProto.L_PROTO_TCP:
+                case LProto.Tcp:
                   sites.Add(InitTcpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
                   break;
 
-                case LProto.L_PROTO_UDP:
+                case LProto.Udp:
                   sites.Add(InitUdpSite(useAppPort, appinstance, cloudletLocation: cloudlet.gps_location, numSamples: numSamples, localEndPoint: localEndPoint));
                   break;
 
@@ -1306,7 +1306,7 @@ namespace DistributedMatchEngine
           {
             return null;
           }
-          if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+          if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.Found)
           {
             DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
           }
@@ -1362,7 +1362,7 @@ namespace DistributedMatchEngine
         }
 
         // TODO: Refactor.
-        if (fcReply.status == FindCloudletReply.FindStatus.FIND_FOUND)
+        if (fcReply.status == FindCloudletReply.FindStatus.Found)
         {
           DmeConnection = GetDMEConnection(fcReply.edge_events_cookie, host, port);
         }
@@ -1394,7 +1394,7 @@ namespace DistributedMatchEngine
     {
 
       FindCloudletReply fcReply = await FindCloudletProximityMode(host, port, request);
-      if (fcReply.status != FindCloudletReply.FindStatus.FIND_FOUND)
+      if (fcReply.status != FindCloudletReply.FindStatus.Found)
       {
         return fcReply;
       }
@@ -1412,7 +1412,7 @@ namespace DistributedMatchEngine
       {
         aiReply.tags = Tag.HashtableToDictionary(aiReply.htags);
       }
-      if (aiReply.status != AppInstListReply.AIStatus.AI_SUCCESS)
+      if (aiReply.status != AppInstListReply.AIStatus.Success)
       {
         throw new FindCloudletException("Unable to GetAppInstList. GetAppInstList status is " + aiReply.status);
       }
@@ -1420,7 +1420,7 @@ namespace DistributedMatchEngine
       if (aiReply.cloudlets.Length == 0)
       {
         Log.E("Check FindCloudletPerformance Request parameters. Empty cloudlet list returned from GetAppInstList.");
-        return new FindCloudletReply { status = FindCloudletReply.FindStatus.FIND_FOUND};
+        return new FindCloudletReply { status = FindCloudletReply.FindStatus.Found};
       }
 
       // Check for global override for site performance testing:
@@ -1511,7 +1511,7 @@ namespace DistributedMatchEngine
       {
         registerClientReply.tags = Tag.HashtableToDictionary(registerClientReply.htags);
       }
-      if (registerClientReply.status != ReplyStatus.RS_SUCCESS)
+      if (registerClientReply.status != ReplyStatus.Success)
       {
         throw new RegisterClientException("RegisterClientReply status is " + registerClientReply.status);
       }
@@ -1721,7 +1721,7 @@ namespace DistributedMatchEngine
       }
       catch
       {
-        status = AppInstListReply.AIStatus.AI_UNDEFINED;
+        status = AppInstListReply.AIStatus.Undefined;
       }
       return status;
     }
@@ -1792,7 +1792,7 @@ namespace DistributedMatchEngine
       }
 
       // reparse if undefined.
-      reply.status = reply.status == AppInstListReply.AIStatus.AI_UNDEFINED ? ParseAIStatus(responseStr) : reply.status;
+      reply.status = reply.status == AppInstListReply.AIStatus.Undefined ? ParseAIStatus(responseStr) : reply.status;
 
       return reply;
     }
@@ -2016,7 +2016,7 @@ namespace DistributedMatchEngine
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
-      reply.status = reply.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(responseStr) : reply.status;
+      reply.status = reply.status == ReplyStatus.Undefined ? ParseReplyStatus(responseStr) : reply.status;
 
       return reply;
     }

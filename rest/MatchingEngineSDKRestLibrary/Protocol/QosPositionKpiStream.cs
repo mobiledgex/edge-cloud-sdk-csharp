@@ -235,12 +235,12 @@ namespace DistributedMatchEngine
           }
           catch
           {
-            replyStatus = ReplyStatus.RS_UNDEFINED;
+            replyStatus = ReplyStatus.Undefined;
           }
           return replyStatus;
         }
       }
-      return ReplyStatus.RS_UNDEFINED;
+      return ReplyStatus.Undefined;
     }
 
     public IEnumerator<QosPositionKpiReply> GetEnumerator()
@@ -258,7 +258,7 @@ namespace DistributedMatchEngine
           {
             reply = deserializer.ReadObject(ms) as QosPositionKpiStreamReply;
             // Re-parse if still on default value.
-            reply.result.status = reply.result.status == ReplyStatus.RS_UNDEFINED ? ParseReplyStatus(qprJsonStr) : reply.result.status;
+            reply.result.status = reply.result.status == ReplyStatus.Undefined ? ParseReplyStatus(qprJsonStr) : reply.result.status;
           }
           catch (Exception e)
           {
