@@ -124,11 +124,11 @@ namespace DistributedMatchEngine
     public enum AIStatus
     {
       [EnumMember]
-      AI_UNDEFINED = 0,
+      Undefined = 0,
       [EnumMember]
-      AI_SUCCESS = 1,
+      Success = 1,
       [EnumMember]
-      AI_FAIL = 2
+      Fail = 2
     }
 
     [DataMember]
@@ -152,7 +152,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          status = AIStatus.AI_UNDEFINED;
+          status = AIStatus.Undefined;
         }
       }
     }

@@ -45,10 +45,14 @@ namespace Tests
   public class Tests
   {
     // Test to an alternate server:
-    const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
-
-    const string orgName = "MobiledgeX-Samples";
-    const string appName = "sdktest";
+    //const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
+    //const string orgName = "MobiledgeX-Samples";
+    //const string appName = "sdktest";
+    //const string appVers = "9.0";
+    //FIXME change to main, once the updates are in.
+    const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
+    const string orgName = "Ahmed-Org";
+    const string appName = "sdk-test";
     const string appVers = "9.0";
     const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.telus.mobiledgex.net";
 
@@ -197,7 +201,7 @@ namespace Tests
       string js1 = @"{
  ""result"": {
   ""ver"": 0,
-  ""status"": ""RS_SUCCESS"",
+  ""status"": ""Success"",
   ""position_results"": [
    {
     ""positionid"": ""1"",
@@ -259,7 +263,7 @@ namespace Tests
       streamParser = new QosPositionKpiStream(getMemoryStream(js1), 15000);
       foreach (var reply in streamParser)
       {
-        Assert.AreEqual(ReplyStatus.RS_SUCCESS, reply.status);
+        Assert.AreEqual(ReplyStatus.Success, reply.status);
         Assert.AreEqual(2, reply.position_results.Length);
         Assert.AreEqual(50.11729018260935, reply.position_results[0].gps_location.latitude);
         Assert.AreEqual(8.576783680147576, reply.position_results[0].gps_location.longitude);
@@ -381,7 +385,7 @@ namespace Tests
           loc: loc);
 
         int knownPort = 2015;
-        var appPorts = me.GetAppPortsByProtocol(reply1, LProto.L_PROTO_TCP);
+        var appPorts = me.GetAppPortsByProtocol(reply1, LProto.Tcp);
         var appPort = appPorts[knownPort]; // Known port of this instance.
         string host = appPort.fqdn_prefix + reply1.fqdn;
         Console.WriteLine("Ports1: " + appPort.internal_port);
@@ -455,12 +459,12 @@ namespace Tests
       }
       Assert.ByVal(reply, Is.Not.Null);
 
-      Assert.True(reply.status.Equals(FindCloudletReply.FindStatus.FIND_FOUND));
+      Assert.True(reply.status.Equals(FindCloudletReply.FindStatus.Found));
 
       //! [getwebsocketexample]
       ClientWebSocket socket = null;
       int knownPort = 3765;
-      var appPorts = me.GetAppPortsByProtocol(reply, LProto.L_PROTO_TCP);
+      var appPorts = me.GetAppPortsByProtocol(reply, LProto.Tcp);
       var appPort = appPorts[knownPort]; // Known port of this instance.
       string url = "ws://" + me.GetHost(reply, appPort) + ":" + appPort.public_port + "/ws";
       Console.WriteLine("URL : " + url);
@@ -545,7 +549,7 @@ namespace Tests
       Assert.ByVal(reply, Is.Not.Null);
 
       Dictionary<int, AppPort> appPortsDict = me.GetTCPAppPorts(reply);
-      Assert.True(reply.status.Equals(FindCloudletReply.FindStatus.FIND_FOUND));
+      Assert.True(reply.status.Equals(FindCloudletReply.FindStatus.Found));
 
       int public_port = reply.ports[0].public_port; // We happen to know it's the first one.
       AppPort appPort = appPortsDict[public_port];
@@ -574,14 +578,14 @@ namespace Tests
     public async static Task TestAppPortMappings()
     {
       AppPort appPort = new AppPort();
-      appPort.proto = LProto.L_PROTO_TCP;
+      appPort.proto = LProto.Tcp;
       appPort.internal_port = 8008;
       appPort.public_port = 3000;
       appPort.end_port = 8010;
       appPort.fqdn_prefix = "";
 
       AppPort appPort2 = new AppPort();
-      appPort2.proto = LProto.L_PROTO_TCP;
+      appPort2.proto = LProto.Tcp;
       appPort2.internal_port = 8008;
       appPort2.public_port = 3000;
       appPort2.end_port = 0;
@@ -705,10 +709,10 @@ namespace Tests
         registerReply = await me.RegisterClient(dmeHost, MatchingEngine.defaultDmeRestPort,
           registerClientRequest
           );
-        Assert.AreEqual(registerReply.status, ReplyStatus.RsSuccess, "TestFindCloudletPerformanceMode: RegisterClient Failed");
+        Assert.AreEqual(registerReply.status, ReplyStatus.Success, "TestFindCloudletPerformanceMode: RegisterClient Failed");
         FindCloudletRequest fcReq = me.CreateFindCloudletRequest(loc, me.carrierInfo.GetCurrentCarrierName());
         fcReply = await me.FindCloudletPerformanceMode(dmeHost, MatchingEngine.defaultDmeRestPort,fcReq, testPort: testPort);
-        Assert.AreEqual(fcReply.status, FindCloudletReply.FindStatus.FIND_FOUND, "TestFindCloudletPerformanceMode: FindCloudletPerformanceMode Failed");
+        Assert.AreEqual(fcReply.status, FindCloudletReply.FindStatus.Found, "TestFindCloudletPerformanceMode: FindCloudletPerformanceMode Failed");
         Assert.NotNull(fcReply.fqdn);
       }
       catch (DmeDnsException dde)
@@ -728,7 +732,7 @@ namespace Tests
     [Test]
     public async static Task TestNetTest()
     {
-      const int NOISE_THRESHOLD = 150; //Threshold for difference between net test averages
+      const int NOISE_THRESHOLD = 500; //Threshold for difference between net test averages
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply reply1 = null;
 
