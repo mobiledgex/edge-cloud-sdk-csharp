@@ -181,13 +181,13 @@ namespace DistributedMatchEngine
             {
               var jsonObjStr = reader.ReadToEnd(); // One way Server Sourced Event endpoint
 
-              Console.WriteLine("XXX: Read: " + jsonObjStr);
+              Console.WriteLine("Read: " + jsonObjStr);
               var serverEdgeEvent = ParseServerEdgeEvent(jsonObjStr);
-              Console.WriteLine("XXX: Parsed Type: " + serverEdgeEvent.event_type);
+              Console.WriteLine("Parsed Type: " + serverEdgeEvent.event_type);
               me.EventBusReciever(serverEdgeEvent);
 
             }
-            Console.WriteLine("XXX: Stream End reached.");
+            Console.WriteLine("Stream End reached.");
             if (!cancelTokenSource.IsCancellationRequested)
             {
               cancelTokenSource.Cancel();
