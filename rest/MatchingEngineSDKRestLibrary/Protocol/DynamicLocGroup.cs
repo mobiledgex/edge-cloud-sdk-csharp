@@ -25,11 +25,11 @@ namespace DistributedMatchEngine
   public enum DlgCommType
   {
     [EnumMember]
-    DLG_UNDEFINED = 0,
+    Undefined = 0,
     [EnumMember]
-    DLG_SECURE = 1,
+    Secure = 1,
     [EnumMember]
-    DLG_OPEN = 2
+    Open = 2
   }
 
   [DataContract]
@@ -43,7 +43,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public UInt64 lg_id;
 
-    public DlgCommType comm_type = DlgCommType.DLG_UNDEFINED;
+    public DlgCommType comm_type = DlgCommType.Undefined;
 
     [DataMember(Name = "comm_type")]
     private string comm_type_string
@@ -54,7 +54,7 @@ namespace DistributedMatchEngine
       }
       set
       {
-        comm_type = Enum.TryParse(value, out DlgCommType commType) ? commType : DlgCommType.DLG_UNDEFINED;
+        comm_type = Enum.TryParse(value, out DlgCommType commType) ? commType : DlgCommType.Undefined;
       }
     }
 
