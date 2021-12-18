@@ -81,21 +81,21 @@ namespace DistributedMatchEngine
     public enum GPSLocationStatus
     {
       [EnumMember]
-      LOC_UNKNOWN = 0,
+      Unknown = 0,
       [EnumMember]
-      LOC_VERIFIED = 1,
+      Verified = 1,
       [EnumMember]
-      LOC_MISMATCH_SAME_COUNTRY = 2,
+      MismatchSameCountry = 2,
       [EnumMember]
-      LOC_MISMATCH_OTHER_COUNTRY = 3,
+      MismatchOtherCountry = 3,
       [EnumMember]
-      LOC_ROAMING_COUNTRY_MATCH = 4,
+      RoamingCountryMatch = 4,
       [EnumMember]
-      LOC_ROAMING_COUNTRY_MISMATCH = 5,
+      RoamingCountryMismatch = 5,
       [EnumMember]
-      LOC_ERROR_UNAUTHORIZED = 6,
+      ErrorUnauthorized = 6,
       [EnumMember]
-      LOC_ERROR_OTHER = 7
+      ErrorOther = 7
     }
 
     [DataMember]
@@ -125,7 +125,7 @@ namespace DistributedMatchEngine
     }
 
     //! GPS location status
-    public GPSLocationStatus gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
+    public GPSLocationStatus gps_location_status = GPSLocationStatus.Unknown;
 
     [DataMember(Name = "gps_location_status")]
     private string gps_location_status_string
@@ -142,7 +142,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
+          gps_location_status = GPSLocationStatus.Unknown;
         }
       }
     }
