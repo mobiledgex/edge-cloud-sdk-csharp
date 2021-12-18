@@ -959,7 +959,7 @@ namespace DistributedMatchEngine
       }
       catch
       {
-        status = AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED;
+        status = AppOfficialFqdnReply.AOFStatus.Undefined;
       }
       return status;
     }
@@ -1056,7 +1056,7 @@ namespace DistributedMatchEngine
       }
 
       // Reparse if default value.
-      reply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_UNDEFINED ? ParseAofStatus(responseStr) : reply.status;
+      reply.status = reply.status == AppOfficialFqdnReply.AOFStatus.Undefined ? ParseAofStatus(responseStr) : reply.status;
 
       // Inform Mel Messaging:
       if (melMessaging.IsMelEnabled() && LastRegisterClientRequest != null)
@@ -1088,7 +1088,7 @@ namespace DistributedMatchEngine
         ports = ports
       };
 
-      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.AOF_SUCCESS ? FindCloudletReply.FindStatus.Found : FindCloudletReply.FindStatus.NotFound;
+      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.Success ? FindCloudletReply.FindStatus.Found : FindCloudletReply.FindStatus.NotFound;
 
       return fcReply;
     }
@@ -1591,7 +1591,7 @@ namespace DistributedMatchEngine
       }
       catch
       {
-        status = VerifyLocationReply.GPSLocationStatus.LOC_UNKNOWN;
+        status = VerifyLocationReply.GPSLocationStatus.Unknown;
       }
       return status;
     }
@@ -1666,7 +1666,7 @@ namespace DistributedMatchEngine
       // Reparse if default value is set.
       reply.tower_status = reply.tower_status == VerifyLocationReply.TowerStatus.TOWER_UNKNOWN ?
         ParseTowerStatus(responseStr) : reply.tower_status;
-      reply.gps_location_status = reply.gps_location_status == VerifyLocationReply.GPSLocationStatus.LOC_UNKNOWN ?
+      reply.gps_location_status = reply.gps_location_status == VerifyLocationReply.GPSLocationStatus.Unknown ?
         ParseGpsLocationStatus(responseStr) : reply.gps_location_status;
 
       return reply;
@@ -1898,7 +1898,7 @@ namespace DistributedMatchEngine
       }
       catch
       {
-        status = FqdnListReply.FLStatus.FL_UNDEFINED;
+        status = FqdnListReply.FLStatus.Undefined;
       }
       return status;
     }
@@ -1947,7 +1947,7 @@ namespace DistributedMatchEngine
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
 
-      reply.status = reply.status == FqdnListReply.FLStatus.FL_UNDEFINED ? ParseFLStatus(responseStr) : reply.status;
+      reply.status = reply.status == FqdnListReply.FLStatus.Undefined ? ParseFLStatus(responseStr) : reply.status;
 
       return reply;
     }
