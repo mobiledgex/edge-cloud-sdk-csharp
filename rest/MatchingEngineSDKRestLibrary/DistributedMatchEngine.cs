@@ -1111,6 +1111,7 @@ namespace DistributedMatchEngine
       }
 
       string responseStr = Util.StreamToString(responseStream);
+      Log.D("ResponseStr: " + responseStr);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(FindCloudletReply), serializerSettings);
@@ -1575,7 +1576,7 @@ namespace DistributedMatchEngine
       }
       catch
       {
-        status = VerifyLocationReply.TowerStatus.TOWER_UNKNOWN;
+        status = VerifyLocationReply.TowerStatus.TowerUnknown;
       }
       return status;
     }
@@ -1631,6 +1632,7 @@ namespace DistributedMatchEngine
       MemoryStream ms = new MemoryStream();
       serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
+      Log.D("RequestStr: " + jsonStr);
 
       Stream responseStream = null;
       try {
@@ -1654,6 +1656,7 @@ namespace DistributedMatchEngine
       }
 
       string responseStr = Util.StreamToString(responseStream);
+      Log.D("ResponseStr: " + responseStr);
       byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
       ms = new MemoryStream(byteArray);
       DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(VerifyLocationReply), serializerSettings);
@@ -1664,7 +1667,7 @@ namespace DistributedMatchEngine
       }
 
       // Reparse if default value is set.
-      reply.tower_status = reply.tower_status == VerifyLocationReply.TowerStatus.TOWER_UNKNOWN ?
+      reply.tower_status = reply.tower_status == VerifyLocationReply.TowerStatus.TowerUnknown ?
         ParseTowerStatus(responseStr) : reply.tower_status;
       reply.gps_location_status = reply.gps_location_status == VerifyLocationReply.GPSLocationStatus.Unknown ?
         ParseGpsLocationStatus(responseStr) : reply.gps_location_status;

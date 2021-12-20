@@ -50,15 +50,15 @@ namespace Tests
     //const string appName = "sdktest";
     //const string appVers = "9.0";
     //FIXME change to main, once the updates are in.
-    const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
-    const string orgName = "Ahmed-Org";
-    const string appName = "sdk-test";
-    const string appVers = "9.0";
+    const string dmeHost = "us-qa." + MatchingEngine.baseDmeHost;
+    const string orgName = "automation_dev_org";
+    const string appName = "automation-sdk-porttest";
+    const string appVers = "1.0";
     const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.telus.mobiledgex.net";
 
     static MatchingEngine me;
 
-    class TestCarrierInfo : CarrierInfo
+    public class TestCarrierInfo : CarrierInfo
     {
       string CarrierInfo.GetCurrentCarrierName()
       {
@@ -86,7 +86,7 @@ namespace Tests
       }
     }
 
-    class TestUniqueID : UniqueID
+    public class TestUniqueID : UniqueID
     {
       string UniqueID.GetUniqueIDType()
       {
@@ -99,7 +99,7 @@ namespace Tests
       }
     }
 
-    class TestDeviceInfo : DeviceInfo
+    public class TestDeviceInfo : DeviceInfo
     {
       Dictionary<string, string> DeviceInfo.GetDeviceInfo()
       {
