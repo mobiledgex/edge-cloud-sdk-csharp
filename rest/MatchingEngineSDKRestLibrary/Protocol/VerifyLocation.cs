@@ -49,7 +49,6 @@ namespace DistributedMatchEngine
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
     //! Optional. Vendor specific data
-    //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
 
     [DataMember(Name = "tags", EmitDefaultValue = false)]
@@ -70,11 +69,11 @@ namespace DistributedMatchEngine
     public enum TowerStatus
     {
       [EnumMember]
-      TOWER_UNKNOWN = 0,
+      TowerUnknown = 0,
       [EnumMember]
-      CONNECTED_TO_SPECIFIED_TOWER = 1,
+      ConnectedToSpecifiedTower = 1,
       [EnumMember]
-      NOT_CONNECTED_TO_SPECIFIED_TOWER = 2,
+      NotConnectedToSpecifiedTower = 2,
     }
 
     //! GPS Status of VerifyLocationReply
@@ -102,7 +101,7 @@ namespace DistributedMatchEngine
     public UInt32 ver;
 
     //! Tower status
-    public TowerStatus tower_status = TowerStatus.TOWER_UNKNOWN;
+    public TowerStatus tower_status = TowerStatus.TowerUnknown;
 
     [DataMember(Name = "tower_status")]
     private string tower_status_tring
@@ -119,7 +118,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          tower_status = TowerStatus.TOWER_UNKNOWN;
+          tower_status = TowerStatus.TowerUnknown;
         }
       }
     }
