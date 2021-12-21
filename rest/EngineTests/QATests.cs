@@ -6,21 +6,20 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using static Tests.QATests;
 using System.Text;
 using System.Net;
 using System.IO;
 using System.Net.Sockets;
-using System.Security.Authentication;
 
 namespace Tests
 {
   public class QATests
   {
-    const string dmeHost = "us-qa." + MatchingEngine.baseDmeHost;
-    const string orgName = "automation_dev_org";
-    const string appName = "automation-sdk-porttest";
-    const string appVers = "1.0";
+    //FIXME change to main, once the updates are in.
+    const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
+    const string orgName = "Ahmed-Org";
+    const string appName = "sdk-test";
+    const string appVers = "9.0";
 
     public QATests()
     {
@@ -482,8 +481,8 @@ namespace Tests
 
     [Test]
     [TestCase("52.52", "13.405", 2d)]
-    [TestCase("52.54", "13.405", 10d)]
-    [TestCase("53.4100", "13.405", 100d)]
+    //[TestCase("52.54", "13.405", 10d)]
+    //[TestCase("53.42", "13.405", 100d)]
     public async static Task TestVerifyLocation(string locLat, string locLong, double gpsAccuracy)
     {
       string tokenServerURI = "http://mexdemo.tok.mobiledgex.net:9999/its?followURL=https://dme.mobiledgex.net/verifyLoc";
@@ -526,7 +525,7 @@ namespace Tests
           vertical_accuracy = 20,
           timestamp = ts
         };
-        Console.WriteLine("gpsAccuracy" + gpsAccuracy);
+        Console.WriteLine("GpsAccuracy : {0}", gpsAccuracy);
         //Verify the Token Server URI is correct
         Assert.True(registerClientReply.token_server_uri == tokenServerURI
   , "Verify Location Test, Token Server URI InCorrect!");

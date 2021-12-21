@@ -33,10 +33,7 @@ using System.Security.Authentication;
 using System.Net.WebSockets;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
-using System.Collections.Concurrent;
-using System.Json;
 using System.Collections;
-using System.Runtime.Serialization;
 using System.Net;
 using System.Runtime.InteropServices;
 
@@ -44,16 +41,12 @@ namespace Tests
 {
   public class Tests
   {
-    // Test to an alternate server:
-    //const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
-    //const string orgName = "MobiledgeX-Samples";
-    //const string appName = "sdktest";
-    //const string appVers = "9.0";
     //FIXME change to main, once the updates are in.
-    const string dmeHost = "us-qa." + MatchingEngine.baseDmeHost;
-    const string orgName = "automation_dev_org";
-    const string appName = "automation-sdk-porttest";
-    const string appVers = "1.0";
+    const string dmeHost = "eu-stage." + MatchingEngine.baseDmeHost;
+    const string orgName = "Ahmed-Org";
+    const string appName = "sdk-test";
+    const string appVers = "9.0";
+
     const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.cerust.mobiledgex.net";
 
     static MatchingEngine me;
@@ -881,7 +874,7 @@ namespace Tests
       {
         return;
       }
-      const int NOISE_THRESHOLD = 150; //Threshold for difference between net test averages
+      const int NOISE_THRESHOLD = 500; //Threshold for difference between net test averages
       var loc = await Util.GetLocationFromDevice();
       FindCloudletReply findCloudletReply = null;
       IPEndPoint localEndPoint = me.GetIPEndPointByName("en0");
@@ -897,7 +890,7 @@ namespace Tests
 
         var findCloudletRequest = me.CreateFindCloudletRequest(loc: loc);
         findCloudletReply = await me.FindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
-          findCloudletRequest, mode: FindCloudletMode.PERFORMANCE, localEndPoint: localEndPoint);
+        findCloudletRequest, mode: FindCloudletMode.PERFORMANCE, localEndPoint: localEndPoint);
       }
       catch (DmeDnsException dde)
       {
