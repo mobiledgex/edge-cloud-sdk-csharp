@@ -18,14 +18,12 @@
 using NUnit.Framework;
 using DistributedMatchEngine;
 using DistributedMatchEngine.Mel;
-
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System;
 using System.Net.Sockets;
-using System.Runtime.Serialization.Json;
 using System.Net.Http;
 using System.Threading;
 using System.Net.Security;
@@ -41,11 +39,10 @@ namespace Tests
   public class Tests
   {
     // Test to an alternate server:
-    const string dmeHost = "us-qa." + MatchingEngine.baseDmeHost;
-
-    const string orgName = "automation_dev_org";
-    const string appName = "automation_api_app";
-    const string appVers = "1.0";
+    const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
+    const string orgName = "MobiledgeX-Samples";
+    const string appName = "sdktest";
+    const string appVers = "9.0";
     const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.telus.mobiledgex.net";
 
     static MatchingEngine me;
