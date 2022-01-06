@@ -1088,7 +1088,7 @@ namespace DistributedMatchEngine
         ports = ports
       };
 
-      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.Success ? FindCloudletReply.FindStatus.Found : FindCloudletReply.FindStatus.NotFound;
+      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.Success ? FindCloudletReply.FindStatus.Found : FindCloudletReply.FindStatus.Notfound;
 
       return fcReply;
     }
