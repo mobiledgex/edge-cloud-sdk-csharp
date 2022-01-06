@@ -457,7 +457,7 @@ namespace Tests
         }
         else
         {
-          if (findCloudletReply.status == FindCloudletReply.FindStatus.NotFound)
+          if (findCloudletReply.status == FindCloudletReply.FindStatus.Notfound)
           {
             Console.WriteLine("FindCloudlet Reply: " + findCloudletReply.status);
             Console.WriteLine("Test Case Failed!!!");
@@ -481,8 +481,6 @@ namespace Tests
 
     [Test]
     [TestCase("52.52", "13.405", 2d)]
-    //[TestCase("52.54", "13.405", 10d)]
-    //[TestCase("53.42", "13.405", 100d)]
     public async static Task TestVerifyLocation(string locLat, string locLong, double gpsAccuracy)
     {
       string tokenServerURI = "http://mexdemo.tok.mobiledgex.net:9999/its?followURL=https://dme.mobiledgex.net/verifyLoc";

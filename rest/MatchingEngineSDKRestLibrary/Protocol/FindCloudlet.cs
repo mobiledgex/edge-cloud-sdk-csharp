@@ -76,7 +76,7 @@ namespace DistributedMatchEngine
       [EnumMember]
       Found = 1,
       [EnumMember]
-      NotFound = 2
+      Notfound = 2
     }
 
     [DataMember]
