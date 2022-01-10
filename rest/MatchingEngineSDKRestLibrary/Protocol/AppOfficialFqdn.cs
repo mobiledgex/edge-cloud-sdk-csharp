@@ -44,12 +44,12 @@ namespace DistributedMatchEngine
     public enum AOFStatus
     {
       [EnumMember]
-      AOF_UNDEFINED = 0,
+      Undefined = 0,
       [EnumMember]
-      AOF_SUCCESS = 1,
+      Success = 1,
       // The user does not allow his location to be tracked
       [EnumMember]
-      AOF_FAIL = 2
+      Fail = 2
     }
     [DataMember]
     public UInt32 ver;
@@ -60,7 +60,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public string client_token;
 
-    public AOFStatus status = AOFStatus.AOF_UNDEFINED;
+    public AOFStatus status = AOFStatus.Undefined;
 
     [DataMember(Name = "status")]
     private string aof_status_string
@@ -77,7 +77,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          status = AOFStatus.AOF_UNDEFINED;
+          status = AOFStatus.Undefined;
         }
       }
     }

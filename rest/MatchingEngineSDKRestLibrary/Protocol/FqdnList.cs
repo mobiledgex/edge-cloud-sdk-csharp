@@ -62,11 +62,11 @@ namespace DistributedMatchEngine
     public enum FLStatus
     {
       [EnumMember]
-      FL_UNDEFINED = 0,
+      Undefined = 0,
       [EnumMember]
-      FL_SUCCESS = 1,
+      Success = 1,
       [EnumMember]
-      FL_FAIL = 2
+      Fail = 2
     }
 
     [DataMember]
@@ -76,7 +76,7 @@ namespace DistributedMatchEngine
     [DataMember]
     public AppFqdn[] app_fqdns;
 
-    public FLStatus status = FLStatus.FL_UNDEFINED;
+    public FLStatus status = FLStatus.Undefined;
 
     [DataMember(Name = "status")]
     private string fl_status_string
@@ -93,7 +93,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          status = FLStatus.FL_UNDEFINED;
+          status = FLStatus.Undefined;
         }
       }
     }
