@@ -49,7 +49,6 @@ namespace DistributedMatchEngine
     [DataMember(EmitDefaultValue = false)]
     public UInt32 cell_id;
     //! Optional. Vendor specific data
-    //! Optional. Vendor specific data
     public Dictionary<string, string> tags;
 
     [DataMember(Name = "tags", EmitDefaultValue = false)]
@@ -70,39 +69,39 @@ namespace DistributedMatchEngine
     public enum TowerStatus
     {
       [EnumMember]
-      TOWER_UNKNOWN = 0,
+      TowerUnknown = 0,
       [EnumMember]
-      CONNECTED_TO_SPECIFIED_TOWER = 1,
+      ConnectedToSpecifiedTower = 1,
       [EnumMember]
-      NOT_CONNECTED_TO_SPECIFIED_TOWER = 2,
+      NotConnectedToSpecifiedTower = 2,
     }
 
     //! GPS Status of VerifyLocationReply
     public enum GPSLocationStatus
     {
       [EnumMember]
-      LOC_UNKNOWN = 0,
+      Unknown = 0,
       [EnumMember]
-      LOC_VERIFIED = 1,
+      Verified = 1,
       [EnumMember]
-      LOC_MISMATCH_SAME_COUNTRY = 2,
+      MismatchSameCountry = 2,
       [EnumMember]
-      LOC_MISMATCH_OTHER_COUNTRY = 3,
+      MismatchOtherCountry = 3,
       [EnumMember]
-      LOC_ROAMING_COUNTRY_MATCH = 4,
+      RoamingCountryMatch = 4,
       [EnumMember]
-      LOC_ROAMING_COUNTRY_MISMATCH = 5,
+      RoamingCountryMismatch = 5,
       [EnumMember]
-      LOC_ERROR_UNAUTHORIZED = 6,
+      ErrorUnauthorized = 6,
       [EnumMember]
-      LOC_ERROR_OTHER = 7
+      ErrorOther = 7
     }
 
     [DataMember]
     public UInt32 ver;
 
     //! Tower status
-    public TowerStatus tower_status = TowerStatus.TOWER_UNKNOWN;
+    public TowerStatus tower_status = TowerStatus.TowerUnknown;
 
     [DataMember(Name = "tower_status")]
     private string tower_status_tring
@@ -119,13 +118,13 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          tower_status = TowerStatus.TOWER_UNKNOWN;
+          tower_status = TowerStatus.TowerUnknown;
         }
       }
     }
 
     //! GPS location status
-    public GPSLocationStatus gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
+    public GPSLocationStatus gps_location_status = GPSLocationStatus.Unknown;
 
     [DataMember(Name = "gps_location_status")]
     private string gps_location_status_string
@@ -142,7 +141,7 @@ namespace DistributedMatchEngine
         }
         catch
         {
-          gps_location_status = GPSLocationStatus.LOC_UNKNOWN;
+          gps_location_status = GPSLocationStatus.Unknown;
         }
       }
     }
