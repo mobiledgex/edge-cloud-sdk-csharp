@@ -2,18 +2,25 @@
 
   <PropertyGroup>
     <PackageId>MobiledgeX.MatchingEngineGrpc</PackageId>
-    <Version>3.0.9</Version>
+    <Version>3.0.10</Version>
     <Authors>MobiledgeX, Inc</Authors>
     <Company>MobiledgeX, Inc.</Company>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright 2018-2021 MobiledgeX, Inc. All rights and licenses reserved.</Copyright>
-    <ReleaseVersion>3.0.9</ReleaseVersion>
+    <ReleaseVersion>3.0.10</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
     <Owners>MobiledgeX, Inc.</Owners>
     <Title>MobiledgeX MatchingEngine SDK gRPC Library</Title>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
+  </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0;</DefineConstants>
