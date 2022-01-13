@@ -717,7 +717,6 @@ namespace DistributedMatchEngine
         OrgName = orgName,
         AppName = appName,
         AppVers = appVersion,
-        CellId = cellID
       };
 
       if (authToken != null && !authToken.Trim().Equals(""))
@@ -800,8 +799,7 @@ namespace DistributedMatchEngine
         OrgName = oldRequest.OrgName,
         AppName = oldRequest.AppName,
         AppVers = oldRequest.AppVers,
-        AuthToken = oldRequest.AuthToken,
-        CellId = oldRequest.CellId
+        AuthToken = oldRequest.AuthToken
       };
       CopyTagField(oldRequest.Tags, request.Tags);
 
@@ -873,8 +871,7 @@ namespace DistributedMatchEngine
       {
         SessionCookie = this.sessionCookie,
         GpsLocation = loc,
-        CarrierName = carrierName,
-        CellId = cellID,
+        CarrierName = carrierName
       };
       if (tags != null)
       {
@@ -1408,8 +1405,7 @@ namespace DistributedMatchEngine
         Ver = 1,
         SessionCookie = this.sessionCookie,
         GpsLocation = loc,
-        CarrierName = carrierName,
-        CellId = cellID,
+        CarrierName = carrierName
       };
 
       CopyTagField(request.Tags, tags);
@@ -1502,8 +1498,7 @@ namespace DistributedMatchEngine
         Ver = 1,
         SessionCookie = this.sessionCookie,
         GpsLocation = loc,
-        CarrierName = carrierName,
-        CellId = cellID
+        CarrierName = carrierName
       };
       CopyTagField(request.Tags, tags);
 
@@ -1586,8 +1581,7 @@ namespace DistributedMatchEngine
         Ver = 1,
         SessionCookie = this.sessionCookie,
         LteCategory = lteCategory,
-        BandSelection = bandSelection,
-        CellId = cellID
+        BandSelection = bandSelection
       };
 
       request.Positions.AddRange(QosPositions);
@@ -1666,8 +1660,7 @@ namespace DistributedMatchEngine
       var request = new FqdnListRequest
       {
         Ver = 1,
-        SessionCookie = this.sessionCookie,
-        CellId = cellID
+        SessionCookie = this.sessionCookie
       };
       CopyTagField(request.Tags, tags);
 
@@ -1720,8 +1713,7 @@ namespace DistributedMatchEngine
         SessionCookie = this.sessionCookie,
         CommType = dlgCommType,
         LgId = lgId,
-        UserData = userData,
-        CellId = cellID
+        UserData = userData
       };
 
       CopyTagField(request.Tags, tags);
