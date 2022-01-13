@@ -13,6 +13,7 @@
     <Owners>MobiledgeX, Inc.</Owners>
     <Title>MobiledgeX MatchingEngine SDK gRPC Library</Title>
     <PackageTags>MobiledgeX MatchingEngine</PackageTags>
+    <PackageProjectUrl>https://github.com/mobiledgex/edge-cloud-sdk-csharp</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>

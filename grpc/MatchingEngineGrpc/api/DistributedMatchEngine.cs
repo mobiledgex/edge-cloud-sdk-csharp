@@ -716,7 +716,7 @@ namespace DistributedMatchEngine
         Ver = 1,
         OrgName = orgName,
         AppName = appName,
-        AppVers = appVersion,
+        AppVers = appVersion
       };
 
       if (authToken != null && !authToken.Trim().Equals(""))
