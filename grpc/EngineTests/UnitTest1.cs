@@ -43,7 +43,6 @@ namespace Tests
     const string orgName = "MobiledgeX-Samples";
     const string appName = "sdktest";
     const string appVers = "9.0";
-    const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.cerust.mobiledgex.net";
 
     static MatchingEngine me;
 
@@ -218,8 +217,7 @@ namespace Tests
         string url = me.CreateUrl(reply1, appPort, "https", knownPort);
         Console.WriteLine("Url to use: " + url);
         var appTcpPorts = me.GetTCPAppPorts(reply1);
-
-        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, knownPort, 5000);
+        Socket tcpConnection = await me.GetTCPConnection(host, knownPort, 5000);
         Assert.ByVal(tcpConnection, Is.Not.Null);
 
         tcpConnection.Send(bytes);
@@ -236,10 +234,12 @@ namespace Tests
       }
       catch (GetConnectionException e)
       {
+        Assert.Fail("TestFailed, GetConnectionException thrown");
         Console.WriteLine("TCP GetConnectionException is " + e.Message);
       }
       catch (Exception e)
       {
+        Assert.Fail("TestFailed, Exception thrown");
         Console.WriteLine("TCP socket exception is " + e);
       }
       Console.WriteLine("TestTCPConnection finished.");
@@ -248,13 +248,19 @@ namespace Tests
     [Test]
     public async static Task TestHTTPConnection()
     {
-      string uriString = connectionTestFqdn;
-      UriBuilder uriBuilder = new UriBuilder("http", uriString, 8085);
-      Uri uri = uriBuilder.Uri;
-
       // HTTP Connection Test
       try
       {
+        int knownPort = 8085;
+        Loc loc = new Loc { Longitude = -121.8863286, Latitude = 37.3382082 }; // San Jose.
+        var findCloudletReply = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
+        orgName, appName, appVers, loc);
+        var appPorts = me.GetAppPortsByProtocol(findCloudletReply, LProto.Tcp);
+        var appPort = appPorts[knownPort]; // Known port of this instance.
+        string host = appPort.FqdnPrefix + findCloudletReply.Fqdn;
+        UriBuilder uriBuilder = new UriBuilder("http", host, appPort.PublicPort);
+        Uri uri = uriBuilder.Uri;
+
         HttpClient httpClient = await me.GetHTTPClient(uri);
         Assert.ByVal(httpClient, Is.Not.Null);
         HttpResponseMessage response = await httpClient.GetAsync(httpClient.BaseAddress + "/automation.html");
@@ -275,6 +281,12 @@ namespace Tests
       catch (HttpRequestException e)
       {
         Assert.Fail("HttpRequestException is " + e.Message);
+        Console.WriteLine("HttpRequestException is " + e);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("TestFailed, Exception thrown, Exception: "+ e.Message);
+        Console.WriteLine("Exception is " + e);
       }
     }
 
@@ -611,11 +623,12 @@ namespace Tests
       }
     }
     [Test]
-    public async static Task TestTimeout()
+    [TestCase("http://mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net:3000")]
+    public async static Task TestTimeout(string connectionTestUrl)
     {
       try
       {
-        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, 2016, 10);
+        Socket tcpConnection = await me.GetTCPConnection(connectionTestUrl, 2016, 10);
         tcpConnection.Close();
       }
       catch (GetConnectionException e)
