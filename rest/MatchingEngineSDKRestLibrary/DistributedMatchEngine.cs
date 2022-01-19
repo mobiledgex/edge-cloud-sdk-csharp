@@ -747,7 +747,7 @@ namespace DistributedMatchEngine
         if (pair.Key != null && pair.Value != null)
         {
           Log.D("Tags Dictonary Add Key: " + pair.Key + ", Value: " + pair.Value);
-          request.tags.Add(pair.Key, pair.Value);
+          request.tags[pair.Key] = pair.Value;
         }
       }
 
@@ -771,7 +771,7 @@ namespace DistributedMatchEngine
       {
         request.tags = new Dictionary<string, string>();
       }
-      request.tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
+      request.tags["ip_user_equipment"] = localEndPoint.Address.ToString();
       return request;
     }
 
@@ -791,7 +791,7 @@ namespace DistributedMatchEngine
       {
         request.tags = new Dictionary<string, string>();
       }
-      request.tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
+      request.tags["ip_user_equipment"] = localEndPoint.Address.ToString();
       return request;
     }
 
@@ -808,7 +808,6 @@ namespace DistributedMatchEngine
     public async Task<RegisterClientReply> RegisterClient(string host, uint port, RegisterClientRequest request)
     {
       RegisterClientRequest oldRequest = request;
-      // Whether or not MEL is enabled, if UID is there, include it for App registration.
       request = new RegisterClientRequest()
       {
         ver = oldRequest.ver,
@@ -820,7 +819,7 @@ namespace DistributedMatchEngine
         tags = oldRequest.tags
       };
 
-      // MEL Enablement:
+      // DeviceInfo and QOS:
       request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
       if (request.tags != null)

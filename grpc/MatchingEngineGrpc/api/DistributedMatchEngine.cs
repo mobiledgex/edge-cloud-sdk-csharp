@@ -772,6 +772,42 @@ namespace DistributedMatchEngine
       return request;
     }
 
+    private FindCloudletRequest UpdateRequestForQoSNetworkPriority(FindCloudletRequest request, IPEndPoint localEndPoint)
+    {
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          return request;
+        }
+        localEndPoint = endPoint;
+      }
+
+      request = new FindCloudletRequest(request);
+      request.Tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
+
+      return request;
+    }
+
+    private AppInstListRequest UpdateRequestForQoSNetworkPriority(AppInstListRequest request, IPEndPoint localEndPoint)
+    {
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          return request;
+        }
+        localEndPoint = endPoint;
+      }
+
+      request = new AppInstListRequest(request);
+      request.Tags.Add("ip_user_equipment", localEndPoint.Address.ToString());
+
+      return request;
+    }
+
     /*!
      * RegisterClient overload with hardcoded DME host and port. Only use for testing.
      * \ingroup functions_dmeapis
@@ -786,7 +822,6 @@ namespace DistributedMatchEngine
     {
 
       RegisterClientRequest oldRequest = request;
-      // Whether or not MEL is enabled, if UID is there, include it for App registration.
       request = new RegisterClientRequest()
       {
         Ver = oldRequest.Ver,
@@ -798,7 +833,7 @@ namespace DistributedMatchEngine
       };
       CopyTagField(oldRequest.Tags, request.Tags);
 
-      // MEL Enablement:
+      // DeviceInfo
       request = UpdateRequestForUniqueID(request);
 
       // One time use Channel:
@@ -899,6 +934,9 @@ namespace DistributedMatchEngine
 
     private async Task<FindCloudletReply> FindCloudletProximityMode(string host, uint port, FindCloudletRequest request)
     {
+      // Append QOS to private copy:
+      request = UpdateRequestForQoSNetworkPriority(request, Util.GetDefaultLocalEndPointIPV4());
+
       // One time use Channel:
       Channel channel = ChannelPicker(host, port);
 
@@ -1144,6 +1182,9 @@ namespace DistributedMatchEngine
       tags["Buffer"] = bytes.ToString();
 
       AppInstListRequest appInstListRequest = CreateAppInstListRequest(request.GpsLocation, request.CarrierName, tags: tags);
+      // Append QOS to private copy:
+      appInstListRequest = UpdateRequestForQoSNetworkPriority(appInstListRequest, Util.GetDefaultLocalEndPointIPV4());
+
       AppInstListReply aiReply = await GetAppInstList(host, port, appInstListRequest);
 
       if (aiReply.Status != AIStatus.AiSuccess)
