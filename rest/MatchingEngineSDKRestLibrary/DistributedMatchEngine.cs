@@ -717,12 +717,7 @@ namespace DistributedMatchEngine
       string aUniqueId = GetUniqueID();
       string manufacturer = melMessaging.GetManufacturer();
 
-      if (uid != null && uid != "")
-      {
-        request.unique_id_type = "Platos:" + aUniqueIdType + ":PlatosEnablingLayer";
-        request.unique_id = melMessaging.GetUid();
-      }
-      else if (manufacturer != null &&
+      if (manufacturer != null &&
         aUniqueIdType != null && aUniqueIdType.Length > 0 &&
         aUniqueId != null && aUniqueId.Length > 0)
       {
@@ -948,22 +943,6 @@ namespace DistributedMatchEngine
       };
     }
 
-    private AppOfficialFqdnReply.AOFStatus ParseAofStatus(string responseStr)
-    {
-      string key = "status";
-      JsonObject jsObj = (JsonObject)JsonValue.Parse(responseStr);
-      AppOfficialFqdnReply.AOFStatus status;
-      try
-      {
-        status = (AppOfficialFqdnReply.AOFStatus)Enum.Parse(typeof(AppOfficialFqdnReply.AOFStatus), jsObj[key]);
-      }
-      catch
-      {
-        status = AppOfficialFqdnReply.AOFStatus.Undefined;
-      }
-      return status;
-    }
-
     private FindCloudletReply.FindStatus ParseFindStatus(string responseStr)
     {
       string key = "status";
@@ -1020,77 +999,6 @@ namespace DistributedMatchEngine
     public async Task<FindCloudletReply> FindCloudlet(FindCloudletRequest request, FindCloudletMode mode = FindCloudletMode.PROXIMITY, IPEndPoint localEndPoint = null)
     {
       return await FindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort, request, mode, localEndPoint);
-    }
-
-    private async Task<FindCloudletReply> FindCloudletMelMode(string host, uint port, FindCloudletRequest request)
-    {
-      AppOfficialFqdnRequest appOfficialFqdnRequest = new AppOfficialFqdnRequest
-      {
-        ver = 1,
-        session_cookie = request.session_cookie,
-        gps_location = request.gps_location,
-        htags = Tag.DictionaryToHashtable(request.tags)
-      };
-
-      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnRequest), serializerSettings);
-      MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, appOfficialFqdnRequest);
-      string jsonStr = Util.StreamToString(ms);
-
-      Stream responseStream = null;
-      responseStream = await PostRequest(CreateUri(host, port) + appofficialfqdnAPI, jsonStr);
-      if (responseStream == null || !responseStream.CanRead)
-      {
-        Log.E("Unreadable FindCloudletMelMode reply stream!");
-        return null;
-      }
-
-      string responseStr = Util.StreamToString(responseStream);
-      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
-      ms = new MemoryStream(byteArray);
-      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AppOfficialFqdnReply), serializerSettings);
-      AppOfficialFqdnReply reply = (AppOfficialFqdnReply)deserializer.ReadObject(ms);
-      if (reply.tags == null)
-      {
-        reply.tags = Tag.HashtableToDictionary(reply.htags);
-      }
-
-      // Reparse if default value.
-      reply.status = reply.status == AppOfficialFqdnReply.AOFStatus.Undefined ? ParseAofStatus(responseStr) : reply.status;
-
-      // Inform Mel Messaging:
-      if (melMessaging.IsMelEnabled() && LastRegisterClientRequest != null)
-      {
-        melMessaging.SetToken(reply.client_token, LastRegisterClientRequest.app_name);
-      }
-
-      AppPort[] ports = null;
-      if (reply.ports != null && reply.ports.Length > 0)
-      {
-        ports = reply.ports;
-        foreach (AppPort aPort in ports)
-        {
-          aPort.public_port = aPort.public_port == 0 ? aPort.internal_port : aPort.public_port;
-        }
-      }
-      else
-      {
-        // attach empty 0 port, indicating app must determine it's own public port.
-        ports = new AppPort[1];
-      }
-
-      // Repackage as FindCloudletReply:
-      FindCloudletReply fcReply = new FindCloudletReply
-      {
-        ver = 1,
-        fqdn = reply.app_official_fqdn,
-        // Don't set location.
-        ports = ports
-      };
-
-      fcReply.status = reply.status == AppOfficialFqdnReply.AOFStatus.Success ? FindCloudletReply.FindStatus.Found : FindCloudletReply.FindStatus.Notfound;
-
-      return fcReply;
     }
 
     private async Task<FindCloudletReply> FindCloudletProximityMode(string host, uint port, FindCloudletRequest request)
@@ -1298,54 +1206,6 @@ namespace DistributedMatchEngine
     {
       try
       {
-        if (melMessaging != null && melMessaging.IsMelEnabled() &&
-            netInterface.GetIPAddress(
-              GetAvailableWiFiName(netInterface.GetNetworkInterfaceName())) == null)
-        {
-          FindCloudletReply melModeFindCloudletReply = await FindCloudletMelMode(host, port, request).ConfigureAwait(false);
-          if (melModeFindCloudletReply == null)
-          {
-            return null;
-          }
-          if (melModeFindCloudletReply.status == FindCloudletReply.FindStatus.Found)
-          {
-            DmeConnection = GetDMEConnection(melModeFindCloudletReply.edge_events_cookie, host, port);
-          }
-          string appOfficialFqdn = melModeFindCloudletReply.fqdn;
-
-          IPHostEntry ipHostEntry;
-          Stopwatch stopwatch = Stopwatch.StartNew();
-          while (stopwatch.ElapsedMilliseconds < httpClient.Timeout.TotalMilliseconds)
-          {
-            if (appOfficialFqdn == null || appOfficialFqdn.Length == 0)
-            {
-              break;
-            }
-
-            try
-            {
-              ipHostEntry = Dns.GetHostEntry(appOfficialFqdn);
-              if (ipHostEntry.AddressList.Length > 0)
-              {
-                Log.D("Public AppOfficialFqdn DNS resolved. First entry: " + ipHostEntry.HostName);
-                return melModeFindCloudletReply;
-              }
-            }
-            catch (ArgumentException ae)
-            {
-              Log.D("ArgumentException. Waiting for update: " + ae.Message);
-            }
-            catch (SocketException se)
-            {
-              Log.D("SocketException. Waiting for update: " + se.Message);
-            }
-            Task.Delay(300).Wait(); // Let the system process SET_TOKEN.
-          }
-
-          // Else, don't return, continue to fallback to original MODE:
-          Log.E("Public AppOfficialFqdn DNS resolve FAILURE for: " + appOfficialFqdn);
-        }
-
         FindCloudletReply fcReply = null;
         request = UpdateRequestForQoSNetworkPriority(request, localEndPoint);
         if (mode == FindCloudletMode.PROXIMITY)
