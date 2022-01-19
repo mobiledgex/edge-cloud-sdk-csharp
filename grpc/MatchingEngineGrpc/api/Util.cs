@@ -17,6 +17,8 @@
 
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -27,6 +29,31 @@ namespace DistributedMatchEngine
     public Util()
     {
 
+    }
+
+    public static IPEndPoint GetDefaultLocalEndPointIPV4()
+    {
+      IPEndPoint defaultEndPoint = null;
+      using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+      {
+        try
+        {
+          socket.Connect(MatchingEngine.wifiOnlyDmeHost, 38001);
+          if (socket.LocalEndPoint.AddressFamily == AddressFamily.InterNetwork)
+          {
+            defaultEndPoint = socket.LocalEndPoint as IPEndPoint;
+          }
+          else
+          {
+            Log.S("LocalIP is not IPV4, returning null.");
+          }
+        }
+        catch (SocketException se)
+        {
+          Log.E("Exception trying to acquire endpoint: " + se.Message);
+        }
+      }
+      return defaultEndPoint;
     }
 
     public static string StreamToString(Stream ms)
