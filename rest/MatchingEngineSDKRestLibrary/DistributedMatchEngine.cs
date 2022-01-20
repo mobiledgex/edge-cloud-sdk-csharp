@@ -819,7 +819,7 @@ namespace DistributedMatchEngine
         tags = oldRequest.tags
       };
 
-      // DeviceInfo and QOS:
+      // DeviceInfo
       request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
       if (request.tags != null)
