@@ -47,7 +47,7 @@ namespace Tests
     const string appName = "sdk-test";
     const string appVers = "9.0";
 
-    const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.telus.mobiledgex.net";
+    //const string connectionTestFqdn = "autoclustersdktest.montreal-pitfield.telus.mobiledgex.net";
 
     static MatchingEngine me;
 
@@ -272,21 +272,23 @@ namespace Tests
     public async static Task TestTCPConnection()
     {
       byte[] bytes = Encoding.UTF8.GetBytes("ping");
-
       var loc = await Util.GetLocationFromDevice();
-      FindCloudletReply reply1 = null;
-      // Overide, test to another server:
-      reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
-        orgName: orgName,
-        appName: appName,
-        appVersion: appVers,
-        loc: loc);
       int knownPort = 2016;
       //! [gettcpconnexample]
       string receiveMessage = "";
       try
       {
-        Socket tcpConnection = await me.GetTCPConnection(connectionTestFqdn, knownPort, 5000);
+        FindCloudletReply reply1 = null;
+
+        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers,
+          loc: loc);
+        var appPorts = me.GetAppPortsByProtocol(reply1, LProto.Tcp);
+        var appPort = appPorts[knownPort]; // Known port of this instance.
+        string host = appPort.fqdn_prefix + reply1.fqdn;
+        Socket tcpConnection = await me.GetTCPConnection(host, appPort.public_port, 5000);
         Assert.ByVal(tcpConnection, Is.Not.Null);
 
         tcpConnection.Send(bytes);
@@ -318,23 +320,31 @@ namespace Tests
     {
       var dict = new Dictionary<string, string>();
       dict["data"] = "HTTP Connection Test";
-
+      var loc = await Util.GetLocationFromDevice();
       var settings = new DataContractJsonSerializerSettings();
       settings.UseSimpleDictionaryFormat = true;
       var serializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>), settings);
-
+      int knownPort = 8085;
       var ms = new MemoryStream();
       serializer.WriteObject(ms, dict);
       string message = Util.StreamToString(ms);
-
-      string uriString = connectionTestFqdn;
-      UriBuilder uriBuilder = new UriBuilder("http", uriString, 8085);
-      Uri uri = uriBuilder.Uri;
 
       //! [gethttpexample]
       // HTTP Connection Test
       try
       {
+        FindCloudletReply reply1 = null;
+
+        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers,
+          loc: loc);
+        var appPorts = me.GetAppPortsByProtocol(reply1, LProto.Tcp);
+        var appPort = appPorts[knownPort]; // Known port of this instance.
+        string host = appPort.fqdn_prefix + reply1.fqdn;
+        UriBuilder uriBuilder = new UriBuilder("http", host, appPort.public_port);
+        Uri uri = uriBuilder.Uri;
         HttpClient httpClient = await me.GetHTTPClient(uri);
         Assert.ByVal(httpClient, Is.Not.Null);
         HttpResponseMessage response = await httpClient.GetAsync(httpClient.BaseAddress + "/automation.html");
@@ -440,15 +450,12 @@ namespace Tests
       catch (DmeDnsException dde)
       {
         Console.WriteLine("Workflow DmeDnsException is " + dde);
-      }
-      catch (NotImplementedException nie)
-      {
-        Console.WriteLine("NotImplementedException is " + nie);
+        Assert.Fail("Workflow DmeDnsException is  " + dde.Message);
       }
       catch (RegisterClientException rce)
       {
         Console.WriteLine("Workflow RegisterClient is " + rce);
-        return;
+        Assert.Fail("Workflow RegisterClientException is  " + rce.Message);
       }
       Assert.ByVal(reply, Is.Not.Null);
 
@@ -466,12 +473,17 @@ namespace Tests
 
       try
       {
+       
         // Send message
         ArraySegment<Byte> sendBuffer = new ArraySegment<byte>(bytesMessage);
+   
         CancellationTokenSource source = new CancellationTokenSource();
         CancellationToken token = source.Token;
-        await socket.SendAsync(sendBuffer, WebSocketMessageType.Text, true, token);
 
+        socket = new ClientWebSocket();
+        await socket.ConnectAsync(uri, token);
+        await socket.SendAsync(sendBuffer, WebSocketMessageType.Text, true, token);
+        
         // Receive message
         byte[] bytesReceive = new byte[message.Length * 2];
         ArraySegment<Byte> receiveBuffer = new ArraySegment<byte>(bytesReceive);
@@ -489,14 +501,17 @@ namespace Tests
         Console.WriteLine("Websocket GetConnectionException is " + e.Message);
         // Since we don't necessarily know the message format, this should actually be slammed closed by the running server.
         //Assert.True(e.Message.Contains("Cannot get websocket connection"));
+        Assert.Fail("Websocket GetConnectionException is " + e.Message);
       }
       catch (OperationCanceledException e)
       {
         Console.WriteLine("Websocket OperationCanceledException is " + e.Message);
+        Assert.Fail("Websocket OperationCanceledException is " + e.Message);
       }
       catch (Exception e)
       {
-        Console.WriteLine("Websocket Exception is " + e.Message);
+        Console.WriteLine("Websocket Exception is " + e);
+        Assert.Fail("Websocket Exception is " + e.Message);
       }
       //! [getwebsocketexample]
     }
@@ -668,7 +683,8 @@ namespace Tests
     }
 
     [Test]
-    public async static Task TestTimeout()
+    [TestCase("http://mobiledgexmobiledgexsdkdemo20.sdkdemo-app-cluster.us-los-angeles.gcp.mobiledgex.net:3000")]
+    public async static Task TestTimeout(string connectionTestFqdn)
     {
       try
       {
