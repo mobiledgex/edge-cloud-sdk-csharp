@@ -114,6 +114,10 @@ namespace DistributedMatchEngine
     //! Location of the cloudlet
     [DataMember]
     public Loc cloudlet_location;
+
+    [DataMember]
+    public QosSessionResult qos_result;
+
     //! Session Cookie for specific EdgeEvents for specific AppInst
     [DataMember]
     public string edge_events_cookie;
