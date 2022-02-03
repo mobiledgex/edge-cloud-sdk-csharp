@@ -240,12 +240,8 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     private bool disposedValue;
-
     string authToken { get; set; }
-
     string qosSessionId { get; set; }
-
-    
 
     // Global local endpoint override for FindCloudlet, NetTest, and GetConnection API helpers.
     // This is used for background App related operations like EdgeEvents processing, if set.
@@ -1899,12 +1895,12 @@ namespace DistributedMatchEngine
       }
       if(findCloudletReply.qos_result == QosSessionResult.QOS_SESSION_CREATED)
       {
-        Log.E("There is active QoS session, please delete the current session first.");
+        Log.E("There is an active QoS session, please delete the current session first.");
         return null;
       }
       if(sessionCookie == null || sessionCookie == "")
       {
-        Log.E("Session cookie is null, please call register client prior to calling CreateQosPrioritySessionCreateRequest");
+        Log.E("Session cookie is null, please call RegisterClient and FindCloudlet prior to calling CreateQosPrioritySessionCreateRequest");
         return null;
       }
       if(!Uri.IsWellFormedUriString(notificationUri, UriKind.Absolute))
