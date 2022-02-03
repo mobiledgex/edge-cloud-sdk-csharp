@@ -70,7 +70,7 @@ namespace DistributedMatchEngine
   }
 
   [DataContract]
-  enum QosSessionResult
+  public enum QosSessionResult
   {
     [EnumMember]
     QOS_NOT_ATTEMPTED = 0,
@@ -171,7 +171,7 @@ namespace DistributedMatchEngine
   * \ingroup classes_datastructs
   */
   [DataContract]
-  public class QosPrioritySessionReply
+  public class QosPrioritySessionCreateReply
   {
     [DataMember]
     public UInt32 ver = 1;
