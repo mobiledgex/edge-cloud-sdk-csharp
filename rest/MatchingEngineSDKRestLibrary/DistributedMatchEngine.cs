@@ -1987,14 +1987,14 @@ namespace DistributedMatchEngine
       {
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
-      if(reply.http_status == 201)
+      if (reply.http_status == 201 || reply.http_status == 200)
       {
         Log.D("Session created successfully");
         qosSessionId = reply.session_id;
       }
       else
       {
-        if(reply.http_status == 400 || reply.http_status == 405)
+        if (reply.http_status == 400 || reply.http_status == 405)
         {
           Log.E("Invalid Input for QoSCreateRequest");
         }
