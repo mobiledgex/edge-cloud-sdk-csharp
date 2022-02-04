@@ -2040,12 +2040,12 @@ namespace DistributedMatchEngine
       return request;
     }
 
-    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionCreateRequest req)
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest req)
     {
       return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, req);
     }
 
-    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionCreateRequest req)
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest req)
     {
       req.htags = Tag.DictionaryToHashtable(req.tags);
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateRequest), serializerSettings);
