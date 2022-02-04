@@ -1811,9 +1811,9 @@ namespace DistributedMatchEngine
       return request;
     }
 
-    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest req)
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest request)
     {
-      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeGrpcPort, req);
+      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeGrpcPort, request);
     }
 
     public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest request)
