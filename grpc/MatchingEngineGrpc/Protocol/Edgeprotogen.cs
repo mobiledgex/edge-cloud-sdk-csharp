@@ -26,7 +26,9 @@ namespace Edgeprotogen {
           string.Concat(
             "ChJlZGdlcHJvdG9nZW4ucHJvdG8SDGVkZ2Vwcm90b2dlbhogZ29vZ2xlL3By",
             "b3RvYnVmL2Rlc2NyaXB0b3IucHJvdG86OQoMZW51bV9iYWNrZW5kEiEuZ29v",
-            "Z2xlLnByb3RvYnVmLkVudW1WYWx1ZU9wdGlvbnMY4o4DIAEoCGIGcHJvdG8z"));
+            "Z2xlLnByb3RvYnVmLkVudW1WYWx1ZU9wdGlvbnMY4o4DIAEoCDpGChtjdXN0",
+            "b21feWFtbF9qc29uX21hcnNoYWxlcnMSHy5nb29nbGUucHJvdG9idWYuTWVz",
+            "c2FnZU9wdGlvbnMY7I4DIAEoCGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { pbr::FileDescriptor.DescriptorProtoFileDescriptor, },
           new pbr::GeneratedClrTypeInfo(null, null));
