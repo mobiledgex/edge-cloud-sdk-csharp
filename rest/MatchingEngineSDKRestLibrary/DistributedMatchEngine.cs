@@ -225,6 +225,8 @@ namespace DistributedMatchEngine
     private string getfqdnlistAPI = "/v1/getfqdnlist";
     private string appofficialfqdnAPI = "/v1/getappofficialfqdn";
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
+    private string qosprioritycreateAPI = "/v1/qosprioritysessioncreate";
+    private string qosprioritydeleteAPI = "/v1/qosprioritysessiondelete";
     internal string streamedgeeventAPI = "/v1/streamedgeevent";
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
@@ -238,8 +240,8 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     private bool disposedValue;
-
     string authToken { get; set; }
+    string qosSessionId { get; set; }
 
     // Global local endpoint override for FindCloudlet, NetTest, and GetConnection API helpers.
     // This is used for background App related operations like EdgeEvents processing, if set.
@@ -758,7 +760,6 @@ namespace DistributedMatchEngine
 
       return request;
     }
-
 
     private FindCloudletRequest UpdateRequestForQoSNetworkPriority(FindCloudletRequest request, IPEndPoint localEndPoint)
     {
@@ -1872,7 +1873,227 @@ namespace DistributedMatchEngine
       var qosPositionKpiStream = new QosPositionKpiStream(responseStream);
 
       return qosPositionKpiStream;
-    }   
+    }
+
+    public QosPrioritySessionCreateRequest CreateQosPriorityCreateRequest
+      (QosSessionProfile sessionProfile,
+      FindCloudletReply findCloudletReply,
+      QosSessionProtocol protocolIn = QosSessionProtocol.ANY,
+      QosSessionProtocol protocolOut = QosSessionProtocol.ANY,
+      UInt32 duration= 0,
+      string applicationPort = "",
+      string serverPort = "",
+      string notificationUri = "",
+      string notificationAuthToken = "",
+      Dictionary<string, string> tags = null,
+      IPEndPoint localEndPoint = null)
+    {
+      if(findCloudletReply == null || findCloudletReply.status != FindCloudletReply.FindStatus.Found)
+      {
+        Log.E("FindCloudletReply is malformed");
+        return null;
+      }
+      if(findCloudletReply.qos_result == QosSessionResult.QOS_SESSION_CREATED)
+      {
+        Log.E("There is an active QoS session, please delete the current session first.");
+        return null;
+      }
+      if(sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call RegisterClient and FindCloudlet prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if(!Uri.IsWellFormedUriString(notificationUri, UriKind.Absolute))
+      {
+        Log.E("notification uri is malformed");
+        return null;
+      }
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          throw new Exception("Couldn't find an IPV4 address for the supplied localEndPoint");
+        }
+        localEndPoint = endPoint;
+      }
+      
+      string ipApplicationServer = Util.GetHostIPV4Address(findCloudletReply.fqdn);
+      if(ipApplicationServer == null || ipApplicationServer == "")
+      {
+        Log.E("Couldn't find an ipv4 for the application server");
+        return null;
+      }
+
+      QosPrioritySessionCreateRequest request = new QosPrioritySessionCreateRequest
+      {
+        ver = 1,
+        profile = sessionProfile,
+        session_cookie = sessionCookie,
+        protocol_in = protocolIn,
+        protocol_out = protocolOut,
+        session_duration = duration,
+        port_application_server = serverPort,
+        port_user_equipment = applicationPort,
+        notification_uri =  notificationUri,
+        notification_auth_token =  notificationAuthToken,
+        ip_application_server = ipApplicationServer,
+        ip_user_equipment = localEndPoint.Address.ToString(),
+        tags = tags
+      };
+      return request;
+    }
+
+    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(QosPrioritySessionCreateRequest req)
+    {
+      return await CreateQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, req);
+    }
+
+    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(string host, uint port, QosPrioritySessionCreateRequest req)
+    {
+      req.htags = Tag.DictionaryToHashtable(req.tags);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateRequest), serializerSettings);
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, req);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream;
+      try
+      {
+        responseStream = await PostRequest(CreateUri(host, port) + qosprioritycreateAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable CreateQosSession stream!");
+          return null;
+        }
+      }
+      catch (HttpException he)
+      {
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
+        throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        Log.E("Exception during CreateQosSession. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateReply), serializerSettings);
+      QosPrioritySessionCreateReply reply = (QosPrioritySessionCreateReply)deserializer.ReadObject(ms);
+      if (reply.tags == null)
+      {
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
+      }
+      if (reply.http_status == 201 || reply.http_status == 200)
+      {
+        Log.D("Session created successfully");
+        qosSessionId = reply.session_id;
+      }
+      else
+      {
+        if (reply.http_status == 400 || reply.http_status == 405)
+        {
+          Log.E("Invalid Input for QoSCreateRequest");
+        }
+        if (reply.http_status == 401)
+        {
+          Log.E(" Unauthorized, missing or incorrect authentication.");
+        }
+        if (reply.http_status == 500)
+        {
+          Log.E(" Session not created.");
+        }
+        if (reply.http_status == 503)
+        {
+          Log.E("Service temporarily unavailable");
+        }
+        Log.E("Failed to create QoSPrioritySession");
+      }
+      return reply;
+    }
+
+    public QosPrioritySessionDeleteRequest CreateQosPriorityDeleteRequest
+     (QosSessionProfile sessionProfile,
+     Dictionary<string, string> tags = null)
+    {
+      if (sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call register client prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if (qosSessionId == null || qosSessionId == "")
+      {
+        Log.E("QosSessionId is null");
+        return null;
+      }
+      QosPrioritySessionDeleteRequest request = new QosPrioritySessionDeleteRequest
+      {
+        ver = 1,
+        session_cookie = sessionCookie,
+        profile = sessionProfile,
+        session_id = qosSessionId,
+        tags = tags
+      };
+      return request;
+    }
+
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest req)
+    {
+      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, req);
+    }
+
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest req)
+    {
+      req.htags = Tag.DictionaryToHashtable(req.tags);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateRequest), serializerSettings);
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, req);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream;
+      try
+      {
+        responseStream = await PostRequest(CreateUri(host, port) + qosprioritycreateAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable DeleteQosSessionStream stream!");
+          return null;
+        }
+      }
+      catch (HttpException he)
+      {
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
+        throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        Log.E("Exception during DeleteQosSession. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(QosPrioritySessionDeleteReply), serializerSettings);
+      QosPrioritySessionDeleteReply reply = (QosPrioritySessionDeleteReply)deserializer.ReadObject(ms);
+      if (reply.tags == null)
+      {
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
+      }
+      if (reply.status == DeleteStatus.QDEL_DELETED)
+      {
+        Log.D("Qos session deleted successfully");
+        qosSessionId = null;
+      }
+      else
+      {
+        Log.E($"Failed to delete Qos session, Delete status: {reply.status}");
+      }
+      return reply;
+    }
 
     private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
     {
