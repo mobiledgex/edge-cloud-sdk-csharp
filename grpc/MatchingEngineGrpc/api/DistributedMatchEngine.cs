@@ -237,6 +237,7 @@ namespace DistributedMatchEngine
     // This is used for background App related operations like EdgeEvents processing, if set.
     // Default routing otherwise.
     public string LocalIP { get; set; }
+    private string qosSessionId { get; set; }
 
     // For Event Consumers
     public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
@@ -1648,7 +1649,205 @@ namespace DistributedMatchEngine
         Log.E("GetQosPositionKpi exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
         throw e;
       }
-    }   
+    }
+
+    public QosPrioritySessionCreateRequest CreateQosPrioritySessionCreateRequest(
+      QosSessionProfile sessionProfile,
+      FindCloudletReply findCloudletReply,
+      QosSessionProtocol protocolIn = QosSessionProtocol.Any,
+      QosSessionProtocol protocolOut = QosSessionProtocol.Any,
+      UInt32 duration = 0,
+      string applicationPort = "",
+      string serverPort = "",
+      string notificationUri = "",
+      string notificationAuthToken = "",
+      Dictionary<string, string> tags = null,
+      IPEndPoint localEndPoint = null)
+    {
+      if (findCloudletReply == null || findCloudletReply.Status != FindStatus.FindFound)
+      {
+        Log.E("FindCloudletReply is malformed");
+        return null;
+      }
+      if (findCloudletReply.QosResult == QosSessionResult.QosSessionCreated)
+      {
+        Log.E("There is an active QoS session, please delete the current session first.");
+        return null;
+      }
+      if (sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call RegisterClient and FindCloudlet prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if (!Uri.IsWellFormedUriString(notificationUri, UriKind.Absolute))
+      {
+        Log.E("notification uri is malformed");
+        return null;
+      }
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          throw new Exception("Couldn't find an IPV4 address for the supplied localEndPoint");
+        }
+        localEndPoint = endPoint;
+      }
+
+      string ipApplicationServer = Util.GetHostIPV4Address(findCloudletReply.Fqdn);
+      if (ipApplicationServer == null || ipApplicationServer == "")
+      {
+        Log.E("Couldn't find an ipv4 for the application server");
+        return null;
+      }
+
+      QosPrioritySessionCreateRequest request = new QosPrioritySessionCreateRequest
+      {
+        Ver = 1,
+        Profile = sessionProfile,
+        SessionCookie = sessionCookie,
+        ProtocolIn = protocolIn,
+        ProtocolOut = protocolOut,
+        SessionDuration = duration,
+        PortApplicationServer = serverPort,
+        PortUserEquipment = applicationPort,
+        NotificationUri = notificationUri,
+        NotificationAuthToken = notificationAuthToken,
+        IpApplicationServer = ipApplicationServer,
+        IpUserEquipment = localEndPoint.Address.ToString()
+      };
+      if (tags != null)
+      {
+        foreach (var entry in tags)
+        {
+          request.Tags.Add(entry.Key, entry.Value);
+        }
+      }
+      return request;
+    }
+
+    public async Task<QosPrioritySessionReply> CreateQOSPrioritySession(QosPrioritySessionCreateRequest req)
+    {
+      return await CreateQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeGrpcPort, req);
+    }
+
+    public async Task<QosPrioritySessionReply> CreateQOSPrioritySession(string host, uint port, QosPrioritySessionCreateRequest request)
+    {
+      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
+
+        var call = client.QosPrioritySessionCreateAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
+
+        if (reply.HttpStatus == 201 || reply.HttpStatus == 200)
+        {
+          Log.D("Session created successfully");
+          qosSessionId = reply.SessionId;
+        }
+        else
+        {
+          if (reply.HttpStatus == 400 || reply.HttpStatus == 405)
+          {
+            Log.E("Invalid Input for QoSCreateRequest");
+          }
+          if (reply.HttpStatus == 401)
+          {
+            Log.E(" Unauthorized, missing or incorrect authentication.");
+          }
+          if (reply.HttpStatus == 500)
+          {
+            Log.E(" Session not created.");
+          }
+          if (reply.HttpStatus == 503)
+          {
+            Log.E("Service temporarily unavailable");
+          }
+          Log.E("Failed to create QoSPrioritySession");
+        }
+        return reply;
+      }
+       catch (RpcException e)
+      {
+        Log.E("Exception during CreateQOSPrioritySession. DME Server used: " + host + ", Message: " + e.Message);
+        throw e;
+      }
+    }
+
+    public QosPrioritySessionDeleteRequest CreateQosPriorityDeleteRequest
+     (QosSessionProfile sessionProfile,
+     Dictionary<string, string> tags = null)
+    {
+      if (sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call register client prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if (qosSessionId == null || qosSessionId == "")
+      {
+        Log.E("QosSessionId is null");
+        return null;
+      }
+      QosPrioritySessionDeleteRequest request = new QosPrioritySessionDeleteRequest
+      {
+        Ver = 1,
+        SessionCookie = sessionCookie,
+        Profile = sessionProfile,
+        SessionId = qosSessionId
+      };
+      if (tags != null)
+      {
+        foreach (var entry in tags)
+        {
+          request.Tags.Add(entry.Key, entry.Value);
+        }
+      }
+      return request;
+    }
+
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest request)
+    {
+      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeGrpcPort, request);
+    }
+
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest request)
+    {
+      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
+
+        var call = client.QosPrioritySessionDeleteAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
+
+        if (reply.Status == QosPrioritySessionDeleteReply.Types.DeleteStatus.QdelDeleted)
+        {
+          Log.D("Qos session deleted successfully");
+          qosSessionId = null;
+        }
+        else
+        {
+          Log.E($"Failed to delete Qos session, Delete status: {reply.Status}");
+        }
+        return reply;
+      }
+      catch (RpcException e)
+      {
+        Log.E("Exception during DeleteQOSPrioritySession. DME Server used: " + host + ", Message: " + e.Message);
+        throw e;
+      }
+    }
 
     private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
     {

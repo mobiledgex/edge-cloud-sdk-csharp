@@ -51,220 +51,275 @@ namespace DistributedMatchEngine {
             "bnRfdG9rZW4YBCABKAkSTQoEdGFncxhkIAMoCzI/LmRpc3RyaWJ1dGVkX21h",
             "dGNoX2VuZ2luZS5QbGF0Zm9ybUZpbmRDbG91ZGxldFJlcXVlc3QuVGFnc0Vu",
             "dHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6",
-            "AjgBIrMDChFGaW5kQ2xvdWRsZXRSZXBseRILCgN2ZXIYASABKA0SRgoGc3Rh",
+            "AjgBIvgEChFGaW5kQ2xvdWRsZXRSZXBseRILCgN2ZXIYASABKA0SRgoGc3Rh",
             "dHVzGAIgASgOMjYuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZpbmRDbG91",
             "ZGxldFJlcGx5LkZpbmRTdGF0dXMSDAoEZnFkbhgDIAEoCRIwCgVwb3J0cxgE",
             "IAMoCzIhLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBQb3J0EjgKEWNs",
             "b3VkbGV0X2xvY2F0aW9uGAUgASgLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
-            "aW5lLkxvYxIaChJlZGdlX2V2ZW50c19jb29raWUYBiABKAkSQwoEdGFncxhk",
-            "IAMoCzI1LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xvdWRsZXRS",
-            "ZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2",
-            "YWx1ZRgCIAEoCToCOAEiQQoKRmluZFN0YXR1cxIQCgxGSU5EX1VOS05PV04Q",
-            "ABIOCgpGSU5EX0ZPVU5EEAESEQoNRklORF9OT1RGT1VORBACIqYCChVWZXJp",
-            "ZnlMb2NhdGlvblJlcXVlc3QSCwoDdmVyGAEgASgNEhYKDnNlc3Npb25fY29v",
-            "a2llGAIgASgJEhQKDGNhcnJpZXJfbmFtZRgDIAEoCRIzCgxncHNfbG9jYXRp",
-            "b24YBCABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEhgKEHZl",
-            "cmlmeV9sb2NfdG9rZW4YBSABKAkSRwoEdGFncxhkIAMoCzI5LmRpc3RyaWJ1",
-            "dGVkX21hdGNoX2VuZ2luZS5WZXJpZnlMb2NhdGlvblJlcXVlc3QuVGFnc0Vu",
-            "dHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6",
-            "AjgBSgQIBhAHUgdjZWxsX2lkIrsFChNWZXJpZnlMb2NhdGlvblJlcGx5EgsK",
-            "A3ZlchgBIAEoDRJPCgx0b3dlcl9zdGF0dXMYAiABKA4yOS5kaXN0cmlidXRl",
-            "ZF9tYXRjaF9lbmdpbmUuVmVyaWZ5TG9jYXRpb25SZXBseS5Ub3dlclN0YXR1",
-            "cxJcChNncHNfbG9jYXRpb25fc3RhdHVzGAMgASgOMj8uZGlzdHJpYnV0ZWRf",
-            "bWF0Y2hfZW5naW5lLlZlcmlmeUxvY2F0aW9uUmVwbHkuR1BTTG9jYXRpb25T",
-            "dGF0dXMSIAoYZ3BzX2xvY2F0aW9uX2FjY3VyYWN5X2ttGAQgASgBEkUKBHRh",
-            "Z3MYZCADKAsyNy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuVmVyaWZ5TG9j",
-            "YXRpb25SZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEo",
-            "CRINCgV2YWx1ZRgCIAEoCToCOAEiaAoLVG93ZXJTdGF0dXMSEQoNVE9XRVJf",
-            "VU5LTk9XThAAEiAKHENPTk5FQ1RFRF9UT19TUEVDSUZJRURfVE9XRVIQARIk",
-            "CiBOT1RfQ09OTkVDVEVEX1RPX1NQRUNJRklFRF9UT1dFUhACIucBChFHUFNM",
-            "b2NhdGlvblN0YXR1cxIPCgtMT0NfVU5LTk9XThAAEhAKDExPQ19WRVJJRklF",
-            "RBABEh0KGUxPQ19NSVNNQVRDSF9TQU1FX0NPVU5UUlkQAhIeChpMT0NfTUlT",
-            "TUFUQ0hfT1RIRVJfQ09VTlRSWRADEh0KGUxPQ19ST0FNSU5HX0NPVU5UUllf",
-            "TUFUQ0gQBBIgChxMT0NfUk9BTUlOR19DT1VOVFJZX01JU01BVENIEAUSGgoW",
-            "TE9DX0VSUk9SX1VOQVVUSE9SSVpFRBAGEhMKD0xPQ19FUlJPUl9PVEhFUhAH",
-            "ItEBChJHZXRMb2NhdGlvblJlcXVlc3QSCwoDdmVyGAEgASgNEhYKDnNlc3Np",
-            "b25fY29va2llGAIgASgJEhQKDGNhcnJpZXJfbmFtZRgDIAEoCRJECgR0YWdz",
-            "GGQgAygLMjYuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkdldExvY2F0aW9u",
-            "UmVxdWVzdC5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEoCRIN",
-            "CgV2YWx1ZRgCIAEoCToCOAFKBAgEEAVSB2NlbGxfaWQi8QIKEEdldExvY2F0",
-            "aW9uUmVwbHkSCwoDdmVyGAEgASgNEkQKBnN0YXR1cxgCIAEoDjI0LmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5HZXRMb2NhdGlvblJlcGx5LkxvY1N0YXR1",
-            "cxIUCgxjYXJyaWVyX25hbWUYAyABKAkSDQoFdG93ZXIYBCABKAQSNwoQbmV0",
-            "d29ya19sb2NhdGlvbhgFIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5Mb2MSQgoEdGFncxhkIAMoCzI0LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
-            "ZS5HZXRMb2NhdGlvblJlcGx5LlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoD",
-            "a2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASI7CglMb2NTdGF0dXMSDwoL",
-            "TE9DX1VOS05PV04QABINCglMT0NfRk9VTkQQARIOCgpMT0NfREVOSUVEEAIi",
-            "lQIKEkFwcEluc3RMaXN0UmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vzc2lv",
-            "bl9jb29raWUYAiABKAkSFAoMY2Fycmllcl9uYW1lGAMgASgJEjMKDGdwc19s",
-            "b2NhdGlvbhgEIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MS",
-            "DQoFbGltaXQYBiABKA0SRAoEdGFncxhkIAMoCzI2LmRpc3RyaWJ1dGVkX21h",
-            "dGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcXVlc3QuVGFnc0VudHJ5GisKCVRh",
-            "Z3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBSgQIBRAG",
-            "UgdjZWxsX2lkIp8BCgtBcHBpbnN0YW5jZRIQCghhcHBfbmFtZRgBIAEoCRIQ",
-            "CghhcHBfdmVycxgCIAEoCRIMCgRmcWRuGAMgASgJEjAKBXBvcnRzGAQgAygL",
-            "MiEuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcFBvcnQSEAoIb3JnX25h",
-            "bWUYBSABKAkSGgoSZWRnZV9ldmVudHNfY29va2llGAYgASgJIsMBChBDbG91",
-            "ZGxldExvY2F0aW9uEhQKDGNhcnJpZXJfbmFtZRgBIAEoCRIVCg1jbG91ZGxl",
-            "dF9uYW1lGAIgASgJEjMKDGdwc19sb2NhdGlvbhgDIAEoCzIdLmRpc3RyaWJ1",
-            "dGVkX21hdGNoX2VuZ2luZS5Mb2MSEAoIZGlzdGFuY2UYBCABKAESOwoMYXBw",
-            "aW5zdGFuY2VzGAUgAygLMiUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFw",
-            "cGluc3RhbmNlIs8CChBBcHBJbnN0TGlzdFJlcGx5EgsKA3ZlchgBIAEoDRJD",
-            "CgZzdGF0dXMYAiABKA4yMy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBw",
-            "SW5zdExpc3RSZXBseS5BSVN0YXR1cxI9CgljbG91ZGxldHMYAyADKAsyKi5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQ2xvdWRsZXRMb2NhdGlvbhJCCgR0",
-            "YWdzGGQgAygLMjQuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RM",
-            "aXN0UmVwbHkuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkS",
-            "DQoFdmFsdWUYAiABKAk6AjgBIjkKCEFJU3RhdHVzEhAKDEFJX1VOREVGSU5F",
-            "RBAAEg4KCkFJX1NVQ0NFU1MQARILCgdBSV9GQUlMEAIitQEKD0ZxZG5MaXN0",
-            "UmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9jb29raWUYAiABKAkS",
-            "QQoEdGFncxhkIAMoCzIzLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GcWRu",
-            "TGlzdFJlcXVlc3QuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASAB",
-            "KAkSDQoFdmFsdWUYAiABKAk6AjgBSgQIAxAEUgdjZWxsX2lkImwKB0FwcEZx",
-            "ZG4SEAoIYXBwX25hbWUYASABKAkSEAoIYXBwX3ZlcnMYAiABKAkSEAoIb3Jn",
-            "X25hbWUYAyABKAkSDQoFZnFkbnMYBCADKAkSHAoUYW5kcm9pZF9wYWNrYWdl",
-            "X25hbWUYBSABKAkivQIKDUZxZG5MaXN0UmVwbHkSCwoDdmVyGAEgASgNEjQK",
-            "CWFwcF9mcWRucxgDIAMoCzIhLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5B",
-            "cHBGcWRuEkAKBnN0YXR1cxgEIAEoDjIwLmRpc3RyaWJ1dGVkX21hdGNoX2Vu",
-            "Z2luZS5GcWRuTGlzdFJlcGx5LkZMU3RhdHVzEj8KBHRhZ3MYZCADKAsyMS5k",
-            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFkbkxpc3RSZXBseS5UYWdzRW50",
-            "cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToC",
-            "OAEiOQoIRkxTdGF0dXMSEAoMRkxfVU5ERUZJTkVEEAASDgoKRkxfU1VDQ0VT",
-            "UxABEgsKB0ZMX0ZBSUwQAiLpAQoWQXBwT2ZmaWNpYWxGcWRuUmVxdWVzdBIL",
-            "CgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9jb29raWUYAiABKAkSMwoMZ3BzX2xv",
-            "Y2F0aW9uGAMgASgLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxvYxJI",
-            "CgR0YWdzGGQgAygLMjouZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcE9m",
-            "ZmljaWFsRnFkblJlcXVlc3QuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNr",
-            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIoQDChRBcHBPZmZpY2lhbEZx",
-            "ZG5SZXBseRILCgN2ZXIYASABKA0SGQoRYXBwX29mZmljaWFsX2ZxZG4YAiAB",
-            "KAkSFAoMY2xpZW50X3Rva2VuGAMgASgJEkgKBnN0YXR1cxgEIAEoDjI4LmRp",
-            "c3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5SZXBseS5B",
-            "T0ZTdGF0dXMSMAoFcG9ydHMYBSADKAsyIS5kaXN0cmlidXRlZF9tYXRjaF9l",
-            "bmdpbmUuQXBwUG9ydBJGCgR0YWdzGGQgAygLMjguZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLkFwcE9mZmljaWFsRnFkblJlcGx5LlRhZ3NFbnRyeRorCglU",
-            "YWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASI9CglB",
-            "T0ZTdGF0dXMSEQoNQU9GX1VOREVGSU5FRBAAEg8KC0FPRl9TVUNDRVNTEAES",
-            "DAoIQU9GX0ZBSUwQAiL2AgoWRHluYW1pY0xvY0dyb3VwUmVxdWVzdBILCgN2",
-            "ZXIYASABKA0SFgoOc2Vzc2lvbl9jb29raWUYAiABKAkSDQoFbGdfaWQYAyAB",
-            "KAQSTwoJY29tbV90eXBlGAsgASgOMjwuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
-            "aW5lLkR5bmFtaWNMb2NHcm91cFJlcXVlc3QuRGxnQ29tbVR5cGUSEQoJdXNl",
-            "cl9kYXRhGAwgASgJEkgKBHRhZ3MYZCADKAsyOi5kaXN0cmlidXRlZF9tYXRj",
-            "aF9lbmdpbmUuRHluYW1pY0xvY0dyb3VwUmVxdWVzdC5UYWdzRW50cnkaKwoJ",
-            "VGFnc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiPgoL",
-            "RGxnQ29tbVR5cGUSEQoNRExHX1VOREVGSU5FRBAAEg4KCkRMR19TRUNVUkUQ",
-            "ARIMCghETEdfT1BFThACSgQIDRAOUgdjZWxsX2lkIvkBChREeW5hbWljTG9j",
-            "R3JvdXBSZXBseRILCgN2ZXIYASABKA0SNQoGc3RhdHVzGAIgASgOMiUuZGlz",
-            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlJlcGx5U3RhdHVzEhIKCmVycm9yX2Nv",
-            "ZGUYAyABKA0SFAoMZ3JvdXBfY29va2llGAUgASgJEkYKBHRhZ3MYZCADKAsy",
-            "OC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRHluYW1pY0xvY0dyb3VwUmVw",
-            "bHkuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFs",
-            "dWUYAiABKAk6AjgBIlYKC1Fvc1Bvc2l0aW9uEhIKCnBvc2l0aW9uaWQYASAB",
-            "KAMSMwoMZ3BzX2xvY2F0aW9uGAIgASgLMh0uZGlzdHJpYnV0ZWRfbWF0Y2hf",
-            "ZW5naW5lLkxvYyJPCg1CYW5kU2VsZWN0aW9uEg4KBnJhdF8yZxgBIAMoCRIO",
-            "CgZyYXRfM2cYAiADKAkSDgoGcmF0XzRnGAMgAygJEg4KBnJhdF81ZxgEIAMo",
-            "CSLMAgoSUW9zUG9zaXRpb25SZXF1ZXN0EgsKA3ZlchgBIAEoDRIWCg5zZXNz",
-            "aW9uX2Nvb2tpZRgCIAEoCRI4Cglwb3NpdGlvbnMYAyADKAsyJS5kaXN0cmli",
-            "dXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRpb24SFAoMbHRlX2NhdGVnb3J5",
-            "GAQgASgFEj8KDmJhbmRfc2VsZWN0aW9uGAUgASgLMicuZGlzdHJpYnV0ZWRf",
-            "bWF0Y2hfZW5naW5lLkJhbmRTZWxlY3Rpb24SRAoEdGFncxhkIAMoCzI2LmRp",
-            "c3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NQb3NpdGlvblJlcXVlc3QuVGFn",
-            "c0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiAB",
-            "KAk6AjgBSgQIBhAHUgdjZWxsX2lkItICChRRb3NQb3NpdGlvbktwaVJlc3Vs",
-            "dBISCgpwb3NpdGlvbmlkGAEgASgDEjMKDGdwc19sb2NhdGlvbhgCIAEoCzId",
-            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSHAoUZGx1c2VydGhyb3Vn",
-            "aHB1dF9taW4YAyABKAISHAoUZGx1c2VydGhyb3VnaHB1dF9hdmcYBCABKAIS",
-            "HAoUZGx1c2VydGhyb3VnaHB1dF9tYXgYBSABKAISHAoUdWx1c2VydGhyb3Vn",
-            "aHB1dF9taW4YBiABKAISHAoUdWx1c2VydGhyb3VnaHB1dF9hdmcYByABKAIS",
-            "HAoUdWx1c2VydGhyb3VnaHB1dF9tYXgYCCABKAISEwoLbGF0ZW5jeV9taW4Y",
-            "CSABKAISEwoLbGF0ZW5jeV9hdmcYCiABKAISEwoLbGF0ZW5jeV9tYXgYCyAB",
-            "KAIilwIKE1Fvc1Bvc2l0aW9uS3BpUmVwbHkSCwoDdmVyGAEgASgNEjUKBnN0",
-            "YXR1cxgCIAEoDjIlLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5SZXBseVN0",
-            "YXR1cxJIChBwb3NpdGlvbl9yZXN1bHRzGAMgAygLMi4uZGlzdHJpYnV0ZWRf",
-            "bWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uS3BpUmVzdWx0EkUKBHRhZ3MYZCAD",
-            "KAsyNy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUG9zaXRpb25LcGlS",
-            "ZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2",
-            "YWx1ZRgCIAEoCToCOAEixAUKD0NsaWVudEVkZ2VFdmVudBIWCg5zZXNzaW9u",
-            "X2Nvb2tpZRgBIAEoCRIaChJlZGdlX2V2ZW50c19jb29raWUYAiABKAkSTQoK",
-            "ZXZlbnRfdHlwZRgDIAEoDjI5LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5D",
-            "bGllbnRFZGdlRXZlbnQuQ2xpZW50RXZlbnRUeXBlEjMKDGdwc19sb2NhdGlv",
-            "bhgEIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSMQoHc2Ft",
-            "cGxlcxgFIAMoCzIgLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5TYW1wbGUS",
-            "RgoSZGV2aWNlX2luZm9fc3RhdGljGAYgASgLMiouZGlzdHJpYnV0ZWRfbWF0",
-            "Y2hfZW5naW5lLkRldmljZUluZm9TdGF0aWMSSAoTZGV2aWNlX2luZm9fZHlu",
-            "YW1pYxgHIAEoCzIrLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5EZXZpY2VJ",
-            "bmZvRHluYW1pYxIUCgxjdXN0b21fZXZlbnQYCCABKAkSQQoEdGFncxhkIAMo",
-            "CzIzLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5DbGllbnRFZGdlRXZlbnQu",
+            "aW5lLkxvYxIaChJlZGdlX2V2ZW50c19jb29raWUYBiABKAkSUAoKcW9zX3Jl",
+            "c3VsdBgHIAEoDjI8LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xv",
+            "dWRsZXRSZXBseS5Rb3NTZXNzaW9uUmVzdWx0EhUKDXFvc19lcnJvcl9tc2cY",
+            "CCABKAkSQwoEdGFncxhkIAMoCzI1LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5GaW5kQ2xvdWRsZXRSZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsK",
+            "A2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiQQoKRmluZFN0YXR1cxIQ",
+            "CgxGSU5EX1VOS05PV04QABIOCgpGSU5EX0ZPVU5EEAESEQoNRklORF9OT1RG",
+            "T1VORBACIloKEFFvc1Nlc3Npb25SZXN1bHQSFQoRUU9TX05PVF9BVFRFTVBU",
+            "RUQQABIXChNRT1NfU0VTU0lPTl9DUkVBVEVEEAESFgoSUU9TX1NFU1NJT05f",
+            "RkFJTEVEEAIi2AQKH1Fvc1ByaW9yaXR5U2Vzc2lvbkNyZWF0ZVJlcXVlc3QS",
+            "CwoDdmVyGAEgASgNEhYKDnNlc3Npb25fY29va2llGAIgASgJEhgKEHNlc3Np",
+            "b25fZHVyYXRpb24YAyABKA0SGQoRaXBfdXNlcl9lcXVpcG1lbnQYBCABKAkS",
+            "HQoVaXBfYXBwbGljYXRpb25fc2VydmVyGAUgASgJEhsKE3BvcnRfdXNlcl9l",
+            "cXVpcG1lbnQYBiABKAkSHwoXcG9ydF9hcHBsaWNhdGlvbl9zZXJ2ZXIYByAB",
+            "KAkSQQoLcHJvdG9jb2xfaW4YCCABKA4yLC5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuUW9zU2Vzc2lvblByb3RvY29sEkIKDHByb3RvY29sX291dBgJIAEo",
+            "DjIsLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Rb3NTZXNzaW9uUHJvdG9j",
+            "b2wSPAoHcHJvZmlsZRgKIAEoDjIrLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5Rb3NTZXNzaW9uUHJvZmlsZRIYChBub3RpZmljYXRpb25fdXJpGAsgASgJ",
+            "Eh8KF25vdGlmaWNhdGlvbl9hdXRoX3Rva2VuGAwgASgJElEKBHRhZ3MYZCAD",
+            "KAsyQy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zUHJpb3JpdHlTZXNz",
+            "aW9uQ3JlYXRlUmVxdWVzdC5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tl",
+            "eRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEixwIKF1Fvc1ByaW9yaXR5U2Vz",
+            "c2lvblJlcGx5EgsKA3ZlchgBIAEoDRIYChBzZXNzaW9uX2R1cmF0aW9uGAIg",
+            "ASgNEjwKB3Byb2ZpbGUYAyABKA4yKy5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
+            "bmUuUW9zU2Vzc2lvblByb2ZpbGUSEgoKc2Vzc2lvbl9pZBgEIAEoCRISCgpz",
+            "dGFydGVkX2F0GAUgASgNEhIKCmV4cGlyZXNfYXQYBiABKA0SEwoLaHR0cF9z",
+            "dGF0dXMYByABKA0SSQoEdGFncxhkIAMoCzI7LmRpc3RyaWJ1dGVkX21hdGNo",
+            "X2VuZ2luZS5Rb3NQcmlvcml0eVNlc3Npb25SZXBseS5UYWdzRW50cnkaKwoJ",
+            "VGFnc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEimAIK",
+            "H1Fvc1ByaW9yaXR5U2Vzc2lvbkRlbGV0ZVJlcXVlc3QSCwoDdmVyGAEgASgN",
+            "EhYKDnNlc3Npb25fY29va2llGAIgASgJEjwKB3Byb2ZpbGUYAyABKA4yKy5k",
+            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUW9zU2Vzc2lvblByb2ZpbGUSEgoK",
+            "c2Vzc2lvbl9pZBgEIAEoCRJRCgR0YWdzGGQgAygLMkMuZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLlFvc1ByaW9yaXR5U2Vzc2lvbkRlbGV0ZVJlcXVlc3Qu",
             "VGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
-            "AiABKAk6AjgBIq0BCg9DbGllbnRFdmVudFR5cGUSEQoNRVZFTlRfVU5LTk9X",
-            "ThAAEhkKFUVWRU5UX0lOSVRfQ09OTkVDVElPThABEh4KGkVWRU5UX1RFUk1J",
-            "TkFURV9DT05ORUNUSU9OEAISGQoVRVZFTlRfTEFURU5DWV9TQU1QTEVTEAMS",
-            "GQoVRVZFTlRfTE9DQVRJT05fVVBEQVRFEAQSFgoSRVZFTlRfQ1VTVE9NX0VW",
-            "RU5UEAUinwYKD1NlcnZlckVkZ2VFdmVudBJNCgpldmVudF90eXBlGAEgASgO",
-            "MjkuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNlcnZlckVkZ2VFdmVudC5T",
-            "ZXJ2ZXJFdmVudFR5cGUSPwoOY2xvdWRsZXRfc3RhdGUYAiABKA4yJy5kaXN0",
-            "cmlidXRlZF9tYXRjaF9lbmdpbmUuQ2xvdWRsZXRTdGF0ZRJFChFtYWludGVu",
-            "YW5jZV9zdGF0ZRgDIAEoDjIqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5N",
-            "YWludGVuYW5jZVN0YXRlEjsKDGhlYWx0aF9jaGVjaxgEIAEoDjIlLmRpc3Ry",
-            "aWJ1dGVkX21hdGNoX2VuZ2luZS5IZWFsdGhDaGVjaxI4CgpzdGF0aXN0aWNz",
-            "GAUgASgLMiQuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlN0YXRpc3RpY3MS",
-            "QQoMbmV3X2Nsb3VkbGV0GAYgASgLMisuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
-            "aW5lLkZpbmRDbG91ZGxldFJlcGx5EhEKCWVycm9yX21zZxgHIAEoCRJBCgR0",
-            "YWdzGGQgAygLMjMuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlNlcnZlckVk",
-            "Z2VFdmVudC5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEoCRIN",
-            "CgV2YWx1ZRgCIAEoCToCOAEi9wEKD1NlcnZlckV2ZW50VHlwZRIRCg1FVkVO",
-            "VF9VTktOT1dOEAASGQoVRVZFTlRfSU5JVF9DT05ORUNUSU9OEAESGQoVRVZF",
-            "TlRfTEFURU5DWV9SRVFVRVNUEAISGwoXRVZFTlRfTEFURU5DWV9QUk9DRVNT",
-            "RUQQAxIYChRFVkVOVF9DTE9VRExFVF9TVEFURRAEEh4KGkVWRU5UX0NMT1VE",
-            "TEVUX01BSU5URU5BTkNFEAUSGAoURVZFTlRfQVBQSU5TVF9IRUFMVEgQBhIZ",
-            "ChVFVkVOVF9DTE9VRExFVF9VUERBVEUQBxIPCgtFVkVOVF9FUlJPUhAIKj0K",
-            "B0lEVHlwZXMSEAoMSURfVU5ERUZJTkVEEAASCAoESU1FSRABEgoKBk1TSVNE",
-            "ThACEgoKBklQQUREUhADKjwKC1JlcGx5U3RhdHVzEhAKDFJTX1VOREVGSU5F",
-            "RBAAEg4KClJTX1NVQ0NFU1MQARILCgdSU19GQUlMEAIyxgwKDk1hdGNoRW5n",
-            "aW5lQXBpEo8BCg5SZWdpc3RlckNsaWVudBIvLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5SZWdpc3RlckNsaWVudFJlcXVlc3QaLS5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuUmVnaXN0ZXJDbGllbnRSZXBseSIdgtPkkwIXIhIvdjEv",
-            "cmVnaXN0ZXJjbGllbnQ6ASoShwEKDEZpbmRDbG91ZGxldBItLmRpc3RyaWJ1",
-            "dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xvdWRsZXRSZXF1ZXN0GisuZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJlcGx5IhuC0+STAhUi",
-            "EC92MS9maW5kY2xvdWRsZXQ6ASoSnwEKFFBsYXRmb3JtRmluZENsb3VkbGV0",
-            "EjUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlBsYXRmb3JtRmluZENsb3Vk",
-            "bGV0UmVxdWVzdBorLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xv",
-            "dWRsZXRSZXBseSIjgtPkkwIdIhgvdjEvcGxhdGZvcm1maW5kY2xvdWRsZXQ6",
-            "ASoSjwEKDlZlcmlmeUxvY2F0aW9uEi8uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
-            "aW5lLlZlcmlmeUxvY2F0aW9uUmVxdWVzdBotLmRpc3RyaWJ1dGVkX21hdGNo",
-            "X2VuZ2luZS5WZXJpZnlMb2NhdGlvblJlcGx5Ih2C0+STAhciEi92MS92ZXJp",
-            "Znlsb2NhdGlvbjoBKhKDAQoLR2V0TG9jYXRpb24SLC5kaXN0cmlidXRlZF9t",
-            "YXRjaF9lbmdpbmUuR2V0TG9jYXRpb25SZXF1ZXN0GiouZGlzdHJpYnV0ZWRf",
-            "bWF0Y2hfZW5naW5lLkdldExvY2F0aW9uUmVwbHkiGoLT5JMCFCIPL3YxL2dl",
-            "dGxvY2F0aW9uOgEqEpEBCg5BZGRVc2VyVG9Hcm91cBIwLmRpc3RyaWJ1dGVk",
-            "X21hdGNoX2VuZ2luZS5EeW5hbWljTG9jR3JvdXBSZXF1ZXN0Gi4uZGlzdHJp",
-            "YnV0ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91cFJlcGx5Ih2C0+ST",
-            "AhciEi92MS9hZGR1c2VydG9ncm91cDoBKhKJAQoOR2V0QXBwSW5zdExpc3QS",
-            "LC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwSW5zdExpc3RSZXF1ZXN0",
-            "GiouZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RMaXN0UmVwbHki",
-            "HYLT5JMCFyISL3YxL2dldGFwcGluc3RsaXN0OgEqEn0KC0dldEZxZG5MaXN0",
-            "EikuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZxZG5MaXN0UmVxdWVzdBon",
-            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GcWRuTGlzdFJlcGx5IhqC0+ST",
-            "AhQiDy92MS9nZXRmcWRubGlzdDoBKhKZAQoSR2V0QXBwT2ZmaWNpYWxGcWRu",
-            "EjAuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcE9mZmljaWFsRnFkblJl",
-            "cXVlc3QaLi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwT2ZmaWNpYWxG",
-            "cWRuUmVwbHkiIYLT5JMCGyIWL3YxL2dldGFwcG9mZmljaWFsZnFkbjoBKhKU",
-            "AQoRR2V0UW9zUG9zaXRpb25LcGkSLC5kaXN0cmlidXRlZF9tYXRjaF9lbmdp",
-            "bmUuUW9zUG9zaXRpb25SZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
-            "aW5lLlFvc1Bvc2l0aW9uS3BpUmVwbHkiIILT5JMCGiIVL3YxL2dldHFvc3Bv",
-            "c2l0aW9ua3BpOgEqMAESiwEKD1N0cmVhbUVkZ2VFdmVudBIpLmRpc3RyaWJ1",
-            "dGVkX21hdGNoX2VuZ2luZS5DbGllbnRFZGdlRXZlbnQaKS5kaXN0cmlidXRl",
-            "ZF9tYXRjaF9lbmdpbmUuU2VydmVyRWRnZUV2ZW50Ih6C0+STAhgiEy92MS9z",
-            "dHJlYW1lZGdlZXZlbnQ6ASooATABYgZwcm90bzM="));
+            "AiABKAk6AjgBIsgCCh1Rb3NQcmlvcml0eVNlc3Npb25EZWxldGVSZXBseRIL",
+            "CgN2ZXIYASABKA0SVAoGc3RhdHVzGAIgASgOMkQuZGlzdHJpYnV0ZWRfbWF0",
+            "Y2hfZW5naW5lLlFvc1ByaW9yaXR5U2Vzc2lvbkRlbGV0ZVJlcGx5LkRlbGV0",
+            "ZVN0YXR1cxJPCgR0YWdzGGQgAygLMkEuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
+            "aW5lLlFvc1ByaW9yaXR5U2Vzc2lvbkRlbGV0ZVJlcGx5LlRhZ3NFbnRyeRor",
+            "CglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASJG",
+            "CgxEZWxldGVTdGF0dXMSEAoMUURFTF9VTktOT1dOEAASEAoMUURFTF9ERUxF",
+            "VEVEEAESEgoOUURFTF9OT1RfRk9VTkQQAiKmAgoVVmVyaWZ5TG9jYXRpb25S",
+            "ZXF1ZXN0EgsKA3ZlchgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tpZRgCIAEoCRIU",
+            "CgxjYXJyaWVyX25hbWUYAyABKAkSMwoMZ3BzX2xvY2F0aW9uGAQgASgLMh0u",
+            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkxvYxIYChB2ZXJpZnlfbG9jX3Rv",
+            "a2VuGAUgASgJEkcKBHRhZ3MYZCADKAsyOS5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuVmVyaWZ5TG9jYXRpb25SZXF1ZXN0LlRhZ3NFbnRyeRorCglUYWdz",
+            "RW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUoECAYQB1IH",
+            "Y2VsbF9pZCK7BQoTVmVyaWZ5TG9jYXRpb25SZXBseRILCgN2ZXIYASABKA0S",
+            "TwoMdG93ZXJfc3RhdHVzGAIgASgOMjkuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5n",
+            "aW5lLlZlcmlmeUxvY2F0aW9uUmVwbHkuVG93ZXJTdGF0dXMSXAoTZ3BzX2xv",
+            "Y2F0aW9uX3N0YXR1cxgDIAEoDjI/LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5WZXJpZnlMb2NhdGlvblJlcGx5LkdQU0xvY2F0aW9uU3RhdHVzEiAKGGdw",
+            "c19sb2NhdGlvbl9hY2N1cmFjeV9rbRgEIAEoARJFCgR0YWdzGGQgAygLMjcu",
+            "ZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlZlcmlmeUxvY2F0aW9uUmVwbHku",
+            "VGFnc0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
+            "AiABKAk6AjgBImgKC1Rvd2VyU3RhdHVzEhEKDVRPV0VSX1VOS05PV04QABIg",
+            "ChxDT05ORUNURURfVE9fU1BFQ0lGSUVEX1RPV0VSEAESJAogTk9UX0NPTk5F",
+            "Q1RFRF9UT19TUEVDSUZJRURfVE9XRVIQAiLnAQoRR1BTTG9jYXRpb25TdGF0",
+            "dXMSDwoLTE9DX1VOS05PV04QABIQCgxMT0NfVkVSSUZJRUQQARIdChlMT0Nf",
+            "TUlTTUFUQ0hfU0FNRV9DT1VOVFJZEAISHgoaTE9DX01JU01BVENIX09USEVS",
+            "X0NPVU5UUlkQAxIdChlMT0NfUk9BTUlOR19DT1VOVFJZX01BVENIEAQSIAoc",
+            "TE9DX1JPQU1JTkdfQ09VTlRSWV9NSVNNQVRDSBAFEhoKFkxPQ19FUlJPUl9V",
+            "TkFVVEhPUklaRUQQBhITCg9MT0NfRVJST1JfT1RIRVIQByLRAQoSR2V0TG9j",
+            "YXRpb25SZXF1ZXN0EgsKA3ZlchgBIAEoDRIWCg5zZXNzaW9uX2Nvb2tpZRgC",
+            "IAEoCRIUCgxjYXJyaWVyX25hbWUYAyABKAkSRAoEdGFncxhkIAMoCzI2LmRp",
+            "c3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5HZXRMb2NhdGlvblJlcXVlc3QuVGFn",
+            "c0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiAB",
+            "KAk6AjgBSgQIBBAFUgdjZWxsX2lkIvECChBHZXRMb2NhdGlvblJlcGx5EgsK",
+            "A3ZlchgBIAEoDRJECgZzdGF0dXMYAiABKA4yNC5kaXN0cmlidXRlZF9tYXRj",
+            "aF9lbmdpbmUuR2V0TG9jYXRpb25SZXBseS5Mb2NTdGF0dXMSFAoMY2Fycmll",
+            "cl9uYW1lGAMgASgJEg0KBXRvd2VyGAQgASgEEjcKEG5ldHdvcmtfbG9jYXRp",
+            "b24YBSABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEkIKBHRh",
+            "Z3MYZCADKAsyNC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuR2V0TG9jYXRp",
+            "b25SZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsKA2tleRgBIAEoCRIN",
+            "CgV2YWx1ZRgCIAEoCToCOAEiOwoJTG9jU3RhdHVzEg8KC0xPQ19VTktOT1dO",
+            "EAASDQoJTE9DX0ZPVU5EEAESDgoKTE9DX0RFTklFRBACIpUCChJBcHBJbnN0",
+            "TGlzdFJlcXVlc3QSCwoDdmVyGAEgASgNEhYKDnNlc3Npb25fY29va2llGAIg",
+            "ASgJEhQKDGNhcnJpZXJfbmFtZRgDIAEoCRIzCgxncHNfbG9jYXRpb24YBCAB",
+            "KAsyHS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEg0KBWxpbWl0GAYg",
+            "ASgNEkQKBHRhZ3MYZCADKAsyNi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUu",
+            "QXBwSW5zdExpc3RSZXF1ZXN0LlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoD",
+            "a2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUoECAUQBlIHY2VsbF9pZCKf",
+            "AQoLQXBwaW5zdGFuY2USEAoIYXBwX25hbWUYASABKAkSEAoIYXBwX3ZlcnMY",
+            "AiABKAkSDAoEZnFkbhgDIAEoCRIwCgVwb3J0cxgEIAMoCzIhLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5BcHBQb3J0EhAKCG9yZ19uYW1lGAUgASgJEhoK",
+            "EmVkZ2VfZXZlbnRzX2Nvb2tpZRgGIAEoCSLDAQoQQ2xvdWRsZXRMb2NhdGlv",
+            "bhIUCgxjYXJyaWVyX25hbWUYASABKAkSFQoNY2xvdWRsZXRfbmFtZRgCIAEo",
+            "CRIzCgxncHNfbG9jYXRpb24YAyABKAsyHS5kaXN0cmlidXRlZF9tYXRjaF9l",
+            "bmdpbmUuTG9jEhAKCGRpc3RhbmNlGAQgASgBEjsKDGFwcGluc3RhbmNlcxgF",
+            "IAMoCzIlLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBpbnN0YW5jZSLP",
+            "AgoQQXBwSW5zdExpc3RSZXBseRILCgN2ZXIYASABKA0SQwoGc3RhdHVzGAIg",
+            "ASgOMjMuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RMaXN0UmVw",
+            "bHkuQUlTdGF0dXMSPQoJY2xvdWRsZXRzGAMgAygLMiouZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLkNsb3VkbGV0TG9jYXRpb24SQgoEdGFncxhkIAMoCzI0",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBJbnN0TGlzdFJlcGx5LlRh",
+            "Z3NFbnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIg",
+            "ASgJOgI4ASI5CghBSVN0YXR1cxIQCgxBSV9VTkRFRklORUQQABIOCgpBSV9T",
+            "VUNDRVNTEAESCwoHQUlfRkFJTBACIrUBCg9GcWRuTGlzdFJlcXVlc3QSCwoD",
+            "dmVyGAEgASgNEhYKDnNlc3Npb25fY29va2llGAIgASgJEkEKBHRhZ3MYZCAD",
+            "KAsyMy5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFkbkxpc3RSZXF1ZXN0",
+            "LlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVl",
+            "GAIgASgJOgI4AUoECAMQBFIHY2VsbF9pZCJsCgdBcHBGcWRuEhAKCGFwcF9u",
+            "YW1lGAEgASgJEhAKCGFwcF92ZXJzGAIgASgJEhAKCG9yZ19uYW1lGAMgASgJ",
+            "Eg0KBWZxZG5zGAQgAygJEhwKFGFuZHJvaWRfcGFja2FnZV9uYW1lGAUgASgJ",
+            "Ir0CCg1GcWRuTGlzdFJlcGx5EgsKA3ZlchgBIAEoDRI0CglhcHBfZnFkbnMY",
+            "AyADKAsyIS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwRnFkbhJACgZz",
+            "dGF0dXMYBCABKA4yMC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRnFkbkxp",
+            "c3RSZXBseS5GTFN0YXR1cxI/CgR0YWdzGGQgAygLMjEuZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLkZxZG5MaXN0UmVwbHkuVGFnc0VudHJ5GisKCVRhZ3NF",
+            "bnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIjkKCEZMU3Rh",
+            "dHVzEhAKDEZMX1VOREVGSU5FRBAAEg4KCkZMX1NVQ0NFU1MQARILCgdGTF9G",
+            "QUlMEAIi6QEKFkFwcE9mZmljaWFsRnFkblJlcXVlc3QSCwoDdmVyGAEgASgN",
+            "EhYKDnNlc3Npb25fY29va2llGAIgASgJEjMKDGdwc19sb2NhdGlvbhgDIAEo",
+            "CzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2MSSAoEdGFncxhkIAMo",
+            "CzI6LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5BcHBPZmZpY2lhbEZxZG5S",
+            "ZXF1ZXN0LlRhZ3NFbnRyeRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0K",
+            "BXZhbHVlGAIgASgJOgI4ASKEAwoUQXBwT2ZmaWNpYWxGcWRuUmVwbHkSCwoD",
+            "dmVyGAEgASgNEhkKEWFwcF9vZmZpY2lhbF9mcWRuGAIgASgJEhQKDGNsaWVu",
+            "dF90b2tlbhgDIAEoCRJICgZzdGF0dXMYBCABKA4yOC5kaXN0cmlidXRlZF9t",
+            "YXRjaF9lbmdpbmUuQXBwT2ZmaWNpYWxGcWRuUmVwbHkuQU9GU3RhdHVzEjAK",
+            "BXBvcnRzGAUgAygLMiEuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcFBv",
+            "cnQSRgoEdGFncxhkIAMoCzI4LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5B",
+            "cHBPZmZpY2lhbEZxZG5SZXBseS5UYWdzRW50cnkaKwoJVGFnc0VudHJ5EgsK",
+            "A2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiPQoJQU9GU3RhdHVzEhEK",
+            "DUFPRl9VTkRFRklORUQQABIPCgtBT0ZfU1VDQ0VTUxABEgwKCEFPRl9GQUlM",
+            "EAIi9gIKFkR5bmFtaWNMb2NHcm91cFJlcXVlc3QSCwoDdmVyGAEgASgNEhYK",
+            "DnNlc3Npb25fY29va2llGAIgASgJEg0KBWxnX2lkGAMgASgEEk8KCWNvbW1f",
+            "dHlwZRgLIAEoDjI8LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5EeW5hbWlj",
+            "TG9jR3JvdXBSZXF1ZXN0LkRsZ0NvbW1UeXBlEhEKCXVzZXJfZGF0YRgMIAEo",
+            "CRJICgR0YWdzGGQgAygLMjouZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5",
+            "bmFtaWNMb2NHcm91cFJlcXVlc3QuVGFnc0VudHJ5GisKCVRhZ3NFbnRyeRIL",
+            "CgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIj4KC0RsZ0NvbW1UeXBl",
+            "EhEKDURMR19VTkRFRklORUQQABIOCgpETEdfU0VDVVJFEAESDAoIRExHX09Q",
+            "RU4QAkoECA0QDlIHY2VsbF9pZCL5AQoURHluYW1pY0xvY0dyb3VwUmVwbHkS",
+            "CwoDdmVyGAEgASgNEjUKBnN0YXR1cxgCIAEoDjIlLmRpc3RyaWJ1dGVkX21h",
+            "dGNoX2VuZ2luZS5SZXBseVN0YXR1cxISCgplcnJvcl9jb2RlGAMgASgNEhQK",
+            "DGdyb3VwX2Nvb2tpZRgFIAEoCRJGCgR0YWdzGGQgAygLMjguZGlzdHJpYnV0",
+            "ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91cFJlcGx5LlRhZ3NFbnRy",
+            "eRorCglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4",
+            "ASJWCgtRb3NQb3NpdGlvbhISCgpwb3NpdGlvbmlkGAEgASgDEjMKDGdwc19s",
+            "b2NhdGlvbhgCIAEoCzIdLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5Mb2Mi",
+            "TwoNQmFuZFNlbGVjdGlvbhIOCgZyYXRfMmcYASADKAkSDgoGcmF0XzNnGAIg",
+            "AygJEg4KBnJhdF80ZxgDIAMoCRIOCgZyYXRfNWcYBCADKAkizAIKElFvc1Bv",
+            "c2l0aW9uUmVxdWVzdBILCgN2ZXIYASABKA0SFgoOc2Vzc2lvbl9jb29raWUY",
+            "AiABKAkSOAoJcG9zaXRpb25zGAMgAygLMiUuZGlzdHJpYnV0ZWRfbWF0Y2hf",
+            "ZW5naW5lLlFvc1Bvc2l0aW9uEhQKDGx0ZV9jYXRlZ29yeRgEIAEoBRI/Cg5i",
+            "YW5kX3NlbGVjdGlvbhgFIAEoCzInLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5CYW5kU2VsZWN0aW9uEkQKBHRhZ3MYZCADKAsyNi5kaXN0cmlidXRlZF9t",
+            "YXRjaF9lbmdpbmUuUW9zUG9zaXRpb25SZXF1ZXN0LlRhZ3NFbnRyeRorCglU",
+            "YWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUoECAYQ",
+            "B1IHY2VsbF9pZCLSAgoUUW9zUG9zaXRpb25LcGlSZXN1bHQSEgoKcG9zaXRp",
+            "b25pZBgBIAEoAxIzCgxncHNfbG9jYXRpb24YAiABKAsyHS5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuTG9jEhwKFGRsdXNlcnRocm91Z2hwdXRfbWluGAMg",
+            "ASgCEhwKFGRsdXNlcnRocm91Z2hwdXRfYXZnGAQgASgCEhwKFGRsdXNlcnRo",
+            "cm91Z2hwdXRfbWF4GAUgASgCEhwKFHVsdXNlcnRocm91Z2hwdXRfbWluGAYg",
+            "ASgCEhwKFHVsdXNlcnRocm91Z2hwdXRfYXZnGAcgASgCEhwKFHVsdXNlcnRo",
+            "cm91Z2hwdXRfbWF4GAggASgCEhMKC2xhdGVuY3lfbWluGAkgASgCEhMKC2xh",
+            "dGVuY3lfYXZnGAogASgCEhMKC2xhdGVuY3lfbWF4GAsgASgCIpcCChNRb3NQ",
+            "b3NpdGlvbktwaVJlcGx5EgsKA3ZlchgBIAEoDRI1CgZzdGF0dXMYAiABKA4y",
+            "JS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuUmVwbHlTdGF0dXMSSAoQcG9z",
+            "aXRpb25fcmVzdWx0cxgDIAMoCzIuLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2lu",
+            "ZS5Rb3NQb3NpdGlvbktwaVJlc3VsdBJFCgR0YWdzGGQgAygLMjcuZGlzdHJp",
+            "YnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uS3BpUmVwbHkuVGFnc0Vu",
+            "dHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6",
+            "AjgBIsQFCg9DbGllbnRFZGdlRXZlbnQSFgoOc2Vzc2lvbl9jb29raWUYASAB",
+            "KAkSGgoSZWRnZV9ldmVudHNfY29va2llGAIgASgJEk0KCmV2ZW50X3R5cGUY",
+            "AyABKA4yOS5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQ2xpZW50RWRnZUV2",
+            "ZW50LkNsaWVudEV2ZW50VHlwZRIzCgxncHNfbG9jYXRpb24YBCABKAsyHS5k",
+            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTG9jEjEKB3NhbXBsZXMYBSADKAsy",
+            "IC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuU2FtcGxlEkYKEmRldmljZV9p",
+            "bmZvX3N0YXRpYxgGIAEoCzIqLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5E",
+            "ZXZpY2VJbmZvU3RhdGljEkgKE2RldmljZV9pbmZvX2R5bmFtaWMYByABKAsy",
+            "Ky5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuRGV2aWNlSW5mb0R5bmFtaWMS",
+            "FAoMY3VzdG9tX2V2ZW50GAggASgJEkEKBHRhZ3MYZCADKAsyMy5kaXN0cmli",
+            "dXRlZF9tYXRjaF9lbmdpbmUuQ2xpZW50RWRnZUV2ZW50LlRhZ3NFbnRyeRor",
+            "CglUYWdzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKt",
+            "AQoPQ2xpZW50RXZlbnRUeXBlEhEKDUVWRU5UX1VOS05PV04QABIZChVFVkVO",
+            "VF9JTklUX0NPTk5FQ1RJT04QARIeChpFVkVOVF9URVJNSU5BVEVfQ09OTkVD",
+            "VElPThACEhkKFUVWRU5UX0xBVEVOQ1lfU0FNUExFUxADEhkKFUVWRU5UX0xP",
+            "Q0FUSU9OX1VQREFURRAEEhYKEkVWRU5UX0NVU1RPTV9FVkVOVBAFIp8GCg9T",
+            "ZXJ2ZXJFZGdlRXZlbnQSTQoKZXZlbnRfdHlwZRgBIAEoDjI5LmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5TZXJ2ZXJFZGdlRXZlbnQuU2VydmVyRXZlbnRU",
+            "eXBlEj8KDmNsb3VkbGV0X3N0YXRlGAIgASgOMicuZGlzdHJpYnV0ZWRfbWF0",
+            "Y2hfZW5naW5lLkNsb3VkbGV0U3RhdGUSRQoRbWFpbnRlbmFuY2Vfc3RhdGUY",
+            "AyABKA4yKi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuTWFpbnRlbmFuY2VT",
+            "dGF0ZRI7CgxoZWFsdGhfY2hlY2sYBCABKA4yJS5kaXN0cmlidXRlZF9tYXRj",
+            "aF9lbmdpbmUuSGVhbHRoQ2hlY2sSOAoKc3RhdGlzdGljcxgFIAEoCzIkLmRp",
+            "c3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5TdGF0aXN0aWNzEkEKDG5ld19jbG91",
+            "ZGxldBgGIAEoCzIrLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xv",
+            "dWRsZXRSZXBseRIRCgllcnJvcl9tc2cYByABKAkSQQoEdGFncxhkIAMoCzIz",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5TZXJ2ZXJFZGdlRXZlbnQuVGFn",
+            "c0VudHJ5GisKCVRhZ3NFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiAB",
+            "KAk6AjgBIvcBCg9TZXJ2ZXJFdmVudFR5cGUSEQoNRVZFTlRfVU5LTk9XThAA",
+            "EhkKFUVWRU5UX0lOSVRfQ09OTkVDVElPThABEhkKFUVWRU5UX0xBVEVOQ1lf",
+            "UkVRVUVTVBACEhsKF0VWRU5UX0xBVEVOQ1lfUFJPQ0VTU0VEEAMSGAoURVZF",
+            "TlRfQ0xPVURMRVRfU1RBVEUQBBIeChpFVkVOVF9DTE9VRExFVF9NQUlOVEVO",
+            "QU5DRRAFEhgKFEVWRU5UX0FQUElOU1RfSEVBTFRIEAYSGQoVRVZFTlRfQ0xP",
+            "VURMRVRfVVBEQVRFEAcSDwoLRVZFTlRfRVJST1IQCCo9CgdJRFR5cGVzEhAK",
+            "DElEX1VOREVGSU5FRBAAEggKBElNRUkQARIKCgZNU0lTRE4QAhIKCgZJUEFE",
+            "RFIQAyo8CgtSZXBseVN0YXR1cxIQCgxSU19VTkRFRklORUQQABIOCgpSU19T",
+            "VUNDRVNTEAESCwoHUlNfRkFJTBACKo4BChFRb3NTZXNzaW9uUHJvZmlsZRIT",
+            "Cg9RT1NfTk9fUFJJT1JJVFkQABITCg9RT1NfTE9XX0xBVEVOQ1kQARIZChVR",
+            "T1NfVEhST1VHSFBVVF9ET1dOX1MQAhIZChVRT1NfVEhST1VHSFBVVF9ET1dO",
+            "X00QAxIZChVRT1NfVEhST1VHSFBVVF9ET1dOX0wQBCovChJRb3NTZXNzaW9u",
+            "UHJvdG9jb2wSBwoDVENQEAASBwoDVURQEAESBwoDQU5ZEAIytA8KDk1hdGNo",
+            "RW5naW5lQXBpEo8BCg5SZWdpc3RlckNsaWVudBIvLmRpc3RyaWJ1dGVkX21h",
+            "dGNoX2VuZ2luZS5SZWdpc3RlckNsaWVudFJlcXVlc3QaLS5kaXN0cmlidXRl",
+            "ZF9tYXRjaF9lbmdpbmUuUmVnaXN0ZXJDbGllbnRSZXBseSIdgtPkkwIXIhIv",
+            "djEvcmVnaXN0ZXJjbGllbnQ6ASoShwEKDEZpbmRDbG91ZGxldBItLmRpc3Ry",
+            "aWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5kQ2xvdWRsZXRSZXF1ZXN0GisuZGlz",
+            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZpbmRDbG91ZGxldFJlcGx5IhuC0+ST",
+            "AhUiEC92MS9maW5kY2xvdWRsZXQ6ASoSnwEKFFBsYXRmb3JtRmluZENsb3Vk",
+            "bGV0EjUuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlBsYXRmb3JtRmluZENs",
+            "b3VkbGV0UmVxdWVzdBorLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GaW5k",
+            "Q2xvdWRsZXRSZXBseSIjgtPkkwIdIhgvdjEvcGxhdGZvcm1maW5kY2xvdWRs",
+            "ZXQ6ASoSsQEKGFFvc1ByaW9yaXR5U2Vzc2lvbkNyZWF0ZRI5LmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5Rb3NQcmlvcml0eVNlc3Npb25DcmVhdGVSZXF1",
+            "ZXN0GjEuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1ByaW9yaXR5U2Vz",
+            "c2lvblJlcGx5IieC0+STAiEiHC92MS9xb3Nwcmlvcml0eXNlc3Npb25jcmVh",
+            "dGU6ASoStwEKGFFvc1ByaW9yaXR5U2Vzc2lvbkRlbGV0ZRI5LmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5Rb3NQcmlvcml0eVNlc3Npb25EZWxldGVSZXF1",
+            "ZXN0GjcuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLlFvc1ByaW9yaXR5U2Vz",
+            "c2lvbkRlbGV0ZVJlcGx5IieC0+STAiEiHC92MS9xb3Nwcmlvcml0eXNlc3Np",
+            "b25kZWxldGU6ASoSjwEKDlZlcmlmeUxvY2F0aW9uEi8uZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLlZlcmlmeUxvY2F0aW9uUmVxdWVzdBotLmRpc3RyaWJ1",
+            "dGVkX21hdGNoX2VuZ2luZS5WZXJpZnlMb2NhdGlvblJlcGx5Ih2C0+STAhci",
+            "Ei92MS92ZXJpZnlsb2NhdGlvbjoBKhKDAQoLR2V0TG9jYXRpb24SLC5kaXN0",
+            "cmlidXRlZF9tYXRjaF9lbmdpbmUuR2V0TG9jYXRpb25SZXF1ZXN0GiouZGlz",
+            "dHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkdldExvY2F0aW9uUmVwbHkiGoLT5JMC",
+            "FCIPL3YxL2dldGxvY2F0aW9uOgEqEpEBCg5BZGRVc2VyVG9Hcm91cBIwLmRp",
+            "c3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5EeW5hbWljTG9jR3JvdXBSZXF1ZXN0",
+            "Gi4uZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkR5bmFtaWNMb2NHcm91cFJl",
+            "cGx5Ih2C0+STAhciEi92MS9hZGR1c2VydG9ncm91cDoBKhKJAQoOR2V0QXBw",
+            "SW5zdExpc3QSLC5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBwSW5zdExp",
+            "c3RSZXF1ZXN0GiouZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcEluc3RM",
+            "aXN0UmVwbHkiHYLT5JMCFyISL3YxL2dldGFwcGluc3RsaXN0OgEqEn0KC0dl",
+            "dEZxZG5MaXN0EikuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkZxZG5MaXN0",
+            "UmVxdWVzdBonLmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5GcWRuTGlzdFJl",
+            "cGx5IhqC0+STAhQiDy92MS9nZXRmcWRubGlzdDoBKhKZAQoSR2V0QXBwT2Zm",
+            "aWNpYWxGcWRuEjAuZGlzdHJpYnV0ZWRfbWF0Y2hfZW5naW5lLkFwcE9mZmlj",
+            "aWFsRnFkblJlcXVlc3QaLi5kaXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuQXBw",
+            "T2ZmaWNpYWxGcWRuUmVwbHkiIYLT5JMCGyIWL3YxL2dldGFwcG9mZmljaWFs",
+            "ZnFkbjoBKhKUAQoRR2V0UW9zUG9zaXRpb25LcGkSLC5kaXN0cmlidXRlZF9t",
+            "YXRjaF9lbmdpbmUuUW9zUG9zaXRpb25SZXF1ZXN0Gi0uZGlzdHJpYnV0ZWRf",
+            "bWF0Y2hfZW5naW5lLlFvc1Bvc2l0aW9uS3BpUmVwbHkiIILT5JMCGiIVL3Yx",
+            "L2dldHFvc3Bvc2l0aW9ua3BpOgEqMAESiwEKD1N0cmVhbUVkZ2VFdmVudBIp",
+            "LmRpc3RyaWJ1dGVkX21hdGNoX2VuZ2luZS5DbGllbnRFZGdlRXZlbnQaKS5k",
+            "aXN0cmlidXRlZF9tYXRjaF9lbmdpbmUuU2VydmVyRWRnZUV2ZW50Ih6C0+ST",
+            "AhgiEy92MS9zdHJlYW1lZGdlZXZlbnQ6ASooATABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::DistributedMatchEngine.LocReflection.Descriptor, global::DistributedMatchEngine.AppcommonReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.IDTypes), typeof(global::DistributedMatchEngine.ReplyStatus), }, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.IDTypes), typeof(global::DistributedMatchEngine.ReplyStatus), typeof(global::DistributedMatchEngine.QosSessionProfile), typeof(global::DistributedMatchEngine.QosSessionProtocol), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientRequest), global::DistributedMatchEngine.RegisterClientRequest.Parser, new[]{ "Ver", "OrgName", "AppName", "AppVers", "CarrierName", "AuthToken", "UniqueIdType", "UniqueId", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.RegisterClientReply), global::DistributedMatchEngine.RegisterClientReply.Parser, new[]{ "Ver", "Status", "SessionCookie", "TokenServerUri", "UniqueIdType", "UniqueId", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletRequest), global::DistributedMatchEngine.FindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.PlatformFindCloudletRequest), global::DistributedMatchEngine.PlatformFindCloudletRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "ClientToken", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletReply), global::DistributedMatchEngine.FindCloudletReply.Parser, new[]{ "Ver", "Status", "Fqdn", "Ports", "CloudletLocation", "EdgeEventsCookie", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FindCloudletReply.Types.FindStatus) }, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.FindCloudletReply), global::DistributedMatchEngine.FindCloudletReply.Parser, new[]{ "Ver", "Status", "Fqdn", "Ports", "CloudletLocation", "EdgeEventsCookie", "QosResult", "QosErrorMsg", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.FindCloudletReply.Types.FindStatus), typeof(global::DistributedMatchEngine.FindCloudletReply.Types.QosSessionResult) }, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPrioritySessionCreateRequest), global::DistributedMatchEngine.QosPrioritySessionCreateRequest.Parser, new[]{ "Ver", "SessionCookie", "SessionDuration", "IpUserEquipment", "IpApplicationServer", "PortUserEquipment", "PortApplicationServer", "ProtocolIn", "ProtocolOut", "Profile", "NotificationUri", "NotificationAuthToken", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPrioritySessionReply), global::DistributedMatchEngine.QosPrioritySessionReply.Parser, new[]{ "Ver", "SessionDuration", "Profile", "SessionId", "StartedAt", "ExpiresAt", "HttpStatus", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPrioritySessionDeleteRequest), global::DistributedMatchEngine.QosPrioritySessionDeleteRequest.Parser, new[]{ "Ver", "SessionCookie", "Profile", "SessionId", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.QosPrioritySessionDeleteReply), global::DistributedMatchEngine.QosPrioritySessionDeleteReply.Parser, new[]{ "Ver", "Status", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.QosPrioritySessionDeleteReply.Types.DeleteStatus) }, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationRequest), global::DistributedMatchEngine.VerifyLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "GpsLocation", "VerifyLocToken", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.VerifyLocationReply), global::DistributedMatchEngine.VerifyLocationReply.Parser, new[]{ "Ver", "TowerStatus", "GpsLocationStatus", "GpsLocationAccuracyKm", "Tags" }, null, new[]{ typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.TowerStatus), typeof(global::DistributedMatchEngine.VerifyLocationReply.Types.GPSLocationStatus) }, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::DistributedMatchEngine.GetLocationRequest), global::DistributedMatchEngine.GetLocationRequest.Parser, new[]{ "Ver", "SessionCookie", "CarrierName", "Tags" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
@@ -304,6 +359,36 @@ namespace DistributedMatchEngine {
     [pbr::OriginalName("RS_UNDEFINED")] RsUndefined = 0,
     [pbr::OriginalName("RS_SUCCESS")] RsSuccess = 1,
     [pbr::OriginalName("RS_FAIL")] RsFail = 2,
+  }
+
+  public enum QosSessionProfile {
+    /// <summary>
+    /// Specifies that no priority session should be created
+    /// </summary>
+    [pbr::OriginalName("QOS_NO_PRIORITY")] QosNoPriority = 0,
+    /// <summary>
+    /// Corresponds to a specific set of network parameters for low latency that will be 
+    /// negotiated with the network provider in advance
+    /// </summary>
+    [pbr::OriginalName("QOS_LOW_LATENCY")] QosLowLatency = 1,
+    /// <summary>
+    /// Downlink traffic from AppInst to client is prioritized up to 20Mbps
+    /// </summary>
+    [pbr::OriginalName("QOS_THROUGHPUT_DOWN_S")] QosThroughputDownS = 2,
+    /// <summary>
+    /// Downlink traffic from AppInst to client is prioritized up to 50Mbps
+    /// </summary>
+    [pbr::OriginalName("QOS_THROUGHPUT_DOWN_M")] QosThroughputDownM = 3,
+    /// <summary>
+    /// Downlink traffic from AppInst to client is prioritized up to 100Mbps
+    /// </summary>
+    [pbr::OriginalName("QOS_THROUGHPUT_DOWN_L")] QosThroughputDownL = 4,
+  }
+
+  public enum QosSessionProtocol {
+    [pbr::OriginalName("TCP")] Tcp = 0,
+    [pbr::OriginalName("UDP")] Udp = 1,
+    [pbr::OriginalName("ANY")] Any = 2,
   }
 
   #endregion
@@ -1610,6 +1695,8 @@ namespace DistributedMatchEngine {
       ports_ = other.ports_.Clone();
       cloudletLocation_ = other.cloudletLocation_ != null ? other.cloudletLocation_.Clone() : null;
       edgeEventsCookie_ = other.edgeEventsCookie_;
+      qosResult_ = other.qosResult_;
+      qosErrorMsg_ = other.qosErrorMsg_;
       tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1705,6 +1792,34 @@ namespace DistributedMatchEngine {
       }
     }
 
+    /// <summary>Field number for the "qos_result" field.</summary>
+    public const int QosResultFieldNumber = 7;
+    private global::DistributedMatchEngine.FindCloudletReply.Types.QosSessionResult qosResult_ = 0;
+    /// <summary>
+    /// Result of QOS priority session creation attempt
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.FindCloudletReply.Types.QosSessionResult QosResult {
+      get { return qosResult_; }
+      set {
+        qosResult_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "qos_error_msg" field.</summary>
+    public const int QosErrorMsgFieldNumber = 8;
+    private string qosErrorMsg_ = "";
+    /// <summary>
+    /// Error message in case of QOS_SESSION_FAILED
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string QosErrorMsg {
+      get { return qosErrorMsg_; }
+      set {
+        qosErrorMsg_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "tags" field.</summary>
     public const int TagsFieldNumber = 100;
     private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
@@ -1737,6 +1852,8 @@ namespace DistributedMatchEngine {
       if(!ports_.Equals(other.ports_)) return false;
       if (!object.Equals(CloudletLocation, other.CloudletLocation)) return false;
       if (EdgeEventsCookie != other.EdgeEventsCookie) return false;
+      if (QosResult != other.QosResult) return false;
+      if (QosErrorMsg != other.QosErrorMsg) return false;
       if (!Tags.Equals(other.Tags)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1750,6 +1867,8 @@ namespace DistributedMatchEngine {
       hash ^= ports_.GetHashCode();
       if (cloudletLocation_ != null) hash ^= CloudletLocation.GetHashCode();
       if (EdgeEventsCookie.Length != 0) hash ^= EdgeEventsCookie.GetHashCode();
+      if (QosResult != 0) hash ^= QosResult.GetHashCode();
+      if (QosErrorMsg.Length != 0) hash ^= QosErrorMsg.GetHashCode();
       hash ^= Tags.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1785,6 +1904,14 @@ namespace DistributedMatchEngine {
         output.WriteRawTag(50);
         output.WriteString(EdgeEventsCookie);
       }
+      if (QosResult != 0) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) QosResult);
+      }
+      if (QosErrorMsg.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(QosErrorMsg);
+      }
       tags_.WriteTo(output, _map_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1809,6 +1936,12 @@ namespace DistributedMatchEngine {
       }
       if (EdgeEventsCookie.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(EdgeEventsCookie);
+      }
+      if (QosResult != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) QosResult);
+      }
+      if (QosErrorMsg.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(QosErrorMsg);
       }
       size += tags_.CalculateSize(_map_tags_codec);
       if (_unknownFields != null) {
@@ -1840,6 +1973,12 @@ namespace DistributedMatchEngine {
       }
       if (other.EdgeEventsCookie.Length != 0) {
         EdgeEventsCookie = other.EdgeEventsCookie;
+      }
+      if (other.QosResult != 0) {
+        QosResult = other.QosResult;
+      }
+      if (other.QosErrorMsg.Length != 0) {
+        QosErrorMsg = other.QosErrorMsg;
       }
       tags_.Add(other.tags_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -1880,6 +2019,14 @@ namespace DistributedMatchEngine {
             EdgeEventsCookie = input.ReadString();
             break;
           }
+          case 56: {
+            QosResult = (global::DistributedMatchEngine.FindCloudletReply.Types.QosSessionResult) input.ReadEnum();
+            break;
+          }
+          case 66: {
+            QosErrorMsg = input.ReadString();
+            break;
+          }
           case 802: {
             tags_.AddEntriesFrom(input, _map_tags_codec);
             break;
@@ -1898,6 +2045,1332 @@ namespace DistributedMatchEngine {
         [pbr::OriginalName("FIND_NOTFOUND")] FindNotfound = 2,
       }
 
+      public enum QosSessionResult {
+        [pbr::OriginalName("QOS_NOT_ATTEMPTED")] QosNotAttempted = 0,
+        [pbr::OriginalName("QOS_SESSION_CREATED")] QosSessionCreated = 1,
+        [pbr::OriginalName("QOS_SESSION_FAILED")] QosSessionFailed = 2,
+      }
+
+    }
+    #endregion
+
+  }
+
+  public sealed partial class QosPrioritySessionCreateRequest : pb::IMessage<QosPrioritySessionCreateRequest> {
+    private static readonly pb::MessageParser<QosPrioritySessionCreateRequest> _parser = new pb::MessageParser<QosPrioritySessionCreateRequest>(() => new QosPrioritySessionCreateRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QosPrioritySessionCreateRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionCreateRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionCreateRequest(QosPrioritySessionCreateRequest other) : this() {
+      ver_ = other.ver_;
+      sessionCookie_ = other.sessionCookie_;
+      sessionDuration_ = other.sessionDuration_;
+      ipUserEquipment_ = other.ipUserEquipment_;
+      ipApplicationServer_ = other.ipApplicationServer_;
+      portUserEquipment_ = other.portUserEquipment_;
+      portApplicationServer_ = other.portApplicationServer_;
+      protocolIn_ = other.protocolIn_;
+      protocolOut_ = other.protocolOut_;
+      profile_ = other.profile_;
+      notificationUri_ = other.notificationUri_;
+      notificationAuthToken_ = other.notificationAuthToken_;
+      tags_ = other.tags_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionCreateRequest Clone() {
+      return new QosPrioritySessionCreateRequest(this);
+    }
+
+    /// <summary>Field number for the "ver" field.</summary>
+    public const int VerFieldNumber = 1;
+    private uint ver_;
+    /// <summary>
+    ///
+    /// API version
+    ///
+    /// _(hidden)_ Reserved for future use
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Ver {
+      get { return ver_; }
+      set {
+        ver_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "session_cookie" field.</summary>
+    public const int SessionCookieFieldNumber = 2;
+    private string sessionCookie_ = "";
+    /// <summary>
+    ///
+    /// Session Cookie from RegisterClientRequest
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string SessionCookie {
+      get { return sessionCookie_; }
+      set {
+        sessionCookie_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "session_duration" field.</summary>
+    public const int SessionDurationFieldNumber = 3;
+    private uint sessionDuration_;
+    /// <summary>
+    ///
+    /// _(optional)_ QOS Priority Session duration in seconds
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint SessionDuration {
+      get { return sessionDuration_; }
+      set {
+        sessionDuration_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "ip_user_equipment" field.</summary>
+    public const int IpUserEquipmentFieldNumber = 4;
+    private string ipUserEquipment_ = "";
+    /// <summary>
+    ///
+    /// IP address of mobile device
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string IpUserEquipment {
+      get { return ipUserEquipment_; }
+      set {
+        ipUserEquipment_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "ip_application_server" field.</summary>
+    public const int IpApplicationServerFieldNumber = 5;
+    private string ipApplicationServer_ = "";
+    /// <summary>
+    ///
+    /// IP address of the application server
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string IpApplicationServer {
+      get { return ipApplicationServer_; }
+      set {
+        ipApplicationServer_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "port_user_equipment" field.</summary>
+    public const int PortUserEquipmentFieldNumber = 6;
+    private string portUserEquipment_ = "";
+    /// <summary>
+    ///
+    /// _(optional)_ A list of single ports or port ranges on the user equipment.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PortUserEquipment {
+      get { return portUserEquipment_; }
+      set {
+        portUserEquipment_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "port_application_server" field.</summary>
+    public const int PortApplicationServerFieldNumber = 7;
+    private string portApplicationServer_ = "";
+    /// <summary>
+    ///
+    /// _(optional)_ A list of single ports or port ranges on the application server
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PortApplicationServer {
+      get { return portApplicationServer_; }
+      set {
+        portApplicationServer_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "protocol_in" field.</summary>
+    public const int ProtocolInFieldNumber = 8;
+    private global::DistributedMatchEngine.QosSessionProtocol protocolIn_ = 0;
+    /// <summary>
+    ///
+    /// _(optional)_ The used transport protocol for the uplink
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.QosSessionProtocol ProtocolIn {
+      get { return protocolIn_; }
+      set {
+        protocolIn_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "protocol_out" field.</summary>
+    public const int ProtocolOutFieldNumber = 9;
+    private global::DistributedMatchEngine.QosSessionProtocol protocolOut_ = 0;
+    /// <summary>
+    ///
+    /// _(optional)_ The used transport protocol for the downlink
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.QosSessionProtocol ProtocolOut {
+      get { return protocolOut_; }
+      set {
+        protocolOut_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "profile" field.</summary>
+    public const int ProfileFieldNumber = 10;
+    private global::DistributedMatchEngine.QosSessionProfile profile_ = 0;
+    /// <summary>
+    ///
+    /// QOS Priority Session profile name
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.QosSessionProfile Profile {
+      get { return profile_; }
+      set {
+        profile_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "notification_uri" field.</summary>
+    public const int NotificationUriFieldNumber = 11;
+    private string notificationUri_ = "";
+    /// <summary>
+    ///
+    ///  _(optional)_ URI of the callback receiver. Allows asynchronous delivery of session related events.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string NotificationUri {
+      get { return notificationUri_; }
+      set {
+        notificationUri_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "notification_auth_token" field.</summary>
+    public const int NotificationAuthTokenFieldNumber = 12;
+    private string notificationAuthToken_ = "";
+    /// <summary>
+    ///
+    /// _(optional)_ Authentification token for callback API
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string NotificationAuthToken {
+      get { return notificationAuthToken_; }
+      set {
+        notificationAuthToken_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "tags" field.</summary>
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
+    /// <summary>
+    ///
+    /// _(optional)_ Vendor specific data
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::MapField<string, string> Tags {
+      get { return tags_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QosPrioritySessionCreateRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QosPrioritySessionCreateRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Ver != other.Ver) return false;
+      if (SessionCookie != other.SessionCookie) return false;
+      if (SessionDuration != other.SessionDuration) return false;
+      if (IpUserEquipment != other.IpUserEquipment) return false;
+      if (IpApplicationServer != other.IpApplicationServer) return false;
+      if (PortUserEquipment != other.PortUserEquipment) return false;
+      if (PortApplicationServer != other.PortApplicationServer) return false;
+      if (ProtocolIn != other.ProtocolIn) return false;
+      if (ProtocolOut != other.ProtocolOut) return false;
+      if (Profile != other.Profile) return false;
+      if (NotificationUri != other.NotificationUri) return false;
+      if (NotificationAuthToken != other.NotificationAuthToken) return false;
+      if (!Tags.Equals(other.Tags)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Ver != 0) hash ^= Ver.GetHashCode();
+      if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
+      if (SessionDuration != 0) hash ^= SessionDuration.GetHashCode();
+      if (IpUserEquipment.Length != 0) hash ^= IpUserEquipment.GetHashCode();
+      if (IpApplicationServer.Length != 0) hash ^= IpApplicationServer.GetHashCode();
+      if (PortUserEquipment.Length != 0) hash ^= PortUserEquipment.GetHashCode();
+      if (PortApplicationServer.Length != 0) hash ^= PortApplicationServer.GetHashCode();
+      if (ProtocolIn != 0) hash ^= ProtocolIn.GetHashCode();
+      if (ProtocolOut != 0) hash ^= ProtocolOut.GetHashCode();
+      if (Profile != 0) hash ^= Profile.GetHashCode();
+      if (NotificationUri.Length != 0) hash ^= NotificationUri.GetHashCode();
+      if (NotificationAuthToken.Length != 0) hash ^= NotificationAuthToken.GetHashCode();
+      hash ^= Tags.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Ver != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(Ver);
+      }
+      if (SessionCookie.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(SessionCookie);
+      }
+      if (SessionDuration != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(SessionDuration);
+      }
+      if (IpUserEquipment.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(IpUserEquipment);
+      }
+      if (IpApplicationServer.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(IpApplicationServer);
+      }
+      if (PortUserEquipment.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(PortUserEquipment);
+      }
+      if (PortApplicationServer.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(PortApplicationServer);
+      }
+      if (ProtocolIn != 0) {
+        output.WriteRawTag(64);
+        output.WriteEnum((int) ProtocolIn);
+      }
+      if (ProtocolOut != 0) {
+        output.WriteRawTag(72);
+        output.WriteEnum((int) ProtocolOut);
+      }
+      if (Profile != 0) {
+        output.WriteRawTag(80);
+        output.WriteEnum((int) Profile);
+      }
+      if (NotificationUri.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(NotificationUri);
+      }
+      if (NotificationAuthToken.Length != 0) {
+        output.WriteRawTag(98);
+        output.WriteString(NotificationAuthToken);
+      }
+      tags_.WriteTo(output, _map_tags_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Ver != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Ver);
+      }
+      if (SessionCookie.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SessionCookie);
+      }
+      if (SessionDuration != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SessionDuration);
+      }
+      if (IpUserEquipment.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(IpUserEquipment);
+      }
+      if (IpApplicationServer.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(IpApplicationServer);
+      }
+      if (PortUserEquipment.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PortUserEquipment);
+      }
+      if (PortApplicationServer.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PortApplicationServer);
+      }
+      if (ProtocolIn != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ProtocolIn);
+      }
+      if (ProtocolOut != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ProtocolOut);
+      }
+      if (Profile != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Profile);
+      }
+      if (NotificationUri.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(NotificationUri);
+      }
+      if (NotificationAuthToken.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(NotificationAuthToken);
+      }
+      size += tags_.CalculateSize(_map_tags_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QosPrioritySessionCreateRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Ver != 0) {
+        Ver = other.Ver;
+      }
+      if (other.SessionCookie.Length != 0) {
+        SessionCookie = other.SessionCookie;
+      }
+      if (other.SessionDuration != 0) {
+        SessionDuration = other.SessionDuration;
+      }
+      if (other.IpUserEquipment.Length != 0) {
+        IpUserEquipment = other.IpUserEquipment;
+      }
+      if (other.IpApplicationServer.Length != 0) {
+        IpApplicationServer = other.IpApplicationServer;
+      }
+      if (other.PortUserEquipment.Length != 0) {
+        PortUserEquipment = other.PortUserEquipment;
+      }
+      if (other.PortApplicationServer.Length != 0) {
+        PortApplicationServer = other.PortApplicationServer;
+      }
+      if (other.ProtocolIn != 0) {
+        ProtocolIn = other.ProtocolIn;
+      }
+      if (other.ProtocolOut != 0) {
+        ProtocolOut = other.ProtocolOut;
+      }
+      if (other.Profile != 0) {
+        Profile = other.Profile;
+      }
+      if (other.NotificationUri.Length != 0) {
+        NotificationUri = other.NotificationUri;
+      }
+      if (other.NotificationAuthToken.Length != 0) {
+        NotificationAuthToken = other.NotificationAuthToken;
+      }
+      tags_.Add(other.tags_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Ver = input.ReadUInt32();
+            break;
+          }
+          case 18: {
+            SessionCookie = input.ReadString();
+            break;
+          }
+          case 24: {
+            SessionDuration = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            IpUserEquipment = input.ReadString();
+            break;
+          }
+          case 42: {
+            IpApplicationServer = input.ReadString();
+            break;
+          }
+          case 50: {
+            PortUserEquipment = input.ReadString();
+            break;
+          }
+          case 58: {
+            PortApplicationServer = input.ReadString();
+            break;
+          }
+          case 64: {
+            ProtocolIn = (global::DistributedMatchEngine.QosSessionProtocol) input.ReadEnum();
+            break;
+          }
+          case 72: {
+            ProtocolOut = (global::DistributedMatchEngine.QosSessionProtocol) input.ReadEnum();
+            break;
+          }
+          case 80: {
+            Profile = (global::DistributedMatchEngine.QosSessionProfile) input.ReadEnum();
+            break;
+          }
+          case 90: {
+            NotificationUri = input.ReadString();
+            break;
+          }
+          case 98: {
+            NotificationAuthToken = input.ReadString();
+            break;
+          }
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class QosPrioritySessionReply : pb::IMessage<QosPrioritySessionReply> {
+    private static readonly pb::MessageParser<QosPrioritySessionReply> _parser = new pb::MessageParser<QosPrioritySessionReply>(() => new QosPrioritySessionReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QosPrioritySessionReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionReply(QosPrioritySessionReply other) : this() {
+      ver_ = other.ver_;
+      sessionDuration_ = other.sessionDuration_;
+      profile_ = other.profile_;
+      sessionId_ = other.sessionId_;
+      startedAt_ = other.startedAt_;
+      expiresAt_ = other.expiresAt_;
+      httpStatus_ = other.httpStatus_;
+      tags_ = other.tags_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionReply Clone() {
+      return new QosPrioritySessionReply(this);
+    }
+
+    /// <summary>Field number for the "ver" field.</summary>
+    public const int VerFieldNumber = 1;
+    private uint ver_;
+    /// <summary>
+    ///
+    /// API version
+    ///
+    /// _(hidden)_ Reserved for future use
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Ver {
+      get { return ver_; }
+      set {
+        ver_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "session_duration" field.</summary>
+    public const int SessionDurationFieldNumber = 2;
+    private uint sessionDuration_;
+    /// <summary>
+    ///
+    /// QOS Priority Session duration in seconds
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint SessionDuration {
+      get { return sessionDuration_; }
+      set {
+        sessionDuration_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "profile" field.</summary>
+    public const int ProfileFieldNumber = 3;
+    private global::DistributedMatchEngine.QosSessionProfile profile_ = 0;
+    /// <summary>
+    ///
+    /// QOS Priority Session profile name
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.QosSessionProfile Profile {
+      get { return profile_; }
+      set {
+        profile_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "session_id" field.</summary>
+    public const int SessionIdFieldNumber = 4;
+    private string sessionId_ = "";
+    /// <summary>
+    ///
+    /// Session ID in UUID format
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string SessionId {
+      get { return sessionId_; }
+      set {
+        sessionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "started_at" field.</summary>
+    public const int StartedAtFieldNumber = 5;
+    private uint startedAt_;
+    /// <summary>
+    ///
+    /// Timestamp of session start in seconds since unix epoch
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint StartedAt {
+      get { return startedAt_; }
+      set {
+        startedAt_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "expires_at" field.</summary>
+    public const int ExpiresAtFieldNumber = 6;
+    private uint expiresAt_;
+    /// <summary>
+    ///
+    /// Timestamp of session expiration if the session was not deleted in seconds since unix epoch
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint ExpiresAt {
+      get { return expiresAt_; }
+      set {
+        expiresAt_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "http_status" field.</summary>
+    public const int HttpStatusFieldNumber = 7;
+    private uint httpStatus_;
+    /// <summary>
+    ///
+    /// HTTP Status Code of call to operator's API server.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint HttpStatus {
+      get { return httpStatus_; }
+      set {
+        httpStatus_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "tags" field.</summary>
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
+    /// <summary>
+    ///
+    /// _(optional)_ Vendor specific data
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::MapField<string, string> Tags {
+      get { return tags_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QosPrioritySessionReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QosPrioritySessionReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Ver != other.Ver) return false;
+      if (SessionDuration != other.SessionDuration) return false;
+      if (Profile != other.Profile) return false;
+      if (SessionId != other.SessionId) return false;
+      if (StartedAt != other.StartedAt) return false;
+      if (ExpiresAt != other.ExpiresAt) return false;
+      if (HttpStatus != other.HttpStatus) return false;
+      if (!Tags.Equals(other.Tags)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Ver != 0) hash ^= Ver.GetHashCode();
+      if (SessionDuration != 0) hash ^= SessionDuration.GetHashCode();
+      if (Profile != 0) hash ^= Profile.GetHashCode();
+      if (SessionId.Length != 0) hash ^= SessionId.GetHashCode();
+      if (StartedAt != 0) hash ^= StartedAt.GetHashCode();
+      if (ExpiresAt != 0) hash ^= ExpiresAt.GetHashCode();
+      if (HttpStatus != 0) hash ^= HttpStatus.GetHashCode();
+      hash ^= Tags.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Ver != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(Ver);
+      }
+      if (SessionDuration != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(SessionDuration);
+      }
+      if (Profile != 0) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Profile);
+      }
+      if (SessionId.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(SessionId);
+      }
+      if (StartedAt != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(StartedAt);
+      }
+      if (ExpiresAt != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(ExpiresAt);
+      }
+      if (HttpStatus != 0) {
+        output.WriteRawTag(56);
+        output.WriteUInt32(HttpStatus);
+      }
+      tags_.WriteTo(output, _map_tags_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Ver != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Ver);
+      }
+      if (SessionDuration != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SessionDuration);
+      }
+      if (Profile != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Profile);
+      }
+      if (SessionId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SessionId);
+      }
+      if (StartedAt != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(StartedAt);
+      }
+      if (ExpiresAt != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ExpiresAt);
+      }
+      if (HttpStatus != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(HttpStatus);
+      }
+      size += tags_.CalculateSize(_map_tags_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QosPrioritySessionReply other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Ver != 0) {
+        Ver = other.Ver;
+      }
+      if (other.SessionDuration != 0) {
+        SessionDuration = other.SessionDuration;
+      }
+      if (other.Profile != 0) {
+        Profile = other.Profile;
+      }
+      if (other.SessionId.Length != 0) {
+        SessionId = other.SessionId;
+      }
+      if (other.StartedAt != 0) {
+        StartedAt = other.StartedAt;
+      }
+      if (other.ExpiresAt != 0) {
+        ExpiresAt = other.ExpiresAt;
+      }
+      if (other.HttpStatus != 0) {
+        HttpStatus = other.HttpStatus;
+      }
+      tags_.Add(other.tags_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Ver = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            SessionDuration = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Profile = (global::DistributedMatchEngine.QosSessionProfile) input.ReadEnum();
+            break;
+          }
+          case 34: {
+            SessionId = input.ReadString();
+            break;
+          }
+          case 40: {
+            StartedAt = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            ExpiresAt = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            HttpStatus = input.ReadUInt32();
+            break;
+          }
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class QosPrioritySessionDeleteRequest : pb::IMessage<QosPrioritySessionDeleteRequest> {
+    private static readonly pb::MessageParser<QosPrioritySessionDeleteRequest> _parser = new pb::MessageParser<QosPrioritySessionDeleteRequest>(() => new QosPrioritySessionDeleteRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QosPrioritySessionDeleteRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionDeleteRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionDeleteRequest(QosPrioritySessionDeleteRequest other) : this() {
+      ver_ = other.ver_;
+      sessionCookie_ = other.sessionCookie_;
+      profile_ = other.profile_;
+      sessionId_ = other.sessionId_;
+      tags_ = other.tags_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionDeleteRequest Clone() {
+      return new QosPrioritySessionDeleteRequest(this);
+    }
+
+    /// <summary>Field number for the "ver" field.</summary>
+    public const int VerFieldNumber = 1;
+    private uint ver_;
+    /// <summary>
+    ///
+    /// API version
+    ///
+    /// _(hidden)_ Reserved for future use
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Ver {
+      get { return ver_; }
+      set {
+        ver_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "session_cookie" field.</summary>
+    public const int SessionCookieFieldNumber = 2;
+    private string sessionCookie_ = "";
+    /// <summary>
+    ///
+    /// Session Cookie from RegisterClientRequest
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string SessionCookie {
+      get { return sessionCookie_; }
+      set {
+        sessionCookie_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "profile" field.</summary>
+    public const int ProfileFieldNumber = 3;
+    private global::DistributedMatchEngine.QosSessionProfile profile_ = 0;
+    /// <summary>
+    ///
+    /// QOS Priority Session profile name
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.QosSessionProfile Profile {
+      get { return profile_; }
+      set {
+        profile_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "session_id" field.</summary>
+    public const int SessionIdFieldNumber = 4;
+    private string sessionId_ = "";
+    /// <summary>
+    ///
+    /// QOS Priority Session ID to be deleted
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string SessionId {
+      get { return sessionId_; }
+      set {
+        sessionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "tags" field.</summary>
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
+    /// <summary>
+    ///
+    /// _(optional)_ Vendor specific data
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::MapField<string, string> Tags {
+      get { return tags_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QosPrioritySessionDeleteRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QosPrioritySessionDeleteRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Ver != other.Ver) return false;
+      if (SessionCookie != other.SessionCookie) return false;
+      if (Profile != other.Profile) return false;
+      if (SessionId != other.SessionId) return false;
+      if (!Tags.Equals(other.Tags)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Ver != 0) hash ^= Ver.GetHashCode();
+      if (SessionCookie.Length != 0) hash ^= SessionCookie.GetHashCode();
+      if (Profile != 0) hash ^= Profile.GetHashCode();
+      if (SessionId.Length != 0) hash ^= SessionId.GetHashCode();
+      hash ^= Tags.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Ver != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(Ver);
+      }
+      if (SessionCookie.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(SessionCookie);
+      }
+      if (Profile != 0) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Profile);
+      }
+      if (SessionId.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(SessionId);
+      }
+      tags_.WriteTo(output, _map_tags_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Ver != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Ver);
+      }
+      if (SessionCookie.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SessionCookie);
+      }
+      if (Profile != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Profile);
+      }
+      if (SessionId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SessionId);
+      }
+      size += tags_.CalculateSize(_map_tags_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QosPrioritySessionDeleteRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Ver != 0) {
+        Ver = other.Ver;
+      }
+      if (other.SessionCookie.Length != 0) {
+        SessionCookie = other.SessionCookie;
+      }
+      if (other.Profile != 0) {
+        Profile = other.Profile;
+      }
+      if (other.SessionId.Length != 0) {
+        SessionId = other.SessionId;
+      }
+      tags_.Add(other.tags_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Ver = input.ReadUInt32();
+            break;
+          }
+          case 18: {
+            SessionCookie = input.ReadString();
+            break;
+          }
+          case 24: {
+            Profile = (global::DistributedMatchEngine.QosSessionProfile) input.ReadEnum();
+            break;
+          }
+          case 34: {
+            SessionId = input.ReadString();
+            break;
+          }
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class QosPrioritySessionDeleteReply : pb::IMessage<QosPrioritySessionDeleteReply> {
+    private static readonly pb::MessageParser<QosPrioritySessionDeleteReply> _parser = new pb::MessageParser<QosPrioritySessionDeleteReply>(() => new QosPrioritySessionDeleteReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QosPrioritySessionDeleteReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionDeleteReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionDeleteReply(QosPrioritySessionDeleteReply other) : this() {
+      ver_ = other.ver_;
+      status_ = other.status_;
+      tags_ = other.tags_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QosPrioritySessionDeleteReply Clone() {
+      return new QosPrioritySessionDeleteReply(this);
+    }
+
+    /// <summary>Field number for the "ver" field.</summary>
+    public const int VerFieldNumber = 1;
+    private uint ver_;
+    /// <summary>
+    ///
+    /// API version
+    ///
+    /// _(hidden)_ Reserved for future use
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Ver {
+      get { return ver_; }
+      set {
+        ver_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 2;
+    private global::DistributedMatchEngine.QosPrioritySessionDeleteReply.Types.DeleteStatus status_ = 0;
+    /// <summary>
+    /// Status return.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::DistributedMatchEngine.QosPrioritySessionDeleteReply.Types.DeleteStatus Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "tags" field.</summary>
+    public const int TagsFieldNumber = 100;
+    private static readonly pbc::MapField<string, string>.Codec _map_tags_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 802);
+    private readonly pbc::MapField<string, string> tags_ = new pbc::MapField<string, string>();
+    /// <summary>
+    ///
+    /// _(optional)_ Vendor specific data
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::MapField<string, string> Tags {
+      get { return tags_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QosPrioritySessionDeleteReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QosPrioritySessionDeleteReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Ver != other.Ver) return false;
+      if (Status != other.Status) return false;
+      if (!Tags.Equals(other.Tags)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Ver != 0) hash ^= Ver.GetHashCode();
+      if (Status != 0) hash ^= Status.GetHashCode();
+      hash ^= Tags.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Ver != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(Ver);
+      }
+      if (Status != 0) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Status);
+      }
+      tags_.WriteTo(output, _map_tags_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Ver != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Ver);
+      }
+      if (Status != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
+      }
+      size += tags_.CalculateSize(_map_tags_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QosPrioritySessionDeleteReply other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Ver != 0) {
+        Ver = other.Ver;
+      }
+      if (other.Status != 0) {
+        Status = other.Status;
+      }
+      tags_.Add(other.tags_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Ver = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            Status = (global::DistributedMatchEngine.QosPrioritySessionDeleteReply.Types.DeleteStatus) input.ReadEnum();
+            break;
+          }
+          case 802: {
+            tags_.AddEntriesFrom(input, _map_tags_codec);
+            break;
+          }
+        }
+      }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the QosPrioritySessionDeleteReply message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public enum DeleteStatus {
+        [pbr::OriginalName("QDEL_UNKNOWN")] QdelUnknown = 0,
+        [pbr::OriginalName("QDEL_DELETED")] QdelDeleted = 1,
+        [pbr::OriginalName("QDEL_NOT_FOUND")] QdelNotFound = 2,
+      }
+
     }
     #endregion
 
@@ -1911,7 +3384,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[5]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2214,7 +3687,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[6]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2488,7 +3961,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[7]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2708,7 +4181,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[8]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3012,7 +4485,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[9]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3304,7 +4777,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[10]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3583,7 +5056,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[11]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3837,7 +5310,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[12]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4059,7 +5532,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[13]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4248,7 +5721,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[14]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4496,7 +5969,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[15]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4718,7 +6191,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[16]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4944,7 +6417,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[17]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5231,7 +6704,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[18]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5526,7 +6999,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[19]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5777,7 +7250,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[20]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5949,7 +7422,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[21]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6136,7 +7609,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[22]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6416,7 +7889,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[23]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[27]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6840,7 +8313,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[24]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[28]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7055,7 +8528,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[25]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[29]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7459,7 +8932,7 @@ namespace DistributedMatchEngine {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[26]; }
+      get { return global::DistributedMatchEngine.AppClientReflection.Descriptor.MessageTypes[30]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
