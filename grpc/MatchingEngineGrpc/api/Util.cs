@@ -16,7 +16,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -94,6 +98,68 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
         };
         return loc;
       });
+    }
+
+    public static string GetHostIPV4Address(string host)
+    {
+      try
+      {
+        if (host == "" || host.Length > 255)
+        {
+          if (host.Length > 255)
+          {
+            Log.D($"{host} is more than 255 characters");
+          }
+          return null;
+        }
+        List<IPAddress> addresses = Dns.GetHostAddresses(host).ToList();
+        IPAddress ipv4Address = addresses.Find(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+        if (ipv4Address == null)
+        {
+          ipv4Address = addresses.Find(ip => ip.IsIPv4MappedToIPv6 == true);
+          if (ipv4Address == null)
+          {
+            return null;
+          }
+          ipv4Address = ipv4Address.MapToIPv4();
+        }
+        return ipv4Address.ToString();
+      }
+      catch (SocketException se)
+      {
+        Log.E($"Error is encountered when resolving {host}, SocketException: {se.Message}");
+        return null;
+      }
+      catch (ArgumentException ae)
+      {
+        Log.E($"{host} is an invalid host address, SocketException: {ae.Message}");
+        return null;
+      }
+    }
+
+    public static IPEndPoint GetDefaultLocalEndPointIPV4()
+    {
+      IPEndPoint defaultEndPoint = null;
+      using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+      {
+        try
+        {
+          socket.Connect(MatchingEngine.wifiOnlyDmeHost, 38001);
+          if (socket.LocalEndPoint.AddressFamily == AddressFamily.InterNetwork)
+          {
+            defaultEndPoint = socket.LocalEndPoint as IPEndPoint;
+          }
+          else
+          {
+            Log.S("LocalIP is not IPV4, returning null.");
+          }
+        }
+        catch (SocketException se)
+        {
+          Log.E("Exception trying to acquire endpoint: " + se.Message);
+        }
+      }
+      return defaultEndPoint;
     }
   }
 }
