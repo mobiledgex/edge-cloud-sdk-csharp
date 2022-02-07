@@ -34,28 +34,28 @@ namespace DistributedMatchEngine
     /// Specifies that no priority session should be created.
     /// </summary>
     [EnumMember]
-    QOS_NO_PRIORITY = 0,
+    NoPriority = 0,
     /// <summary>
     /// Corresponds to a specific set of network parameters for low latency that will be 
     /// negotiated with the network provider in advance.
     /// </summary>
     [EnumMember]
-    QOS_LOW_LATENCY = 1,
+    LowLatency = 1,
     /// <summary>
     /// Downlink traffic from AppInst to client is prioritized up to 20Mbps.
     /// </summary>
     [EnumMember]
-    QOS_THROUGHPUT_DOWN_S = 2,
+    ThroughputDownS = 2,
     /// <summary>
     /// Downlink traffic from AppInst to client is prioritized up to 50Mbps.
     /// </summary>
     [EnumMember]
-    QOS_THROUGHPUT_DOWN_M = 3,
+    ThroughputDownM = 3,
     /// <summary>
     /// Downlink traffic from AppInst to client is prioritized up to 100Mbps.
     /// </summary>
     [EnumMember]
-    QOS_THROUGHPUT_DOWN_L = 4
+    ThroughputDownL = 4
   }
 
   [DataContract]
@@ -67,17 +67,6 @@ namespace DistributedMatchEngine
     UDP = 1,
     [EnumMember]
     ANY = 2
-  }
-
-  [DataContract]
-  public enum QosSessionResult
-  {
-    [EnumMember]
-    QOS_NOT_ATTEMPTED = 0,
-    [EnumMember]
-    QOS_SESSION_CREATED = 1,
-    [EnumMember]
-    QOS_SESSION_FAILED = 2
   }
 
   [DataContract]

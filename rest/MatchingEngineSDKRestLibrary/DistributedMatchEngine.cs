@@ -1752,7 +1752,7 @@ namespace DistributedMatchEngine
         Log.E("FindCloudletReply is malformed");
         return null;
       }
-      if(findCloudletReply.qos_result == QosSessionResult.QOS_SESSION_CREATED)
+      if(findCloudletReply.qos_result == FindCloudletReply.QosSessionResult.SessionCreated)
       {
         Log.E("There is an active QoS session, please delete the current session first.");
         return null;
