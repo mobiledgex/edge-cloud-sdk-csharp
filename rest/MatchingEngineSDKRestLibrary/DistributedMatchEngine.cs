@@ -1737,8 +1737,8 @@ namespace DistributedMatchEngine
     public QosPrioritySessionCreateRequest CreateQosPriorityCreateRequest
       (QosSessionProfile sessionProfile,
       FindCloudletReply findCloudletReply,
-      QosSessionProtocol protocolIn = QosSessionProtocol.ANY,
-      QosSessionProtocol protocolOut = QosSessionProtocol.ANY,
+      QosSessionProtocol protocolIn = QosSessionProtocol.Any,
+      QosSessionProtocol protocolOut = QosSessionProtocol.Any,
       UInt32 duration= 0,
       string applicationPort = "",
       string serverPort = "",
@@ -1942,7 +1942,7 @@ namespace DistributedMatchEngine
       {
         reply.tags = Tag.HashtableToDictionary(reply.htags);
       }
-      if (reply.status == DeleteStatus.QDEL_DELETED)
+      if (reply.status == DeleteStatus.Deleted)
       {
         Log.D("Qos session deleted successfully");
         qosSessionId = null;

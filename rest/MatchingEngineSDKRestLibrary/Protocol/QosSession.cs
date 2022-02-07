@@ -62,22 +62,22 @@ namespace DistributedMatchEngine
   public enum QosSessionProtocol
   {
     [EnumMember]
-    TCP = 0,
+    Tcp = 0,
     [EnumMember]
-    UDP = 1,
+    Udp = 1,
     [EnumMember]
-    ANY = 2
+    Any = 2
   }
 
   [DataContract]
   public enum DeleteStatus
   {
     [EnumMember]
-    QDEL_UNKNOWN = 0,
+    Unknown = 0,
     [EnumMember]
-    QDEL_DELETED = 1,
+    Deleted = 1,
     [EnumMember]
-    QDEL_NOT_FOUND = 2
+    NotFound = 2
   }
 
   /*!
