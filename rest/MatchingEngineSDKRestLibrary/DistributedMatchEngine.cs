@@ -1733,15 +1733,44 @@ namespace DistributedMatchEngine
 
       return qosPositionKpiStream;
     }
-
+    /// <summary>
+    /// Creates the create request for a QoS priority session 
+    /// </summary>
+    /// <param name="sessionProfile">The QosSessionProfile choose an option from the following:
+    /// <para>(NoPriority, LowLatency, ThroughputDownS, ThroughputDownM, ThroughputDownL)</para> </param>
+    /// <param name="findCloudletReply"> the FindCloudletReply to be used, findCloudletReply is used for retrieving the following information
+    /// <para>
+    ///  SessionCookie, IPAddress of the server, Detecting if there is a QoS session created already
+    /// </para>
+    /// <para>if findCloudletReply.Status is not "Found" the function will return a null value</para>
+    /// </param>
+    /// <param name="applicationPort">A string representing a list of single ports or port ranges on the user equipment
+    /// <para>range of ports ex. "5000-5500"</para>
+    /// <para>comma delimited  ports ex. "5000,6000"</para>
+    /// <para>a mix of both ex. "5000-5500,4000,6000"</para>
+    /// </param>
+    /// <param name="serverPort"> A string representing a list of single ports or port ranges on the application server
+    /// <para>range of ports ex. "5000-5500"</para>
+    /// <para>comma delimited  ports ex. "5000,6000"</para>
+    /// <para>a mix of both ex. "5000-5500,4000,6000"</para>
+    /// </param>
+    /// <param name="protocolIn">(Optional) The used transport protocol for the uplink (default QosSessionProtocol.Any)</param>
+    /// <param name="protocolOut">(Optional) The used transport protocol for the downlink (default QosSessionProtocol.Any)</param>
+    /// <param name="duration">(Optional) QoS Priority Session duration in seconds </param>
+    /// <param name="notificationUri"> (Optional) URI of the callback receiver. Allows asynchronous delivery of session related events, malformed uri will result in a null value</param>
+    /// <param name="notificationAuthToken"> (Optional) Authentification token for callback API</param>
+    /// <param name="tags"> (Optional) Vendor specific data</param>
+    /// <param name="localEndPoint"> (Optional) IPV4 Address of the device, if not supplied the SDK will determine the IPV4 address of the device.</param>
+    /// <returns>QosPrioritySessionCreateRequest object</returns>
+    /// \section getqospriorityloadexample-grpc Example
     public QosPrioritySessionCreateRequest CreateQosPriorityCreateRequest
       (QosSessionProfile sessionProfile,
       FindCloudletReply findCloudletReply,
+      string applicationPort,
+      string serverPort,
       QosSessionProtocol protocolIn = QosSessionProtocol.Any,
       QosSessionProtocol protocolOut = QosSessionProtocol.Any,
       UInt32 duration= 0,
-      string applicationPort = "",
-      string serverPort = "",
       string notificationUri = "",
       string notificationAuthToken = "",
       Dictionary<string, string> tags = null,
@@ -1803,17 +1832,31 @@ namespace DistributedMatchEngine
       return request;
     }
 
-    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(QosPrioritySessionCreateRequest req)
+    /// <summary>
+    /// Creates QoS priority session 
+    /// </summary>
+    /// <param name="request">QosPrioritySessionCreateRequest object</param>
+    /// <returns>QosPrioritySessionReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(QosPrioritySessionCreateRequest request)
     {
-      return await CreateQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, req);
+      return await CreateQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
-    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(string host, uint port, QosPrioritySessionCreateRequest req)
+    /// <summary>
+    /// Creates QoS priority session
+    /// </summary>
+    /// <param name="host">(string) dme host</param>
+    /// <param name="port">(uint) dme port</param>
+    /// <param name="request">QosPrioritySessionCreateRequest object</param>
+    /// <returns>QosPrioritySessionReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(string host, uint port, QosPrioritySessionCreateRequest request)
     {
-      req.htags = Tag.DictionaryToHashtable(req.tags);
+      request.htags = Tag.DictionaryToHashtable(request.tags);
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, req);
+      serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
       Stream responseStream;
@@ -1874,6 +1917,13 @@ namespace DistributedMatchEngine
       return reply;
     }
 
+    /// <summary>
+    /// Creates DeleteRequest for deleting a running QoSPrioritySession, returns null if no QoSSessionId is stored in matchingEngine
+    /// </summary>
+    /// <param name="sessionProfile"> The QosSessionProfile to delete</param>
+    /// <param name="tags">(Optional) Vendor specific data</param>
+    /// <returns>QosPrioritySessionDeleteRequest object</returns>
+    /// \section getqospriorityloadexample Example
     public QosPrioritySessionDeleteRequest CreateQosPriorityDeleteRequest
      (QosSessionProfile sessionProfile,
      Dictionary<string, string> tags = null)
@@ -1899,23 +1949,37 @@ namespace DistributedMatchEngine
       return request;
     }
 
-    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest req)
+    /// <summary>
+    /// Deletes QoS priority session
+    /// </summary>
+    /// <param name="request">QosPrioritySessionDeleteRequest object</param>
+    /// <returns>QosPrioritySessionDeleteReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest request)
     {
-      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, req);
+      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, request);
     }
 
-    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest req)
+    /// <summary>
+    /// Deletes QoS priority session
+    /// </summary>
+    /// <param name="host">(string) dme host</param>
+    /// <param name="port">(uint) dme port</param>
+    /// <param name="request">QosPrioritySessionDeleteRequest object</param>
+    /// <returns>QosPrioritySessionDeleteReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest request)
     {
-      req.htags = Tag.DictionaryToHashtable(req.tags);
+      request.htags = Tag.DictionaryToHashtable(request.tags);
       DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateRequest), serializerSettings);
       MemoryStream ms = new MemoryStream();
-      serializer.WriteObject(ms, req);
+      serializer.WriteObject(ms, request);
       string jsonStr = Util.StreamToString(ms);
 
       Stream responseStream;
       try
       {
-        responseStream = await PostRequest(CreateUri(host, port) + qosprioritycreateAPI, jsonStr);
+        responseStream = await PostRequest(CreateUri(host, port) + qosprioritydeleteAPI, jsonStr);
         if (responseStream == null || !responseStream.CanRead)
         {
           Log.E("Unreadable DeleteQosSessionStream stream!");
