@@ -186,10 +186,10 @@ namespace DistributedMatchEngine
     HEALTH_CHECK_UNKNOWN = 0,
     //! Health Check failure due to RootLB being offline
     [EnumMember]
-    HEALTH_CHECK_FAIL_ROOTLB_OFFLINE = 1,
+    HEALTH_CHECK_ROOTLB_OFFLINE = 1,
     //! Health Check failure due to Backend server being unavailable
     [EnumMember]
-    HEALTH_CHECK_FAIL_SERVER_FAIL = 2,
+    HEALTH_CHECK_SERVER_FAIL = 2,
     //! Health Check is ok
     [EnumMember]
     HEALTH_CHECK_OK = 3

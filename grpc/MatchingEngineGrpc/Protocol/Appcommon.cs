@@ -35,23 +35,23 @@ namespace DistributedMatchEngine {
             "Y2VJbmZvRHluYW1pYxIZChFkYXRhX25ldHdvcmtfdHlwZRgBIAEoCRIXCg9z",
             "aWduYWxfc3RyZW5ndGgYAiABKAQSFAoMY2Fycmllcl9uYW1lGAMgASgJKj8K",
             "BkxQcm90bxITCg9MX1BST1RPX1VOS05PV04QABIPCgtMX1BST1RPX1RDUBAB",
-            "Eg8KC0xfUFJPVE9fVURQEAIqqAEKC0hlYWx0aENoZWNrEhgKFEhFQUxUSF9D",
-            "SEVDS19VTktOT1dOEAASJAogSEVBTFRIX0NIRUNLX0ZBSUxfUk9PVExCX09G",
-            "RkxJTkUQARIhCh1IRUFMVEhfQ0hFQ0tfRkFJTF9TRVJWRVJfRkFJTBACEhMK",
-            "D0hFQUxUSF9DSEVDS19PSxADEiEKHUhFQUxUSF9DSEVDS19DTE9VRExFVF9P",
-            "RkZMSU5FEAQq7wEKDUNsb3VkbGV0U3RhdGUSGgoWQ0xPVURMRVRfU1RBVEVf",
-            "VU5LTk9XThAAEhkKFUNMT1VETEVUX1NUQVRFX0VSUk9SUxABEhgKFENMT1VE",
-            "TEVUX1NUQVRFX1JFQURZEAISGgoWQ0xPVURMRVRfU1RBVEVfT0ZGTElORRAD",
-            "Eh4KGkNMT1VETEVUX1NUQVRFX05PVF9QUkVTRU5UEAQSFwoTQ0xPVURMRVRf",
-            "U1RBVEVfSU5JVBAFEhoKFkNMT1VETEVUX1NUQVRFX1VQR1JBREUQBhIcChhD",
-            "TE9VRExFVF9TVEFURV9ORUVEX1NZTkMQByrAAgoQTWFpbnRlbmFuY2VTdGF0",
-            "ZRIUChBOT1JNQUxfT1BFUkFUSU9OEAASFQoRTUFJTlRFTkFOQ0VfU1RBUlQQ",
-            "ARIcChJGQUlMT1ZFUl9SRVFVRVNURUQQAhoEkPYYARIXCg1GQUlMT1ZFUl9E",
-            "T05FEAMaBJD2GAESGAoORkFJTE9WRVJfRVJST1IQBBoEkPYYARIhCh1NQUlO",
-            "VEVOQU5DRV9TVEFSVF9OT19GQUlMT1ZFUhAFEhcKDUNSTV9SRVFVRVNURUQQ",
-            "BhoEkPYYARIfChVDUk1fVU5ERVJfTUFJTlRFTkFOQ0UQBxoEkPYYARITCglD",
-            "Uk1fRVJST1IQCBoEkPYYARIfChVOT1JNQUxfT1BFUkFUSU9OX0lOSVQQCRoE",
-            "kPYYARIbChFVTkRFUl9NQUlOVEVOQU5DRRAfGgSQ9hgBYgZwcm90bzM="));
+            "Eg8KC0xfUFJPVE9fVURQEAIqngEKC0hlYWx0aENoZWNrEhgKFEhFQUxUSF9D",
+            "SEVDS19VTktOT1dOEAASHwobSEVBTFRIX0NIRUNLX1JPT1RMQl9PRkZMSU5F",
+            "EAESHAoYSEVBTFRIX0NIRUNLX1NFUlZFUl9GQUlMEAISEwoPSEVBTFRIX0NI",
+            "RUNLX09LEAMSIQodSEVBTFRIX0NIRUNLX0NMT1VETEVUX09GRkxJTkUQBCrv",
+            "AQoNQ2xvdWRsZXRTdGF0ZRIaChZDTE9VRExFVF9TVEFURV9VTktOT1dOEAAS",
+            "GQoVQ0xPVURMRVRfU1RBVEVfRVJST1JTEAESGAoUQ0xPVURMRVRfU1RBVEVf",
+            "UkVBRFkQAhIaChZDTE9VRExFVF9TVEFURV9PRkZMSU5FEAMSHgoaQ0xPVURM",
+            "RVRfU1RBVEVfTk9UX1BSRVNFTlQQBBIXChNDTE9VRExFVF9TVEFURV9JTklU",
+            "EAUSGgoWQ0xPVURMRVRfU1RBVEVfVVBHUkFERRAGEhwKGENMT1VETEVUX1NU",
+            "QVRFX05FRURfU1lOQxAHKsACChBNYWludGVuYW5jZVN0YXRlEhQKEE5PUk1B",
+            "TF9PUEVSQVRJT04QABIVChFNQUlOVEVOQU5DRV9TVEFSVBABEhwKEkZBSUxP",
+            "VkVSX1JFUVVFU1RFRBACGgSQ9hgBEhcKDUZBSUxPVkVSX0RPTkUQAxoEkPYY",
+            "ARIYCg5GQUlMT1ZFUl9FUlJPUhAEGgSQ9hgBEiEKHU1BSU5URU5BTkNFX1NU",
+            "QVJUX05PX0ZBSUxPVkVSEAUSFwoNQ1JNX1JFUVVFU1RFRBAGGgSQ9hgBEh8K",
+            "FUNSTV9VTkRFUl9NQUlOVEVOQU5DRRAHGgSQ9hgBEhMKCUNSTV9FUlJPUhAI",
+            "GgSQ9hgBEh8KFU5PUk1BTF9PUEVSQVRJT05fSU5JVBAJGgSQ9hgBEhsKEVVO",
+            "REVSX01BSU5URU5BTkNFEB8aBJD2GAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { pbr::FileDescriptor.DescriptorProtoFileDescriptor, global::Edgeprotogen.EdgeprotogenReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::DistributedMatchEngine.LProto), typeof(global::DistributedMatchEngine.HealthCheck), typeof(global::DistributedMatchEngine.CloudletState), typeof(global::DistributedMatchEngine.MaintenanceState), }, new pbr::GeneratedClrTypeInfo[] {
@@ -101,11 +101,11 @@ namespace DistributedMatchEngine {
     /// <summary>
     /// Health Check failure due to RootLB being offline
     /// </summary>
-    [pbr::OriginalName("HEALTH_CHECK_FAIL_ROOTLB_OFFLINE")] FailRootlbOffline = 1,
+    [pbr::OriginalName("HEALTH_CHECK_ROOTLB_OFFLINE")] RootlbOffline = 1,
     /// <summary>
     /// Health Check failure due to Backend server being unavailable
     /// </summary>
-    [pbr::OriginalName("HEALTH_CHECK_FAIL_SERVER_FAIL")] FailServerFail = 2,
+    [pbr::OriginalName("HEALTH_CHECK_SERVER_FAIL")] ServerFail = 2,
     /// <summary>
     /// Health Check is ok
     /// </summary>

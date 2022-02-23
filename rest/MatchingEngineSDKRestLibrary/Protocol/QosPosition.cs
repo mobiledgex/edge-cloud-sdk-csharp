@@ -48,13 +48,13 @@ namespace DistributedMatchEngine
   {
     //! Radio Access Technologies
     [DataMember]
-    public string[] rat_2g;
+    public string[] rat2g;
     [DataMember]
-    public string[] rat_3g;
+    public string[] rat3g;
     [DataMember]
-    public string[] rat_4g;
+    public string[] rat4g;
     [DataMember]
-    public string[] rat_5g;
+    public string[] rat5g;
   }
 
   /*!
