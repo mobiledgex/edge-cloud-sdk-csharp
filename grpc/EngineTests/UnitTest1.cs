@@ -241,7 +241,7 @@ namespace Tests
       }
       catch (Exception e)
       {
-        Assert.Fail("TestFailed, Exceptions thrown "+ e.Message + e.Data + e.Source + e.StackTrace);
+        Assert.Fail("TestFailed, Exception thrown "+ e.Message);
         Console.WriteLine("TCP socket exception is " + e.Message);
       }
       Console.WriteLine("TestTCPConnection finished.");
