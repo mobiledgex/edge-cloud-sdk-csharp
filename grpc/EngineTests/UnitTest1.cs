@@ -39,10 +39,14 @@ namespace Tests
   public class Tests
   {
     // Test to an alternate server:
-    const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
-    const string orgName = "MobiledgeX-Samples";
-    const string appName = "sdktest";
-    const string appVers = "9.0";
+    //const string dmeHost = "eu-mexdemo." + MatchingEngine.baseDmeHost;
+    //const string orgName = "MobiledgeX-Samples";
+    //const string appName = "sdktest";
+    //const string appVers = "9.0";
+    const string dmeHost = "us-qa." + MatchingEngine.baseDmeHost;
+    const string orgName = "automation_dev_org";
+    const string appName = "automation-sdk-porttest";
+    const string appVers = "1.0";
 
     static MatchingEngine me;
 
@@ -178,10 +182,8 @@ namespace Tests
       int port = port1.PublicPort;
       Assert.True(port > 0, "Port must be bigger than 0!");
 
-      Assert.True(me.EdgeEventsConnection != null);
-
-      me.EdgeEventsConnection.Open();
-
+      bool startEdgeEvents = me.StartEdgeEvents();
+      Assert.True(startEdgeEvents, "Failed to start edge events");
       // In case you're using edgebox locally:
       //host = "127.0.0.1";
       //port = 50051;
@@ -239,8 +241,8 @@ namespace Tests
       }
       catch (Exception e)
       {
-        Assert.Fail("TestFailed, Exception thrown");
-        Console.WriteLine("TCP socket exception is " + e);
+        Assert.Fail("TestFailed, Exceptions thrown "+ e.Message + e.Data + e.Source + e.StackTrace);
+        Console.WriteLine("TCP socket exception is " + e.Message);
       }
       Console.WriteLine("TestTCPConnection finished.");
     }
@@ -1016,10 +1018,10 @@ namespace Tests
         DeviceModel = "VS Studio",
         DeviceOs = ".NET"
       };
-      me.EdgeEventsConnection.Open(
-        deviceInfoStatic: useDeviceInofStaticInConstructor == true ? deviceInfoStatic : null,
-        deviceInfoDynamic: useDeviceInfoDynamicInConstructor == true ? deviceInfoDynamic : null
+      bool startEdgeEvents = me.StartEdgeEvents(deviceInfoStatic: useDeviceInofStaticInConstructor == true ? deviceInfoStatic : null,
+         deviceInfoDynamic: useDeviceInfoDynamicInConstructor == true ? deviceInfoDynamic : null
         );
+      Assert.True(startEdgeEvents, "Failed to start edge events");
       ServerEdgeEvent latestServerEvent = null;
       me.EdgeEventsReceiver += (ServerEdgeEvent) =>
       {
@@ -1052,8 +1054,8 @@ namespace Tests
       int port = port1.PublicPort;
       Assert.True(port > 0, "Port must be bigger than 0!");
 
-      Assert.True(me.EdgeEventsConnection != null);
-      me.EdgeEventsConnection.Open();
+      bool startEdgeEvents = me.StartEdgeEvents();
+      Assert.True(startEdgeEvents, "Failed to start edge events");
       ServerEdgeEvent latestServerEvent = null;
       me.EdgeEventsReceiver += (ServerEdgeEvent) =>
       {
@@ -1071,7 +1073,8 @@ namespace Tests
         latestServerEvent = ServerEdgeEvent;
       };
       me.RestartEdgeEventsConnection(latestServerEvent.NewCloudlet, dmeHost, MatchingEngine.defaultDmeGrpcPort);
-      me.EdgeEventsConnection.Open();
+      startEdgeEvents = me.StartEdgeEvents();
+      Assert.True(startEdgeEvents, "Failed to start edge events");
       me.EdgeEventsReceiver += (ServerEdgeEvent) =>
       {
         latestServerEvent = ServerEdgeEvent;
@@ -1110,8 +1113,8 @@ namespace Tests
       bool latencySamplesSent;
       Assert.True(port > 0, "Port must be bigger than 0!");
 
-      Assert.True(me.EdgeEventsConnection != null);
-      me.EdgeEventsConnection.Open();
+      bool startEdgeEvents = me.StartEdgeEvents();
+      Assert.True(startEdgeEvents, "Failed to start edge events");
       ServerEdgeEvent latestServerEvent = null;
       me.EdgeEventsReceiver += (ServerEdgeEvent) =>
       {
@@ -1171,8 +1174,8 @@ namespace Tests
       bool latencySamplesSent;
       Assert.True(port > 0, "Port must be bigger than 0!");
 
-      Assert.True(me.EdgeEventsConnection != null);
-      me.EdgeEventsConnection.Open();
+      bool startEdgeEvents = me.StartEdgeEvents();
+      Assert.True(startEdgeEvents, "Failed to start edge events");
       ServerEdgeEvent latestServerEvent = null;
       me.EdgeEventsReceiver += (ServerEdgeEvent) =>
       {
