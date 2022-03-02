@@ -17,7 +17,6 @@
 
 using NUnit.Framework;
 using DistributedMatchEngine;
-using DistributedMatchEngine.Mel;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -58,11 +57,6 @@ namespace Tests
         return null;
       }
 
-      ulong CarrierInfo.GetCellID()
-      {
-        return 0;
-      }
-
       public ulong GetSignalStrength()
       {
         return 0;
@@ -71,19 +65,6 @@ namespace Tests
       public string GetDataNetworkType()
       {
         return "";
-      }
-    }
-
-    class TestUniqueID : UniqueID
-    {
-      string UniqueID.GetUniqueIDType()
-      {
-        return "uniqueIdTypeModel";
-      }
-
-      string UniqueID.GetUniqueID()
-      {
-        return "uniqueId";
       }
     }
 
@@ -116,27 +97,16 @@ namespace Tests
       }
     }
 
-    public class TestMelMessaging : MelMessagingInterface
-    {
-      public bool IsMelEnabled() { return false; }
-      public string GetMelVersion() { return ""; }
-      public string GetUid() { return ""; }
-      public string SetToken(string token, string app_name) { return ""; }
-      public string GetManufacturer() { return "DummyManufacturer"; }
-    }
-
     [SetUp]
     public void Setup()
     {
       // Create a network interface abstraction, with named WiFi and Cellular interfaces.
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
-      UniqueID uniqueIdInterface = new TestUniqueID();
       DeviceInfoApp deviceInfo = new TestDeviceInfo();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
-      me.SetMelMessaging(new TestMelMessaging());
+      me = new MatchingEngine(carrierInfo, netInterface, deviceInfo);
     }
 
     [TearDown]
@@ -946,10 +916,6 @@ namespace Tests
           orgName: orgName,
           appName: appName,
           appVersion: appVers);
-
-        // Micro Test:
-        TestMelMessaging mt = new TestMelMessaging();
-        Assert.AreEqual("DummyManufacturer", mt.GetManufacturer());
 
         // It's the actual RegisterClient DME call that grabs the latest
         // values for hashed Advertising ID and unique ID, and does so as late

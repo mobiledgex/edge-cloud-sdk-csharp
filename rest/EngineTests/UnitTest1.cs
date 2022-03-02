@@ -17,7 +17,6 @@
 
 using NUnit.Framework;
 using DistributedMatchEngine;
-using DistributedMatchEngine.Mel;
 
 using System.Collections.Generic;
 using System.IO;
@@ -63,11 +62,6 @@ namespace Tests
         return null;
       }
 
-      ulong CarrierInfo.GetCellID()
-      {
-        return 0;
-      }
-
       public string GetDataNetworkPath()
       {
         return "";
@@ -76,19 +70,6 @@ namespace Tests
       public ulong GetSignalStrength()
       {
         return 0;
-      }
-    }
-
-    public class TestUniqueID : UniqueID
-    {
-      string UniqueID.GetUniqueIDType()
-      {
-        return "uniqueIdTypeModel";
-      }
-
-      string UniqueID.GetUniqueID()
-      {
-        return "uniqueId";
       }
     }
 
@@ -105,27 +86,16 @@ namespace Tests
       }
     }
 
-    public class TestMelMessaging : MelMessagingInterface
-    {
-      public bool IsMelEnabled() { return false; }
-      public string GetMelVersion() { return ""; }
-      public string GetUid() { return ""; }
-      public string SetToken(string token, string app_name) { return ""; }
-      public string GetManufacturer() { return "DummyManufacturer"; }
-    }
-
     [SetUp]
     public void Setup()
     {
       // Create a network interface abstraction, with named WiFi and Cellular interfaces.
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
-      UniqueID uniqueIdInterface = new TestUniqueID();
       DeviceInfo deviceInfo = new TestDeviceInfo();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
-      me.SetMelMessaging(new TestMelMessaging());
+      me = new MatchingEngine(carrierInfo, netInterface, deviceInfo);
     }
 
     private MemoryStream getMemoryStream(string jsonStr)
@@ -1020,41 +990,6 @@ namespace Tests
 
         Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
         netTest.doTest(false);
-      }
-      catch (Exception e)
-      {
-        Assert.Fail("Excepton while testing: " + e.Message);
-        if (e.InnerException != null)
-        {
-          Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
-        }
-      }
-    }
-
-    [Test]
-    public async static Task TestUniqueIdText()
-    {
-      RegisterClientRequest req1;
-
-
-      try
-      {
-        req1 = me.CreateRegisterClientRequest(
-          orgName: orgName,
-          appName: appName,
-          appVersion: appVers);
-
-        TestMelMessaging mt = new TestMelMessaging();
-        Assert.AreEqual("DummyManufacturer", mt.GetManufacturer());
-
-        // It's the actual RegisterClient DME call that grabs the latest
-        // values for hashed Advertising ID and unique ID, and does so as late
-        // as possible.
-        // It's the actual send, not the message creation where it is filled in.
-
-        Console.WriteLine("Testing null");
-        Assert.AreEqual(null, req1.unique_id_type);
-        Assert.AreEqual(null, req1.unique_id);
       }
       catch (Exception e)
       {

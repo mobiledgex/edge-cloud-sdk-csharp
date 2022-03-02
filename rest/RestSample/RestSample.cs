@@ -23,26 +23,11 @@ using System.Runtime.Serialization.Json;
 using System.IO;
 
 using DistributedMatchEngine;
-using DistributedMatchEngine.Mel;
 using DistributedMatchEngine.PerformanceMetrics;
 using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 
 namespace RestSample
 {
-  // This interface is optional but is used in the sample.
-  class DummyUniqueID : UniqueID
-  {
-    string UniqueID.GetUniqueIDType()
-    {
-      return "dummyModel";
-    }
-
-    string UniqueID.GetUniqueID()
-    {
-      return "abcdef0123456789";
-    }
-  }
-
   class DummyDeviceInfo : DeviceInfo
   {
     DummyCarrierInfo carrierInfo = new DummyCarrierInfo();
@@ -67,11 +52,6 @@ namespace RestSample
 
   class DummyCarrierInfo : CarrierInfo
   {
-    public ulong GetCellID()
-    {
-      return 0;
-    }
-
     public string GetCurrentCarrierName()
     {
       return "26201";
@@ -91,15 +71,6 @@ namespace RestSample
     {
       return 2;
     }
-  }
-
-  public class TestMelMessaging : MelMessagingInterface
-  {
-    public bool IsMelEnabled() { return false; }
-    public string GetMelVersion() { return ""; }
-    public string GetUid() { return ""; }
-    public string SetToken(string token, string app_name) { return ""; }
-    public string GetManufacturer() { return "DummyManufacturer"; }
   }
 
   class Program
@@ -234,10 +205,9 @@ namespace RestSample
         Console.WriteLine("MobiledgeX RestSample!");
 
         //! [meconstructorexample]
-        MatchingEngine me = new MatchingEngine(new DummyCarrierInfo(), new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
+        MatchingEngine me = new MatchingEngine(new DummyCarrierInfo(), new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyDeviceInfo());
         //! [meconstructorexample]
 
-        me.SetMelMessaging(new TestMelMessaging());
         me.SetTimeout(15000);
         me.useSSL = true;
         fallbackDmeHost = me.GenerateDmeHostAddress(); // WiFi if not overridden in test sample.

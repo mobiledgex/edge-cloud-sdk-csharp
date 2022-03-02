@@ -27,9 +27,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DistributedMatchEngine.PerformanceMetrics;
-using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
-using System.Runtime.Serialization;
 
 
 /*!
@@ -207,9 +205,7 @@ namespace DistributedMatchEngine
 
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
-    public UniqueID uniqueID { get; set; }
     public DeviceInfo deviceInfo { get; private set; }
-    private MelMessagingInterface melMessaging { get; set; }
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
@@ -258,13 +254,12 @@ namespace DistributedMatchEngine
     /*!
      * Constructor for MatchingEngine class.
      * \param carrierInfo (CarrierInfo): 
-     * \param netInterface (NetInterface): 
-     * \param uniqueID (UniqueID):
+     * \param netInterface (NetInterface):
      * \param deviceInfo (DeviceInfo):
      * \section meconstructorexample Example
      * \snippet RestSample.cs meconstructorexample
      */
-    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null, DeviceInfo deviceInfo = null)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, DeviceInfo deviceInfo = null)
     {
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
@@ -286,15 +281,6 @@ namespace DistributedMatchEngine
         this.netInterface = netInterface;
       }
 
-      if (uniqueID == null)
-      {
-        this.uniqueID = new EmptyUniqueID();
-      }
-      else
-      {
-        this.uniqueID = uniqueID;
-      }
-
       if (deviceInfo == null)
       {
         this.deviceInfo = new EmptyDeviceInfo();
@@ -303,9 +289,6 @@ namespace DistributedMatchEngine
       {
         this.deviceInfo = deviceInfo;
       }
-
-      // Default to empty.
-      SetMelMessaging(null);
 
       // Setup a dummy event delegate for monitoring events:
       EventBusReciever += (ServerEdgeEvent serverEdgeEvent) =>
@@ -352,22 +335,6 @@ namespace DistributedMatchEngine
     }
 
     /*!
-     * A device specific interface.
-     * @private
-     */
-    public void SetMelMessaging(MelMessagingInterface melInterface)
-    {
-      if (melInterface != null)
-      {
-        this.melMessaging = melInterface;
-      }
-      else
-      {
-        this.melMessaging = new EmptyMelMessaging();
-      }
-    }
-
-    /*!
      * Set the REST timeout for DME APIs.
      * \param timeout_in_milliseconds (int)
      * \return Timespan
@@ -380,33 +347,6 @@ namespace DistributedMatchEngine
         return httpClient.Timeout = TimeSpan.FromMilliseconds(timeout_in_milliseconds);
       }
       return httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
-    }
-
-    /*!
-     * GetUniqueIDType
-     * \ingroup functions_dmeutils
-     */
-    public string GetUniqueIDType()
-    {
-      return uniqueID.GetUniqueIDType();
-    }
-
-    /*!
-     * GetUniqueID
-     * \ingroup functions_dmeutils
-     */
-    public string GetUniqueID()
-    {
-      return uniqueID.GetUniqueID();
-    }
-
-    /*!
-     * GetCellID
-     * \ingroup functions_dmeutils
-     */
-    public ulong GetCellID()
-    {
-      return carrierInfo.GetCellID();
     }
 
     /*!
@@ -654,16 +594,13 @@ namespace DistributedMatchEngine
      * \param appName (string): Application name
      * \param appVersion (string): Application version
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
-     * \param uniqueIDType (string): Optional
-     * \param uniqueID (string): Optional
      * \param tags (Tag[]): Optional
      * \return RegisterClientRequest
      * \section createregisterexample Example
      * \snippet RestSample.cs createregisterexample
      */
     public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null)
+      Dictionary<string, string> tags = null)
     {
       return new RegisterClientRequest
       {
@@ -672,9 +609,6 @@ namespace DistributedMatchEngine
         app_name = appName,
         app_vers = appVersion,
         auth_token = authToken,
-        cell_id = cellID,
-        unique_id_type = uniqueIDType,
-        unique_id = uniqueID,
         tags = tags
       };
     }
@@ -710,24 +644,6 @@ namespace DistributedMatchEngine
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
       return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
-    }
-
-    private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
-    {
-      string uid = melMessaging.GetUid();
-      string aUniqueIdType = GetUniqueIDType(); // Read: device model
-      string aUniqueId = GetUniqueID();
-      string manufacturer = melMessaging.GetManufacturer();
-
-      if (manufacturer != null &&
-        aUniqueIdType != null && aUniqueIdType.Length > 0 &&
-        aUniqueId != null && aUniqueId.Length > 0)
-      {
-        request.unique_id_type = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
-        request.unique_id = aUniqueId;
-      }
-
-      return request;
     }
 
     private RegisterClientRequest UpdateRequestForDeviceInfo(RegisterClientRequest request)
@@ -816,12 +732,10 @@ namespace DistributedMatchEngine
         app_name = oldRequest.app_name,
         app_vers = oldRequest.app_vers,
         auth_token = oldRequest.auth_token,
-        cell_id = oldRequest.cell_id,
         tags = oldRequest.tags
       };
 
       // DeviceInfo
-      request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
       if (request.tags != null)
       {
@@ -830,7 +744,7 @@ namespace DistributedMatchEngine
       // Debug Log Serialization issues:
       Log.D("Pre Serialize: Request Reference" + request);
       Log.D("Pre Serialize OrgName: " + request.org_name + ", " + "AppName: " + request.app_name + ", AppVer: " + request.app_vers);
-      Log.D("Pre Serialize AuthToken: " + request.auth_token + ", " + "CellID: " + request.cell_id + ", Ver: " + request.ver);
+      Log.D("Pre Serialize AuthToken: " + request.auth_token + ", " + ", Ver: " + request.ver);
       Log.D("Pre Serialize Tag Reference: " + request.tags);
       if (request.tags != null) {
         Log.D("Pre Serialize Tags Count: " + request.tags.Count);
@@ -916,13 +830,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return FindCloudletRequest
      * \section createfindcloudletexample Example
      * \snippet RestSample.cs createfindcloudletexample
      */
-    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -938,7 +851,6 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         gps_location = loc,
         carrier_name = carrierName,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1319,20 +1231,17 @@ namespace DistributedMatchEngine
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
-     * \param uniqueIDType (string): Optional
-     * \param uniqueID (string): Optional
      * \param tags (Dictionary<string, string>): Optional
      * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+      Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort,
         orgName, appName, appVersion, loc,
-        carrierName, authToken, cellID, uniqueIDType, uniqueID, tags, mode);
+        carrierName, authToken, tags, mode);
     }
 
     /*!
@@ -1346,16 +1255,13 @@ namespace DistributedMatchEngine
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
-     * \param uniqueIDType (string): Optional
-     * \param uniqueID (string): Optional
      * \param tags (Tag[]): Optional
      * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
        string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+       Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(
@@ -1363,9 +1269,6 @@ namespace DistributedMatchEngine
         appName: appName,
         appVersion: appVersion,
         authToken: authToken,
-        cellID: cellID,
-        uniqueIDType: uniqueIDType,
-        uniqueID: uniqueID,
         tags: tags);
       RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
       if (registerClientReply.tags == null)
@@ -1380,7 +1283,6 @@ namespace DistributedMatchEngine
       FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(
         loc: loc,
         carrierName: carrierName,
-        cellID: cellID,
         tags: tags);
       FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode);
       if (findCloudletReply.tags == null)
@@ -1396,13 +1298,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return VerifyLocationRequest
      * \section createverifylocationexample Example
      * \snippet RestSample.cs createverifylocationexample
      */
-    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1420,7 +1321,6 @@ namespace DistributedMatchEngine
         gps_location = loc,
         carrier_name = carrierName,
         verify_loc_token = null,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1458,7 +1358,7 @@ namespace DistributedMatchEngine
     }
 
     /*!
-     * Makes sure that the user's location is not spoofed based on cellID and gps location.
+     * Makes sure that the user's location is not spoofed based on gps location.
      * Returns the Cell Tower status (CONNECTED_TO_SPECIFIED_TOWER if successful) and Gps Location status (LOC_VERIFIED if successful).
      * Also provides the distance between where the user claims to be and where carrier believes user to be (via gps and cell id) in km.
      * \ingroup functions_dmeapis
@@ -1540,13 +1440,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return AppInstListRequest
      * \section createappinstexample Example
      * \snippet RestSample.cs createappinstexample
      */
-    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1568,7 +1467,6 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         gps_location = loc,
         carrier_name = carrierName,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1666,14 +1564,13 @@ namespace DistributedMatchEngine
      * \param QosPositions (List<QosPosition): List of gps positions
      * \param lteCategory (Int32): Client's device LTE category number
      * \param bandSelection (BandSelection): Band list used by client
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return QosPositionRequest
      * \section createqospositionexample Example
      * \snippet RestSample.cs createqospositionexample
      */
     public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
-      UInt32 cellID = 0, Dictionary<string, string> tags = null)
+      Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1687,7 +1584,6 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         lte_category = lteCategory,
         band_selection = bandSelection,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -2018,7 +1914,7 @@ namespace DistributedMatchEngine
       return reply;
     }
 
-    private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    private FqdnListRequest CreateFqdnListRequest(Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -2029,7 +1925,6 @@ namespace DistributedMatchEngine
       {
         ver = 1,
         session_cookie = this.sessionCookie,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -2100,7 +1995,7 @@ namespace DistributedMatchEngine
     }
 
     private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
-      string userData = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+      string userData = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -2114,7 +2009,6 @@ namespace DistributedMatchEngine
         comm_type = dlgCommType,
         lg_id = lgId,
         user_data = userData,
-        cell_id = cellID,
         tags = tags
       };
     }
