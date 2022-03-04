@@ -15,8 +15,8 @@ jobs:
           doxyfile-path: './Doxygen/Doxyfile'
       - name: Move generated docs to docs directory
         run: |
-           rm -rf docs
-           mv rest/html docs/
+           sudo rm -rf docs
+           sudo mv rest/html docs/
         shell: bash
       - name: Commit Doxygen Updates
         uses: stefanzweifel/git-auto-commit-action@v4
