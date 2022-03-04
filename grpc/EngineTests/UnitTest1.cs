@@ -265,9 +265,10 @@ namespace Tests
 
         HttpClient httpClient = await me.GetHTTPClient(uri);
         Assert.ByVal(httpClient, Is.Not.Null);
-        HttpResponseMessage response = await httpClient.GetAsync(httpClient.BaseAddress + "/automation.html");
+        HttpResponseMessage response = await httpClient.GetAsync(httpClient.BaseAddress + "automation.html");
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseBody);
         Assert.ByVal(responseBody, Is.Not.Null);
         string responseBodyTest =
                     "<html>" +
@@ -293,7 +294,8 @@ namespace Tests
     }
 
     [Test]
-    public async static Task TestTCPTLSConnection()
+    [TestCase("Ahmed-Org","sdk-test","9.0","eu-stage.dme.mobiledgex.net")]
+    public async static Task TestTCPTLSConnection(string org_name, string app_name, string app_vers, string dme_host)
     {
       // TLS on TCP Connection Test
       try
@@ -302,10 +304,10 @@ namespace Tests
         FindCloudletReply reply1 = null;
 
         // Overide, test to another server:
-        reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeGrpcPort,
-          orgName: orgName,
-          appName: appName,
-          appVersion: appVers,
+        reply1 = await me.RegisterAndFindCloudlet(dme_host, MatchingEngine.defaultDmeGrpcPort,
+          orgName: org_name,
+          appName: app_name,
+          appVersion: app_vers,
           loc: loc);
 
 
