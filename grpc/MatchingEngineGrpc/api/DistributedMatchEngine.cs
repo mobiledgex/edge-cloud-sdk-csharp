@@ -342,6 +342,15 @@ namespace DistributedMatchEngine
       return EdgeEventsConnection;
     }
 
+    public bool StartEdgeEvents(string dmeHost = null, uint dmePort = 0, DeviceInfoDynamic deviceInfoDynamic = null, DeviceInfoStatic deviceInfoStatic = null)
+    {
+      EdgeEventsConnection = GetEdgeEventsConnection(edgeEventsCookie, dmeHost, dmePort);
+      if (EdgeEventsConnection == null)
+      {
+        return false;
+      }
+      return EdgeEventsConnection.Open(deviceInfoDynamic, deviceInfoStatic);
+    }
 
     public EdgeEventsConnection RestartEdgeEventsConnection(FindCloudletReply newCloudlet, string dmeHost = null, uint dmePort = 0)
     {
