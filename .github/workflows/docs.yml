@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Download Doxygen
         run: |
-           sudo apt-get update
+           apt-get update
            apt install build-essential xz-utils curl cmake flex bison git
            git clone https://github.com/doxygen/doxygen.git
            cd doxygen
