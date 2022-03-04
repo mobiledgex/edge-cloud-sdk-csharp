@@ -1,6 +1,6 @@
 name: MobiledgeX C# Docs
 
-on: [pull_request]
+on: [push]
 
 jobs:
   build:
@@ -8,11 +8,24 @@ jobs:
     steps:
       - name: Check out Repo
         uses: actions/checkout@v2
-      - name: Update Docs
-        uses: mattnotmitt/doxygen-action@v1.9.2
-        with:  
-          working-directory: 'rest/'
-          doxyfile-path: './Doxygen/Doxyfile'
+      - name: Download Doxygen
+        run: |
+           sudo apt-get update
+           apt install build-essential xz-utils curl cmake flex bison git
+           git clone https://github.com/doxygen/doxygen.git
+           cd doxygen
+           mkdir build
+           cd build
+           cmake -G "Unix Makefiles" ..
+           make
+           make install
+        shell: bash
+      - name: Update docs
+        run: |
+           make generate-doxygen
+        shell: bash
+        working-directory: ./rest/
+
       - name: Commit Doxygen Updates
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
