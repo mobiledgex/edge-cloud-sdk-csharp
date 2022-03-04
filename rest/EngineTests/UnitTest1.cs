@@ -370,7 +370,8 @@ namespace Tests
     }
 
     [Test]
-    public async static Task TestTCPTLSConnection()
+    [TestCase("Ahmed-Org","sdk-test","9.0","eu-stage.dme.mobiledgex.net")]
+    public async static Task TestTCPTLSConnection(string org_name, string app_name, string app_vers, string dmeHost)
     {
 
       MatchingEngine.ServerRequiresClientCertificateAuthentication(false);
@@ -382,9 +383,9 @@ namespace Tests
         FindCloudletReply reply1 = null;
 
         reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
-          orgName: orgName,
-          appName: appName,
-          appVersion: appVers,
+          orgName: org_name,
+          appName: app_name,
+          appVersion: app_vers,
           loc: loc);
 
         int knownPort = 2015;
