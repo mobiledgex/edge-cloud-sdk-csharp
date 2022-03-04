@@ -8,26 +8,18 @@ jobs:
     steps:
       - name: Check out Repo
         uses: actions/checkout@v2
-      - name: Download Doxygen
+      - name: Update Docs
+        uses: mattnotmitt/doxygen-action@v1.9.2
+        with:  
+          working-directory: 'rest/'
+          doxyfile-path: './Doxygen/Doxyfile'
+      - name: Move generated docs to docs directory
         run: |
-           apt-get update
-           apt install build-essential xz-utils curl cmake flex bison git
-           git clone https://github.com/doxygen/doxygen.git
-           cd doxygen
-           mkdir build
-           cd build
-           cmake -G "Unix Makefiles" ..
-           make
-           make install
+           rm -rf docs
+           mv rest/html docs/
         shell: bash
-      - name: Update docs
-        run: |
-           make generate-doxygen
-        shell: bash
-        working-directory: ./rest/
-
       - name: Commit Doxygen Updates
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
             commit_message: Docs Automated Updates
-            branch: automated-docs
+            branch: automated-docs 
