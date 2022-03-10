@@ -73,6 +73,19 @@ namespace Tests
       }
     }
 
+    public class TestUniqueID : UniqueID
+    {
+      string UniqueID.GetUniqueIDType()
+      {
+        return "uniqueIdTypeModel";
+      }
+
+      string UniqueID.GetUniqueID()
+      {
+        return "uniqueId";
+      }
+    }
+
     public class TestDeviceInfo : DeviceInfo
     {
       Dictionary<string, string> DeviceInfo.GetDeviceInfo()
@@ -92,10 +105,11 @@ namespace Tests
       // Create a network interface abstraction, with named WiFi and Cellular interfaces.
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
+      UniqueID uniqueIdInterface = new TestUniqueID();
       DeviceInfo deviceInfo = new TestDeviceInfo();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface, deviceInfo);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
     }
 
     private MemoryStream getMemoryStream(string jsonStr)
@@ -991,6 +1005,37 @@ namespace Tests
 
         Assert.True(netTest.sites.ToArray()[0].samples[0] >= 0);
         netTest.doTest(false);
+      }
+      catch (Exception e)
+      {
+        Assert.Fail("Excepton while testing: " + e.Message);
+        if (e.InnerException != null)
+        {
+          Console.WriteLine("Inner Exception: " + e.InnerException.Message + ",\nStacktrace: " + e.InnerException.StackTrace);
+        }
+      }
+    }
+
+    [Test]
+    public async static Task TestUniqueIdText()
+    {
+      RegisterClientRequest req1;
+
+      try
+      {
+        req1 = me.CreateRegisterClientRequest(
+          orgName: orgName,
+          appName: appName,
+          appVersion: appVers);
+
+        // It's the actual RegisterClient DME call that grabs the latest
+        // values for hashed Advertising ID and unique ID, and does so as late
+        // as possible.
+        // It's the actual send, not the message creation where it is filled in.
+
+        Console.WriteLine("Testing null");
+        Assert.AreEqual(null, req1.unique_id_type);
+        Assert.AreEqual(null, req1.unique_id);
       }
       catch (Exception e)
       {

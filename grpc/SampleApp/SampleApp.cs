@@ -103,6 +103,20 @@ namespace MexGrpcSampleConsoleApp
     }
   }
 
+  // This interface is optional but is used in the sample.
+  class DummyUniqueID : UniqueID
+  {
+    string UniqueID.GetUniqueIDType()
+    {
+      return "dummyModel";
+    }
+
+    string UniqueID.GetUniqueID()
+    {
+      return "abcdef0123456789";
+    }
+  }
+
   class DummyDeviceInfo : DeviceInfoApp
   {
 
@@ -294,7 +308,8 @@ namespace MexGrpcSampleConsoleApp
         me = new MatchingEngine(
           netInterface: new SimpleNetInterface(new MacNetworkInterfaceName()),
           carrierInfo: new DummyCarrierInfo(),
-          deviceInfo: new DummyDeviceInfo());
+          deviceInfo: new DummyDeviceInfo(),
+          uniqueID: new DummyUniqueID());
         location = GetLocation();
         locs = new Loc[] { sanfran, paloalto, anchorage, austin };
         string uri = dmeHost + ":" + dmePort;
@@ -518,7 +533,8 @@ namespace MexGrpcSampleConsoleApp
       me = new MatchingEngine(
         netInterface: new SimpleNetInterface(new MacNetworkInterfaceName()),
         carrierInfo: new DummyCarrierInfo(),
-        deviceInfo: new DummyDeviceInfo());
+        deviceInfo: new DummyDeviceInfo(),
+        uniqueID: new DummyUniqueID());
       me.useOnlyWifi = true;
       me.useSSL = true; // false --> Local testing only.
       location = GetLocation();

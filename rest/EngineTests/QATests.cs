@@ -24,7 +24,18 @@ namespace Tests
     public QATests()
     {
     }
+    public class DummyUniqueID : UniqueID
+    {
+      string UniqueID.GetUniqueIDType()
+      {
+        return "dummyModel";
+      }
 
+      string UniqueID.GetUniqueID()
+      {
+        return "abcdef0123456789";
+      }
+    }
     public class DummyDeviceInfo : DeviceInfo
     {
       DummyCarrierInfo carrierInfo = new DummyCarrierInfo();
@@ -155,7 +166,7 @@ namespace Tests
       {
         carrierName = await getCurrentCarrierName();
         Console.WriteLine("RegisterClientRest Testcase");
-        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyDeviceInfo());
+        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
 
         // Start location task:
         var locTask = Util.GetLocationFromDevice();
@@ -316,7 +327,7 @@ namespace Tests
       {
         Console.WriteLine("FindCloudletSuccessRest Testcase");
 
-        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyDeviceInfo());
+        MatchingEngine me = new MatchingEngine(null, new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
         me.SetTimeout(15000);
 
         var locTask = Util.GetLocationFromDevice();
@@ -481,7 +492,7 @@ namespace Tests
 
         Console.WriteLine("VerifyLocationRest Testcase");
 
-        MatchingEngine me = new MatchingEngine(new DummyCarrierInfo(), new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyDeviceInfo());
+        MatchingEngine me = new MatchingEngine(new DummyCarrierInfo(), new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
 
         Console.WriteLine("Seting the location in the Location Server");
         SetLocation(locLat, locLong);
@@ -561,12 +572,12 @@ namespace Tests
         Console.WriteLine("Get UDP Connections Testcase!!");
 
         CarrierInfo dummyCarrier = new DummyCarrierInfo();
-        MatchingEngine me = new MatchingEngine(dummyCarrier, new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyDeviceInfo());
+        MatchingEngine me = new MatchingEngine(dummyCarrier, new SimpleNetInterface(new LinuxNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
         me.SetTimeout(15000);
 
         FindCloudletReply findCloudletInfo = null;
         var locTask = Util.GetLocationFromDevice();
-        var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers, developerAuthToken);
+        var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers, developerAuthToken, me.GetUniqueIDType(), me.GetUniqueIDType());
         RegisterClientReply registerClientReply;
         registerClientReply = await me.RegisterClient(dmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
         Assert.True(registerClientReply.status == ReplyStatus.Success, "GetUDPConnectionTest RegisterClient Failed");
