@@ -57,9 +57,10 @@ namespace EngineTests
       // Create a network interface abstraction, with named WiFi and Cellular interfaces.
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
+      UniqueID uniqueIdInterface = new EmptyUniqueID();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface);
     }
 
     public NetworkTests1()
