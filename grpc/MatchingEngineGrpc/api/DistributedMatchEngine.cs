@@ -735,19 +735,24 @@ namespace DistributedMatchEngine
 
     private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
     {
-      string uid = melMessaging.GetUid();
-      string aUniqueIdType = GetUniqueIDType(); // Read: device model
-      string aUniqueId = GetUniqueID();
-      string manufacturer = melMessaging.GetManufacturer();
-
-      if (manufacturer != null &&
-        aUniqueIdType != null && aUniqueIdType.Length > 0 &&
-        aUniqueId != null && aUniqueId.Length > 0)
+      if (uniqueID != null)
       {
-        request.UniqueIdType = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
-        request.UniqueId = aUniqueId;
+        string uidtype = uniqueID.GetUniqueIDType();
+        string uid = uniqueID.GetUniqueID();
+        if (uidtype != null)
+        {
+          uidtype = uidtype.Trim();
+        }
+        if (uid != null)
+        {
+          uid = uid.Trim();
+        }
+        if (uidtype != null && uidtype.Length > 0 && uid != null && uid.Length > 0)
+        {
+          request.UniqueIdType = uidtype;
+          request.UniqueId = uid;
+        }
       }
-
       return request;
     }
 
