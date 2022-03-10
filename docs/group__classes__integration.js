@@ -12,5 +12,7 @@ var group__classes__integration =
     [ "DistributedMatchEngine.LinuxNetworkInterfaceName", "class_distributed_match_engine_1_1_linux_network_interface_name.html", null ],
     [ "DistributedMatchEngine.Windows10NetworkInterfaceName", "class_distributed_match_engine_1_1_windows10_network_interface_name.html", null ],
     [ "DistributedMatchEngine.NetInterface", "interface_distributed_match_engine_1_1_net_interface.html", null ],
-    [ "DistributedMatchEngine.EmptyNetInterface", "class_distributed_match_engine_1_1_empty_net_interface.html", null ]
+    [ "DistributedMatchEngine.EmptyNetInterface", "class_distributed_match_engine_1_1_empty_net_interface.html", null ],
+    [ "DistributedMatchEngine.UniqueID", "interface_distributed_match_engine_1_1_unique_i_d.html", null ],
+    [ "DistributedMatchEngine.EmptyUniqueID", "class_distributed_match_engine_1_1_empty_unique_i_d.html", null ]
 ];
