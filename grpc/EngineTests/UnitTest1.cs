@@ -72,6 +72,19 @@ namespace Tests
       }
     }
 
+    class TestUniqueID : UniqueID
+    {
+      string UniqueID.GetUniqueIDType()
+      {
+        return "uniqueIdTypeModel";
+      }
+
+      string UniqueID.GetUniqueID()
+      {
+        return "uniqueId";
+      }
+    }
+
     class TestDeviceInfo : DeviceInfoApp
     {
       public DeviceInfoDynamic GetDeviceInfoDynamic()
@@ -107,10 +120,11 @@ namespace Tests
       // Create a network interface abstraction, with named WiFi and Cellular interfaces.
       CarrierInfo carrierInfo = new TestCarrierInfo();
       NetInterface netInterface = new SimpleNetInterface(new MacNetworkInterfaceName());
+      UniqueID uniqueIdInterface = new TestUniqueID();
       DeviceInfoApp deviceInfo = new TestDeviceInfo();
 
       // pass in unknown interfaces at compile and runtime.
-      me = new MatchingEngine(carrierInfo, netInterface, deviceInfo);
+      me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
     }
 
     [TearDown]

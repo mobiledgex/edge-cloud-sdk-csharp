@@ -28,6 +28,20 @@ using static DistributedMatchEngine.PerformanceMetrics.NetTest;
 
 namespace RestSample
 {
+  // This interface is optional but is used in the sample.
+  class DummyUniqueID : UniqueID
+  {
+    string UniqueID.GetUniqueIDType()
+    {
+      return "dummyModel";
+    }
+
+    string UniqueID.GetUniqueID()
+    {
+      return "abcdef0123456789";
+    }
+  }
+
   class DummyDeviceInfo : DeviceInfo
   {
     DummyCarrierInfo carrierInfo = new DummyCarrierInfo();
@@ -205,7 +219,7 @@ namespace RestSample
         Console.WriteLine("MobiledgeX RestSample!");
 
         //! [meconstructorexample]
-        MatchingEngine me = new MatchingEngine(new DummyCarrierInfo(), new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyDeviceInfo());
+        MatchingEngine me = new MatchingEngine(new DummyCarrierInfo(), new SimpleNetInterface(new MacNetworkInterfaceName()), new DummyUniqueID(), new DummyDeviceInfo());
         //! [meconstructorexample]
 
         me.SetTimeout(15000);
