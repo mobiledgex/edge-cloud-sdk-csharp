@@ -205,6 +205,7 @@ namespace DistributedMatchEngine
 
     public CarrierInfo carrierInfo { get; set; }
     public NetInterface netInterface { get; set; }
+    public UniqueID uniqueID { get; set; }
     public DeviceInfo deviceInfo { get; private set; }
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
@@ -255,11 +256,12 @@ namespace DistributedMatchEngine
      * Constructor for MatchingEngine class.
      * \param carrierInfo (CarrierInfo): 
      * \param netInterface (NetInterface):
+     * \param uniqueID (UniqueID):
      * \param deviceInfo (DeviceInfo):
      * \section meconstructorexample Example
      * \snippet RestSample.cs meconstructorexample
      */
-    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, DeviceInfo deviceInfo = null)
+    public MatchingEngine(CarrierInfo carrierInfo = null, NetInterface netInterface = null, UniqueID uniqueID = null, DeviceInfo deviceInfo = null)
     {
       httpClient = new HttpClient();
       httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
@@ -279,6 +281,15 @@ namespace DistributedMatchEngine
       else
       {
         this.netInterface = netInterface;
+      }
+
+      if (uniqueID == null)
+      {
+        this.uniqueID = new EmptyUniqueID();
+      }
+      else
+      {
+        this.uniqueID = uniqueID;
       }
 
       if (deviceInfo == null)
@@ -347,6 +358,24 @@ namespace DistributedMatchEngine
         return httpClient.Timeout = TimeSpan.FromMilliseconds(timeout_in_milliseconds);
       }
       return httpClient.Timeout = TimeSpan.FromMilliseconds(DEFAULT_REST_TIMEOUT_MS);
+    }
+
+    /*!
+     * GetUniqueIDType
+     * \ingroup functions_dmeutils
+     */
+    public string GetUniqueIDType()
+    {
+      return uniqueID.GetUniqueIDType();
+    }
+
+    /*!
+     * GetUniqueID
+     * \ingroup functions_dmeutils
+     */
+    public string GetUniqueID()
+    {
+      return uniqueID.GetUniqueID();
     }
 
     /*!
@@ -594,13 +623,15 @@ namespace DistributedMatchEngine
      * \param appName (string): Application name
      * \param appVersion (string): Application version
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     * \param uniqueIDType (string): Optional
+     * \param uniqueID (string): Optional
      * \param tags (Tag[]): Optional
      * \return RegisterClientRequest
      * \section createregisterexample Example
      * \snippet RestSample.cs createregisterexample
      */
     public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
-      Dictionary<string, string> tags = null)
+      string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null)
     {
       return new RegisterClientRequest
       {
@@ -609,6 +640,8 @@ namespace DistributedMatchEngine
         app_name = appName,
         app_vers = appVersion,
         auth_token = authToken,
+        unique_id_type = uniqueIDType,
+        unique_id = uniqueID,
         tags = tags
       };
     }
@@ -644,6 +677,33 @@ namespace DistributedMatchEngine
     public async Task<RegisterClientReply> RegisterClient(RegisterClientRequest request)
     {
       return await RegisterClient(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+    }
+
+    private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
+    {
+      if (uniqueID != null)
+      {
+        string uidtype = uniqueID.GetUniqueIDType();
+        string uid = uniqueID.GetUniqueID();
+        if (uidtype != null)
+        {
+          uidtype = uidtype.Trim();
+        }
+        if (uid != null) {
+          uid = uid.Trim();
+        }
+        if (uidtype != null && uidtype.Length >= 0 && uid != null && uid.Length >= 0)
+        {
+          request.unique_id_type = uidtype;
+          request.unique_id = uid;
+        }
+        else
+        {
+          request.unique_id_type = null;
+          request.unique_id = null;
+        }
+      }
+      return request;
     }
 
     private RegisterClientRequest UpdateRequestForDeviceInfo(RegisterClientRequest request)
@@ -736,6 +796,7 @@ namespace DistributedMatchEngine
       };
 
       // DeviceInfo
+      request = UpdateRequestForUniqueID(request);
       request = UpdateRequestForDeviceInfo(request);
       if (request.tags != null)
       {
@@ -1231,17 +1292,19 @@ namespace DistributedMatchEngine
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     * \param uniqueIDType (string): Optional
+     * \param uniqueID (string): Optional
      * \param tags (Dictionary<string, string>): Optional
      * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+      string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort,
         orgName, appName, appVersion, loc,
-        carrierName, authToken, tags, mode);
+        carrierName, authToken, uniqueIDType, uniqueID, tags, mode);
     }
 
     /*!
@@ -1255,13 +1318,16 @@ namespace DistributedMatchEngine
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
+     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
+     * \param uniqueIDType (string): Optional
+     * \param uniqueID (string): Optional
      * \param tags (Tag[]): Optional
      * \param mode (FindCloudletMode): Optional. Default is PROXIMITY. PROXIMITY will just return the findCloudletReply sent by DME (Generic REST API to findcloudlet endpoint). PERFORMANCE will test all app insts deployed on the specified carrier network and return the cloudlet with the lowest latency (Note: PERFORMANCE may take some time to return). Default value if mode parameter is not supplied is PROXIMITY.
      * \return Task<FindCloudletReply>
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
        string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-       Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+       string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(
@@ -1269,6 +1335,8 @@ namespace DistributedMatchEngine
         appName: appName,
         appVersion: appVersion,
         authToken: authToken,
+        uniqueIDType: uniqueIDType,
+        uniqueID: uniqueID,
         tags: tags);
       RegisterClientReply registerClientReply = await RegisterClient(host, port, registerRequest);
       if (registerClientReply.tags == null)
