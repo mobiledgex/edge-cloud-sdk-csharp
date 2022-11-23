@@ -59,10 +59,6 @@ namespace Tests
     }
     public class DummyCarrierInfo : CarrierInfo
     {
-      public ulong GetCellID()
-      {
-        return 0;
-      }
 
       public string GetCurrentCarrierName()
       {
@@ -581,7 +577,7 @@ namespace Tests
 
         FindCloudletReply findCloudletInfo = null;
         var locTask = Util.GetLocationFromDevice();
-        var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers, developerAuthToken, (uint)me.carrierInfo.GetCellID(), me.GetUniqueIDType(), me.GetUniqueIDType());
+        var registerClientRequest = me.CreateRegisterClientRequest(orgName, appName, appVers, developerAuthToken, me.GetUniqueIDType(), me.GetUniqueIDType());
         RegisterClientReply registerClientReply;
         registerClientReply = await me.RegisterClient(dmeHost, MatchingEngine.defaultDmeRestPort, registerClientRequest);
         Assert.True(registerClientReply.status == ReplyStatus.Success, "GetUDPConnectionTest RegisterClient Failed");

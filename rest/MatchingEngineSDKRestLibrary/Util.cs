@@ -16,7 +16,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -124,6 +126,43 @@ gN9WUwCbEMBy/YhBSrXycKA8crgGg3x1mIsopn88JKwmMBa68oS7EHM9w7C4y71M
 -----END CERTIFICATE-----";
       byte[] certBytes = Encoding.ASCII.GetBytes(certText);
       return certBytes;
+    }
+
+    public static string GetHostIPV4Address(string host)
+    {
+      try
+      {
+        if (host == "" || host.Length > 255)
+        {
+          if (host.Length > 255)
+          {
+            Log.D($"{host} is more than 255 characters");
+          }
+          return null;
+        }
+        List<IPAddress> addresses = Dns.GetHostAddresses(host).ToList();
+        IPAddress ipv4Address = addresses.Find(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+        if(ipv4Address == null)
+        {
+          ipv4Address = addresses.Find(ip => ip.IsIPv4MappedToIPv6 == true);
+          if(ipv4Address == null)
+          {
+            return null;
+          }
+          ipv4Address = ipv4Address.MapToIPv4();
+        }
+        return ipv4Address.ToString();
+      }
+      catch(SocketException se)
+      {
+        Log.E($"Error is encountered when resolving {host}, SocketException: {se.Message}");
+        return null;
+      }
+      catch(ArgumentException ae)
+      {
+        Log.E($"{host} is an invalid host address, SocketException: {ae.Message}");
+        return null;
+      }
     }
   }
 }

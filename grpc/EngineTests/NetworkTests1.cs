@@ -40,11 +40,6 @@ namespace EngineTests
         return "";
       }
 
-      ulong CarrierInfo.GetCellID()
-      {
-        return 0;
-      }
-
       public ulong GetSignalStrength()
       {
         return 0;

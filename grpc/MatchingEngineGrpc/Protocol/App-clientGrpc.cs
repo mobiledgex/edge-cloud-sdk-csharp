@@ -20,6 +20,10 @@ namespace DistributedMatchEngine {
     static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletRequest> __Marshaller_distributed_match_engine_FindCloudletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FindCloudletRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.FindCloudletReply> __Marshaller_distributed_match_engine_FindCloudletReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.FindCloudletReply.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.PlatformFindCloudletRequest> __Marshaller_distributed_match_engine_PlatformFindCloudletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.PlatformFindCloudletRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPrioritySessionCreateRequest> __Marshaller_distributed_match_engine_QosPrioritySessionCreateRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPrioritySessionCreateRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPrioritySessionReply> __Marshaller_distributed_match_engine_QosPrioritySessionReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPrioritySessionReply.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPrioritySessionDeleteRequest> __Marshaller_distributed_match_engine_QosPrioritySessionDeleteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPrioritySessionDeleteRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::DistributedMatchEngine.QosPrioritySessionDeleteReply> __Marshaller_distributed_match_engine_QosPrioritySessionDeleteReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.QosPrioritySessionDeleteReply.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationRequest> __Marshaller_distributed_match_engine_VerifyLocationRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.VerifyLocationRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.VerifyLocationReply> __Marshaller_distributed_match_engine_VerifyLocationReply = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.VerifyLocationReply.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::DistributedMatchEngine.GetLocationRequest> __Marshaller_distributed_match_engine_GetLocationRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::DistributedMatchEngine.GetLocationRequest.Parser.ParseFrom);
@@ -57,6 +61,20 @@ namespace DistributedMatchEngine {
         "PlatformFindCloudlet",
         __Marshaller_distributed_match_engine_PlatformFindCloudletRequest,
         __Marshaller_distributed_match_engine_FindCloudletReply);
+
+    static readonly grpc::Method<global::DistributedMatchEngine.QosPrioritySessionCreateRequest, global::DistributedMatchEngine.QosPrioritySessionReply> __Method_QosPrioritySessionCreate = new grpc::Method<global::DistributedMatchEngine.QosPrioritySessionCreateRequest, global::DistributedMatchEngine.QosPrioritySessionReply>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "QosPrioritySessionCreate",
+        __Marshaller_distributed_match_engine_QosPrioritySessionCreateRequest,
+        __Marshaller_distributed_match_engine_QosPrioritySessionReply);
+
+    static readonly grpc::Method<global::DistributedMatchEngine.QosPrioritySessionDeleteRequest, global::DistributedMatchEngine.QosPrioritySessionDeleteReply> __Method_QosPrioritySessionDelete = new grpc::Method<global::DistributedMatchEngine.QosPrioritySessionDeleteRequest, global::DistributedMatchEngine.QosPrioritySessionDeleteReply>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "QosPrioritySessionDelete",
+        __Marshaller_distributed_match_engine_QosPrioritySessionDeleteRequest,
+        __Marshaller_distributed_match_engine_QosPrioritySessionDeleteReply);
 
     static readonly grpc::Method<global::DistributedMatchEngine.VerifyLocationRequest, global::DistributedMatchEngine.VerifyLocationReply> __Method_VerifyLocation = new grpc::Method<global::DistributedMatchEngine.VerifyLocationRequest, global::DistributedMatchEngine.VerifyLocationReply>(
         grpc::MethodType.Unary,
@@ -338,6 +356,126 @@ namespace DistributedMatchEngine {
       public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.FindCloudletReply> PlatformFindCloudletAsync(global::DistributedMatchEngine.PlatformFindCloudletRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_PlatformFindCloudlet, null, options, request);
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionCreate
+      ///
+      /// Creates a QOS priority session (latency or throughput priority) from the client
+      /// to the app inst by making a call to the operator's priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::DistributedMatchEngine.QosPrioritySessionReply QosPrioritySessionCreate(global::DistributedMatchEngine.QosPrioritySessionCreateRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return QosPrioritySessionCreate(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionCreate
+      ///
+      /// Creates a QOS priority session (latency or throughput priority) from the client
+      /// to the app inst by making a call to the operator's priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::DistributedMatchEngine.QosPrioritySessionReply QosPrioritySessionCreate(global::DistributedMatchEngine.QosPrioritySessionCreateRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_QosPrioritySessionCreate, null, options, request);
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionCreate
+      ///
+      /// Creates a QOS priority session (latency or throughput priority) from the client
+      /// to the app inst by making a call to the operator's priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.QosPrioritySessionReply> QosPrioritySessionCreateAsync(global::DistributedMatchEngine.QosPrioritySessionCreateRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return QosPrioritySessionCreateAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionCreate
+      ///
+      /// Creates a QOS priority session (latency or throughput priority) from the client
+      /// to the app inst by making a call to the operator's priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.QosPrioritySessionReply> QosPrioritySessionCreateAsync(global::DistributedMatchEngine.QosPrioritySessionCreateRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_QosPrioritySessionCreate, null, options, request);
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionDelete
+      ///
+      /// Deletes a previously created QOS priority session by making a call to the operator's 
+      /// priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::DistributedMatchEngine.QosPrioritySessionDeleteReply QosPrioritySessionDelete(global::DistributedMatchEngine.QosPrioritySessionDeleteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return QosPrioritySessionDelete(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionDelete
+      ///
+      /// Deletes a previously created QOS priority session by making a call to the operator's 
+      /// priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::DistributedMatchEngine.QosPrioritySessionDeleteReply QosPrioritySessionDelete(global::DistributedMatchEngine.QosPrioritySessionDeleteRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_QosPrioritySessionDelete, null, options, request);
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionDelete
+      ///
+      /// Deletes a previously created QOS priority session by making a call to the operator's 
+      /// priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.QosPrioritySessionDeleteReply> QosPrioritySessionDeleteAsync(global::DistributedMatchEngine.QosPrioritySessionDeleteRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return QosPrioritySessionDeleteAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///
+      /// QosPrioritySessionDelete
+      ///
+      /// Deletes a previously created QOS priority session by making a call to the operator's 
+      /// priority session API server.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::DistributedMatchEngine.QosPrioritySessionDeleteReply> QosPrioritySessionDeleteAsync(global::DistributedMatchEngine.QosPrioritySessionDeleteRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_QosPrioritySessionDelete, null, options, request);
       }
       /// <summary>
       ///

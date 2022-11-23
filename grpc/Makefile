@@ -57,7 +57,7 @@ get-grpc-tools:
 packageRestore:
 	nuget restore
 
-build-all: build-proto build-debug build-release
+build-all: build-proto build-debug build-release third-party-licenses
 
 build-proto:
 	@echo Absolute Path for Proto files are: $(ABSOLUTEPATH)
@@ -81,6 +81,9 @@ publish:
 	echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
 	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineGrpc.$(GRPC_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
 
+third-party-licenses:
+	# dotnet tool install --global dotnet-project-licenses to install the tool.
+	dotnet-project-licenses -i MatchingEngineGrpc --include-transitive > THIRD_PARTY_LICENSES.txt
 
 clean:
 ifneq ("$(APPLIBBASE)", "/bin")

@@ -48,11 +48,6 @@ namespace EngineTests
         return "";
       }
 
-      ulong CarrierInfo.GetCellID()
-      {
-        return 0;
-      }
-
       public string GetDataNetworkPath()
       {
         return "";

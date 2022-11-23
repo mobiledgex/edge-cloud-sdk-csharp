@@ -27,9 +27,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DistributedMatchEngine.PerformanceMetrics;
-using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
-using System.Runtime.Serialization;
 
 
 /*!
@@ -209,7 +207,6 @@ namespace DistributedMatchEngine
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
     public DeviceInfo deviceInfo { get; private set; }
-    private MelMessagingInterface melMessaging { get; set; }
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
@@ -225,6 +222,8 @@ namespace DistributedMatchEngine
     private string getfqdnlistAPI = "/v1/getfqdnlist";
     private string appofficialfqdnAPI = "/v1/getappofficialfqdn";
     private string qospositionkpiAPI = "/v1/getqospositionkpi";
+    private string qosprioritycreateAPI = "/v1/qosprioritysessioncreate";
+    private string qosprioritydeleteAPI = "/v1/qosprioritysessiondelete";
     internal string streamedgeeventAPI = "/v1/streamedgeevent";
 
     public const int DEFAULT_REST_TIMEOUT_MS = 10000;
@@ -238,8 +237,8 @@ namespace DistributedMatchEngine
     public string sessionCookie { get; set; }
     string tokenServerURI;
     private bool disposedValue;
-
     string authToken { get; set; }
+    string qosSessionId { get; set; }
 
     // Global local endpoint override for FindCloudlet, NetTest, and GetConnection API helpers.
     // This is used for background App related operations like EdgeEvents processing, if set.
@@ -256,7 +255,7 @@ namespace DistributedMatchEngine
     /*!
      * Constructor for MatchingEngine class.
      * \param carrierInfo (CarrierInfo): 
-     * \param netInterface (NetInterface): 
+     * \param netInterface (NetInterface):
      * \param uniqueID (UniqueID):
      * \param deviceInfo (DeviceInfo):
      * \section meconstructorexample Example
@@ -301,9 +300,6 @@ namespace DistributedMatchEngine
       {
         this.deviceInfo = deviceInfo;
       }
-
-      // Default to empty.
-      SetMelMessaging(null);
 
       // Setup a dummy event delegate for monitoring events:
       EventBusReciever += (ServerEdgeEvent serverEdgeEvent) =>
@@ -350,22 +346,6 @@ namespace DistributedMatchEngine
     }
 
     /*!
-     * A device specific interface.
-     * @private
-     */
-    public void SetMelMessaging(MelMessagingInterface melInterface)
-    {
-      if (melInterface != null)
-      {
-        this.melMessaging = melInterface;
-      }
-      else
-      {
-        this.melMessaging = new EmptyMelMessaging();
-      }
-    }
-
-    /*!
      * Set the REST timeout for DME APIs.
      * \param timeout_in_milliseconds (int)
      * \return Timespan
@@ -396,15 +376,6 @@ namespace DistributedMatchEngine
     public string GetUniqueID()
     {
       return uniqueID.GetUniqueID();
-    }
-
-    /*!
-     * GetCellID
-     * \ingroup functions_dmeutils
-     */
-    public ulong GetCellID()
-    {
-      return carrierInfo.GetCellID();
     }
 
     /*!
@@ -652,7 +623,6 @@ namespace DistributedMatchEngine
      * \param appName (string): Application name
      * \param appVersion (string): Application version
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param uniqueIDType (string): Optional
      * \param uniqueID (string): Optional
      * \param tags (Tag[]): Optional
@@ -661,7 +631,7 @@ namespace DistributedMatchEngine
      * \snippet RestSample.cs createregisterexample
      */
     public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = null,
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null)
+      string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null)
     {
       return new RegisterClientRequest
       {
@@ -670,7 +640,6 @@ namespace DistributedMatchEngine
         app_name = appName,
         app_vers = appVersion,
         auth_token = authToken,
-        cell_id = cellID,
         unique_id_type = uniqueIDType,
         unique_id = uniqueID,
         tags = tags
@@ -712,19 +681,28 @@ namespace DistributedMatchEngine
 
     private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
     {
-      string uid = melMessaging.GetUid();
-      string aUniqueIdType = GetUniqueIDType(); // Read: device model
-      string aUniqueId = GetUniqueID();
-      string manufacturer = melMessaging.GetManufacturer();
-
-      if (manufacturer != null &&
-        aUniqueIdType != null && aUniqueIdType.Length > 0 &&
-        aUniqueId != null && aUniqueId.Length > 0)
+      if (uniqueID != null)
       {
-        request.unique_id_type = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
-        request.unique_id = aUniqueId;
+        string uidtype = uniqueID.GetUniqueIDType();
+        string uid = uniqueID.GetUniqueID();
+        if (uidtype != null)
+        {
+          uidtype = uidtype.Trim();
+        }
+        if (uid != null) {
+          uid = uid.Trim();
+        }
+        if (uidtype != null && uidtype.Length >= 0 && uid != null && uid.Length >= 0)
+        {
+          request.unique_id_type = uidtype;
+          request.unique_id = uid;
+        }
+        else
+        {
+          request.unique_id_type = null;
+          request.unique_id = null;
+        }
       }
-
       return request;
     }
 
@@ -753,7 +731,6 @@ namespace DistributedMatchEngine
 
       return request;
     }
-
 
     private FindCloudletRequest UpdateRequestForQoSNetworkPriority(FindCloudletRequest request, IPEndPoint localEndPoint)
     {
@@ -815,7 +792,6 @@ namespace DistributedMatchEngine
         app_name = oldRequest.app_name,
         app_vers = oldRequest.app_vers,
         auth_token = oldRequest.auth_token,
-        cell_id = oldRequest.cell_id,
         tags = oldRequest.tags
       };
 
@@ -829,7 +805,7 @@ namespace DistributedMatchEngine
       // Debug Log Serialization issues:
       Log.D("Pre Serialize: Request Reference" + request);
       Log.D("Pre Serialize OrgName: " + request.org_name + ", " + "AppName: " + request.app_name + ", AppVer: " + request.app_vers);
-      Log.D("Pre Serialize AuthToken: " + request.auth_token + ", " + "CellID: " + request.cell_id + ", Ver: " + request.ver);
+      Log.D("Pre Serialize AuthToken: " + request.auth_token + ", " + ", Ver: " + request.ver);
       Log.D("Pre Serialize Tag Reference: " + request.tags);
       if (request.tags != null) {
         Log.D("Pre Serialize Tags Count: " + request.tags.Count);
@@ -915,13 +891,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return FindCloudletRequest
      * \section createfindcloudletexample Example
      * \snippet RestSample.cs createfindcloudletexample
      */
-    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -937,7 +912,6 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         gps_location = loc,
         carrier_name = carrierName,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1318,7 +1292,6 @@ namespace DistributedMatchEngine
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param uniqueIDType (string): Optional
      * \param uniqueID (string): Optional
      * \param tags (Dictionary<string, string>): Optional
@@ -1327,11 +1300,11 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+      string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), defaultDmeRestPort,
         orgName, appName, appVersion, loc,
-        carrierName, authToken, cellID, uniqueIDType, uniqueID, tags, mode);
+        carrierName, authToken, uniqueIDType, uniqueID, tags, mode);
     }
 
     /*!
@@ -1354,7 +1327,7 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
        string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+       string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(
@@ -1362,7 +1335,6 @@ namespace DistributedMatchEngine
         appName: appName,
         appVersion: appVersion,
         authToken: authToken,
-        cellID: cellID,
         uniqueIDType: uniqueIDType,
         uniqueID: uniqueID,
         tags: tags);
@@ -1379,7 +1351,6 @@ namespace DistributedMatchEngine
       FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(
         loc: loc,
         carrierName: carrierName,
-        cellID: cellID,
         tags: tags);
       FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode);
       if (findCloudletReply.tags == null)
@@ -1395,13 +1366,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return VerifyLocationRequest
      * \section createverifylocationexample Example
      * \snippet RestSample.cs createverifylocationexample
      */
-    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1419,7 +1389,6 @@ namespace DistributedMatchEngine
         gps_location = loc,
         carrier_name = carrierName,
         verify_loc_token = null,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1457,7 +1426,7 @@ namespace DistributedMatchEngine
     }
 
     /*!
-     * Makes sure that the user's location is not spoofed based on cellID and gps location.
+     * Makes sure that the user's location is not spoofed based on gps location.
      * Returns the Cell Tower status (CONNECTED_TO_SPECIFIED_TOWER if successful) and Gps Location status (LOC_VERIFIED if successful).
      * Also provides the distance between where the user claims to be and where carrier believes user to be (via gps and cell id) in km.
      * \ingroup functions_dmeapis
@@ -1539,13 +1508,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return AppInstListRequest
      * \section createappinstexample Example
      * \snippet RestSample.cs createappinstexample
      */
-    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1567,7 +1535,6 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         gps_location = loc,
         carrier_name = carrierName,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1665,14 +1632,13 @@ namespace DistributedMatchEngine
      * \param QosPositions (List<QosPosition): List of gps positions
      * \param lteCategory (Int32): Client's device LTE category number
      * \param bandSelection (BandSelection): Band list used by client
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return QosPositionRequest
      * \section createqospositionexample Example
      * \snippet RestSample.cs createqospositionexample
      */
     public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
-      UInt32 cellID = 0, Dictionary<string, string> tags = null)
+      Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1686,7 +1652,6 @@ namespace DistributedMatchEngine
         session_cookie = this.sessionCookie,
         lte_category = lteCategory,
         band_selection = bandSelection,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1731,9 +1696,293 @@ namespace DistributedMatchEngine
       var qosPositionKpiStream = new QosPositionKpiStream(responseStream);
 
       return qosPositionKpiStream;
-    }   
+    }
+    /// <summary>
+    /// Creates the create request for a QoS priority session 
+    /// </summary>
+    /// <param name="sessionProfile">The QosSessionProfile choose an option from the following:
+    /// <para>(NoPriority, LowLatency, ThroughputDownS, ThroughputDownM, ThroughputDownL)</para> </param>
+    /// <param name="findCloudletReply"> the FindCloudletReply to be used, findCloudletReply is used for retrieving the following information
+    /// <para>
+    ///  SessionCookie, IPAddress of the server, Detecting if there is a QoS session created already
+    /// </para>
+    /// <para>if findCloudletReply.Status is not "Found" the function will return a null value</para>
+    /// </param>
+    /// <param name="applicationPort">A string representing a list of single ports or port ranges on the user equipment
+    /// <para>range of ports ex. "5000-5500"</para>
+    /// <para>comma delimited  ports ex. "5000,6000"</para>
+    /// <para>a mix of both ex. "5000-5500,4000,6000"</para>
+    /// </param>
+    /// <param name="serverPort"> A string representing a list of single ports or port ranges on the application server
+    /// <para>range of ports ex. "5000-5500"</para>
+    /// <para>comma delimited  ports ex. "5000,6000"</para>
+    /// <para>a mix of both ex. "5000-5500,4000,6000"</para>
+    /// </param>
+    /// <param name="protocolIn">(Optional) The used transport protocol for the uplink (default QosSessionProtocol.Any)</param>
+    /// <param name="protocolOut">(Optional) The used transport protocol for the downlink (default QosSessionProtocol.Any)</param>
+    /// <param name="duration">(Optional) QoS Priority Session duration in seconds </param>
+    /// <param name="notificationUri"> (Optional) URI of the callback receiver. Allows asynchronous delivery of session related events, malformed uri will result in a null value</param>
+    /// <param name="notificationAuthToken"> (Optional) Authentification token for callback API</param>
+    /// <param name="tags"> (Optional) Vendor specific data</param>
+    /// <param name="localEndPoint"> (Optional) IPV4 Address of the device, if not supplied the SDK will determine the IPV4 address of the device.</param>
+    /// <returns>QosPrioritySessionCreateRequest object</returns>
+    /// \section getqospriorityloadexample-grpc Example
+    public QosPrioritySessionCreateRequest CreateQosPriorityCreateRequest
+      (QosSessionProfile sessionProfile,
+      FindCloudletReply findCloudletReply,
+      string applicationPort,
+      string serverPort,
+      QosSessionProtocol protocolIn = QosSessionProtocol.Any,
+      QosSessionProtocol protocolOut = QosSessionProtocol.Any,
+      UInt32 duration= 0,
+      string notificationUri = "",
+      string notificationAuthToken = "",
+      Dictionary<string, string> tags = null,
+      IPEndPoint localEndPoint = null)
+    {
+      if(findCloudletReply == null || findCloudletReply.status != FindCloudletReply.FindStatus.Found)
+      {
+        Log.E("FindCloudletReply is malformed");
+        return null;
+      }
+      if(findCloudletReply.qos_result == FindCloudletReply.QosSessionResult.SessionCreated)
+      {
+        Log.E("There is an active QoS session, please delete the current session first.");
+        return null;
+      }
+      if(sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call RegisterClient and FindCloudlet prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if(!Uri.IsWellFormedUriString(notificationUri, UriKind.Absolute))
+      {
+        Log.E("notification uri is malformed");
+        return null;
+      }
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          throw new Exception("Couldn't find an IPV4 address for the supplied localEndPoint");
+        }
+        localEndPoint = endPoint;
+      }
+      
+      string ipApplicationServer = Util.GetHostIPV4Address(findCloudletReply.fqdn);
+      if(ipApplicationServer == null || ipApplicationServer == "")
+      {
+        Log.E("Couldn't find an ipv4 for the application server");
+        return null;
+      }
 
-    private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
+      QosPrioritySessionCreateRequest request = new QosPrioritySessionCreateRequest
+      {
+        ver = 1,
+        profile = sessionProfile,
+        session_cookie = sessionCookie,
+        protocol_in = protocolIn,
+        protocol_out = protocolOut,
+        session_duration = duration,
+        port_application_server = serverPort,
+        port_user_equipment = applicationPort,
+        notification_uri =  notificationUri,
+        notification_auth_token =  notificationAuthToken,
+        ip_application_server = ipApplicationServer,
+        ip_user_equipment = localEndPoint.Address.ToString(),
+        tags = tags
+      };
+      return request;
+    }
+
+    /// <summary>
+    /// Creates QoS priority session 
+    /// </summary>
+    /// <param name="request">QosPrioritySessionCreateRequest object</param>
+    /// <returns>QosPrioritySessionReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(QosPrioritySessionCreateRequest request)
+    {
+      return await CreateQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+    }
+
+    /// <summary>
+    /// Creates QoS priority session
+    /// </summary>
+    /// <param name="host">(string) dme host</param>
+    /// <param name="port">(uint) dme port</param>
+    /// <param name="request">QosPrioritySessionCreateRequest object</param>
+    /// <returns>QosPrioritySessionReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionCreateReply> CreateQOSPrioritySession(string host, uint port, QosPrioritySessionCreateRequest request)
+    {
+      request.htags = Tag.DictionaryToHashtable(request.tags);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateRequest), serializerSettings);
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, request);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream;
+      try
+      {
+        responseStream = await PostRequest(CreateUri(host, port) + qosprioritycreateAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable CreateQosSession stream!");
+          return null;
+        }
+      }
+      catch (HttpException he)
+      {
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
+        throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        Log.E("Exception during CreateQosSession. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateReply), serializerSettings);
+      QosPrioritySessionCreateReply reply = (QosPrioritySessionCreateReply)deserializer.ReadObject(ms);
+      if (reply.tags == null)
+      {
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
+      }
+      if (reply.http_status == 201 || reply.http_status == 200)
+      {
+        Log.D("Session created successfully");
+        qosSessionId = reply.session_id;
+      }
+      else
+      {
+        if (reply.http_status == 400 || reply.http_status == 405)
+        {
+          Log.E("Invalid Input for QoSCreateRequest");
+        }
+        if (reply.http_status == 401)
+        {
+          Log.E(" Unauthorized, missing or incorrect authentication.");
+        }
+        if (reply.http_status == 500)
+        {
+          Log.E(" Session not created.");
+        }
+        if (reply.http_status == 503)
+        {
+          Log.E("Service temporarily unavailable");
+        }
+        Log.E("Failed to create QoSPrioritySession");
+      }
+      return reply;
+    }
+
+    /// <summary>
+    /// Creates DeleteRequest for deleting a running QoSPrioritySession, returns null if no QoSSessionId is stored in matchingEngine
+    /// </summary>
+    /// <param name="sessionProfile"> The QosSessionProfile to delete</param>
+    /// <param name="tags">(Optional) Vendor specific data</param>
+    /// <returns>QosPrioritySessionDeleteRequest object</returns>
+    /// \section getqospriorityloadexample Example
+    public QosPrioritySessionDeleteRequest CreateQosPriorityDeleteRequest
+     (QosSessionProfile sessionProfile,
+     Dictionary<string, string> tags = null)
+    {
+      if (sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call register client prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if (qosSessionId == null || qosSessionId == "")
+      {
+        Log.E("QosSessionId is null");
+        return null;
+      }
+      QosPrioritySessionDeleteRequest request = new QosPrioritySessionDeleteRequest
+      {
+        ver = 1,
+        session_cookie = sessionCookie,
+        profile = sessionProfile,
+        session_id = qosSessionId,
+        tags = tags
+      };
+      return request;
+    }
+
+    /// <summary>
+    /// Deletes QoS priority session
+    /// </summary>
+    /// <param name="request">QosPrioritySessionDeleteRequest object</param>
+    /// <returns>QosPrioritySessionDeleteReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest request)
+    {
+      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeRestPort, request);
+    }
+
+    /// <summary>
+    /// Deletes QoS priority session
+    /// </summary>
+    /// <param name="host">(string) dme host</param>
+    /// <param name="port">(uint) dme port</param>
+    /// <param name="request">QosPrioritySessionDeleteRequest object</param>
+    /// <returns>QosPrioritySessionDeleteReply object</returns>
+    /// \section getqospriorityloadexample Example
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest request)
+    {
+      request.htags = Tag.DictionaryToHashtable(request.tags);
+      DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(QosPrioritySessionCreateRequest), serializerSettings);
+      MemoryStream ms = new MemoryStream();
+      serializer.WriteObject(ms, request);
+      string jsonStr = Util.StreamToString(ms);
+
+      Stream responseStream;
+      try
+      {
+        responseStream = await PostRequest(CreateUri(host, port) + qosprioritydeleteAPI, jsonStr);
+        if (responseStream == null || !responseStream.CanRead)
+        {
+          Log.E("Unreadable DeleteQosSessionStream stream!");
+          return null;
+        }
+      }
+      catch (HttpException he)
+      {
+        Log.E("Exception hit: DME Server host: " + host + ", status: " + he.HttpStatusCode + ", Message: " + he.Message);
+        throw he;
+      }
+      catch (HttpRequestException hre)
+      {
+        Log.E("Exception during DeleteQosSession. DME Server used: " + host + ", Message: " + hre.Message);
+        throw hre;
+      }
+
+      string responseStr = Util.StreamToString(responseStream);
+      byte[] byteArray = Encoding.ASCII.GetBytes(responseStr);
+      ms = new MemoryStream(byteArray);
+      DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(QosPrioritySessionDeleteReply), serializerSettings);
+      QosPrioritySessionDeleteReply reply = (QosPrioritySessionDeleteReply)deserializer.ReadObject(ms);
+      if (reply.tags == null)
+      {
+        reply.tags = Tag.HashtableToDictionary(reply.htags);
+      }
+      if (reply.status == DeleteStatus.Deleted)
+      {
+        Log.D("Qos session deleted successfully");
+        qosSessionId = null;
+      }
+      else
+      {
+        Log.E($"Failed to delete Qos session, Delete status: {reply.status}");
+      }
+      return reply;
+    }
+
+    private FqdnListRequest CreateFqdnListRequest(Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1744,7 +1993,6 @@ namespace DistributedMatchEngine
       {
         ver = 1,
         session_cookie = this.sessionCookie,
-        cell_id = cellID,
         tags = tags
       };
     }
@@ -1815,7 +2063,7 @@ namespace DistributedMatchEngine
     }
 
     private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
-      string userData = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+      string userData = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1829,7 +2077,6 @@ namespace DistributedMatchEngine
         comm_type = dlgCommType,
         lg_id = lgId,
         user_data = userData,
-        cell_id = cellID,
         tags = tags
       };
     }

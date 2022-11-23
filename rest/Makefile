@@ -20,7 +20,7 @@ BINOUT := $(APPLIBBASE)/lib
 SOLUTIONLOG := /tmp/$(VSPROJECTROOT)_out.log
 PUBLISHLOG := /tmp/nuget_out.log
 
-REST_SDK_VERSION=3.0.9
+REST_SDK_VERSION=3.1.0
 NUGET_RELEASE_SERVER := https://artifactory.mobiledgex.net/api/nuget/nuget-releases/
 
 DOXYGENROOT := Doxygen
@@ -33,7 +33,7 @@ all: packageRestore build-all generate-doxygen
 packageRestore:
 	dotnet restore
 
-build-all: build-debug build-release
+build-all: build-debug build-release third-party-licenses
 
 build-debug:
 	@echo Making Debug Library...
@@ -55,6 +55,10 @@ endif
 publish:
 	@echo "Publish command will pause for password if you don't set the Artifactory publish key first..."
 	$(shell nuget push $(BINOUT)/Release/Mobiledgex.MatchingEngineSDKRestLibrary.$(REST_SDK_VERSION).nupkg -Source $(NUGET_RELEASE_SERVER) >> $(PUBLISHLOG))
+
+third-party-licenses:
+	# dotnet tool install --global dotnet-project-licenses to install the tool.
+	dotnet-project-licenses -i MatchingEngineSDKRestLibrary --include-transitive > THIRD_PARTY_LICENSES.txt
 
 clean:
 ifneq ("$(BINOUT)", "/lib")

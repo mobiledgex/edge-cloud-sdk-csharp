@@ -79,6 +79,16 @@ namespace DistributedMatchEngine
       Notfound = 2
     }
 
+    public enum QosSessionResult
+    {
+      [EnumMember]
+      NotAttempted = 0,
+      [EnumMember]
+      SessionCreated = 1,
+      [EnumMember]
+      SessionFailed = 2
+    }
+
     [DataMember]
     public UInt32 ver;
 
@@ -114,6 +124,32 @@ namespace DistributedMatchEngine
     //! Location of the cloudlet
     [DataMember]
     public Loc cloudlet_location;
+
+    [DataMember(Name = "qos_result")]
+    private string qosResult
+    {
+      get
+      {
+        return qos_result.ToString();
+      }
+      set
+      {
+        try
+        {
+          qos_result = (QosSessionResult)Enum.Parse(typeof(QosSessionResult), value);
+        }
+        catch
+        {
+          qos_result = QosSessionResult.SessionFailed;
+        }
+      }
+    }
+
+    public QosSessionResult qos_result = QosSessionResult.SessionFailed;
+
+
+    public string qos_error_msg;
+
     //! Session Cookie for specific EdgeEvents for specific AppInst
     [DataMember]
     public string edge_events_cookie;

@@ -26,7 +26,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DistributedMatchEngine.PerformanceMetrics;
-using DistributedMatchEngine.Mel;
 using System.Net.Sockets;
 using Grpc.Core;
 using Google.Protobuf.Collections;
@@ -212,7 +211,6 @@ namespace DistributedMatchEngine
     public NetInterface netInterface { get; set; }
     public UniqueID uniqueID { get; set; }
     public DeviceInfoApp deviceInfo { get; private set; }
-    private MelMessagingInterface melMessaging { get; set; }
 
     internal DataContractJsonSerializerSettings serializerSettings = new DataContractJsonSerializerSettings
     {
@@ -237,6 +235,7 @@ namespace DistributedMatchEngine
     // This is used for background App related operations like EdgeEvents processing, if set.
     // Default routing otherwise.
     public string LocalIP { get; set; }
+    private string qosSessionId { get; set; }
 
     // For Event Consumers
     public delegate void EdgeEventsDelegate(ServerEdgeEvent serverEdgeEvent);
@@ -259,7 +258,7 @@ namespace DistributedMatchEngine
     /*!
      * Constructor for MatchingEngine class.
      * \param carrierInfo (CarrierInfo): 
-     * \param netInterface (NetInterface): 
+     * \param netInterface (NetInterface):
      * \param uniqueID (UniqueID):
      * \param deviceInfo (DeviceInfo):
      * \section meconstructorexample Example
@@ -305,9 +304,6 @@ namespace DistributedMatchEngine
         this.deviceInfo = deviceInfo;
       }
 
-      // Default to empty.
-      SetMelMessaging(null);
-
       // Setup a dummy event delegate for monitoring events:
       EdgeEventsReceiver += (ServerEdgeEvent serverEdgeEvent) =>
       {
@@ -341,6 +337,15 @@ namespace DistributedMatchEngine
       return EdgeEventsConnection;
     }
 
+    public bool StartEdgeEvents(string dmeHost = null, uint dmePort = 0, DeviceInfoDynamic deviceInfoDynamic = null, DeviceInfoStatic deviceInfoStatic = null)
+    {
+      EdgeEventsConnection = GetEdgeEventsConnection(edgeEventsCookie, dmeHost, dmePort);
+      if (EdgeEventsConnection == null)
+      {
+        return false;
+      }
+      return EdgeEventsConnection.Open(deviceInfoDynamic, deviceInfoStatic);
+    }
 
     public EdgeEventsConnection RestartEdgeEventsConnection(FindCloudletReply newCloudlet, string dmeHost = null, uint dmePort = 0)
     {
@@ -360,22 +365,6 @@ namespace DistributedMatchEngine
       edgeEventsCookie = newCloudlet.EdgeEventsCookie;
       EdgeEventsConnection = new EdgeEventsConnection(this, dmeHost, dmePort);
       return EdgeEventsConnection;
-    }
-
-    /*!
-     * A device specific interface.
-     * @private
-     */
-    public void SetMelMessaging(MelMessagingInterface melInterface)
-    {
-      if (melInterface != null)
-      {
-        this.melMessaging = melInterface;
-      }
-      else
-      {
-        this.melMessaging = new EmptyMelMessaging();
-      }
     }
 
     /*!
@@ -409,15 +398,6 @@ namespace DistributedMatchEngine
     public string GetUniqueID()
     {
       return uniqueID.GetUniqueID();
-    }
-
-    /*!
-     * GetCellID
-     * \ingroup functions_dmeutils
-     */
-    public ulong GetCellID()
-    {
-      return carrierInfo.GetCellID();
     }
 
     /*!
@@ -700,7 +680,6 @@ namespace DistributedMatchEngine
      * \param appName (string): Application name
      * \param appVersion (string): Application version
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param uniqueIDType (string): Optional
      * \param uniqueID (string): Optional
      * \param tags (Tag[]): Optional
@@ -709,7 +688,7 @@ namespace DistributedMatchEngine
      * \snippet RestSample.cs createregisterexample
      */
     public RegisterClientRequest CreateRegisterClientRequest(string orgName, string appName, string appVersion, string authToken = "",
-      UInt32 cellID = 0, string uniqueIDType = "", string uniqueID = "", Dictionary<string, string> tags = null)
+      string uniqueIDType = "", string uniqueID = "", Dictionary<string, string> tags = null)
     {
       var request = new RegisterClientRequest
       {
@@ -756,19 +735,24 @@ namespace DistributedMatchEngine
 
     private RegisterClientRequest UpdateRequestForUniqueID(RegisterClientRequest request)
     {
-      string uid = melMessaging.GetUid();
-      string aUniqueIdType = GetUniqueIDType(); // Read: device model
-      string aUniqueId = GetUniqueID();
-      string manufacturer = melMessaging.GetManufacturer();
-
-      if (manufacturer != null &&
-        aUniqueIdType != null && aUniqueIdType.Length > 0 &&
-        aUniqueId != null && aUniqueId.Length > 0)
+      if (uniqueID != null)
       {
-        request.UniqueIdType = manufacturer + ":" + aUniqueIdType + ":HASHED_ID";
-        request.UniqueId = aUniqueId;
+        string uidtype = uniqueID.GetUniqueIDType();
+        string uid = uniqueID.GetUniqueID();
+        if (uidtype != null)
+        {
+          uidtype = uidtype.Trim();
+        }
+        if (uid != null)
+        {
+          uid = uid.Trim();
+        }
+        if (uidtype != null && uidtype.Length > 0 && uid != null && uid.Length > 0)
+        {
+          request.UniqueIdType = uidtype;
+          request.UniqueId = uid;
+        }
       }
-
       return request;
     }
 
@@ -879,13 +863,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return FindCloudletRequest
      * \section createfindcloudletexample Example
      * \snippet RestSample.cs createfindcloudletexample
      */
-    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public FindCloudletRequest CreateFindCloudletRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1233,7 +1216,6 @@ namespace DistributedMatchEngine
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param uniqueIDType (string): Optional
      * \param uniqueID (string): Optional
      * \param tags (Dictionary<string, string>): Optional
@@ -1242,11 +1224,11 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(
       string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = null, 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+      string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       return await RegisterAndFindCloudlet(GenerateDmeHostAddress(), dmePort,
         orgName, appName, appVersion, loc,
-        carrierName, authToken, cellID, uniqueIDType, uniqueID, tags, mode);
+        carrierName, authToken, uniqueIDType, uniqueID, tags, mode);
     }
 
     /*!
@@ -1260,7 +1242,6 @@ namespace DistributedMatchEngine
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
      * \param authToken (string): Optional authentication token for application. If none supplied, default is null.
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param uniqueIDType (string): Optional
      * \param uniqueID (string): Optional
      * \param tags (Tag[]): Optional
@@ -1269,7 +1250,7 @@ namespace DistributedMatchEngine
      */
     public async Task<FindCloudletReply> RegisterAndFindCloudlet(string host, uint port,
        string orgName, string appName, string appVersion, Loc loc, string carrierName = "", string authToken = "", 
-      UInt32 cellID = 0, string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
+       string uniqueIDType = null, string uniqueID = null, Dictionary<string, string> tags = null, FindCloudletMode mode = FindCloudletMode.PROXIMITY)
     {
       // Register Client
       RegisterClientRequest registerRequest = CreateRegisterClientRequest(
@@ -1277,7 +1258,6 @@ namespace DistributedMatchEngine
         appName: appName,
         appVersion: appVersion,
         authToken: authToken,
-        cellID: cellID,
         uniqueIDType: uniqueIDType,
         uniqueID: uniqueID,
         tags: tags);
@@ -1294,7 +1274,6 @@ namespace DistributedMatchEngine
       FindCloudletRequest findCloudletRequest = CreateFindCloudletRequest(
         loc: loc,
         carrierName: carrierName,
-        cellID: cellID,
         tags: tags);
       FindCloudletReply findCloudletReply = await FindCloudlet(host, port, findCloudletRequest, mode)
         .ConfigureAwait(false);
@@ -1312,13 +1291,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return VerifyLocationRequest
      * \section createverifylocationexample Example
      * \snippet RestSample.cs createverifylocationexample
      */
-    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public VerifyLocationRequest CreateVerifyLocationRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1343,7 +1321,7 @@ namespace DistributedMatchEngine
     }
 
     /*!
-     * Makes sure that the user's location is not spoofed based on cellID and gps location.
+     * Makes sure that the user's location is not spoofed based on gps location.
      * Returns the Cell Tower status (CONNECTED_TO_SPECIFIED_TOWER if successful) and Gps Location status (LOC_VERIFIED if successful).
      * Also provides the distance between where the user claims to be and where carrier believes user to be (via gps and cell id) in km.
      * \ingroup functions_dmeapis
@@ -1400,13 +1378,12 @@ namespace DistributedMatchEngine
      * \ingroup functions_dmeapis
      * \param loc (Loc): User location
      * \param carrierName (string): Optional device carrier (if not provided, carrier information will be pulled from device)
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return AppInstListRequest
      * \section createappinstexample Example
      * \snippet RestSample.cs createappinstexample
      */
-    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    public AppInstListRequest CreateAppInstListRequest(Loc loc, string carrierName = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1491,14 +1468,13 @@ namespace DistributedMatchEngine
      * \param QosPositions (List<QosPosition): List of gps positions
      * \param lteCategory (Int32): Client's device LTE category number
      * \param bandSelection (BandSelection): Band list used by client
-     * \param cellID (UInt32): Optional cell tower id. If none supplied, default is 0.
      * \param tags (Tag[]): Optional
      * \return QosPositionRequest
      * \section createqospositionexample Example
      * \snippet RestSample.cs createqospositionexample
      */
     public QosPositionRequest CreateQosPositionRequest(List<QosPosition> QosPositions, Int32 lteCategory, BandSelection bandSelection,
-      UInt32 cellID = 0, Dictionary<string, string> tags = null)
+      Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1577,9 +1553,272 @@ namespace DistributedMatchEngine
         Log.E("GetQosPositionKpi exception using DME Server: " + host + ", status: " + e.StatusCode + ", Message: " + e.Message);
         throw e;
       }
-    }   
+    }
 
-    private FqdnListRequest CreateFqdnListRequest(UInt32 cellID = 0, Dictionary<string, string> tags = null)
+    /// <summary>
+    /// Creates the create request for a QoS priority session 
+    /// </summary>
+    /// <param name="sessionProfile">The QosSessionProfile, choose an option from the following:
+    /// <para>(QOS_NO_PRIORITY, QOS_LOW_LATENCY, QOS_THROUGHPUT_DOWN_S, QOS_THROUGHPUT_DOWN_M, QOS_THROUGHPUT_DOWN_L)</para> </param>
+    /// <param name="findCloudletReply"> the FindCloudletReply to be used, findCloudletReply is used for retrieving the following:
+    /// <para>
+    ///  SessionCookie, IPAddress of the server, Detecting if there is a QoS session created already
+    /// </para>
+    /// <para>if findCloudletReply.Status is not "Found" the function will return a null value</para>
+    /// </param>
+    /// <param name="applicationPort">A string representing a list of single ports or port ranges on the user equipment
+    /// <para>range of ports ex. "5000-5500"</para>
+    /// <para>comma delimited  ports ex. "5000,6000"</para>
+    /// <para>a mix of both ex. "5000-5500,4000,6000"</para>
+    /// </param>
+    /// <param name="serverPort"> A string representing a list of single ports or port ranges on the application server
+    /// <para>range of ports ex. "5000-5500"</para>
+    /// <para>comma delimited  ports ex. "5000,6000"</para>
+    /// <para>a mix of both ex. "5000-5500,4000,6000"</para>
+    /// </param>
+    /// <param name="protocolIn">(Optional) The used transport protocol for the uplink (default QosSessionProtocol.Any)</param>
+    /// <param name="protocolOut">(Optional) The used transport protocol for the downlink (default QosSessionProtocol.Any)</param>
+    /// <param name="duration">(Optional) QoS priority session duration in seconds </param>
+    /// <param name="notificationUri"> (Optional) URI of the callback receiver. Allows asynchronous delivery of session related events, malformed uri will result in a null value</param>
+    /// <param name="notificationAuthToken"> (Optional) Authentification token for callback API</param>
+    /// <param name="tags"> (Optional) Vendor specific data</param>
+    /// <param name="localEndPoint"> (Optional) IPV4 address of the device, if not supplied the SDK will determine the IPV4 address of the device.</param>
+    /// <returns>QosPrioritySessionCreateRequest object</returns>
+    /// \section getqospriorityloadexample-grpc Example
+    public QosPrioritySessionCreateRequest CreateQosPrioritySessionCreateRequest(
+      QosSessionProfile sessionProfile,
+      FindCloudletReply findCloudletReply,
+      string applicationPort,
+      string serverPort,
+      QosSessionProtocol protocolIn = QosSessionProtocol.Any,
+      QosSessionProtocol protocolOut = QosSessionProtocol.Any,
+      UInt32 duration = 0,
+      string notificationUri = "",
+      string notificationAuthToken = "",
+      Dictionary<string, string> tags = null,
+      IPEndPoint localEndPoint = null)
+    {
+      if (findCloudletReply == null || findCloudletReply.Status != FindStatus.FindFound)
+      {
+        Log.E("FindCloudletReply is malformed");
+        return null;
+      }
+      if (findCloudletReply.QosResult == QosSessionResult.QosSessionCreated)
+      {
+        Log.E("There is an active QoS session, please delete the current session first.");
+        return null;
+      }
+      if (sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call RegisterClient and FindCloudlet prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if (!Uri.IsWellFormedUriString(notificationUri, UriKind.Absolute))
+      {
+        Log.E("notification uri is malformed");
+        return null;
+      }
+      if (localEndPoint == null || localEndPoint.AddressFamily != AddressFamily.InterNetwork)
+      {
+        IPEndPoint endPoint = Util.GetDefaultLocalEndPointIPV4();
+        if (endPoint == null)
+        {
+          throw new Exception("Couldn't find an IPV4 address for the supplied localEndPoint");
+        }
+        localEndPoint = endPoint;
+      }
+
+      string ipApplicationServer = Util.GetHostIPV4Address(findCloudletReply.Fqdn);
+      if (ipApplicationServer == null || ipApplicationServer == "")
+      {
+        Log.E("Couldn't find an ipv4 for the application server");
+        return null;
+      }
+
+      QosPrioritySessionCreateRequest request = new QosPrioritySessionCreateRequest
+      {
+        Ver = 1,
+        Profile = sessionProfile,
+        SessionCookie = sessionCookie,
+        ProtocolIn = protocolIn,
+        ProtocolOut = protocolOut,
+        SessionDuration = duration,
+        PortApplicationServer = serverPort,
+        PortUserEquipment = applicationPort,
+        NotificationUri = notificationUri,
+        NotificationAuthToken = notificationAuthToken,
+        IpApplicationServer = ipApplicationServer,
+        IpUserEquipment = localEndPoint.Address.ToString()
+      };
+      if (tags != null)
+      {
+        foreach (var entry in tags)
+        {
+          request.Tags.Add(entry.Key, entry.Value);
+        }
+      }
+      return request;
+    }
+
+    /// <summary>
+    /// Creates QoS priority session 
+    /// </summary>
+    /// <param name="request">QosPrioritySessionCreateRequest object</param>
+    /// <returns>QosPrioritySessionReply object</returns>
+    /// \section getqospriorityloadexample-grpc Example
+    public async Task<QosPrioritySessionReply> CreateQOSPrioritySession(QosPrioritySessionCreateRequest request)
+    {
+      return await CreateQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeGrpcPort, request);
+    }
+
+    /// <summary>
+    /// Creates QoS priority session
+    /// </summary>
+    /// <param name="host">(string) dme host</param>
+    /// <param name="port">(uint) dme port</param>
+    /// <param name="request">QosPrioritySessionCreateRequest object</param>
+    /// <returns>QosPrioritySessionReply object</returns>
+    /// \section getqospriorityloadexample-grpc Example
+    public async Task<QosPrioritySessionReply> CreateQOSPrioritySession(string host, uint port, QosPrioritySessionCreateRequest request)
+    {
+      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
+
+        var call = client.QosPrioritySessionCreateAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
+
+        if (reply.HttpStatus == 201 || reply.HttpStatus == 200)
+        {
+          Log.D("Session created successfully");
+          qosSessionId = reply.SessionId;
+        }
+        else
+        {
+          if (reply.HttpStatus == 400 || reply.HttpStatus == 405)
+          {
+            Log.E("Invalid Input for QoSCreateRequest");
+          }
+          if (reply.HttpStatus == 401)
+          {
+            Log.E(" Unauthorized, missing or incorrect authentication.");
+          }
+          if (reply.HttpStatus == 500)
+          {
+            Log.E(" Session not created.");
+          }
+          if (reply.HttpStatus == 503)
+          {
+            Log.E("Service temporarily unavailable");
+          }
+          Log.E("Failed to create QoSPrioritySession");
+        }
+        return reply;
+      }
+       catch (RpcException e)
+      {
+        Log.E("Exception during CreateQOSPrioritySession. DME Server used: " + host + ", Message: " + e.Message);
+        throw e;
+      }
+    }
+
+    /// <summary>
+    /// Creates DeleteRequest for deleting a running QoSPrioritySession, returns null if no QoS sessionId is stored in matchingEngine
+    /// </summary>
+    /// <param name="sessionProfile"> The QosSessionProfile to delete</param>
+    /// <param name="tags">(Optional) Vendor specific data</param>
+    /// <returns>QosPrioritySessionDeleteRequest object</returns>
+    /// \section getqospriorityloadexample-grpc Example
+    public QosPrioritySessionDeleteRequest CreateQosPriorityDeleteRequest
+     (QosSessionProfile sessionProfile,
+     Dictionary<string, string> tags = null)
+    {
+      if (sessionCookie == null || sessionCookie == "")
+      {
+        Log.E("Session cookie is null, please call register client prior to calling CreateQosPrioritySessionCreateRequest");
+        return null;
+      }
+      if (qosSessionId == null || qosSessionId == "")
+      {
+        Log.E("QosSessionId is null");
+        return null;
+      }
+      QosPrioritySessionDeleteRequest request = new QosPrioritySessionDeleteRequest
+      {
+        Ver = 1,
+        SessionCookie = sessionCookie,
+        Profile = sessionProfile,
+        SessionId = qosSessionId
+      };
+      if (tags != null)
+      {
+        foreach (var entry in tags)
+        {
+          request.Tags.Add(entry.Key, entry.Value);
+        }
+      }
+      return request;
+    }
+
+    /// <summary>
+    /// Deletes QoS priority session
+    /// </summary>
+    /// <param name="request">QosPrioritySessionDeleteRequest object</param>
+    /// <returns>QosPrioritySessionDeleteReply object</returns>
+    /// \section getqospriorityloadexample-grpc Example
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(QosPrioritySessionDeleteRequest request)
+    {
+      return await DeleteQOSPrioritySession(GenerateDmeHostAddress(), defaultDmeGrpcPort, request);
+    }
+
+    /// <summary>
+    /// Deletes QoS priority session
+    /// </summary>
+    /// <param name="host">(string) dme host</param>
+    /// <param name="port">(uint) dme port</param>
+    /// <param name="request">QosPrioritySessionDeleteRequest object</param>
+    /// <returns>QosPrioritySessionDeleteReply object</returns>
+    /// \section getqospriorityloadexample-grpc Example
+    public async Task<QosPrioritySessionDeleteReply> DeleteQOSPrioritySession(string host, uint port, QosPrioritySessionDeleteRequest request)
+    {
+      Channel channel = ChannelPicker(host, port);
+      try
+      {
+        var client = new MatchEngineApi.MatchEngineApiClient(channel);
+
+        var call = client.QosPrioritySessionDeleteAsync(
+          request,
+          new CallOptions()
+            .WithDeadline(DateTime.UtcNow.AddMilliseconds(GrpcTimeout.TotalMilliseconds))
+        );
+        var responseTask = call.ResponseAsync.ConfigureAwait(false);
+        var reply = await responseTask;
+
+        if (reply.Status == QosPrioritySessionDeleteReply.Types.DeleteStatus.QdelDeleted)
+        {
+          Log.D("Qos session deleted successfully");
+          qosSessionId = null;
+        }
+        else
+        {
+          Log.E($"Failed to delete Qos session, Delete status: {reply.Status}");
+        }
+        return reply;
+      }
+      catch (RpcException e)
+      {
+        Log.E("Exception during DeleteQOSPrioritySession. DME Server used: " + host + ", Message: " + e.Message);
+        throw e;
+      }
+    }
+
+    private FqdnListRequest CreateFqdnListRequest(Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {
@@ -1629,7 +1868,7 @@ namespace DistributedMatchEngine
     }
 
     private DynamicLocGroupRequest CreateDynamicLocGroupRequest(DlgCommType dlgCommType, UInt64 lgId = 0, 
-      string userData = null, UInt32 cellID = 0, Dictionary<string, string> tags = null)
+      string userData = null, Dictionary<string, string> tags = null)
     {
       if (sessionCookie == null)
       {

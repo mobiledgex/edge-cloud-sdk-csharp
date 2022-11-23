@@ -17,7 +17,6 @@
 
 using NUnit.Framework;
 using DistributedMatchEngine;
-using DistributedMatchEngine.Mel;
 
 using System.Collections.Generic;
 using System.IO;
@@ -63,11 +62,6 @@ namespace Tests
         return null;
       }
 
-      ulong CarrierInfo.GetCellID()
-      {
-        return 0;
-      }
-
       public string GetDataNetworkPath()
       {
         return "";
@@ -105,15 +99,6 @@ namespace Tests
       }
     }
 
-    public class TestMelMessaging : MelMessagingInterface
-    {
-      public bool IsMelEnabled() { return false; }
-      public string GetMelVersion() { return ""; }
-      public string GetUid() { return ""; }
-      public string SetToken(string token, string app_name) { return ""; }
-      public string GetManufacturer() { return "DummyManufacturer"; }
-    }
-
     [SetUp]
     public void Setup()
     {
@@ -125,7 +110,6 @@ namespace Tests
 
       // pass in unknown interfaces at compile and runtime.
       me = new MatchingEngine(carrierInfo, netInterface, uniqueIdInterface, deviceInfo);
-      me.SetMelMessaging(new TestMelMessaging());
     }
 
     private MemoryStream getMemoryStream(string jsonStr)
@@ -370,7 +354,8 @@ namespace Tests
     }
 
     [Test]
-    public async static Task TestTCPTLSConnection()
+    [TestCase("Ahmed-Org","sdk-test","9.0","eu-stage.dme.mobiledgex.net")]
+    public async static Task TestTCPTLSConnection(string org_name, string app_name, string app_vers, string dmeHost)
     {
 
       MatchingEngine.ServerRequiresClientCertificateAuthentication(false);
@@ -382,9 +367,9 @@ namespace Tests
         FindCloudletReply reply1 = null;
 
         reply1 = await me.RegisterAndFindCloudlet(dmeHost, MatchingEngine.defaultDmeRestPort,
-          orgName: orgName,
-          appName: appName,
-          appVersion: appVers,
+          orgName: org_name,
+          appName: app_name,
+          appVersion: app_vers,
           loc: loc);
 
         int knownPort = 2015;
@@ -1036,16 +1021,12 @@ namespace Tests
     {
       RegisterClientRequest req1;
 
-
       try
       {
         req1 = me.CreateRegisterClientRequest(
           orgName: orgName,
           appName: appName,
           appVersion: appVers);
-
-        TestMelMessaging mt = new TestMelMessaging();
-        Assert.AreEqual("DummyManufacturer", mt.GetManufacturer());
 
         // It's the actual RegisterClient DME call that grabs the latest
         // values for hashed Advertising ID and unique ID, and does so as late
